@@ -46,6 +46,8 @@
     <string name="area_of_interest_already_added">Area of interest already added</string>
     <string name="write_success">DocumentSnapshot successfully written!</string>
     <string name="write_failed">Error writing document</string>
+    <string name="remove_area_of_interest">Remove area of interest</string>
+    <string name="area_of_interest_not_present">Area of interest not present</string>
     <string-array name="event_types">
         <item>football</item>
         <item>basketball</item>

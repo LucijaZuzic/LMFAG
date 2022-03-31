@@ -7,9 +7,6 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.lmfag.R;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class CustomAdapterAreaOfInterest extends RecyclerView.Adapter<CustomAdapterAreaOfInterest.ViewHolder> {

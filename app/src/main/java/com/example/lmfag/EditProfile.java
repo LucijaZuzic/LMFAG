@@ -46,6 +46,7 @@ public class EditProfile extends AppCompatActivity {
         fillSpinner();
         fillUserData();
         addAreaOfInterest();
+        removeAreaOfInterest();
         createProfile();
         getBack();
         showAreasOfInterest();
@@ -88,7 +89,22 @@ public class EditProfile extends AppCompatActivity {
                 Snackbar.make(floatingActionButtonAreaOfInterest, R.string.area_of_interest_already_added, Snackbar.LENGTH_SHORT).show();
             }
         });
-
+    }
+    void removeAreaOfInterest() {
+        FloatingActionButton floatingActionButtonRemoveAreaOfInterest = findViewById(R.id.floatingActionButtonRemoveAreaOfInterest);
+        floatingActionButtonRemoveAreaOfInterest.setOnClickListener(view -> {
+            Spinner sp = findViewById(R.id.sp);
+            String text = sp.getSelectedItem().toString();
+            if (areas_array.contains(text)) {
+                areas_array.remove(areas_array.indexOf(text));
+                points_array.remove(areas_array.indexOf(text));
+                RecyclerView recyclerViewAreasOfInterest = findViewById(R.id.recyclerViewAreasOfInterest);
+                CustomAdapterAreaOfInterest customAdapterAreaOfInterest = new CustomAdapterAreaOfInterest(areas_array, points_array);
+                recyclerViewAreasOfInterest.setAdapter(customAdapterAreaOfInterest);
+            } else {
+                Snackbar.make(floatingActionButtonRemoveAreaOfInterest, R.string.area_of_interest_not_present, Snackbar.LENGTH_SHORT).show();
+            }
+        });
     }
     void getBack() {
         Button discard = findViewById(R.id.buttonDiscard);
