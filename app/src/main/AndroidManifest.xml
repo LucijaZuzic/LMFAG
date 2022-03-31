@@ -10,6 +10,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LMFAG">
         <activity
+            android:name=".FriendRequests"
+            android:exported="false" />
+        <activity
+            android:name=".FindFriends"
+            android:exported="false" />
+        <activity
+            android:name=".FindEvents"
+            android:exported="false" />
+        <activity
+            android:name=".ViewEvent"
+            android:exported="false" />
+        <activity
+            android:name=".EditProfile"
+            android:exported="false" />
+        <activity
+            android:name=".RateEvent"
+            android:exported="false" />
+        <activity
+            android:name=".CreateEvent"
+            android:exported="false" />
+        <activity
             android:name=".MyProfile"
             android:exported="false" />
         <activity
