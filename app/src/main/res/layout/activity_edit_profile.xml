@@ -7,89 +7,78 @@
     tools:context=".EditProfile">
 
     <LinearLayout
+        android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:baselineAligned="false">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_image"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                app:civ_circle_background_color="@color/blue_gray_100"
-                android:src="@drawable/ic_baseline_profile_picture_24"
-                app:civ_border_color="@color/black"
-                app:civ_border_width="10dp" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textViewUsername"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/username"
-                    android:textColor="@color/black"
-                    android:textSize="21sp"
-                    android:textStyle="bold" />
-
-                <EditText
-                    android:id="@+id/editTextUsername"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="48dp"
-                    android:inputType="textPersonName"
-                    android:text="@string/enter_a_username"
-                    android:autofillHints="username" />
-
-                <TextView
-                    android:id="@+id/textViewLocation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:text="@string/location"
-                    android:textColor="@color/black"
-                    android:textSize="21sp"
-                    android:textStyle="bold" />
-
-                <EditText
-                    android:id="@+id/editTextMyLocation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="48dp"
-                    android:inputType="textPostalAddress"
-                    android:text="@string/enter_a_location"
-                    android:autofillHints="postalAddress" />
-
-            </LinearLayout>
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/textViewUserDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:text="@string/user_description"
-            android:textColor="@color/black"
+            android:layout_height="196dp"
+            android:layout_width="196dp"
+            android:layout_gravity="center"
+            app:civ_circle_background_color="@color/blue_gray_100"
+            android:src="@drawable/ic_baseline_profile_picture_24"
+            app:civ_border_color="@color/my_pink"
+            app:civ_border_width="10dp" />
+
+        <EditText
+            android:id="@+id/editTextUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="@color/white"
+            android:layout_marginBottom="10dp"
             android:textSize="21sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:layout_gravity="center"
+            android:inputType="textPersonName"
+            android:background="@drawable/gradient"
+            android:text="@string/enter_a_username"
+            android:autofillHints="username" />
+        <TextView
+            android:padding="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:id="@+id/textViewLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="21sp"
+            android:textColor="@color/white"
+            android:background="@drawable/gradient"
+            android:text="@string/location"
+            app:drawableStartCompat="@drawable/ic_baseline_home_24" />
+        <EditText
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:id="@+id/editTextMyLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:inputType="textPostalAddress"
+            android:text="@string/enter_a_location"
+            android:autofillHints="postalAddress" />
+        <TextView
+            android:padding="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:textSize="21sp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:background="@drawable/gradient"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewUserDescription"
+            android:text="@string/user_description"
+            app:drawableStartCompat="@drawable/ic_baseline_description_24" />
 
         <EditText
             android:id="@+id/editTextMyDescription"
@@ -103,94 +92,78 @@
             android:text="@string/enter_a_description"
             android:importantForAutofill="no" />
 
+
+        <TextView
+            android:id="@+id/textViewEvenType"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:padding="5dp"
+            android:background="@drawable/gradient"
+            android:drawableStart="@drawable/ic_baseline_list_alt_24"
+            android:textColor="@color/white"
+            android:text="@string/area_of_interest" />
+        <Spinner
+            android:id="@+id/sp"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:contentDescription="@string/choose_an_activity_category"
+            android:minHeight="48dp" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
+            android:gravity="center"
             android:layout_marginBottom="10dp"
             android:orientation="horizontal">
-
             <TextView
-                android:id="@+id/textViewEvenType"
-                android:layout_gravity="center_vertical"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:textSize="21sp"
-                android:textStyle="bold"
-                android:layout_marginEnd="10dp"
-                android:textColor="@color/black"
-                android:text="@string/area_of_interest" />
-
-            <Spinner
-                android:id="@+id/sp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:layout_marginEnd="10dp"
-                android:contentDescription="@string/choose_an_activity_category"
-                android:minHeight="48dp" />
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:layout_marginEnd="10dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/floatingActionButtonAreaOfInterest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:backgroundTint="@color/purple_500"
-                app:tint="@color/white"
-                android:clickable="true"
-                app:srcCompat="@drawable/ic_baseline_add_24" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="@string/add_area_of_interest">
-
-            </TextView>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:background="@drawable/gradient"
                 android:id="@+id/floatingActionButtonRemoveAreaOfInterest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:backgroundTint="@color/purple_500"
-                app:tint="@color/white"
                 android:clickable="true"
-                app:srcCompat="@drawable/ic_baseline_remove_24" />
-
+                android:contentDescription="@string/remove_area_of_interest"
+                android:focusable="true"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:textStyle="bold"
+                android:layout_weight="0.25"
+                android:layout_marginEnd="5dp"
+                android:text="@string/remove_area_of_interest"
+                app:drawableTopCompat="@drawable/ic_baseline_remove_24" />
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/floatingActionButtonAreaOfInterest"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="@string/remove_area_of_interest">
+                android:layout_weight="0.25"
+                android:padding="10dp"
+                android:clickable="true"
+                android:contentDescription="@string/add_area_of_interest"
+                android:focusable="true"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:background="@drawable/gradient"
+                android:layout_marginStart="5dp"
+                android:textColor="@color/white"
+                android:text="@string/add_area_of_interest"
+                app:drawableTopCompat="@drawable/ic_baseline_add_24">
 
             </TextView>
-        </LinearLayout>
+
 
         </LinearLayout>
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -199,10 +172,11 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:background="@drawable/gradient"
                 android:id="@+id/linearLayoutShowAreasOfInterest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
+                android:gravity="center"
                 android:clickable="true"
                 android:focusable="true"
                 android:minHeight="48dp"
@@ -212,14 +186,15 @@
                     android:id="@+id/textViewAreasOfInterest"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     android:text="@string/areas_of_interest"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="21sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:drawableStartCompat="@drawable/ic_baseline_list_alt_24" />
 
                 <ImageView
-                    android:background="@color/blue_gray_100"
                     android:id="@+id/imageViewExpandAreasOfInterest"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -238,52 +213,59 @@
             </androidx.recyclerview.widget.RecyclerView>
 
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="10dp"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
+    <LinearLayout
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
             <LinearLayout
+                android:gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:gravity="center"
                 android:orientation="horizontal">
 
-                <Button
+                <TextView
+                    android:gravity="center"
                     android:id="@+id/buttonApply"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="96dp"
+                    android:layout_height="48dp"
                     android:clickable="true"
                     android:contentDescription="@string/apply"
                     android:focusable="true"
-                    android:text="@string/apply"
-                    app:backgroundTint="@color/purple_500"
-                    app:tint="@color/white" />
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
+                    android:background="@drawable/gradient"
+                    android:textColor="@color/white"
+                    android:text="@string/apply" />
 
             </LinearLayout>
 
             <LinearLayout
+                android:gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:gravity="center"
                 android:orientation="horizontal">
 
-                <Button
+                <TextView
+                    android:gravity="center"
                     android:id="@+id/buttonDiscard"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="96dp"
+                    android:layout_height="48dp"
                     android:clickable="true"
-                    android:contentDescription="@string/discard"
+                    android:contentDescription="@string/cancel"
                     android:focusable="true"
-                    android:text="@string/discard"
-                    app:backgroundTint="@color/purple_500"
-                    app:tint="@color/white" />
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
+                    android:background="@drawable/gradient"
+                    android:textColor="@color/white"
+                    android:text="@string/cancel" />
 
             </LinearLayout>
         </LinearLayout>

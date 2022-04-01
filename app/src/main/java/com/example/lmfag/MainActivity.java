@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         createSignInIntent();
-        Button myB = findViewById(R.id.button);
+        TextView myB = findViewById(R.id.button);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         myB.setOnClickListener(new View.OnClickListener() {
             @Override

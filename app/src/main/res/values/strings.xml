@@ -23,16 +23,15 @@
     <string name="event_name">Event name</string>
     <string name="create_event">Create event</string>
     <string name="event_type">Event type</string>
-    <string name="maximum_players">Maximum players</string>
+    <string name="players">Players</string>
     <string name="organizer_playing">Organizer playing</string>
     <string name="choose_location">Choose location</string>
     <string name="choose_date">Choose date</string>
     <string name="choose_time">Choose time</string>
-    <string name="minimum_players">Minimum players</string>
     <string name="public_event">Public</string>
     <string name="outdoor">Outdoor</string>
     <string name="apply">Apply</string>
-    <string name="discard">Discard</string>
+    <string name="cancel">Cancel</string>
     <string name="enter_a_username">Enter a username</string>
     <string name="minimum_level">Minimum level</string>
     <string name="choose_an_activity_category">Choose an activity category</string>
@@ -48,6 +47,10 @@
     <string name="write_failed">Error writing document</string>
     <string name="remove_area_of_interest">Remove area of interest</string>
     <string name="area_of_interest_not_present">Area of interest not present</string>
+    <string name="image_upload_finished">Image upload finished</string>
+    <string name="image_upload_started">Image upload started</string>
+    <string name="go_back_upload">You can\'t go back while the image is uploading.</string>
+    <string name="my_profile">My profile</string>
     <string-array name="event_types">
         <item>football</item>
         <item>basketball</item>

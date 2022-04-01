@@ -7,174 +7,175 @@
     tools:context=".MyProfile">
 
     <LinearLayout
+        android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_height="196dp"
+            android:layout_width="196dp"
+            android:layout_gravity="center"
+            app:civ_circle_background_color="@color/blue_gray_100"
+            android:src="@drawable/ic_baseline_profile_picture_24"
+            app:civ_border_color="@color/my_pink"
+            app:civ_border_width="10dp" />
+
+        <TextView
+            android:padding="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:textSize="21sp"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:background="@drawable/gradient"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:baselineAligned="false">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_image"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                app:civ_circle_background_color="@color/blue_gray_100"
-                android:src="@drawable/ic_baseline_profile_picture_24"
-                app:civ_border_color="@color/black"
-                app:civ_border_width="10dp" />
-
+            android:id="@+id/textViewUsername"
+            android:text="@string/username" />
+        <HorizontalScrollView
+            android:background="@drawable/gradient"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:gravity="center" >
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textViewUsername"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:textSize="21sp"
-                    android:text="@string/username" />
-
-                <LinearLayout
-                    android:layout_marginTop="10dp"
-                    android:layout_marginStart="10dp"
-                    android:gravity="center_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/floatingActionButtonEditProfile"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:contentDescription="@string/edit_profile"
-                        android:focusable="true"
-                        app:backgroundTint="@color/purple_500"
-                        app:srcCompat="@drawable/ic_baseline_settings_24"
-                        app:tint="@color/white" />
-
-                    <TextView
-                        android:layout_marginStart="10dp"
-                        android:id="@+id/textViewSettings"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/edit_profile" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_marginTop="10dp"
-                    android:layout_marginStart="10dp"
-                    android:gravity="center_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/floatingActionButtonFriendRequests"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:contentDescription="@string/friend_requests"
-                        android:focusable="true"
-                        app:backgroundTint="@color/purple_500"
-                        app:srcCompat="@drawable/ic_baseline_mail_24"
-                        app:tint="@color/white" />
-
-                    <TextView
-                        android:layout_marginStart="10dp"
-                        android:id="@+id/textViewFriendRequests"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/friend_requests" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginStart="10dp"
-                    android:gravity="center_vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/floatingActionButtonMessages"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:contentDescription="@string/my_messages"
-                        android:focusable="true"
-                        app:backgroundTint="@color/purple_500"
-                        app:srcCompat="@drawable/ic_baseline_chat_bubble_24"
-                        app:tint="@color/white" />
-
-                    <TextView
-                        android:layout_marginStart="10dp"
-                        android:id="@+id/textViewMessages"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/my_messages" />
-                </LinearLayout>
-
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/textViewLocation"
-                    android:layout_marginEnd="10dp"
+            <TextView
+                    android:padding="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:textColor="@color/white"
                     android:textStyle="bold"
-                    android:textSize="21sp"
-                    android:text="@string/location" />
+                    android:id="@+id/floatingActionButtonEditProfile"
+                    android:text="@string/edit_profile"
+                    app:drawableTopCompat="@drawable/ic_baseline_settings_24" />
+                <TextView
+                    android:padding="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:id="@+id/floatingActionButtonFriendRequests"
+                    android:text="@string/friend_requests"
+                    app:drawableTopCompat="@drawable/ic_baseline_mail_24" />
+                <TextView
+                    android:padding="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:id="@+id/floatingActionButtonMessages"
+                    android:text="@string/my_messages"
+                    app:drawableTopCompat="@drawable/ic_baseline_chat_bubble_24" />
+                <TextView
+                    android:padding="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:id="@+id/floatingActionButtonFindFriends"
+                    android:text="@string/find_friends"
+                    app:drawableTopCompat="@drawable/ic_baseline_person_search_24" />
 
                 <TextView
-                    android:id="@+id/textViewMyLocation"
-                    android:layout_width="match_parent"
+                    android:padding="5dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/enter_a_location" />
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:id="@+id/floatingActionButtonFindEvents"
+                    android:text="@string/find_events"
+                    app:drawableTopCompat="@drawable/ic_baseline_manage_search_24" />
+                <TextView
+                    android:padding="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:id="@+id/floatingActionButtonEventsNearby"
+                    android:text="@string/events_nearby"
+                    app:drawableTopCompat="@drawable/ic_baseline_location_searching_24" />
+                <TextView
+                    android:padding="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:id="@+id/floatingActionButtonMyEvents"
+                    android:text="@string/my_events"
+                    app:drawableTopCompat="@drawable/ic_baseline_calendar_today_24" />
+                <TextView
+                    android:padding="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:id="@+id/floatingActionButtonCreateEvent"
+                    android:text="@string/create_event"
+                    app:drawableTopCompat="@drawable/ic_baseline_edit_calendar_24" />
             </LinearLayout>
+        </HorizontalScrollView>
+
+            <TextView
+                android:padding="5dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="center"
+                android:id="@+id/textViewLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="21sp"
+                android:textColor="@color/white"
+                android:background="@drawable/gradient"
+                android:text="@string/location"
+                app:drawableStartCompat="@drawable/ic_baseline_home_24" />
 
             <TextView
                 android:layout_marginStart="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginEnd="10dp"
-                android:textSize="21sp"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:id="@+id/textViewUserDescription"
+                android:id="@+id/textViewMyLocation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/user_description" />
+                android:text="@string/enter_a_location" />
+
+            <TextView
+                android:padding="5dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="10dp"
+                android:textSize="21sp"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:background="@drawable/gradient"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textViewUserDescription"
+                android:text="@string/user_description"
+                app:drawableStartCompat="@drawable/ic_baseline_description_24" />
 
             <TextView
                 android:layout_marginStart="10dp"
@@ -186,16 +187,20 @@
                 android:text="@string/enter_a_description" />
 
             <TextView
+                android:padding="5dp"
+                android:gravity="center"
+                android:background="@drawable/gradient"
                 android:layout_marginStart="10dp"
                 android:layout_marginBottom="10dp"
                 android:id="@+id/textViewOrganizerRank"
                 android:layout_marginEnd="10dp"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textStyle="bold"
                 android:textSize="21sp"
-                android:text="@string/organizer_rank" />
+                android:text="@string/organizer_rank"
+                app:drawableStartCompat="@drawable/ic_baseline_emoji_events_24" />
 
             <LinearLayout
                 android:layout_marginStart="10dp"
@@ -203,24 +208,32 @@
                 android:layout_marginBottom="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textViewMyOrganizerRank"
+                android:orientation="horizontal"
+                android:baselineAligned="false">
+                <LinearLayout
+                    android:layout_marginEnd="5dp"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.25"
                     android:gravity="center"
-                    android:layout_marginEnd="10dp"
-                    android:textColor="@color/purple_500"
-                    android:textStyle="bold"
-                    android:textSize="21sp"
-                    android:text="@string/rank"
-                    app:drawableTopCompat="@drawable/ic_baseline_shield_24" />
+                    android:orientation="vertical">
 
+                    <TextView
+                        android:padding="5dp"
+                        android:background="@drawable/gradient"
+                        android:id="@+id/textViewMyOrganizerRank"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        android:textSize="21sp"
+                        android:text="@string/rank"
+                        app:drawableTopCompat="@drawable/ic_baseline_emoji_events_24" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
+                    android:layout_marginStart="5dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.75"
                     android:gravity="center"
@@ -238,156 +251,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:progress="75"
-                        android:progressBackgroundTint="@color/blue_gray_100"
-                        android:progressTint="@color/purple_500" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_marginBottom="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:baselineAligned="false">
-
-                <LinearLayout
-                    android:gravity="center"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.33"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/floatingActionButtonFindFriends"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:contentDescription="@string/find_friends"
-                        android:focusable="true"
-                        app:backgroundTint="@color/purple_500"
-                        app:srcCompat="@drawable/ic_baseline_person_search_24"
-                        app:tint="@color/white" />
-
-                    <TextView
-                        android:layout_marginStart="10dp"
-                        android:id="@+id/textViewFindFriends"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/find_friends" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:gravity="center"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.33"
-                    android:orientation="horizontal">
-                    <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/floatingActionButtonFindEvents"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:contentDescription="@string/find_events"
-                        android:focusable="true"
-                        app:backgroundTint="@color/purple_500"
-                        app:srcCompat="@drawable/ic_baseline_manage_search_24"
-                        app:tint="@color/white" />
-
-                    <TextView
-                        android:layout_marginStart="10dp"
-                        android:id="@+id/textViewFindEvents"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/find_events" />
-                </LinearLayout>
-                <LinearLayout
-                    android:gravity="center"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.33"
-                    android:orientation="horizontal">
-                    <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/floatingActionButtonEventsNearby"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:contentDescription="@string/events_nearby"
-                        android:focusable="true"
-                        app:backgroundTint="@color/purple_500"
-                        app:srcCompat="@drawable/ic_baseline_location_searching_24"
-                        app:tint="@color/white" />
-
-                    <TextView
-                        android:layout_marginStart="10dp"
-                        android:id="@+id/textViewEventsNearby"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/events_nearby" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_marginBottom="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:baselineAligned="false">
-
-                <LinearLayout
-                    android:gravity="center"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/floatingActionButtonMyEvents"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:contentDescription="@string/my_events"
-                        android:focusable="true"
-                        app:backgroundTint="@color/purple_500"
-                        app:srcCompat="@drawable/ic_baseline_calendar_today_24"
-                        app:tint="@color/white" />
-
-                    <TextView
-                        android:layout_marginStart="10dp"
-                        android:id="@+id/textViewMyEvents"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/my_events" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:gravity="center"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:orientation="horizontal">
-                    <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/floatingActionButtonCreateEvent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:contentDescription="@string/create_event"
-                        android:focusable="true"
-                        app:backgroundTint="@color/purple_500"
-                        app:srcCompat="@drawable/ic_baseline_edit_calendar_24"
-                        app:tint="@color/white" />
-
-                    <TextView
-                        android:layout_marginStart="10dp"
-                        android:id="@+id/textViewCreateEvent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/create_event" />
+                        android:progressDrawable="@drawable/progress_bar_states" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -399,10 +263,11 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:background="@drawable/gradient"
                     android:id="@+id/linearLayoutShowAreasOfInterest"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:clickable="true"
                     android:focusable="true"
                     android:minHeight="48dp"
@@ -412,14 +277,15 @@
                         android:id="@+id/textViewAreasOfInterest"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
                         android:layout_marginEnd="10dp"
                         android:text="@string/areas_of_interest"
-                        android:textColor="@color/black"
+                        android:textColor="@color/white"
                         android:textSize="21sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        app:drawableStartCompat="@drawable/ic_baseline_list_alt_24" />
 
                     <ImageView
-                        android:background="@color/blue_gray_100"
                         android:id="@+id/imageViewExpandAreasOfInterest"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -436,7 +302,6 @@
                     android:visibility="gone">
 
                 </androidx.recyclerview.widget.RecyclerView>
-
             </LinearLayout>
 
             <LinearLayout
@@ -448,10 +313,11 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:background="@drawable/gradient"
                     android:id="@+id/linearLayoutShowFriends"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:clickable="true"
                     android:focusable="true"
                     android:minHeight="48dp"
@@ -462,13 +328,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/friends"
-                        android:textColor="@color/black"
+                        android:textColor="@color/white"
                         android:layout_marginEnd="10dp"
+                        android:layout_marginStart="10dp"
                         android:textSize="21sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        app:drawableStartCompat="@drawable/ic_baseline_people_alt_24" />
 
                     <ImageView
-                        android:background="@color/blue_gray_100"
                         android:contentDescription="@string/expand_friends"
                         android:id="@+id/imageViewExpandFriends"
                         android:layout_width="wrap_content"
@@ -488,5 +355,4 @@
 
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 </ScrollView>

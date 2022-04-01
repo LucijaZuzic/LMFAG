@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,17 +16,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MyProfile extends AppCompatActivity {
 
@@ -48,6 +55,8 @@ public class MyProfile extends AppCompatActivity {
     }
 
     void fillUserData() {
+        LinearLayout ll = findViewById(R.id.main_layout);
+        ll.setVisibility(View.INVISIBLE);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users").document(user.getUid());
@@ -89,6 +98,25 @@ public class MyProfile extends AppCompatActivity {
                         CustomAdapterAreaOfInterest customAdapterAreaOfInterest = new CustomAdapterAreaOfInterest(areas_array, points_array);
                         recyclerViewAreasOfInterest.setAdapter(customAdapterAreaOfInterest);
                         myDescription.setText(data.get("description").toString());
+                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                        StorageReference storageRef = storage.getReference();
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        StorageReference imagesRef = storageRef.child("profile_pictures/" + user.getUid());
+                        final long ONE_MEGABYTE = 1024 * 1024;
+                        imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                            @Override
+                            public void onSuccess(byte[] bytes) {
+                                // Data for "images/island.jpg" is returns, use this as needed
+                                CircleImageView circleImageView = findViewById(R.id.profile_image);
+                                Bitmap bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+                                circleImageView.setImageBitmap(bmp);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle any errors
+                            }
+                        });
                         //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                     } else {
                         Intent myIntent = new Intent(context, EditProfile.class);
@@ -100,10 +128,11 @@ public class MyProfile extends AppCompatActivity {
                 }
             }
         });
+        ll.setVisibility(View.VISIBLE);
     }
 
     void redirectToCreateEvent() {
-        FloatingActionButton fab = findViewById(R.id.floatingActionButtonCreateEvent);
+        TextView fab = findViewById(R.id.floatingActionButtonCreateEvent);
         fab.setOnClickListener(view -> {
             Intent myIntent = new Intent(context, CreateEvent.class);
             startActivity(myIntent);
@@ -112,7 +141,7 @@ public class MyProfile extends AppCompatActivity {
 
     void redirectToEditProfile() {
         Context context = this;
-        FloatingActionButton floatingActionButtonEditProfile = findViewById(R.id.floatingActionButtonEditProfile);
+        TextView floatingActionButtonEditProfile = findViewById(R.id.floatingActionButtonEditProfile);
         floatingActionButtonEditProfile.setOnClickListener(view -> {
             Intent myIntent = new Intent(context, EditProfile.class);
             startActivity(myIntent);

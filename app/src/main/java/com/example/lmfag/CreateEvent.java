@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -34,10 +35,10 @@ public class CreateEvent extends AppCompatActivity {
                 R.array.event_types, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp.setAdapter(adapter);
-        FloatingActionButton ctfab = findViewById(R.id.floatingActionButtonChooseTime);
-        TextView cttv = findViewById(R.id.textViewChooseTime);
+        ImageView floatingActionButtonChooseTime = findViewById(R.id.floatingActionButtonChooseTime);
+        TextView textViewChooseTime = findViewById(R.id.textViewChooseTime);
         Context context = this;
-        ctfab.setOnClickListener(new View.OnClickListener() {
+        floatingActionButtonChooseTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // time picker dialog
@@ -47,15 +48,15 @@ public class CreateEvent extends AppCompatActivity {
                             public void onTimeSet(TimePicker tp, int sHour, int sMinute) {
                                 hour = sHour;
                                 minutes = sMinute;
-                                cttv.setText(hour + ":" + minutes);
+                                textViewChooseTime.setText(hour + ":" + minutes);
                             }
                         }, hour, minutes, true);
                 picker.show();
             }
         });
-        FloatingActionButton cdfab = findViewById(R.id.floatingActionButtonChooseDate);
-        TextView cdtv = findViewById(R.id.textViewChooseDate);
-        cdfab.setOnClickListener(new View.OnClickListener() {
+        ImageView floatingActionButtonChooseDate = findViewById(R.id.floatingActionButtonChooseDate);
+        TextView textViewChooseDate = findViewById(R.id.textViewChooseDate);
+        floatingActionButtonChooseDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // time picker dialog
@@ -66,7 +67,7 @@ public class CreateEvent extends AppCompatActivity {
                                 day = sDay;
                                 month = sMonth;
                                 year = sYear;
-                                cdtv.setText(day + "/" + (month + 1) + "/" + year);
+                                textViewChooseDate.setText(day + "/" + (month + 1) + "/" + year);
                             }
                         }, year, month, day);
                 picker.show();
