@@ -12,34 +12,40 @@
         android:orientation="vertical">
 
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
 
-            <TextView
+            <ImageView
                 android:id="@+id/textViewEventName"
                 android:layout_gravity="center"
-                android:layout_width="match_parent"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
                 android:gravity="center"
-                android:layout_marginTop="10dp"
                 android:textSize="21sp"
                 android:textStyle="bold"
                 android:padding="5dp"
                 android:background="@drawable/gradient"
-                android:drawableStart="@drawable/ic_baseline_calendar_today_24"
+                android:src="@drawable/ic_baseline_calendar_today_24"
                 android:textColor="@color/white"
-                android:text="@string/event_name" />
+                android:contentDescription="@string/event_name" />
 
             <EditText
                 android:id="@+id/editTextEventName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginTop="10dp"
                 android:minHeight="48dp"
                 android:inputType="textPersonName"
-                android:text="@string/event_name" />
+                android:hint="@string/event_name"  />
+    </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,28 +54,28 @@
             android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
             android:orientation="horizontal">
-            <TextView
+            <ImageView
                 android:gravity="center"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
                 android:id="@+id/textViewEvenType"
                 android:padding="5dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="5dp"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:textSize="21sp"
                 android:textStyle="bold"
                 android:background="@drawable/gradient"
-                android:drawableStart="@drawable/ic_baseline_list_alt_24"
-                android:textColor="@color/white"
-                android:text="@string/event_type" />
+                android:contentDescription="@string/event_type"
+                android:src="@drawable/ic_baseline_list_alt_24"
+                android:textColor="@color/white"  />
 
             <Spinner
                 android:id="@+id/sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:layout_weight="1"
                 android:contentDescription="@string/choose_an_activity_category"
                 android:minHeight="48dp" />
     </LinearLayout>
@@ -79,34 +85,35 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
+            android:gravity="center"
             android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/textViewMinimumLevel"
+            <ImageView
                 android:gravity="center"
+                android:padding="5dp"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
                 android:layout_gravity="center_vertical"
-                android:layout_width="0dp"
+                android:layout_marginEnd="5dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
                 android:textSize="21sp"
                 android:textStyle="bold"
-                android:padding="5dp"
-                android:layout_marginEnd="5dp"
                 android:background="@drawable/gradient"
                 android:textColor="@color/white"
-                android:drawableStart="@drawable/ic_baseline_workspace_premium_24"
-                android:text="@string/minimum_level" />
+                android:id="@+id/textViewMinimumLevel"
+                android:contentDescription="@string/minimum_level"
+                android:src="@drawable/ic_baseline_workspace_premium_24"  />
             <EditText
                 android:id="@+id/editTextMinimumLevel"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_marginStart="5dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
                 android:minHeight="48dp"
                 android:inputType="number"
-                android:text="@string/minimum_level" />
+                android:hint="@string/minimum_level" />
         </LinearLayout>
 
     <LinearLayout
@@ -114,6 +121,7 @@
         android:layout_height="match_parent"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
+        android:gravity="center"
         android:layout_marginTop="10dp"
         android:orientation="horizontal">
         <com.google.android.material.switchmaterial.SwitchMaterial
@@ -129,8 +137,7 @@
             android:layout_gravity="center"
             android:padding="5dp"
             android:background="@drawable/gradient"
-            android:textColor="@color/white"
-            android:text="@string/public_event" />
+            android:textColor="@color/white" />
 
 
         <com.google.android.material.switchmaterial.SwitchMaterial
@@ -142,29 +149,26 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textSize="21sp"
+            android:layout_marginEnd="5dp"
             android:textStyle="bold"
             android:padding="5dp"
             android:background="@drawable/gradient"
-            android:textColor="@color/white"
-            android:text="@string/outdoor" />
-    </LinearLayout>
+            android:textColor="@color/white" />
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:gravity="center"
             android:id="@+id/switchOrganizerPlaying"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:drawableStart="@drawable/ic_baseline_plus_one_24"
             android:textSize="21sp"
             android:textStyle="bold"
+            android:layout_marginStart="5dp"
             android:padding="5dp"
             android:background="@drawable/gradient"
-            android:textColor="@color/white"
-            android:text="@string/organizer_playing" />
+            android:textColor="@color/white"  />
+    </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -172,28 +176,28 @@
             android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
             android:orientation="horizontal">
-        <TextView
+        <ImageView
             android:id="@+id/textViewPlayers"
             android:layout_marginEnd="5dp"
             android:gravity="center"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
             android:layout_gravity="center_vertical"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="21sp"
             android:textStyle="bold"
             android:padding="5dp"
-            android:layout_weight="1"
             android:background="@drawable/gradient"
             android:textColor="@color/white"
-            android:drawableStart="@drawable/ic_baseline_reduce_capacity_24"
-            android:text="@string/players" />
+            android:contentDescription="@string/players"
+            android:src="@drawable/ic_baseline_reduce_capacity_24" />
 
         <com.google.android.material.slider.RangeSlider
             android:id="@+id/range_slider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:layout_weight="1"
             android:contentDescription="@string/players"
             app:values="@array/initial_slider_values"
             android:valueFrom="0.0"
@@ -226,7 +230,7 @@
                     android:layout_height="54dp"
                     android:padding="10dp"
                     android:clickable="true"
-                    android:contentDescription="@string/my_events"
+                    android:contentDescription="@string/choose_date"
                     android:focusable="true"
                     android:background="@drawable/gradient"
                     app:srcCompat="@drawable/ic_baseline_event_24" />
@@ -253,7 +257,7 @@
                     android:layout_height="54dp"
                     android:padding="10dp"
                     android:clickable="true"
-                    android:contentDescription="@string/my_events"
+                    android:contentDescription="@string/choose_time"
                     android:focusable="true"
                     android:background="@drawable/gradient"
                     app:srcCompat="@drawable/ic_baseline_access_time_24" />
@@ -289,7 +293,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:inputType="textPostalAddress"
                     android:text="@string/choose_location" />
             </LinearLayout>
 
@@ -310,8 +313,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:orientation="horizontal">
-
-                <TextView
+                <ImageView
                     android:gravity="center"
                     android:id="@+id/buttonApply"
                     android:layout_width="96dp"
@@ -323,7 +325,7 @@
                     android:textStyle="bold"
                     android:background="@drawable/gradient"
                     android:textColor="@color/white"
-                    android:text="@string/apply" />
+                    android:src="@drawable/ic_baseline_check_24"/>
 
             </LinearLayout>
 
@@ -334,7 +336,7 @@
                 android:layout_weight="0.5"
                 android:orientation="horizontal">
 
-                <TextView
+                <ImageView
                     android:gravity="center"
                     android:id="@+id/buttonDiscard"
                     android:layout_width="96dp"
@@ -345,8 +347,8 @@
                     android:textAllCaps="true"
                     android:textStyle="bold"
                     android:background="@drawable/gradient"
-                    android:textColor="@color/white"
-                    android:text="@string/cancel" />
+                    android:src="@drawable/ic_baseline_close_24"
+                    android:textColor="@color/white"  />
 
             </LinearLayout>
 
