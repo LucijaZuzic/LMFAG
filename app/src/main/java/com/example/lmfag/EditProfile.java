@@ -218,8 +218,8 @@ public class EditProfile extends AppCompatActivity {
                 docData.put("password_hash", old_password);
             }
             docData.put("points_rank", 0.0);
-            docData.put("areas_of_interest", areas_array.toString());
-            docData.put("points_levels", points_array.toString());
+            docData.put("areas_of_interest", areas_array);
+            docData.put("points_levels", points_array);
 
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();

@@ -1,6 +1,5 @@
 package com.example.lmfag;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
@@ -19,20 +18,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Map;
 
 public class CreateEvent extends AppCompatActivity {
@@ -45,23 +34,26 @@ public class CreateEvent extends AppCompatActivity {
     int day = cldr.get(Calendar.DAY_OF_MONTH);
     double longitude = 45.23;
     double latitude = 45.36;
-    ImageView floatingActionButtonChooseDate = findViewById(R.id.floatingActionButtonChooseDate);
-    TextView textViewChooseDate = findViewById(R.id.textViewChooseDate);
-    ImageView floatingActionButtonChooseTime = findViewById(R.id.floatingActionButtonChooseTime);
-    TextView textViewChooseTime = findViewById(R.id.textViewChooseTime);
-    ImageView apply = findViewById(R.id.imageViewApply);
-    Spinner sp = findViewById(R.id.sp);
     Context context = this;
+    ImageView imageViewChooseDate, imageViewChooseTime, apply;
+    TextView textViewChooseDate, textViewChooseTime;
+    Spinner sp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
+        imageViewChooseDate = findViewById(R.id.imageViewChooseDate);
+        textViewChooseDate = findViewById(R.id.textViewChooseDate);
+        imageViewChooseTime = findViewById(R.id.imageViewChooseTime);
+        textViewChooseTime = findViewById(R.id.textViewChooseTime);
+        apply = findViewById(R.id.imageViewApply);
+        sp = findViewById(R.id.sp);
         fillSpinner();
         setDate();
         setTime();
     }
     void setDate() {
-        floatingActionButtonChooseDate.setOnClickListener(new View.OnClickListener() {
+        imageViewChooseDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // time picker dialog
@@ -81,7 +73,7 @@ public class CreateEvent extends AppCompatActivity {
 
     }
     void setTime() {
-        floatingActionButtonChooseTime.setOnClickListener(new View.OnClickListener() {
+        imageViewChooseTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // time picker dialog

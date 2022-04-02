@@ -64,6 +64,7 @@
     <string name="password_short">Password must have at least one character.</string>
     <string name="send_friend_request">Send friend request</string>
     <string name="alerady_sent">Friend request already sent.</string>
+    <string name="send_message">Send message</string>
     <string-array name="event_types">
         <item>football</item>
         <item>basketball</item>
@@ -73,5 +74,13 @@
         <item>tennis</item>
         <item>table tennis</item>
         <item>chess</item>
+    </string-array>
+    <string-array name="friend_search_params">
+        <item>areas of interest</item>
+        <item>description</item>
+        <item>location</item>
+        <item>levels</item>
+        <item>rank</item>
+        <item>username</item>
     </string-array>
 </resources>

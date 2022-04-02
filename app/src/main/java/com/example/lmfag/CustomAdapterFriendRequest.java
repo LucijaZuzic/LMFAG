@@ -1,16 +1,38 @@
 package com.example.lmfag;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapterFriendRequest.ViewHolder> {
 
@@ -22,16 +44,21 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView textViewUsername;
+        private final CircleImageView profile_image;
 
         public ViewHolder(View view) {
             super(view);
             // Define click listener for the ViewHolder's View
 
             textViewUsername = (TextView) view.findViewById(R.id.textViewUsername);
+            profile_image = (CircleImageView) view.findViewById(R.id.profile_image);
         }
 
         public TextView getTextView() {
             return textViewUsername;
+        }
+        public CircleImageView getProfileImage() {
+            return profile_image;
         }
     }
 
@@ -61,7 +88,32 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        viewHolder.getTextView().setText(localFriendUsernames.get(position));
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("users").document(localFriendUsernames.get(position));
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    viewHolder.getTextView().setText(document.get("username").toString());
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    StorageReference storageRef = storage.getReference();
+                    StorageReference imagesRef = storageRef.child("profile_pictures/" + localFriendUsernames.get(position));
+                    final long ONE_MEGABYTE = 1024 * 1024;
+                    imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+                        // Data for "images/island.jpg" is returns, use this as needed
+                        CircleImageView circleImageView = viewHolder.getProfileImage();
+                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        circleImageView.setImageBitmap(bmp);
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle any errors
+                        }
+                    });
+                }
+            }
+        });
+
     }
 
     // Return the size of your dataset (invoked by the layout manager)
