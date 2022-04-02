@@ -64,7 +64,7 @@ public class CreateEvent extends AppCompatActivity {
                                 day = sDay;
                                 month = sMonth;
                                 year = sYear;
-                                textViewChooseDate.setText(day + "/" + (month + 1) + "/" + year);
+                                textViewChooseDate.setText(day + "." + (month + 1) + "." + year);
                             }
                         }, year, month, day);
                 picker.show();

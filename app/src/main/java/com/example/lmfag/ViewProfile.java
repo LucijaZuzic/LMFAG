@@ -14,6 +14,7 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -223,7 +224,12 @@ public class ViewProfile extends AppCompatActivity {
                     Integer rank = (int) (Math.floor(points_rank / 1000));
                     String text_rank = Integer.toString(rank);
                     Double upper_bound = Math.ceil(points_rank / 1000) * 1000;
+                    if (upper_bound.equals(0.0)) {
+                        upper_bound = 1000.0;
+                    }
                     String text_rank_points = points_rank + "/" + upper_bound;
+                    ProgressBar progressBar = findViewById(R.id.determinateBar);
+                    progressBar.setProgress((int)((points_rank - (upper_bound - 1000)) / 10));
                     myOrganizerRank.setText(text_rank);
                     myOrganizerRankPoints.setText(text_rank_points);
                     String area_string = data.get("areas_of_interest").toString();
