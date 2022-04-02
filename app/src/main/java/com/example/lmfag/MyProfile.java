@@ -24,17 +24,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -45,20 +50,14 @@ public class MyProfile extends AppCompatActivity {
 
     Context context = this;
     boolean flag = false;
+    RecyclerView recyclerViewFriends;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
-
-        fillUserData();
         showFriends();
         showAreasOfInterest();
-
-        //ArrayList<String> friends_array = new ArrayList<String>();
-        //CustomAdapterFriends customAdapterFriends = new CustomAdapterFriends(friends_array);
-        //RecyclerView recyclerViewFriends = findViewById(R.id.recyclerViewFriends);
-        //recyclerViewFriends.setAdapter(customAdapterFriends);
-
+        recyclerViewFriends = findViewById(R.id.recyclerViewFriends);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -68,6 +67,12 @@ public class MyProfile extends AppCompatActivity {
                         return true;
                     }
                 });
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fillUserData();
+        getFriends();
     }
     public void selectDrawerItem(MenuItem menuItem) {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -79,7 +84,12 @@ public class MyProfile extends AppCompatActivity {
         } else if (id == R.id.edit_profile) {
             Intent myIntent = new Intent(context, EditProfile.class);
             startActivity(myIntent);
-
+        } else if (id == R.id.find_friends) {
+            Intent myIntent = new Intent(context, FindFriends.class);
+            startActivity(myIntent);
+        } else if (id == R.id.friend_requests) {
+            Intent myIntent = new Intent(context, FriendRequests.class);
+            startActivity(myIntent);
         }
         drawer.closeDrawer(GravityCompat.START);
     }
@@ -218,6 +228,29 @@ public class MyProfile extends AppCompatActivity {
             } else {
                 ll_areas.setVisibility(View.GONE);
                 iv_areas.setImageResource(R.drawable.ic_baseline_expand_more_24);
+            }
+        });
+    }
+
+    void getFriends() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String name = preferences.getString("userID", "");
+        db.collection("friends")
+                .document(name)
+                .get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Map<String, Object> data = document.getData();
+                    String friends_string = data.get("friends").toString();
+                    if (friends_string.length() > 2) {
+                        String[] friends_string_array = friends_string.substring(1, friends_string.length() - 1).split(", ");
+                        List<String> friends_array = new ArrayList<>(Arrays.asList(friends_string_array));
+                        CustomAdapterFriends customAdapterAreaOfInterest = new CustomAdapterFriends(friends_array, context, preferences);
+                        recyclerViewFriends.setAdapter(customAdapterAreaOfInterest);
+                    }
+                }
             }
         });
     }

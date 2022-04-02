@@ -12,11 +12,13 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="vertical">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image"
             android:layout_width="96dp"
+            android:gravity="center"
             android:layout_height="96dp"
             android:layout_marginBottom="10dp"
             android:src="@drawable/ic_baseline_profile_picture_24"
@@ -31,6 +33,7 @@
             android:background="@drawable/gradient"
             android:text="@string/username"
             android:padding="5px"
+            android:gravity="center"
             android:textColor="@color/white"
             android:textSize="21sp"
             android:textStyle="bold" />

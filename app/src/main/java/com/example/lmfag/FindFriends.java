@@ -2,13 +2,17 @@ package com.example.lmfag;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -19,11 +23,16 @@ import java.util.List;
 import java.util.Map;
 
 public class FindFriends extends AppCompatActivity {
-
+    Context context = this;
+    RecyclerView recyclerViewFindFriends;
+    SharedPreferences preferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_friends);
+        preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        recyclerViewFindFriends = findViewById(R.id.recyclerViewFriends);
+        getAllFriends();
     }
 
     void getAllFriends() {
@@ -35,12 +44,16 @@ public class FindFriends extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            friends_array.add(document.getId());
+                            if(!(document.getId().equals(preferences.getString("userID", "")))) {
+                                friends_array.add(document.getId());
+                            }
                         }
-                        CustomAdapterFriends customAdapterAreaOfInterest = new CustomAdapterFriends(friends_array);
+                        CustomAdapterFriends customAdapterFriends = new CustomAdapterFriends(friends_array, context, preferences);
+                        recyclerViewFindFriends.setAdapter(customAdapterFriends);
                     }
                 }
             }
         });
     }
+
 }

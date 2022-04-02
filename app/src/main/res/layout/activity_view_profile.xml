@@ -141,7 +141,7 @@
                 android:src="@drawable/ic_baseline_description_24" />
 
             <TextView
-                android:id="@+id/editTextMyDescription"
+                android:id="@+id/textViewMyDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"

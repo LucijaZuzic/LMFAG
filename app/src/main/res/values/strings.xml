@@ -65,6 +65,9 @@
     <string name="send_friend_request">Send friend request</string>
     <string name="alerady_sent">Friend request already sent.</string>
     <string name="send_message">Send message</string>
+    <string name="friends_with_self">You can\'t become friends with yourself.</string>
+    <string name="visiting_myself">You can\'t visit your profile.</string>
+    <string name="already_friends">You are already friends with this user.</string>
     <string-array name="event_types">
         <item>football</item>
         <item>basketball</item>
