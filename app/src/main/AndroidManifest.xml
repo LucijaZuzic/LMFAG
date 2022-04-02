@@ -10,10 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LMFAG">
         <activity
-            android:name=".MainActivity2"
-            android:exported="false"
-            android:label="@string/title_activity_main2"
-            android:theme="@style/Theme.LMFAG.NoActionBar" />
+            android:name=".ViewProfile"
+            android:exported="false" />
         <activity
             android:name=".CreateProfile"
             android:exported="false" />

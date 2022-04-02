@@ -9,9 +9,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
 
+import java.util.List;
+
 public class CustomAdapterFriends extends RecyclerView.Adapter<CustomAdapterFriends.ViewHolder> {
 
-    private String[] localFriendUsernames;
+    private List<String> localFriendUsernames;
 
     /**
      * Provide a reference to the type of views that you are using
@@ -38,7 +40,7 @@ public class CustomAdapterFriends extends RecyclerView.Adapter<CustomAdapterFrie
      * @param dataSet String[] containing the data to populate views to be used
      * by RecyclerView.
      */
-    public CustomAdapterFriends(String[] dataSet) {
+    public CustomAdapterFriends(List<String> dataSet) {
         localFriendUsernames = dataSet;
     }
 
@@ -58,12 +60,12 @@ public class CustomAdapterFriends extends RecyclerView.Adapter<CustomAdapterFrie
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        viewHolder.getTextView().setText(localFriendUsernames[position]);
+        viewHolder.getTextView().setText(localFriendUsernames.get(position));
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return localFriendUsernames.length;
+        return localFriendUsernames.size();
     }
 }

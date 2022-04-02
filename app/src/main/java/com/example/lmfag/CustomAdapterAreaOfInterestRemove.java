@@ -1,29 +1,13 @@
 package com.example.lmfag;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.nio.InvalidMarkException;
-import java.util.Date;
 import java.util.List;
 
 public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<CustomAdapterAreaOfInterestRemove.ViewHolder> {
@@ -50,7 +34,7 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
             textViewAreaOfInterest = (TextView) view.findViewById(R.id.textViewAreaOfInterest);
             textViewLevel = (TextView) view.findViewById(R.id.textViewLevel);
             textViewLevelPoints = (TextView) view.findViewById(R.id.textViewLevelPoints);
-            floatingActionButtonRemoveAreaOfInterest = (ImageView) view.findViewById(R.id.floatingActionButtonRemoveAreaOfInterest);
+            floatingActionButtonRemoveAreaOfInterest = (ImageView) view.findViewById(R.id.imageViewRemoveAreaOfInterest);
         }
 
         public TextView getTextViewAreaOfInterest() {

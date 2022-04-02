@@ -54,6 +54,7 @@ public class EditProfile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+        fillUserData();
         fillSpinner();
         addAreaOfInterest();
         removeAreaOfInterest();
@@ -61,11 +62,6 @@ public class EditProfile extends AppCompatActivity {
         getBack();
         showAreasOfInterest();
         changeProfilePicture();
-    }
-    @Override
-    public void onStart() {
-        super.onStart();
-        fillUserData();
     }
 
     void changeProfilePicture() {
@@ -116,7 +112,7 @@ public class EditProfile extends AppCompatActivity {
     }
 
     void addAreaOfInterest() {
-        ImageView floatingActionButtonAreaOfInterest = findViewById(R.id.floatingActionButtonAreaOfInterest);
+        ImageView floatingActionButtonAreaOfInterest = findViewById(R.id.imageViewButtonAreaOfInterest);
         floatingActionButtonAreaOfInterest.setOnClickListener(view -> {
             Spinner sp = findViewById(R.id.sp);
             String text = sp.getSelectedItem().toString();
@@ -132,7 +128,7 @@ public class EditProfile extends AppCompatActivity {
         });
     }
     void removeAreaOfInterest() {
-        ImageView floatingActionButtonRemoveAreaOfInterest = findViewById(R.id.floatingActionButtonRemoveAreaOfInterest);
+        ImageView floatingActionButtonRemoveAreaOfInterest = findViewById(R.id.imageViewRemoveAreaOfInterest);
         floatingActionButtonRemoveAreaOfInterest.setOnClickListener(view -> {
             Spinner sp = findViewById(R.id.sp);
             String text = sp.getSelectedItem().toString();
@@ -148,7 +144,7 @@ public class EditProfile extends AppCompatActivity {
         });
     }
     void removeAreaOfInterest(String text) {
-        ImageView floatingActionButtonRemoveAreaOfInterest = findViewById(R.id.floatingActionButtonRemoveAreaOfInterest);
+        ImageView floatingActionButtonRemoveAreaOfInterest = findViewById(R.id.imageViewRemoveAreaOfInterest);
         if (areas_array.contains(text)) {
             points_array.remove(areas_array.indexOf(text));
             areas_array.remove(areas_array.indexOf(text));
@@ -160,7 +156,7 @@ public class EditProfile extends AppCompatActivity {
         }
     }
     void getBack() {
-        ImageView discard = findViewById(R.id.buttonDiscard);
+        ImageView discard = findViewById(R.id.imageViewDiscard);
         discard.setOnClickListener(view -> {
             if (blocked) {
                 Snackbar.make(discard, R.string.go_back_upload, Snackbar.LENGTH_SHORT).show();
@@ -172,7 +168,7 @@ public class EditProfile extends AppCompatActivity {
     }
 
     void writeDB(Map<String, Object> docData) {
-        ImageView apply = findViewById(R.id.buttonApply);
+        ImageView apply = findViewById(R.id.imageViewApply);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -199,7 +195,7 @@ public class EditProfile extends AppCompatActivity {
                 });
     }
     void createProfile() {
-        ImageView apply = findViewById(R.id.buttonApply);
+        ImageView apply = findViewById(R.id.imageViewApply);
         CheckBox check = findViewById(R.id.checkbox);
         apply.setOnClickListener(view -> {
             EditText myUsername = findViewById(R.id.editTextUsername);

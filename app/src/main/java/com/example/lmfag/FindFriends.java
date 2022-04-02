@@ -11,4 +11,6 @@ public class FindFriends extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_friends);
     }
+
+
 }

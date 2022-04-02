@@ -315,7 +315,7 @@
                 android:orientation="horizontal">
                 <ImageView
                     android:gravity="center"
-                    android:id="@+id/buttonApply"
+                    android:id="@+id/imageViewApply"
                     android:layout_width="96dp"
                     android:layout_height="48dp"
                     android:clickable="true"
@@ -338,7 +338,7 @@
 
                 <ImageView
                     android:gravity="center"
-                    android:id="@+id/buttonDiscard"
+                    android:id="@+id/imageViewDiscard"
                     android:layout_width="96dp"
                     android:layout_height="48dp"
                     android:clickable="true"

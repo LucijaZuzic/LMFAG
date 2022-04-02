@@ -61,14 +61,16 @@
     <string name="password_incorrect">Password incorrect.</string>
     <string name="username_taken">Username taken, pick another.</string>
     <string name="logged_in">Logged in!</string>
+    <string name="password_short">Password must have at least one character.</string>
+    <string name="send_friend_request">Send friend request</string>
     <string-array name="event_types">
         <item>football</item>
         <item>basketball</item>
         <item>handball</item>
-        <item>waterpolo</item>
+        <item>water polo</item>
         <item>volleyball</item>
         <item>tennis</item>
-        <item>table tenis</item>
+        <item>table tennis</item>
         <item>chess</item>
     </string-array>
 </resources>

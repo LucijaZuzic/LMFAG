@@ -27,10 +27,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -113,7 +110,7 @@ public class CreateProfile extends AppCompatActivity {
     }
 
     void addAreaOfInterest() {
-        ImageView floatingActionButtonAreaOfInterest = findViewById(R.id.floatingActionButtonAreaOfInterest);
+        ImageView floatingActionButtonAreaOfInterest = findViewById(R.id.imageViewButtonAreaOfInterest);
         floatingActionButtonAreaOfInterest.setOnClickListener(view -> {
             Spinner sp = findViewById(R.id.sp);
             String text = sp.getSelectedItem().toString();
@@ -129,7 +126,7 @@ public class CreateProfile extends AppCompatActivity {
         });
     }
     void removeAreaOfInterest() {
-        ImageView floatingActionButtonRemoveAreaOfInterest = findViewById(R.id.floatingActionButtonRemoveAreaOfInterest);
+        ImageView floatingActionButtonRemoveAreaOfInterest = findViewById(R.id.imageViewRemoveAreaOfInterest);
         floatingActionButtonRemoveAreaOfInterest.setOnClickListener(view -> {
             Spinner sp = findViewById(R.id.sp);
             String text = sp.getSelectedItem().toString();
@@ -145,7 +142,7 @@ public class CreateProfile extends AppCompatActivity {
         });
     }
     void removeAreaOfInterest(String text) {
-        ImageView floatingActionButtonRemoveAreaOfInterest = findViewById(R.id.floatingActionButtonRemoveAreaOfInterest);
+        ImageView floatingActionButtonRemoveAreaOfInterest = findViewById(R.id.imageViewRemoveAreaOfInterest);
         if (areas_array.contains(text) && areas_array.contains(text)) {
             points_array.remove(areas_array.indexOf(text));
             areas_array.remove(areas_array.indexOf(text));
@@ -157,7 +154,7 @@ public class CreateProfile extends AppCompatActivity {
         }
     }
     void getBack() {
-        ImageView discard = findViewById(R.id.buttonDiscard);
+        ImageView discard = findViewById(R.id.imageViewDiscard);
         discard.setOnClickListener(view -> {
             if (blocked) {
                 Snackbar.make(discard, R.string.go_back_upload, Snackbar.LENGTH_SHORT).show();
@@ -168,10 +165,10 @@ public class CreateProfile extends AppCompatActivity {
         });
     }
 
-    void writeDB(Map<String, Object> docData) {
-        ImageView apply = findViewById(R.id.buttonApply);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    void writeDB(Map<String, Object> docData) {
+        ImageView apply = findViewById(R.id.imageViewApply);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users")
                 .add(docData)
                 .addOnSuccessListener(aVoid -> {
@@ -182,8 +179,24 @@ public class CreateProfile extends AppCompatActivity {
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString("userID", aVoid.getId());
                     editor.apply();
-                    Intent myIntent = new Intent(context, MyProfile.class);
-                    startActivity(myIntent);
+                    if (uri != null) {
+                        blocked = true;
+                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                        StorageReference storageRef = storage.getReference();
+                        StorageReference imagesRef = storageRef.child("profile_pictures/" + aVoid.getId());
+                        UploadTask uploadTask = imagesRef.putFile(uri);
+                        Snackbar.make(apply, R.string.image_upload_started, Snackbar.LENGTH_SHORT).show();
+                        uploadTask.addOnFailureListener(exception -> {
+                            // Handle unsuccessful uploads
+                        }).addOnSuccessListener(taskSnapshot -> {
+                            blocked = false;
+                            Snackbar.make(apply, R.string.image_upload_finished, Snackbar.LENGTH_SHORT).show();
+                            Intent myIntent = new Intent(context, MyProfile.class);
+                            startActivity(myIntent);
+                            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                            // ...
+                        });
+                    }
                 })
                 .addOnFailureListener(e -> {
                     Snackbar.make(apply, R.string.write_failed, Snackbar.LENGTH_SHORT).show();
@@ -192,7 +205,7 @@ public class CreateProfile extends AppCompatActivity {
     }
 
     void createProfile() {
-        ImageView apply = findViewById(R.id.buttonApply);
+        ImageView apply = findViewById(R.id.imageViewApply);
         apply.setOnClickListener(view -> {
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -214,35 +227,19 @@ public class CreateProfile extends AppCompatActivity {
                             docData.put("username", myUsername.getText().toString());
                             docData.put("location", myLocation.getText().toString());
                             docData.put("description", myDescription.getText().toString());
-                            try {
-                                docData.put("password_hash", SecureHash.generateStrongPasswordHash(passwordEdit.getText().toString()));
-                            } catch (NoSuchAlgorithmException e) {
-                                e.printStackTrace();
-                            } catch (InvalidKeySpecException e) {
-                                e.printStackTrace();
-                            }
-                            docData.put("points_rank", 0.0);
-                            docData.put("areas_of_interest", areas_array.toString());
-                            docData.put("points_levels", points_array.toString());
-
-                            FirebaseStorage storage = FirebaseStorage.getInstance();
-                            StorageReference storageRef = storage.getReference();
-                            StorageReference imagesRef = storageRef.child("profile_pictures/" + myUsername.getText().toString());
-
-                            if (uri != null) {
-                                UploadTask uploadTask = imagesRef.putFile(uri);
-                                blocked = true;
-                                Snackbar.make(myDescription, R.string.image_upload_started, Snackbar.LENGTH_SHORT).show();
-                                uploadTask.addOnFailureListener(exception -> {
-                                    // Handle unsuccessful uploads
-                                }).addOnSuccessListener(taskSnapshot -> {
-                                    blocked = false;
-                                    Snackbar.make(myDescription, R.string.image_upload_finished, Snackbar.LENGTH_SHORT).show();
-                                    writeDB(docData);
-                                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                                    // ...
-                                });
+                            if (passwordEdit.getText().toString().length() == 0) {
+                                Snackbar.make(apply, R.string.password_short, Snackbar.LENGTH_SHORT).show();
                             } else {
+                                try {
+                                    docData.put("password_hash", SecureHash.generateStrongPasswordHash(passwordEdit.getText().toString()));
+                                } catch (NoSuchAlgorithmException e) {
+                                    e.printStackTrace();
+                                } catch (InvalidKeySpecException e) {
+                                    e.printStackTrace();
+                                }
+                                docData.put("points_rank", 0.0);
+                                docData.put("areas_of_interest", areas_array.toString());
+                                docData.put("points_levels", points_array.toString());
                                 writeDB(docData);
                             }
                         }

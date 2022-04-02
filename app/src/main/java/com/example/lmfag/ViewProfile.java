@@ -1,128 +1,95 @@
 package com.example.lmfag;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
-
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.material.navigation.NavigationView;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MyProfile extends AppCompatActivity {
-
+public class ViewProfile extends AppCompatActivity {
     Context context = this;
-    boolean flag = false;
+    ImageView friendRequest = findViewById(R.id.imageViewSendFriendRequest);
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_profile);
-
+        setContentView(R.layout.activity_view_profile);
         fillUserData();
-        showFriends();
-        showAreasOfInterest();
-
-        //ArrayList<String> friends_array = new ArrayList<String>();
-        //CustomAdapterFriends customAdapterFriends = new CustomAdapterFriends(friends_array);
-        //RecyclerView recyclerViewFriends = findViewById(R.id.recyclerViewFriends);
-        //recyclerViewFriends.setAdapter(customAdapterFriends);
-
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        selectDrawerItem(menuItem);
-                        return true;
-                    }
-                });
-    }
-    public void selectDrawerItem(MenuItem menuItem) {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        int id = menuItem.getItemId();
-        Snackbar.make(drawer, id, Snackbar.LENGTH_SHORT).show();
-        if (id == R.id.create_event) {
-            Intent myIntent = new Intent(context, CreateEvent.class);
-            startActivity(myIntent);
-        } else if (id == R.id.edit_profile) {
-            Intent myIntent = new Intent(context, EditProfile.class);
-            startActivity(myIntent);
-
-        }
-        drawer.closeDrawer(GravityCompat.START);
+        friendRequest.setOnClickListener(view -> {
+            sendFriendRequest();
+        });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.logout:
-                logout();
-                return true;
-            case R.id.menu_open:
-                DrawerLayout drawer = findViewById(R.id.drawer_layout);
-                if (flag) {
-                    drawer.closeDrawer(GravityCompat.START);
-                } else {
-                    drawer.openDrawer(GravityCompat.START);
-                }
-                flag = !flag;
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    public void logout() {
+    void sendFriendRequest() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("userID", "");
-        editor.apply();
-        Intent myIntent = new Intent(context, MainActivity.class);
-        startActivity(myIntent);
+        String sender = preferences.getString("userID", "");
+        String receiver = preferences.getString("friendID", "");
+        Map<String, Object> docData = new HashMap<>();
+        docData.put("sender", sender);
+        docData.put("receiver", receiver);
+        db.collection("friend_requests")
+                .whereEqualTo("sender", sender)
+                .whereEqualTo("receiver", receiver)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    if (task.getResult().size() > 0){
+                        Snackbar.make(friendRequest, R.string.alerady_sent, Snackbar.LENGTH_SHORT).show();
+                    } else {
+                        db.collection("friend_requests")
+                                .add(docData)
+                                .addOnSuccessListener(aVoid -> {
+                                    //Log.d(TAG, "DocumentSnapshot successfully written!");
+                                    Snackbar.make(friendRequest, R.string.write_success, Snackbar.LENGTH_SHORT).show();
+                                })
+                                .addOnFailureListener(e -> {
+                                    Snackbar.make(friendRequest, R.string.write_failed, Snackbar.LENGTH_SHORT).show();
+                                    //Log.w(TAG, "Error writing document", e);
+                                });
+                    }
+                }
+            }
+        });
     }
+
     void fillUserData() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String name = preferences.getString("userID", "");
+        String name = preferences.getString("friendID", "");
         if(name.equalsIgnoreCase(""))
         {
             Intent myIntent = new Intent(context, MainActivity.class);
@@ -135,7 +102,6 @@ public class MyProfile extends AppCompatActivity {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     Map<String, Object> data = document.getData();
-
                     TextView myUsername = findViewById(R.id.textViewUsername);
                     TextView myLocation = findViewById(R.id.textViewMyLocation);
                     TextView myDescription = findViewById(R.id.textViewMyDescription);
@@ -188,36 +154,6 @@ public class MyProfile extends AppCompatActivity {
                 }
             } else {
                 //Log.d(TAG, "get failed with ", task.getException());
-            }
-        });
-    }
-
-    void showFriends() {
-        LinearLayout ll_friends_show = findViewById(R.id.linearLayoutShowFriends);
-        RecyclerView ll_friends = findViewById(R.id.recyclerViewFriends);
-        ImageView iv_friends = findViewById(R.id.imageViewExpandFriends);
-        ll_friends_show.setOnClickListener(view -> {
-            if (ll_friends.getVisibility() == View.GONE) {
-                ll_friends.setVisibility(View.VISIBLE);
-                iv_friends.setImageResource(R.drawable.ic_baseline_expand_less_24);
-            } else {
-                ll_friends.setVisibility(View.GONE);
-                iv_friends.setImageResource(R.drawable.ic_baseline_expand_more_24);
-            }
-        });
-    }
-
-    void showAreasOfInterest() {
-        LinearLayout ll_areas_show = findViewById(R.id.linearLayoutShowAreasOfInterest);
-        RecyclerView ll_areas = findViewById(R.id.recyclerViewAreasOfInterest);
-        ImageView iv_areas = findViewById(R.id.imageViewExpandAreasOfInterest);
-        ll_areas_show.setOnClickListener(view -> {
-            if (ll_areas.getVisibility() == View.GONE) {
-                ll_areas.setVisibility(View.VISIBLE);
-                iv_areas.setImageResource(R.drawable.ic_baseline_expand_less_24);
-            } else {
-                ll_areas.setVisibility(View.GONE);
-                iv_areas.setImageResource(R.drawable.ic_baseline_expand_more_24);
             }
         });
     }

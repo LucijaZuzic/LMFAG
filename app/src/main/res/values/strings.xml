@@ -60,28 +60,18 @@
     <string name="multiple_username">Multiple users with username.</string>
     <string name="password_incorrect">Password incorrect.</string>
     <string name="username_taken">Username taken, pick another.</string>
+    <string name="logged_in">Logged in!</string>
+    <string name="password_short">Password must have at least one character.</string>
+    <string name="send_friend_request">Send friend request</string>
+    <string name="alerady_sent">Friend request already sent.</string>
     <string-array name="event_types">
         <item>football</item>
         <item>basketball</item>
         <item>handball</item>
-        <item>waterpolo</item>
+        <item>water polo</item>
         <item>volleyball</item>
         <item>tennis</item>
-        <item>table tenis</item>
+        <item>table tennis</item>
         <item>chess</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="logged_in">Logged in!</string>
-    <string name="title_activity_main2">MainActivity2</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
-
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
 </resources>

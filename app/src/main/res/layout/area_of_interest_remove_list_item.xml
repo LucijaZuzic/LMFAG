@@ -79,7 +79,7 @@
             android:orientation="vertical">
             <ImageView
                 android:background="@drawable/gradient"
-                android:id="@+id/floatingActionButtonRemoveAreaOfInterest"
+                android:id="@+id/imageViewRemoveAreaOfInterest"
                 android:clickable="true"
                 android:contentDescription="@string/remove_area_of_interest"
                 android:focusable="true"
