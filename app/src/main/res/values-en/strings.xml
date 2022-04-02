@@ -56,6 +56,11 @@
     <string name="password">Password</string>
     <string name="long_app_name">Let\'s meet for a game</string>
     <string name="update_password">Update password</string>
+    <string name="no_user_username">No user with username.</string>
+    <string name="multiple_username">Multiple users with username.</string>
+    <string name="password_incorrect">Password incorrect.</string>
+    <string name="username_taken">Username taken, pick another.</string>
+    <string name="logged_in">Logged in!</string>
     <string-array name="event_types">
         <item>football</item>
         <item>basketball</item>

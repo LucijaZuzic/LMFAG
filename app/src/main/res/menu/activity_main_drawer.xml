@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/edit_profile"
+            android:icon="@drawable/ic_baseline_settings_24"
+            android:title="@string/edit_profile" />
+        <item
+            android:id="@+id/friend_requests"
+            android:icon="@drawable/ic_baseline_mail_24"
+            android:title="@string/friend_requests" />
+        <item
+            android:id="@+id/my_messages"
+            android:icon="@drawable/ic_baseline_chat_bubble_24"
+            android:title="@string/my_messages" />
+        <item
+            android:id="@+id/find_friends"
+            android:icon="@drawable/ic_baseline_person_search_24"
+            android:title="@string/find_friends" />
+        <item
+            android:id="@+id/find_events"
+            android:icon="@drawable/ic_baseline_manage_search_24"
+            android:title="@string/find_events" />
+        <item
+            android:id="@+id/events_nearby"
+            android:icon="@drawable/ic_baseline_location_searching_24"
+            android:title="@string/events_nearby" />
+        <item
+            android:id="@+id/my_events"
+            android:icon="@drawable/ic_baseline_calendar_today_24"
+            android:title="@string/my_events" />
+        <item
+            android:id="@+id/create_event"
+            android:icon="@drawable/ic_baseline_edit_calendar_24"
+            android:title="@string/create_event" />
+    </group>
+</menu>

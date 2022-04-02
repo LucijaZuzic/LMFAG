@@ -2,17 +2,18 @@ package com.example.lmfag;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -23,7 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -55,13 +55,17 @@ public class EditProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
         fillSpinner();
-        fillUserData();
         addAreaOfInterest();
         removeAreaOfInterest();
         createProfile();
         getBack();
         showAreasOfInterest();
         changeProfilePicture();
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        fillUserData();
     }
 
     void changeProfilePicture() {
@@ -166,6 +170,34 @@ public class EditProfile extends AppCompatActivity {
             startActivity(myIntent);
         });
     }
+
+    void writeDB(Map<String, Object> docData) {
+        ImageView apply = findViewById(R.id.buttonApply);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String name = preferences.getString("userID", "");
+        if(name.equalsIgnoreCase(""))
+        {
+            Intent myIntent = new Intent(context, MainActivity.class);
+            startActivity(myIntent);
+            return;
+        }
+        db.collection("users")
+                .document(name)
+                .set(docData)
+                .addOnSuccessListener(aVoid -> {
+                    //Log.d(TAG, "DocumentSnapshot successfully written!");
+                    Snackbar.make(apply, R.string.write_success, Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(apply, R.string.logged_in, Snackbar.LENGTH_SHORT).show();
+                    Intent myIntent = new Intent(context, MyProfile.class);
+                    startActivity(myIntent);
+                })
+                .addOnFailureListener(e -> {
+                    Snackbar.make(apply, R.string.write_failed, Snackbar.LENGTH_SHORT).show();
+                    //Log.w(TAG, "Error writing document", e);
+                });
+    }
     void createProfile() {
         ImageView apply = findViewById(R.id.buttonApply);
         CheckBox check = findViewById(R.id.checkbox);
@@ -193,40 +225,50 @@ public class EditProfile extends AppCompatActivity {
             docData.put("areas_of_interest", areas_array.toString());
             docData.put("points_levels", points_array.toString());
 
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection("users").document(MainActivity.username)
-            .set(docData)
-            .addOnSuccessListener(aVoid -> {
-                //Log.d(TAG, "DocumentSnapshot successfully written!");
-                Snackbar.make(apply, R.string.write_success, Snackbar.LENGTH_SHORT).show();
-            })
-            .addOnFailureListener(e -> {
-                Snackbar.make(apply, R.string.write_failed, Snackbar.LENGTH_SHORT).show();
-                //Log.w(TAG, "Error writing document", e);
-            });
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
-            StorageReference imagesRef = storageRef.child("profile_pictures/" + MainActivity.username);
-            UploadTask uploadTask = imagesRef.putFile(uri);
-            blocked = true;
-            Snackbar.make(myDescription, R.string.image_upload_started, Snackbar.LENGTH_SHORT).show();
-            uploadTask.addOnFailureListener(exception -> {
-                // Handle unsuccessful uploads
-            }).addOnSuccessListener(taskSnapshot -> {
-                blocked = false;
-                Snackbar.make(myDescription, R.string.image_upload_finished, Snackbar.LENGTH_SHORT).show();
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                // ...
-            });
+
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            String name = preferences.getString("userID", "");
+            if(name.equalsIgnoreCase(""))
+            {
+                Intent myIntent = new Intent(context, MainActivity.class);
+                startActivity(myIntent);
+                return;
+            }
+            StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
+
+            if (uri != null) {
+                UploadTask uploadTask = imagesRef.putFile(uri);
+                blocked = true;
+                Snackbar.make(myDescription, R.string.image_upload_started, Snackbar.LENGTH_SHORT).show();
+                uploadTask.addOnFailureListener(exception -> {
+                    // Handle unsuccessful uploads
+                }).addOnSuccessListener(taskSnapshot -> {
+                    blocked = false;
+                    Snackbar.make(myDescription, R.string.image_upload_finished, Snackbar.LENGTH_SHORT).show();
+                    writeDB(docData);
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                    // ...
+                });
+            } else {
+                writeDB(docData);
+            }
         });
     }
 
     void fillUserData() {
-        LinearLayout ll = findViewById(R.id.main_layout);
-        ll.setVisibility(View.INVISIBLE);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("users").document(MainActivity.username);
         EditProfile ep = this;
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String name = preferences.getString("userID", "");
+        if(name.equalsIgnoreCase(""))
+        {
+            Intent myIntent = new Intent(context, MainActivity.class);
+            startActivity(myIntent);
+            return;
+        }
+        DocumentReference docRef = db.collection("users").document(name);
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
@@ -254,26 +296,30 @@ public class EditProfile extends AppCompatActivity {
                         recyclerViewAreasOfInterest.setAdapter(customAdapterAreaOfInterestRemove);
                     }
                     myDescription.setText(data.get("description").toString());
-                    FirebaseStorage storage = FirebaseStorage.getInstance();
-                    StorageReference storageRef = storage.getReference();
-                    StorageReference imagesRef = storageRef.child("profile_pictures/" + MainActivity.username);
-                    final long ONE_MEGABYTE = 1024 * 1024;
-                    CircleImageView circleImageView = findViewById(R.id.profile_image);
-                    imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                        // Data for "images/island.jpg" is returns, use this as needed
-                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-                        circleImageView.setImageBitmap(bmp);
-                    }).addOnFailureListener(exception -> {
-                        // Handle any errors
-                    });
+                    if (uri == null) {
+                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                        StorageReference storageRef = storage.getReference();
+                        StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
+                        final long ONE_MEGABYTE = 1024 * 1024;
+                        CircleImageView circleImageView = findViewById(R.id.profile_image);
+                        imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+                            // Data for "images/island.jpg" is returns, use this as needed
+                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            circleImageView.setImageBitmap(bmp);
+                        }).addOnFailureListener(exception -> {
+                            // Handle any errors
+                        });
+                    }
                     //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                 } else {
+                    Intent myIntent = new Intent(context, MainActivity.class);
+                    startActivity(myIntent);
+                    return;
                     //Log.d(TAG, "No such document");
                 }
             } else {
                 //Log.d(TAG, "get failed with ", task.getException());
             }
         });
-        ll.setVisibility(View.VISIBLE);
     }
 }

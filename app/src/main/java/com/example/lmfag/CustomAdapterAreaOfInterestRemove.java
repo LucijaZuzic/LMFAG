@@ -30,7 +30,8 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
 
     private List<String> localAreasOfInterest;
     private List<Double> localLevelPoints;
-    private EditProfile editProfile;
+    private EditProfile editProfile = null;
+    private CreateProfile createProfile = null;
 
     /**
      * Provide a reference to the type of views that you are using
@@ -64,10 +65,15 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
         public ImageView getFloatingActionButtonRemoveAreaOfInterest() { return floatingActionButtonRemoveAreaOfInterest; }
     }
 
-    public CustomAdapterAreaOfInterestRemove(List<String> areasOfInterest, List<Double> levelPoints, Activity editProfile) {
+    public CustomAdapterAreaOfInterestRemove(List<String> areasOfInterest, List<Double> levelPoints, EditProfile editProfile) {
         localAreasOfInterest = areasOfInterest;
         localLevelPoints = levelPoints;
-        editProfile = editProfile;
+        this.editProfile = editProfile;
+    }
+    public CustomAdapterAreaOfInterestRemove(List<String> areasOfInterest, List<Double> levelPoints, CreateProfile createProfile) {
+        localAreasOfInterest = areasOfInterest;
+        localLevelPoints = levelPoints;
+        this.createProfile = createProfile;
     }
 
     // Create new views (invoked by the layout manager)
@@ -97,7 +103,12 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
         viewHolder.getFloatingActionButtonRemoveAreaOfInterest().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editProfile.removeAreaOfInterest(text);
+                if (editProfile != null) {
+                    editProfile.removeAreaOfInterest(text);
+                }
+                if (createProfile != null) {
+                    createProfile.removeAreaOfInterest(text);
+                }
             }
         });
     }

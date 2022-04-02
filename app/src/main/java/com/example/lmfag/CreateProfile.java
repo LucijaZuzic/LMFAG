@@ -2,15 +2,18 @@ package com.example.lmfag;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -20,9 +23,15 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -158,77 +167,88 @@ public class CreateProfile extends AppCompatActivity {
             startActivity(myIntent);
         });
     }
-    boolean return_value = false;
-    boolean checkUserDouble() {
-        return_value = false;
+
+    void writeDB(Map<String, Object> docData) {
+        ImageView apply = findViewById(R.id.buttonApply);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        TextView myUsername = findViewById(R.id.editTextUsername);
-        CollectionReference docRef = db.collection("users");
-        docRef.whereEqualTo("username", myUsername.getText().toString()).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                if (task.getResult().size() >= 1) {
-                    return_value = true;
-                }
-            }
-        });
-        return return_value;
+
+        db.collection("users")
+                .add(docData)
+                .addOnSuccessListener(aVoid -> {
+                    //Log.d(TAG, "DocumentSnapshot successfully written!");
+                    Snackbar.make(apply, R.string.write_success, Snackbar.LENGTH_SHORT).show();
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    Snackbar.make(apply, R.string.logged_in, Snackbar.LENGTH_SHORT).show();
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("userID", aVoid.getId());
+                    editor.apply();
+                    Intent myIntent = new Intent(context, MyProfile.class);
+                    startActivity(myIntent);
+                })
+                .addOnFailureListener(e -> {
+                    Snackbar.make(apply, R.string.write_failed, Snackbar.LENGTH_SHORT).show();
+                    //Log.w(TAG, "Error writing document", e);
+                });
     }
+
     void createProfile() {
         ImageView apply = findViewById(R.id.buttonApply);
-        if (checkUserDouble()) {
-            Snackbar.make(apply, "Username taken, pick another.", Snackbar.LENGTH_SHORT).show();
-            return;
-        }
         apply.setOnClickListener(view -> {
-            TextView myUsername = findViewById(R.id.editTextUsername);
-            TextView myLocation = findViewById(R.id.editTextMyLocation);
-            TextView myDescription = findViewById(R.id.editTextMyDescription);
-            EditText passwordEdit = findViewById(R.id.editTextPassword);
-            Map<String, Object> docData = new HashMap<>();
-            docData.put("username", myUsername.getText().toString());
-            docData.put("location", myLocation.getText().toString());
-            docData.put("description", myDescription.getText().toString());
-            try {
-                docData.put("password_hash", SecureHash.generateStrongPasswordHash(passwordEdit.getText().toString()));
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            } catch (InvalidKeySpecException e) {
-                e.printStackTrace();
-            }
-            docData.put("points_rank", 0.0);
-            docData.put("areas_of_interest", areas_array.toString());
-            docData.put("points_levels", points_array.toString());
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
+            TextView myUsername = findViewById(R.id.editTextUsername);
+            String text = myUsername.getText().toString();
+            CollectionReference docRef = db.collection("users");
+            docRef.whereEqualTo("username", text).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().size() > 0) {
+                            Snackbar.make(apply, R.string.username_taken, Snackbar.LENGTH_SHORT).show();
+                        } else {
+                            TextView myUsername = findViewById(R.id.editTextUsername);
+                            TextView myLocation = findViewById(R.id.editTextMyLocation);
+                            TextView myDescription = findViewById(R.id.editTextMyDescription);
+                            EditText passwordEdit = findViewById(R.id.editTextPassword);
+                            Map<String, Object> docData = new HashMap<>();
+                            docData.put("username", myUsername.getText().toString());
+                            docData.put("location", myLocation.getText().toString());
+                            docData.put("description", myDescription.getText().toString());
+                            try {
+                                docData.put("password_hash", SecureHash.generateStrongPasswordHash(passwordEdit.getText().toString()));
+                            } catch (NoSuchAlgorithmException e) {
+                                e.printStackTrace();
+                            } catch (InvalidKeySpecException e) {
+                                e.printStackTrace();
+                            }
+                            docData.put("points_rank", 0.0);
+                            docData.put("areas_of_interest", areas_array.toString());
+                            docData.put("points_levels", points_array.toString());
 
-            db.collection("users").document(myUsername.getText().toString())
-                    .set(docData)
-                    .addOnSuccessListener(aVoid -> {
-                        //Log.d(TAG, "DocumentSnapshot successfully written!");
-                        Snackbar.make(apply, R.string.write_success, Snackbar.LENGTH_SHORT).show();
-                    })
-                    .addOnFailureListener(e -> {
-                        Snackbar.make(apply, R.string.write_failed, Snackbar.LENGTH_SHORT).show();
-                        //Log.w(TAG, "Error writing document", e);
-                    });
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageRef = storage.getReference();
-            StorageReference imagesRef = storageRef.child("profile_pictures/" + myUsername.getText().toString());
+                            FirebaseStorage storage = FirebaseStorage.getInstance();
+                            StorageReference storageRef = storage.getReference();
+                            StorageReference imagesRef = storageRef.child("profile_pictures/" + myUsername.getText().toString());
 
-            if (uri != null) {
-                UploadTask uploadTask = imagesRef.putFile(uri);
-                blocked = true;
-                Snackbar.make(myDescription, R.string.image_upload_started, Snackbar.LENGTH_SHORT).show();
-                uploadTask.addOnFailureListener(exception -> {
-                    // Handle unsuccessful uploads
-                }).addOnSuccessListener(taskSnapshot -> {
-                    blocked = false;
-                    Snackbar.make(myDescription, R.string.image_upload_finished, Snackbar.LENGTH_SHORT).show();
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                    // ...
-                });
-
-            }
+                            if (uri != null) {
+                                UploadTask uploadTask = imagesRef.putFile(uri);
+                                blocked = true;
+                                Snackbar.make(myDescription, R.string.image_upload_started, Snackbar.LENGTH_SHORT).show();
+                                uploadTask.addOnFailureListener(exception -> {
+                                    // Handle unsuccessful uploads
+                                }).addOnSuccessListener(taskSnapshot -> {
+                                    blocked = false;
+                                    Snackbar.make(myDescription, R.string.image_upload_finished, Snackbar.LENGTH_SHORT).show();
+                                    writeDB(docData);
+                                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                                    // ...
+                                });
+                            } else {
+                                writeDB(docData);
+                            }
+                        }
+                    }
+                }
+            });
         });
     }
 

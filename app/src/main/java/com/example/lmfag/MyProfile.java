@@ -1,21 +1,32 @@
 package com.example.lmfag;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,6 +44,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MyProfile extends AppCompatActivity {
 
     Context context = this;
+    boolean flag = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,20 +54,86 @@ public class MyProfile extends AppCompatActivity {
         showFriends();
         showAreasOfInterest();
 
-        redirectToCreateEvent();
-        redirectToEditProfile();
-
         //ArrayList<String> friends_array = new ArrayList<String>();
         //CustomAdapterFriends customAdapterFriends = new CustomAdapterFriends(friends_array);
         //RecyclerView recyclerViewFriends = findViewById(R.id.recyclerViewFriends);
         //recyclerViewFriends.setAdapter(customAdapterFriends);
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        selectDrawerItem(menuItem);
+                        return true;
+                    }
+                });
+    }
+    public void selectDrawerItem(MenuItem menuItem) {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        int id = menuItem.getItemId();
+        Snackbar.make(drawer, id, Snackbar.LENGTH_SHORT).show();
+        if (id == R.id.create_event) {
+            Intent myIntent = new Intent(context, CreateEvent.class);
+            startActivity(myIntent);
+        } else if (id == R.id.edit_profile) {
+            Intent myIntent = new Intent(context, EditProfile.class);
+            startActivity(myIntent);
+
+        }
+        drawer.closeDrawer(GravityCompat.START);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.logout:
+                logout();
+                return true;
+            case R.id.menu_open:
+                DrawerLayout drawer = findViewById(R.id.drawer_layout);
+                if (flag) {
+                    drawer.closeDrawer(GravityCompat.START);
+                } else {
+                    drawer.openDrawer(GravityCompat.START);
+                }
+                flag = !flag;
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        fillUserData();
+    }
+    public void logout() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("userID", "");
+        editor.apply();
+        Intent myIntent = new Intent(context, MainActivity.class);
+        startActivity(myIntent);
+    }
     void fillUserData() {
-        LinearLayout ll = findViewById(R.id.main_layout);
-        ll.setVisibility(View.INVISIBLE);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("users").document(MainActivity.username);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String name = preferences.getString("userID", "");
+        if(name.equalsIgnoreCase(""))
+        {
+            Intent myIntent = new Intent(context, MainActivity.class);
+            startActivity(myIntent);
+            return;
+        }
+        DocumentReference docRef = db.collection("users").document(name);
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
@@ -93,7 +171,7 @@ public class MyProfile extends AppCompatActivity {
                     myDescription.setText(Objects.requireNonNull(data.get("description")).toString());
                     FirebaseStorage storage = FirebaseStorage.getInstance();
                     StorageReference storageRef = storage.getReference();
-                    StorageReference imagesRef = storageRef.child("profile_pictures/" + MainActivity.username);
+                    StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
                     final long ONE_MEGABYTE = 1024 * 1024;
                     imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
                         // Data for "images/island.jpg" is returns, use this as needed
@@ -108,7 +186,7 @@ public class MyProfile extends AppCompatActivity {
                     });
                     //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                 } else {
-                    Intent myIntent = new Intent(context, EditProfile.class);
+                    Intent myIntent = new Intent(context, MainActivity.class);
                     startActivity(myIntent);
                     //Log.d(TAG, "No such document");
                 }
@@ -116,25 +194,8 @@ public class MyProfile extends AppCompatActivity {
                 //Log.d(TAG, "get failed with ", task.getException());
             }
         });
-        ll.setVisibility(View.VISIBLE);
     }
 
-    void redirectToCreateEvent() {
-        ImageView fab = findViewById(R.id.floatingActionButtonCreateEvent);
-        fab.setOnClickListener(view -> {
-            Intent myIntent = new Intent(context, CreateEvent.class);
-            startActivity(myIntent);
-        });
-    }
-
-    void redirectToEditProfile() {
-        Context context = this;
-        ImageView floatingActionButtonEditProfile = findViewById(R.id.floatingActionButtonEditProfile);
-        floatingActionButtonEditProfile.setOnClickListener(view -> {
-            Intent myIntent = new Intent(context, EditProfile.class);
-            startActivity(myIntent);
-        });
-    }
     void showFriends() {
         LinearLayout ll_friends_show = findViewById(R.id.linearLayoutShowFriends);
         RecyclerView ll_friends = findViewById(R.id.recyclerViewFriends);
