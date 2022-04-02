@@ -1,264 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MyProfile">
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
 
-    <LinearLayout
-        android:id="@+id/main_layout"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        tools:context=".CreateProfile">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_image"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_height="196dp"
-            android:layout_width="196dp"
-            android:layout_gravity="center"
-            app:civ_circle_background_color="@color/blue_gray_100"
-            android:src="@drawable/ic_baseline_profile_picture_24"
-            app:civ_border_color="@color/my_pink"
-            app:civ_border_width="10dp" />
-
-        <TextView
-            android:padding="5dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginEnd="10dp"
-            android:textSize="21sp"
-            android:textColor="@color/white"
-            android:gravity="center"
-            android:background="@drawable/gradient"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textViewUsername"
-            android:text="@string/username" />
-        <HorizontalScrollView
-            android:background="@drawable/gradient"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_height="wrap_content"
+        <LinearLayout
+            android:id="@+id/main_layout"
             android:layout_width="match_parent"
-            android:gravity="center" >
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:layout_marginEnd="10dp"
                 android:orientation="horizontal">
-
-            <TextView
+                <ImageView
                     android:padding="5dp"
+                    android:gravity="center"
+                    android:id="@+id/textViewLocation"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:id="@+id/floatingActionButtonEditProfile"
-                    android:text="@string/edit_profile"
-                    app:drawableTopCompat="@drawable/ic_baseline_settings_24" />
+                    android:background="@drawable/gradient"
+                    android:contentDescription="@string/enter_a_location"
+                    android:src="@drawable/ic_baseline_home_24" />
                 <TextView
-                    android:padding="5dp"
-                    android:layout_width="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:id="@+id/textViewMyLocation"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:minHeight="48dp"
                     android:gravity="center"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:id="@+id/floatingActionButtonFriendRequests"
-                    android:text="@string/friend_requests"
-                    app:drawableTopCompat="@drawable/ic_baseline_mail_24" />
-                <TextView
-                    android:padding="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:id="@+id/floatingActionButtonMessages"
-                    android:text="@string/my_messages"
-                    app:drawableTopCompat="@drawable/ic_baseline_chat_bubble_24" />
-                <TextView
-                    android:padding="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:id="@+id/floatingActionButtonFindFriends"
-                    android:text="@string/find_friends"
-                    app:drawableTopCompat="@drawable/ic_baseline_person_search_24" />
-
-                <TextView
-                    android:padding="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:id="@+id/floatingActionButtonFindEvents"
-                    android:text="@string/find_events"
-                    app:drawableTopCompat="@drawable/ic_baseline_manage_search_24" />
-                <TextView
-                    android:padding="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:id="@+id/floatingActionButtonEventsNearby"
-                    android:text="@string/events_nearby"
-                    app:drawableTopCompat="@drawable/ic_baseline_location_searching_24" />
-                <TextView
-                    android:padding="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:id="@+id/floatingActionButtonMyEvents"
-                    android:text="@string/my_events"
-                    app:drawableTopCompat="@drawable/ic_baseline_calendar_today_24" />
-                <TextView
-                    android:padding="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    android:id="@+id/floatingActionButtonCreateEvent"
-                    android:text="@string/create_event"
-                    app:drawableTopCompat="@drawable/ic_baseline_edit_calendar_24" />
+                    android:inputType="textPostalAddress"
+                    android:text="@string/location" />
             </LinearLayout>
-        </HorizontalScrollView>
-
-            <TextView
-                android:padding="5dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="10dp"
-                android:gravity="center"
-                android:id="@+id/textViewLocation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="21sp"
-                android:textColor="@color/white"
-                android:background="@drawable/gradient"
-                android:text="@string/location"
-                app:drawableStartCompat="@drawable/ic_baseline_home_24" />
-
-            <TextView
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="10dp"
-                android:id="@+id/textViewMyLocation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/enter_a_location" />
-
-            <TextView
-                android:padding="5dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="10dp"
-                android:textSize="21sp"
-                android:textColor="@color/white"
-                android:gravity="center"
-                android:background="@drawable/gradient"
-                android:textStyle="bold"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/textViewUserDescription"
-                android:text="@string/user_description"
-                app:drawableStartCompat="@drawable/ic_baseline_description_24" />
-
-            <TextView
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="10dp"
-                android:id="@+id/textViewMyDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/enter_a_description" />
-
-            <TextView
-                android:padding="5dp"
-                android:gravity="center"
-                android:background="@drawable/gradient"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="10dp"
-                android:id="@+id/textViewOrganizerRank"
-                android:layout_marginEnd="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:textSize="21sp"
-                android:text="@string/organizer_rank"
-                app:drawableStartCompat="@drawable/ic_baseline_emoji_events_24" />
-
             <LinearLayout
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:baselineAligned="false">
-                <LinearLayout
-                    android:layout_marginEnd="5dp"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.25"
+                android:layout_marginStart="10dp"
+                android:gravity="center"
+                android:layout_marginEnd="10dp"
+                android:orientation="horizontal">
+                <ImageView
+                    android:padding="5dp"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:background="@drawable/gradient"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:id="@+id/textViewUserDescription"
+                    android:contentDescription="@string/user_description"
+                    android:src="@drawable/ic_baseline_description_24" />
 
-                    <TextView
-                        android:padding="5dp"
-                        android:background="@drawable/gradient"
-                        android:id="@+id/textViewMyOrganizerRank"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        android:textStyle="bold"
-                        android:textSize="21sp"
-                        android:text="@string/rank"
-                        app:drawableTopCompat="@drawable/ic_baseline_emoji_events_24" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.75"
+                <TextView
+                    android:id="@+id/textViewMyDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:minHeight="48dp"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:text="@string/user_description" />
 
-                    <TextView
-                        android:id="@+id/textViewRankPoints"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/rank_points" />
-
-                    <ProgressBar
-                        android:id="@+id/determinateBar"
-                        style="@android:style/Widget.ProgressBar.Horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:progress="75"
-                        android:progressDrawable="@drawable/progress_bar_states" />
-                </LinearLayout>
             </LinearLayout>
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
                 android:orientation="vertical">
 
@@ -275,10 +104,11 @@
 
                     <TextView
                         android:id="@+id/textViewAreasOfInterest"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_weight="0.9"
+                        android:gravity="center"
+                        android:padding="5dp"
                         android:text="@string/areas_of_interest"
                         android:textColor="@color/white"
                         android:textSize="21sp"
@@ -287,8 +117,9 @@
 
                     <ImageView
                         android:id="@+id/imageViewExpandAreasOfInterest"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
                         android:contentDescription="@string/expand_areas_of_interest"
                         app:srcCompat="@drawable/ic_baseline_expand_more_24" />
                 </LinearLayout>
@@ -325,12 +156,13 @@
 
                     <TextView
                         android:id="@+id/textViewFriends"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="0.9"
+                        android:gravity="center"
+                        android:padding="5dp"
                         android:text="@string/friends"
                         android:textColor="@color/white"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginStart="10dp"
                         android:textSize="21sp"
                         android:textStyle="bold"
                         app:drawableStartCompat="@drawable/ic_baseline_people_alt_24" />
@@ -338,8 +170,9 @@
                     <ImageView
                         android:contentDescription="@string/expand_friends"
                         android:id="@+id/imageViewExpandFriends"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
                         app:srcCompat="@drawable/ic_baseline_expand_more_24" />
                 </LinearLayout>
 
@@ -355,4 +188,16 @@
 
             </LinearLayout>
         </LinearLayout>
-</ScrollView>
+    </ScrollView>
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        android:background="@drawable/gradient"
+        app:itemTextColor="@color/white"
+        app:itemIconTint="@color/white"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/activity_main_drawer" />
+</androidx.drawerlayout.widget.DrawerLayout>
