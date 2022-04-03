@@ -5,7 +5,7 @@
     <item android:title="Item"
         android:id="@+id/menu_open"
         app:showAsAction="always"
-        android:icon="@drawable/ic_baseline_menu_open_24"/>
+        android:icon="@drawable/ic_baseline_menu_24"/>
     <item android:title="Item"
         android:id="@+id/logout"
         app:showAsAction="always"

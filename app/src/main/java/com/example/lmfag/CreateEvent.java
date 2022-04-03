@@ -60,7 +60,8 @@ public class CreateEvent extends AppCompatActivity {
             public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
 
                 selecteditem = adapter.getItemAtPosition(i).toString();
-                //or this can be also right: selecteditem = level[i];
+                ImageView iv = findViewById(R.id.imageViewEventType);
+                iv.setImageDrawable(getDrawable(EventTypeToDrawable.getEventTypeToDrawable(selecteditem)));
             }
             @Override
             public void onNothingSelected(AdapterView<?> parentView)

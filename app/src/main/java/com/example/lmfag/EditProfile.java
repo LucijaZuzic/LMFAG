@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -50,6 +51,7 @@ public class EditProfile extends AppCompatActivity {
     List<Double> points_array = new ArrayList<>();
     String old_password = "";
     Uri uri;
+    private String selecteditem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +64,22 @@ public class EditProfile extends AppCompatActivity {
         getBack();
         showAreasOfInterest();
         changeProfilePicture();
+        Spinner sp = findViewById(R.id.sp);
+        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
+
+                selecteditem = adapter.getItemAtPosition(i).toString();
+                ImageView iv = findViewById(R.id.imageViewEventType);
+                iv.setImageDrawable(getDrawable(EventTypeToDrawable.getEventTypeToDrawable(selecteditem)));
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView)
+            {
+
+            }
+        });
     }
 
     void changeProfilePicture() {

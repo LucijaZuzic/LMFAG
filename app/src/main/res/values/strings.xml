@@ -76,32 +76,42 @@
     <string-array name="event_types">
         <item>skiing</item>
         <item>hiking</item>
+        <item>ice skating</item>
         <item>kayaking</item>
         <item>kitesurfing</item>
         <item>nordic walking</item>
         <item>paragliding</item>
-        <item>pedal bike</item>
+        <item>biking</item>
         <item>roller skating</item>
         <item>rowing</item>
         <item>sailing</item>
         <item>scuba diving</item>
+        <item>yoga</item>
         <item>skateboarding</item>
         <item>sledding</item>
         <item>snowboarding</item>
         <item>baseball</item>
         <item>basketball</item>
+        <item>cricket</item>
         <item>esports</item>
         <item>football</item>
         <item>golf</item>
         <item>gymnastics</item>
         <item>handball</item>
         <item>hockey</item>
+        <item>kabaddi</item>
         <item>martial arts</item>
+        <item>MMA</item>
         <item>motorsports</item>
         <item>rugby</item>
         <item>soccer</item>
-        <item>tennis</item>v
+        <item>tennis</item>
         <item>volleyball</item>
+        <item>dice games</item>
+        <item>card games</item>
+        <item>tabletop games</item>
+        <item>poker</item>
+        <item>other</item>
     </string-array>
     <string-array name="friend_search_params">
         <item>areas of interest</item>

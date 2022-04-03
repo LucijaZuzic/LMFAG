@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -49,6 +50,7 @@ public class CreateProfile extends AppCompatActivity {
     Context context = this;
     List<String> areas_array = new ArrayList<>();
     List<Double> points_array = new ArrayList<>();
+    private String selecteditem;
     Uri uri;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,22 @@ public class CreateProfile extends AppCompatActivity {
         getBack();
         showAreasOfInterest();
         changeProfilePicture();
+        Spinner sp = findViewById(R.id.sp);
+        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
+
+                selecteditem = adapter.getItemAtPosition(i).toString();
+                ImageView iv = findViewById(R.id.imageViewEventType);
+                iv.setImageDrawable(getDrawable(EventTypeToDrawable.getEventTypeToDrawable(selecteditem)));
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView)
+            {
+
+            }
+        });
     }
 
     void changeProfilePicture() {
