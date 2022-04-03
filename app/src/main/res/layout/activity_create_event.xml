@@ -58,7 +58,7 @@
                 android:gravity="center"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
-                android:id="@+id/textViewEvenType"
+                android:id="@+id/imageViewEvenType"
                 android:padding="5dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="5dp"
@@ -79,6 +79,40 @@
                 android:contentDescription="@string/choose_an_activity_category"
                 android:minHeight="48dp" />
     </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:gravity="center"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:gravity="center"
+                android:padding="5dp"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="21sp"
+                android:textStyle="bold"
+                android:background="@drawable/gradient"
+                android:textColor="@color/white"
+                android:contentDescription="@string/minimum_level"
+                android:src="@drawable/ic_baseline_description_24"  />
+            <EditText
+                android:id="@+id/editTextEventDescription"
+                android:layout_width="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:inputType="textMultiLine"
+                android:hint="@string/event_description" />
+        </LinearLayout>
 
 
         <LinearLayout
@@ -103,7 +137,6 @@
                 android:textStyle="bold"
                 android:background="@drawable/gradient"
                 android:textColor="@color/white"
-                android:id="@+id/textViewMinimumLevel"
                 android:contentDescription="@string/minimum_level"
                 android:src="@drawable/ic_baseline_workspace_premium_24"  />
             <EditText

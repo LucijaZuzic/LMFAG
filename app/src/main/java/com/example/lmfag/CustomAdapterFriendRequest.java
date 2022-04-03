@@ -57,8 +57,8 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
             super(view);
             // Define click listener for the ViewHolder's View
 
-            textViewUsername = (TextView) view.findViewById(R.id.textViewUsername);
-            profile_image = (CircleImageView) view.findViewById(R.id.profile_image);
+            textViewUsername = (TextView) view.findViewById(R.id.textViewUsernameFriend);
+            profile_image = (CircleImageView) view.findViewById(R.id.profile_image_friend);
             accept = (ImageView) view.findViewById(R.id.imageViewApply);
             decline = (ImageView) view.findViewById(R.id.imageViewDiscard);
         }
@@ -175,6 +175,15 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                             Map<String, Object> docuDataNew2 = document2.getData();
                                                             docuDataNew2.put("friends", friends_array2);
                                                             db.collection("friends").document(replace_string).set(docuDataNew2);
+                                                            Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
+                                                            ca.friendRequests.refresh();
+                                                        } else {
+                                                            List<String> friends_array2 = new ArrayList<>();
+                                                            friends_array2.add(receiver);
+                                                            Map<String, Object> docuDataNew2 = new HashMap<>();
+                                                            docuDataNew2.put("friends", friends_array2);
+                                                            db.collection("friends").document(replace_string).set(docuDataNew2);
+                                                            Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
                                                             ca.friendRequests.refresh();
                                                         }
                                                     } else {
@@ -183,6 +192,50 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                         Map<String, Object> docuDataNew2 = new HashMap<>();
                                                         docuDataNew2.put("friends", friends_array2);
                                                         db.collection("friends").document(replace_string).set(docuDataNew2);
+                                                        Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
+                                                        ca.friendRequests.refresh();
+                                                    }
+                                                }
+                                            });
+                                        } else {
+                                            List<String> friends_array = new ArrayList<>();
+                                            friends_array.add(replace_string);
+                                            Map<String, Object> docuDataNew = new HashMap<>();
+                                            docuDataNew.put("friends", friends_array);
+                                            db.collection("friends").document(receiver).set(docuDataNew);
+                                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                            db.collection("friends").document(replace_string).get().addOnCompleteListener(task2 -> {
+                                                if (task2.isSuccessful()) {
+                                                    DocumentSnapshot document2 = task2.getResult();
+                                                    if (document2.exists()) {
+                                                        Map<String, Object> data2 = document2.getData();
+                                                        String friends_string2 = data2.get("friends").toString();
+                                                        if (friends_string2.length() > 2) {
+                                                            String[] friends_string_array2 = friends_string2.substring(1, friends_string2.length() - 1).split(", ");
+                                                            List<String> friends_array2 = new ArrayList<>();
+                                                            Collections.addAll(friends_array2, friends_string_array2);
+                                                            friends_array2.add(receiver);
+                                                            Map<String, Object> docuDataNew2 = document2.getData();
+                                                            docuDataNew2.put("friends", friends_array2);
+                                                            db.collection("friends").document(replace_string).set(docuDataNew2);
+                                                            Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
+                                                            ca.friendRequests.refresh();
+                                                        } else {
+                                                            List<String> friends_array2 = new ArrayList<>();
+                                                            friends_array2.add(receiver);
+                                                            Map<String, Object> docuDataNew2 = new HashMap<>();
+                                                            docuDataNew2.put("friends", friends_array2);
+                                                            db.collection("friends").document(replace_string).set(docuDataNew2);
+                                                            Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
+                                                            ca.friendRequests.refresh();
+                                                        }
+                                                    } else {
+                                                        List<String> friends_array2 = new ArrayList<>();
+                                                        friends_array2.add(receiver);
+                                                        Map<String, Object> docuDataNew2 = new HashMap<>();
+                                                        docuDataNew2.put("friends", friends_array2);
+                                                        db.collection("friends").document(replace_string).set(docuDataNew2);
+                                                        Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
                                                         ca.friendRequests.refresh();
                                                     }
                                                 }
@@ -209,6 +262,15 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                         Map<String, Object> docuDataNew2 = document2.getData();
                                                         docuDataNew2.put("friends", friends_array2);
                                                         db.collection("friends").document(replace_string).set(docuDataNew2);
+                                                        Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
+                                                        ca.friendRequests.refresh();
+                                                    } else {
+                                                        List<String> friends_array2 = new ArrayList<>();
+                                                        friends_array2.add(receiver);
+                                                        Map<String, Object> docuDataNew2 = new HashMap<>();
+                                                        docuDataNew2.put("friends", friends_array2);
+                                                        db.collection("friends").document(replace_string).set(docuDataNew2);
+                                                        Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
                                                         ca.friendRequests.refresh();
                                                     }
                                                 } else {
@@ -217,6 +279,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                     Map<String, Object> docuDataNew2 = new HashMap<>();
                                                     docuDataNew2.put("friends", friends_array2);
                                                     db.collection("friends").document(replace_string).set(docuDataNew2);
+                                                    Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
                                                     ca.friendRequests.refresh();
                                                 }
                                             }
@@ -240,6 +303,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 db.collection("friend_requests").document(document.getId()).delete();
                             }
+                            Snackbar.make(viewHolder.getDecline(), R.string.friend_request_declined, Snackbar.LENGTH_SHORT).show();
                             ca.friendRequests.refresh();
                         }
                     }

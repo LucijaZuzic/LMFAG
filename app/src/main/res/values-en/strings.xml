@@ -63,14 +63,44 @@
     <string name="logged_in">Logged in!</string>
     <string name="password_short">Password must have at least one character.</string>
     <string name="send_friend_request">Send friend request</string>
+    <string name="already_sent">Friend request already sent.</string>
+    <string name="send_message">Send message</string>
+    <string name="friends_with_self">You can\'t become friends with yourself.</string>
+    <string name="visiting_myself">You can\'t visit your profile.</string>
+    <string name="already_friends">You are already friends with this user.</string>
+    <string name="event_description">Event description</string>
+    <string name="friend_request_sent">Friend request sent.</string>
+    <string name="no_longer_friends">You are no longer friends.</string>
+    <string name="friend_request_declined">Friend request declined.</string>
+    <string name="friend_request_accepted">Friend request declined.</string>
     <string-array name="event_types">
-        <item>football</item>
+        <item>skiing</item>
+        <item>hiking</item>
+        <item>kayaking</item>
+        <item>kitesurfing</item>
+        <item>nordic walking</item>
+        <item>paragliding</item>
+        <item>biking</item>
+        <item>roller skating</item>
+        <item>rowing</item>
+        <item>sailing</item>
+        <item>scuba diving</item>
+        <item>skateboarding</item>
+        <item>sledding</item>
+        <item>snowboarding</item>
+        <item>baseball</item>
         <item>basketball</item>
+        <item>esports</item>
+        <item>football</item>
+        <item>golf</item>
+        <item>gymnastics</item>
         <item>handball</item>
-        <item>water polo</item>
+        <item>hockey</item>
+        <item>martial arts</item>
+        <item>motorsports</item>
+        <item>rugby</item>
+        <item>soccer</item>
+        <item>tennis</item>v
         <item>volleyball</item>
-        <item>tennis</item>
-        <item>table tennis</item>
-        <item>chess</item>
     </string-array>
 </resources>

@@ -27,24 +27,16 @@
 
             <TextView
                 android:id="@+id/textViewFriends"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.9"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="@string/friends"
+                android:text="@string/find_friends"
                 android:textColor="@color/white"
                 android:textSize="21sp"
                 android:textStyle="bold"
-                app:drawableStartCompat="@drawable/ic_baseline_people_alt_24" />
+                app:drawableStartCompat="@drawable/ic_baseline_person_search_24" />
 
-            <ImageView
-                android:contentDescription="@string/expand_friends"
-                android:id="@+id/imageViewExpandFriends"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.1"
-                app:srcCompat="@drawable/ic_baseline_expand_more_24" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView

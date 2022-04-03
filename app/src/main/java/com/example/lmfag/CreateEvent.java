@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.ImageView;
@@ -35,6 +36,7 @@ public class CreateEvent extends AppCompatActivity {
     double longitude = 45.23;
     double latitude = 45.36;
     Context context = this;
+    private String selecteditem;
     ImageView imageViewChooseDate, imageViewChooseTime, apply;
     TextView textViewChooseDate, textViewChooseTime;
     Spinner sp;
@@ -51,6 +53,21 @@ public class CreateEvent extends AppCompatActivity {
         fillSpinner();
         setDate();
         setTime();
+
+        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
+
+                selecteditem = adapter.getItemAtPosition(i).toString();
+                //or this can be also right: selecteditem = level[i];
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView)
+            {
+
+            }
+        });
     }
     void setDate() {
         imageViewChooseDate.setOnClickListener(new View.OnClickListener() {
@@ -81,7 +98,8 @@ public class CreateEvent extends AppCompatActivity {
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker tp, int sHour, int sMinute) {
-                                hour = sHour;
+
+                                                   hour = sHour;
                                 minutes = sMinute;
                                 textViewChooseTime.setText(hour + ":" + minutes);
                             }
@@ -97,7 +115,6 @@ public class CreateEvent extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp.setAdapter(adapter);
     }
-
     void writeDB(Map<String, Object> docData) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 

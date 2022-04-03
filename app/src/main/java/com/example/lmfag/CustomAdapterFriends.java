@@ -55,8 +55,8 @@ public class CustomAdapterFriends extends RecyclerView.Adapter<CustomAdapterFrie
             super(view);
             // Define click listener for the ViewHolder's View
 
-            textViewUsername = (TextView) view.findViewById(R.id.textViewUsername);
-            profile_image = (CircleImageView) view.findViewById(R.id.profile_image);
+            textViewUsername = (TextView) view.findViewById(R.id.textViewUsernameFriend);
+            profile_image = (CircleImageView) view.findViewById(R.id.profile_image_friend);
         }
 
         public TextView getTextView() {

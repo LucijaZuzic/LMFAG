@@ -52,6 +52,11 @@ public class FriendRequests extends AppCompatActivity {
         getFriendRequests();
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent myIntent = new Intent(context, MyProfile.class);
+        context.startActivity(myIntent);
+    }
     void getFriendRequests() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());

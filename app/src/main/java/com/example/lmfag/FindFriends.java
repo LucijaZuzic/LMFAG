@@ -35,6 +35,11 @@ public class FindFriends extends AppCompatActivity {
         getAllFriends();
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent myIntent = new Intent(context, MyProfile.class);
+        context.startActivity(myIntent);
+    }
     void getAllFriends() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         List<String> friends_array = new ArrayList<>();

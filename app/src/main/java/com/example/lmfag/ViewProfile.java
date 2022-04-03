@@ -21,18 +21,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -60,12 +56,25 @@ public class ViewProfile extends AppCompatActivity {
         });
     }
     @Override
+    public void onBackPressed() {
+        Intent myIntent = new Intent(context, MyProfile.class);
+        context.startActivity(myIntent);
+    }
+    @Override
     protected void onResume() {
         super.onResume();
         fillUserData();
         getFriends();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String sender = preferences.getString("userID", "");
+        String receiver = preferences.getString("friendID", "");
+        checkFriendsOneDir(sender, receiver, false);
     }
 
+    void refresh() {
+        Intent myIntent = new Intent(context, ViewProfile.class);
+        context.startActivity(myIntent);
+    }
     void showFriends() {
         LinearLayout ll_friends_show = findViewById(R.id.linearLayoutShowFriends);
         RecyclerView ll_friends = findViewById(R.id.recyclerViewFriends);
@@ -104,7 +113,7 @@ public class ViewProfile extends AppCompatActivity {
         .add(docData)
         .addOnSuccessListener(aVoid -> {
             //Log.d(TAG, "DocumentSnapshot successfully written!");
-            Snackbar.make(friendRequest, R.string.write_success, Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(friendRequest, R.string.friend_request_sent, Snackbar.LENGTH_SHORT).show();
         })
         .addOnFailureListener(e -> {
             Snackbar.make(friendRequest, R.string.write_failed, Snackbar.LENGTH_SHORT).show();
@@ -112,7 +121,7 @@ public class ViewProfile extends AppCompatActivity {
         });
     }
 
-    void checkFriendsTwoDir(String sender, String receiver) {
+    void checkFriendsTwoDir(String sender, String receiver, boolean send) {
         db.collection("friends").document(sender).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
@@ -120,18 +129,37 @@ public class ViewProfile extends AppCompatActivity {
                     Map<String, Object> docuData = document.getData();
                     String friends = docuData.get("friends").toString();
                     if (friends.contains(receiver)) {
-                        Snackbar.make(friendRequest, R.string.already_friends, Snackbar.LENGTH_SHORT).show();
+                        //Snackbar.make(friendRequest, R.string.already_friends, Snackbar.LENGTH_SHORT).show();
+                        if (send) {
+                            db.collection("friends").document(receiver).update("friends", FieldValue.arrayRemove(sender));
+                            db.collection("friends").document(sender).update("friends", FieldValue.arrayRemove(receiver));
+                            Snackbar.make(friendRequest, R.string.no_longer_friends, Snackbar.LENGTH_SHORT).show();
+                            refresh();
+                        } else {
+                            friendRequest = findViewById(R.id.imageViewSendFriendRequest);
+                            friendRequest.setImageDrawable(getDrawable(R.drawable.ic_baseline_person_remove_24));
+                        }
                     } else {
-                        writeToDb(sender, receiver);
+                        if (send) {
+                            writeToDb(sender, receiver);
+                        } else {
+                            friendRequest = findViewById(R.id.imageViewSendFriendRequest);
+                            friendRequest.setImageDrawable(getDrawable(R.drawable.ic_baseline_person_add_24));
+                        }
                     }
                 } else {
-                    writeToDb(sender, receiver);
+                    if (send) {
+                        writeToDb(sender, receiver);
+                    } else {
+                        friendRequest = findViewById(R.id.imageViewSendFriendRequest);
+                        friendRequest.setImageDrawable(getDrawable(R.drawable.ic_baseline_person_add_24));
+                    }
                 }
             }
         });
     }
 
-    void checkFriendsOneDir(String sender, String receiver) {
+    void checkFriendsOneDir(String sender, String receiver, boolean send) {
         db.collection("friends").document(receiver).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
@@ -139,41 +167,54 @@ public class ViewProfile extends AppCompatActivity {
                     Map<String, Object> docuData = document.getData();
                     String friends = docuData.get("friends").toString();
                     if (friends.contains(sender)) {
-                        Snackbar.make(friendRequest, R.string.already_friends, Snackbar.LENGTH_SHORT).show();
+                        //Snackbar.make(friendRequest, R.string.already_friends, Snackbar.LENGTH_SHORT).show();
+                        if (send) {
+                            db.collection("friends").document(receiver).update("friends", FieldValue.arrayRemove(sender));
+                            db.collection("friends").document(sender).update("friends", FieldValue.arrayRemove(receiver));
+                            Snackbar.make(friendRequest, R.string.no_longer_friends, Snackbar.LENGTH_SHORT).show();
+                            refresh();
+                        } else {
+                            friendRequest = findViewById(R.id.imageViewSendFriendRequest);
+                            friendRequest.setImageDrawable(getDrawable(R.drawable.ic_baseline_person_remove_24));
+                        }
                     } else {
-                        checkFriendsTwoDir(sender, receiver);
+                        checkFriendsTwoDir(sender, receiver, send);
                     }
                 } else {
-                    checkFriendsTwoDir(sender, receiver);
+                    checkFriendsTwoDir(sender, receiver, send);
                 }
             }
         });
     }
-    void checkSentTwoDir(String sender, String receiver) {
+    void checkSentTwoDir(String sender, String receiver, boolean send) {
         db.collection("friend_requests").whereEqualTo("sender", receiver).whereEqualTo("receiver", sender)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
-                        Snackbar.make(friendRequest, R.string.alerady_sent, Snackbar.LENGTH_SHORT).show();
+                        if (send) {
+                            Snackbar.make(friendRequest, R.string.already_sent, Snackbar.LENGTH_SHORT).show();
+                        }
                     } else {
-                        checkFriendsOneDir(sender, receiver);
+                        checkFriendsOneDir(sender, receiver, send);
                     }
                 }
             }
         });
     }
-    void checkSentOneDir(String sender, String receiver) {
+    void checkSentOneDir(String sender, String receiver, boolean send) {
         db.collection("friend_requests").whereEqualTo("sender", sender).whereEqualTo("receiver", receiver)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
-                        Snackbar.make(friendRequest, R.string.alerady_sent, Snackbar.LENGTH_SHORT).show();
+                        if (send) {
+                            Snackbar.make(friendRequest, R.string.already_sent, Snackbar.LENGTH_SHORT).show();
+                        }
                     } else {
-                        checkSentTwoDir(sender, receiver);
+                        checkSentTwoDir(sender, receiver, send);
                     }
                 }
             }
@@ -188,7 +229,7 @@ public class ViewProfile extends AppCompatActivity {
             Snackbar.make(friendRequest, R.string.friends_with_self, Snackbar.LENGTH_SHORT).show();
             return;
         }
-        checkSentOneDir(sender, receiver);
+        checkSentOneDir(sender, receiver, true);
     }
 
     void fillUserData() {
