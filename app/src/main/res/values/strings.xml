@@ -24,6 +24,7 @@
     <string name="create_event">Create event</string>
     <string name="event_type">Event type</string>
     <string name="players">Players</string>
+    <string name="number_of_players">Number of players</string>
     <string name="organizer_playing">Organizer playing</string>
     <string name="choose_location">Choose location</string>
     <string name="choose_date">Choose date</string>
@@ -40,7 +41,6 @@
     <string name="level">Level</string>
     <string name="level_points">Level points/Level points for next level</string>
     <string name="organizer">Organizer</string>
-    <string name="users">Users</string>
     <string name="rate_event">Rate event</string>
     <string name="area_of_interest_already_added">Area of interest already added</string>
     <string name="write_success">DocumentSnapshot successfully written!</string>
@@ -73,6 +73,22 @@
     <string name="no_longer_friends">You are no longer friends.</string>
     <string name="friend_request_declined">Friend request declined.</string>
     <string name="friend_request_accepted">Friend request declined.</string>
+    <string name="notifications">Notifications</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="created_event">Created event!</string>
+    <string name="updated_event">Updated event</string>
+    <string name="initial_minimum_level">0</string>
+    <string name="enter_search_value">Enter search value.</string>
+    <string name="lastest_message">Latest message</string>
+    <string name="enter_message">Enter message.</string>
+    <string name="choose_duration">Choose duration</string>
+    <string name="duration">Duration</string>
+    <string name="choose_start_date">Choose start date</string>
+    <string name="choose_start_time">Choose start time</string>
+    <string name="choose_end_time">Choose end time</string>
+    <string name="choose_end_date">Choose end date</string>
+    <string name="organizer_edit">Only organizer can edit event.</string>
     <string-array name="event_types">
         <item>skiing</item>
         <item>hiking</item>
@@ -117,8 +133,20 @@
         <item>areas of interest</item>
         <item>description</item>
         <item>location</item>
-        <item>levels</item>
+        <item>username</item>
+    </string-array>
+    <string-array name="friend_sort_params">
         <item>rank</item>
         <item>username</item>
+    </string-array>
+    <string-array name="event_search_params">
+        <item>event type</item>
+        <item>event name</item>
+        <item>description</item>
+    </string-array>
+    <string-array name="event_sort_params">
+        <item>start time</item>
+        <item>event type</item>
+        <item>event name</item>
     </string-array>
 </resources>

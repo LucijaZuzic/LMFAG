@@ -1,9 +1,527 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ViewEvent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+    <LinearLayout
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image"
+            android:layout_height="80dp"
+            android:layout_width="80dp"
+            app:civ_circle_background_color="@color/blue_gray_100"
+            android:src="@drawable/ic_baseline_profile_picture_24"
+            app:civ_border_color="@color/my_pink"
+            app:civ_border_width="10dp" />
+
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:id="@+id/textViewOrganizer"
+            android:hint="@string/organizer" />
+    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_gravity="center"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="21sp"
+                android:textStyle="bold"
+                android:padding="5dp"
+                android:background="@drawable/gradient"
+                android:src="@drawable/ic_baseline_calendar_today_24"
+                android:textColor="@color/white"
+                android:contentDescription="@string/event_name" />
+
+            <TextView
+                android:id="@+id/textViewEventName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:gravity="center"
+                android:minHeight="48dp"
+                android:inputType="textPersonName"
+                android:hint="@string/event_name"  />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:gravity="center"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:id="@+id/imageViewEventType"
+                android:padding="5dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="21sp"
+                android:textStyle="bold"
+                android:background="@drawable/gradient"
+                android:contentDescription="@string/event_type"
+                android:src="@drawable/ic_baseline_interests_24"
+                android:textColor="@color/white"  />
+
+            <TextView
+                android:id="@+id/textViewEventType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:gravity="center"
+                android:minHeight="48dp"
+                android:inputType="textPersonName"
+                android:hint="@string/event_type"  />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:gravity="center"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:gravity="center"
+                android:padding="5dp"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="21sp"
+                android:textStyle="bold"
+                android:background="@drawable/gradient"
+                android:textColor="@color/white"
+                android:contentDescription="@string/minimum_level"
+                android:src="@drawable/ic_baseline_description_24"  />
+            <TextView
+                android:id="@+id/textViewEvenDescription"
+                android:layout_width="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:gravity="center"
+                android:inputType="textMultiLine"
+                android:hint="@string/event_description" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:gravity="center"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:gravity="center"
+                android:padding="5dp"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="21sp"
+                android:textStyle="bold"
+                android:background="@drawable/gradient"
+                android:textColor="@color/white"
+                android:contentDescription="@string/minimum_level"
+                android:src="@drawable/ic_baseline_workspace_premium_24"  />
+            <TextView
+                android:id="@+id/textViewMinimumLevel"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:layout_marginStart="5dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:inputType="number"
+                android:hint="@string/minimum_level" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_marginEnd="10dp"
+                android:gravity="center"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="21sp"
+                android:textStyle="bold"
+                android:padding="5dp"
+                android:background="@drawable/gradient"
+                android:contentDescription="@string/players"
+                android:src="@drawable/ic_baseline_groups_24" />
+            <TextView
+                android:id="@+id/textViewNumberOfPlayers"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:layout_marginStart="5dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:inputType="number"
+                android:hint="@string/number_of_players" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:gravity="center"
+                android:id="@+id/imageViewPublic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/ic_baseline_lock_open_24"
+                android:layout_marginEnd="10dp"
+                android:layout_gravity="center"
+                android:padding="5dp"
+                android:background="@drawable/gradient"  />
+            <ImageView
+                android:gravity="center"
+                android:id="@+id/imageViewOutdoor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/ic_baseline_nature_people_24"
+                android:layout_marginEnd="10dp"
+                android:layout_gravity="center"
+                android:padding="5dp"
+                android:background="@drawable/gradient"  />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:gravity="center"
+                android:id="@+id/switchNotifications"
+                android:checked="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableStart="@drawable/ic_baseline_notifications_24"
+                android:layout_marginStart="5dp"
+                android:padding="5dp"
+                android:background="@drawable/gradient" />
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:baselineAligned="false">
+
+        <ImageView
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:padding="10dp"
+            android:clickable="true"
+            android:contentDescription="@string/choose_date"
+            android:focusable="true"
+            android:background="@drawable/gradient"
+            app:srcCompat="@drawable/ic_baseline_hourglass_top_24" />
+
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageViewChooseStartDate"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:padding="10dp"
+                android:clickable="true"
+                android:contentDescription="@string/choose_date"
+                android:focusable="true"
+                android:background="@drawable/gradient"
+                app:srcCompat="@drawable/ic_baseline_event_24" />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:id="@+id/textViewChooseStartDate"
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:hint="@string/choose_start_date" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageViewChooseStartTime"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:padding="10dp"
+                android:clickable="true"
+                android:contentDescription="@string/choose_time"
+                android:focusable="true"
+                android:background="@drawable/gradient"
+                app:srcCompat="@drawable/ic_baseline_access_time_24" />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:id="@+id/textViewChooseStartTime"
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:hint="@string/choose_start_time" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:baselineAligned="false">
+
+        <ImageView
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:padding="10dp"
+            android:clickable="true"
+            android:contentDescription="@string/choose_date"
+            android:focusable="true"
+            android:background="@drawable/gradient"
+            app:srcCompat="@drawable/ic_baseline_hourglass_bottom_24" />
+
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageViewChooseEndDate"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:padding="10dp"
+                android:clickable="true"
+                android:contentDescription="@string/choose_date"
+                android:focusable="true"
+                android:background="@drawable/gradient"
+                app:srcCompat="@drawable/ic_baseline_event_24" />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:id="@+id/textViewChooseEndDate"
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:hint="@string/choose_end_date" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageViewChooseEndTime"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:padding="10dp"
+                android:clickable="true"
+                android:contentDescription="@string/choose_time"
+                android:focusable="true"
+                android:background="@drawable/gradient"
+                app:srcCompat="@drawable/ic_baseline_access_time_24" />
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:id="@+id/textViewChooseEndTime"
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:hint="@string/choose_end_time" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/floatingActionButtonChooseLocation"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:padding="10dp"
+                android:clickable="true"
+                android:contentDescription="@string/my_events"
+                android:focusable="true"
+                android:background="@drawable/gradient"
+                app:srcCompat="@drawable/ic_baseline_location_on_24" />
+
+            <TextView
+                android:gravity="center"
+                android:id="@+id/textViewChooseLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:hint="@string/choose_location" />
+        </LinearLayout>
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:orientation="horizontal">
+                <ImageView
+                    android:gravity="center"
+                    android:id="@+id/imageViewApply"
+                    android:layout_width="96dp"
+                    android:layout_height="48dp"
+                    android:clickable="true"
+                    android:contentDescription="@string/apply"
+                    android:focusable="true"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
+                    android:background="@drawable/gradient"
+                    android:textColor="@color/white"
+                    android:src="@drawable/ic_baseline_person_add_24"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:orientation="horizontal">
+                <ImageView
+                    android:gravity="center"
+                    android:id="@+id/imageViewRate"
+                    android:layout_width="96dp"
+                    android:layout_height="48dp"
+                    android:clickable="true"
+                    android:contentDescription="@string/apply"
+                    android:focusable="true"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
+                    android:background="@drawable/gradient"
+                    android:textColor="@color/white"
+                    android:src="@drawable/ic_baseline_star_outline_24"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:gravity="center"
+                android:id="@+id/imageViewEdit"
+                android:layout_width="96dp"
+                android:layout_height="48dp"
+                android:clickable="true"
+                android:contentDescription="@string/cancel"
+                android:focusable="true"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:background="@drawable/gradient"
+                android:src="@drawable/ic_baseline_edit_calendar_24"
+                android:textColor="@color/white"  />
+
+        </LinearLayout>
+
+    </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

@@ -1,34 +1,22 @@
 package com.example.lmfag;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.lmfag.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -126,11 +114,8 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                         CircleImageView circleImageView = viewHolder.getProfileImage();
                         Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                         circleImageView.setImageBitmap(bmp);
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Handle any errors
-                        }
+                    }).addOnFailureListener(exception -> {
+                        // Handle any errors
                     });
                 }
             }
@@ -138,9 +123,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
         viewHolder.getAccept().setOnClickListener(view -> {
             db.collection("friend_requests")
                 .whereEqualTo("sender", replace_string)
-                .whereEqualTo("receiver", this.receiver).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task3) {
+                .whereEqualTo("receiver", this.receiver).get().addOnCompleteListener(task3 -> {
                     if (task3.isSuccessful()) {
                         if (task3.getResult().size() > 0) {
                             for (QueryDocumentSnapshot document3 : task3.getResult()) {
@@ -160,8 +143,8 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                             Map<String, Object> docuDataNew = document.getData();
                                             docuDataNew.put("friends", friends_array);
                                             db.collection("friends").document(receiver).set(docuDataNew);
-                                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                            db.collection("friends").document(replace_string).get().addOnCompleteListener(task2 -> {
+                                            FirebaseFirestore db1 = FirebaseFirestore.getInstance();
+                                            db1.collection("friends").document(replace_string).get().addOnCompleteListener(task2 -> {
                                                 if (task2.isSuccessful()) {
                                                     DocumentSnapshot document2 = task2.getResult();
                                                     if (document2.exists()) {
@@ -174,7 +157,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                             friends_array2.add(receiver);
                                                             Map<String, Object> docuDataNew2 = document2.getData();
                                                             docuDataNew2.put("friends", friends_array2);
-                                                            db.collection("friends").document(replace_string).set(docuDataNew2);
+                                                            db1.collection("friends").document(replace_string).set(docuDataNew2);
                                                             Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
                                                             ca.friendRequests.refresh();
                                                         } else {
@@ -182,7 +165,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                             friends_array2.add(receiver);
                                                             Map<String, Object> docuDataNew2 = new HashMap<>();
                                                             docuDataNew2.put("friends", friends_array2);
-                                                            db.collection("friends").document(replace_string).set(docuDataNew2);
+                                                            db1.collection("friends").document(replace_string).set(docuDataNew2);
                                                             Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
                                                             ca.friendRequests.refresh();
                                                         }
@@ -191,7 +174,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                         friends_array2.add(receiver);
                                                         Map<String, Object> docuDataNew2 = new HashMap<>();
                                                         docuDataNew2.put("friends", friends_array2);
-                                                        db.collection("friends").document(replace_string).set(docuDataNew2);
+                                                        db1.collection("friends").document(replace_string).set(docuDataNew2);
                                                         Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
                                                         ca.friendRequests.refresh();
                                                     }
@@ -203,8 +186,8 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                             Map<String, Object> docuDataNew = new HashMap<>();
                                             docuDataNew.put("friends", friends_array);
                                             db.collection("friends").document(receiver).set(docuDataNew);
-                                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                            db.collection("friends").document(replace_string).get().addOnCompleteListener(task2 -> {
+                                            FirebaseFirestore db1 = FirebaseFirestore.getInstance();
+                                            db1.collection("friends").document(replace_string).get().addOnCompleteListener(task2 -> {
                                                 if (task2.isSuccessful()) {
                                                     DocumentSnapshot document2 = task2.getResult();
                                                     if (document2.exists()) {
@@ -217,7 +200,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                             friends_array2.add(receiver);
                                                             Map<String, Object> docuDataNew2 = document2.getData();
                                                             docuDataNew2.put("friends", friends_array2);
-                                                            db.collection("friends").document(replace_string).set(docuDataNew2);
+                                                            db1.collection("friends").document(replace_string).set(docuDataNew2);
                                                             Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
                                                             ca.friendRequests.refresh();
                                                         } else {
@@ -225,7 +208,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                             friends_array2.add(receiver);
                                                             Map<String, Object> docuDataNew2 = new HashMap<>();
                                                             docuDataNew2.put("friends", friends_array2);
-                                                            db.collection("friends").document(replace_string).set(docuDataNew2);
+                                                            db1.collection("friends").document(replace_string).set(docuDataNew2);
                                                             Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
                                                             ca.friendRequests.refresh();
                                                         }
@@ -234,7 +217,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                         friends_array2.add(receiver);
                                                         Map<String, Object> docuDataNew2 = new HashMap<>();
                                                         docuDataNew2.put("friends", friends_array2);
-                                                        db.collection("friends").document(replace_string).set(docuDataNew2);
+                                                        db1.collection("friends").document(replace_string).set(docuDataNew2);
                                                         Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
                                                         ca.friendRequests.refresh();
                                                     }
@@ -247,8 +230,8 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                         Map<String, Object> docuDataNew = new HashMap<>();
                                         docuDataNew.put("friends", friends_array);
                                         db.collection("friends").document(receiver).set(docuDataNew);
-                                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                        db.collection("friends").document(replace_string).get().addOnCompleteListener(task2 -> {
+                                        FirebaseFirestore db1 = FirebaseFirestore.getInstance();
+                                        db1.collection("friends").document(replace_string).get().addOnCompleteListener(task2 -> {
                                             if (task2.isSuccessful()) {
                                                 DocumentSnapshot document2 = task2.getResult();
                                                 if (document2.exists()) {
@@ -261,7 +244,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                         friends_array2.add(receiver);
                                                         Map<String, Object> docuDataNew2 = document2.getData();
                                                         docuDataNew2.put("friends", friends_array2);
-                                                        db.collection("friends").document(replace_string).set(docuDataNew2);
+                                                        db1.collection("friends").document(replace_string).set(docuDataNew2);
                                                         Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
                                                         ca.friendRequests.refresh();
                                                     } else {
@@ -269,7 +252,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                         friends_array2.add(receiver);
                                                         Map<String, Object> docuDataNew2 = new HashMap<>();
                                                         docuDataNew2.put("friends", friends_array2);
-                                                        db.collection("friends").document(replace_string).set(docuDataNew2);
+                                                        db1.collection("friends").document(replace_string).set(docuDataNew2);
                                                         Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
                                                         ca.friendRequests.refresh();
                                                     }
@@ -278,7 +261,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                     friends_array2.add(receiver);
                                                     Map<String, Object> docuDataNew2 = new HashMap<>();
                                                     docuDataNew2.put("friends", friends_array2);
-                                                    db.collection("friends").document(replace_string).set(docuDataNew2);
+                                                    db1.collection("friends").document(replace_string).set(docuDataNew2);
                                                     Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
                                                     ca.friendRequests.refresh();
                                                 }
@@ -289,27 +272,21 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                             });
                         }
                     }
-                }
-            });
+                });
         });
-        viewHolder.getDecline().setOnClickListener(view -> {
-            db.collection("friend_requests")
-                .whereEqualTo("sender", replace_string)
-                .whereEqualTo("receiver", this.receiver).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        if (task.getResult().size() > 0) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                db.collection("friend_requests").document(document.getId()).delete();
-                            }
-                            Snackbar.make(viewHolder.getDecline(), R.string.friend_request_declined, Snackbar.LENGTH_SHORT).show();
-                            ca.friendRequests.refresh();
+        viewHolder.getDecline().setOnClickListener(view -> db.collection("friend_requests")
+            .whereEqualTo("sender", replace_string)
+            .whereEqualTo("receiver", this.receiver).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    if (task.getResult().size() > 0) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            db.collection("friend_requests").document(document.getId()).delete();
                         }
+                        Snackbar.make(viewHolder.getDecline(), R.string.friend_request_declined, Snackbar.LENGTH_SHORT).show();
+                        ca.friendRequests.refresh();
                     }
                 }
-            });
-        });
+            }));
     }
 
     // Return the size of your dataset (invoked by the layout manager)

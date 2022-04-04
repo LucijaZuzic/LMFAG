@@ -77,8 +77,6 @@ public class EventTypeToDrawable {
                 return R.drawable.ic_baseline_table_restaurant_24;
             case "poker":
                 return R.drawable.ic_baseline_favorite_24;
-            case "other":
-                return R.drawable.ic_baseline_interests_24;
             default:
                 return R.drawable.ic_baseline_interests_24;
         }

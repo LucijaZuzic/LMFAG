@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -26,6 +28,8 @@ public class FindFriends extends AppCompatActivity {
     Context context = this;
     RecyclerView recyclerViewFindFriends;
     SharedPreferences preferences;
+    Spinner search_params;
+    Spinner sort_params;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +39,16 @@ public class FindFriends extends AppCompatActivity {
         getAllFriends();
     }
 
+    void fillSpinner() {
+        ArrayAdapter<CharSequence> adapter_search_params = ArrayAdapter.createFromResource(this,
+                R.array.event_search_params, android.R.layout.simple_spinner_item);
+        adapter_search_params.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        search_params.setAdapter(adapter_search_params);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.event_sort_params, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sort_params.setAdapter(adapter);
+    }
     @Override
     public void onBackPressed() {
         Intent myIntent = new Intent(context, MyProfile.class);
@@ -43,7 +57,7 @@ public class FindFriends extends AppCompatActivity {
     void getAllFriends() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         List<String> friends_array = new ArrayList<>();
-        db.collection("users").orderBy("username").limit(10).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("users").orderBy("username").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
@@ -60,5 +74,6 @@ public class FindFriends extends AppCompatActivity {
             }
         });
     }
+
 
 }

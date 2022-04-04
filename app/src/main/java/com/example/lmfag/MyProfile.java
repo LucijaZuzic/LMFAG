@@ -78,8 +78,11 @@ public class MyProfile extends AppCompatActivity {
     public void selectDrawerItem(MenuItem menuItem) {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         int id = menuItem.getItemId();
-        Snackbar.make(drawer, id, Snackbar.LENGTH_SHORT).show();
         if (id == R.id.create_event) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("eventID", "");
+            editor.apply();
             Intent myIntent = new Intent(context, CreateEvent.class);
             startActivity(myIntent);
         } else if (id == R.id.edit_profile) {
@@ -90,6 +93,15 @@ public class MyProfile extends AppCompatActivity {
             startActivity(myIntent);
         } else if (id == R.id.friend_requests) {
             Intent myIntent = new Intent(context, FriendRequests.class);
+            startActivity(myIntent);
+        } else if (id == R.id.find_events) {
+            Intent myIntent = new Intent(context, FindEvents.class);
+            startActivity(myIntent);
+        } else if (id == R.id.my_messages) {
+            Intent myIntent = new Intent(context, MyMessages.class);
+            startActivity(myIntent);
+        } else if (id == R.id.my_events) {
+            Intent myIntent = new Intent(context, MyEvents.class);
             startActivity(myIntent);
         }
         drawer.closeDrawer(GravityCompat.START);

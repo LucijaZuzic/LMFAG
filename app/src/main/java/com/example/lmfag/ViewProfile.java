@@ -51,8 +51,11 @@ public class ViewProfile extends AppCompatActivity {
         showAreasOfInterest();
         recyclerViewFriends = findViewById(R.id.recyclerViewFriends);
         friendRequest = findViewById(R.id.imageViewSendFriendRequest);
-        friendRequest.setOnClickListener(view -> {
-            sendFriendRequest();
+        friendRequest.setOnClickListener(view -> sendFriendRequest());
+        ImageView message = findViewById(R.id.imageViewMyMesages);
+        message.setOnClickListener(view -> {
+            Intent myIntent = new Intent(context, ViewMessages.class);
+            context.startActivity(myIntent);
         });
     }
     @Override

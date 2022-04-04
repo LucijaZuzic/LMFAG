@@ -24,6 +24,7 @@
     <string name="create_event">Create event</string>
     <string name="event_type">Event type</string>
     <string name="players">Players</string>
+    <string name="number_of_players">Number of players</string>
     <string name="organizer_playing">Organizer playing</string>
     <string name="choose_location">Choose location</string>
     <string name="choose_date">Choose date</string>
@@ -40,7 +41,6 @@
     <string name="level">Level</string>
     <string name="level_points">Level points/Level points for next level</string>
     <string name="organizer">Organizer</string>
-    <string name="users">Users</string>
     <string name="rate_event">Rate event</string>
     <string name="area_of_interest_already_added">Area of interest already added</string>
     <string name="write_success">DocumentSnapshot successfully written!</string>
@@ -73,6 +73,11 @@
     <string name="no_longer_friends">You are no longer friends.</string>
     <string name="friend_request_declined">Friend request declined.</string>
     <string name="friend_request_accepted">Friend request declined.</string>
+    <string name="notifications">Notifications</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="initial_minimum_level">0</string>
+    <string name="enter_message">Enter message.</string>
     <string-array name="event_types">
         <item>skiing</item>
         <item>hiking</item>

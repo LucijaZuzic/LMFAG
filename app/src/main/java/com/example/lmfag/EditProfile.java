@@ -84,13 +84,12 @@ public class EditProfile extends AppCompatActivity {
 
     void changeProfilePicture() {
         CircleImageView circleImageView = findViewById(R.id.profile_image);
-        ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+        ActivityResultLauncher<Intent> photoPicker = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
                         uri = data.getData();
-
                         try {
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                             circleImageView.setImageBitmap(bitmap);
@@ -100,10 +99,11 @@ public class EditProfile extends AppCompatActivity {
                         }
                     }
                 });
+
         circleImageView.setOnClickListener(view -> {
             Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
             photoPickerIntent.setType("image/*");
-            someActivityResultLauncher.launch(photoPickerIntent);
+            photoPicker.launch(photoPickerIntent);
         });
     }
 
