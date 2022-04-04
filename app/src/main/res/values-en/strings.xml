@@ -63,6 +63,7 @@
     <string name="logged_in">Logged in!</string>
     <string name="password_short">Password must have at least one character.</string>
     <string name="send_friend_request">Send friend request</string>
+    <string name="send_message">Send message</string>
     <string-array name="event_types">
         <item>football</item>
         <item>basketball</item>
