@@ -54,6 +54,9 @@ dependencies {
     // Testing Navigation
     androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
 
+    // OpenStreetMaps-Tools
+    implementation 'org.osmdroid:osmdroid-android:6.1.11'
+
     // Jetpack Compose Integration
     implementation "androidx.navigation:navigation-compose:$nav_version"
     def lifecycle_version = "2.2.0"
