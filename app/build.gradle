@@ -31,7 +31,7 @@ android {
                 srcDirs 'src\\main\\assets'
             }
             res {
-                srcDirs 'src\\main\\res', 'src\\main\\res\\values-en'
+                srcDirs 'src\\main\\res', 'src\\main\\res\\values-en', 'src\\main\\xml'
             }
         }
     }

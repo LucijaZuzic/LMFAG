@@ -33,15 +33,30 @@ import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FriendRequests extends AppCompatActivity {
-    RecyclerView recyclerViewFriendRequests = findViewById(R.id.recyclerViewFriendRequests);
+    RecyclerView recyclerViewFriendRequests;
+    FriendRequests context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_requests);
+        recyclerViewFriendRequests = findViewById(R.id.recyclerViewFriendRequests);
+    }
+    void refresh() {
+        Intent myIntent = new Intent(context, FriendRequests.class);
+        context.startActivity(myIntent);
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
         getFriendRequests();
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent myIntent = new Intent(context, MyProfile.class);
+        context.startActivity(myIntent);
+    }
     void getFriendRequests() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -59,11 +74,12 @@ public class FriendRequests extends AppCompatActivity {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             friends_array.add(document.get("sender").toString());
                         }
-                        CustomAdapterFriendRequest customAdapterAreaOfInterest = new CustomAdapterFriendRequest(friends_array);
+                        CustomAdapterFriendRequest customAdapterAreaOfInterest = new CustomAdapterFriendRequest(friends_array, receiver, context);
                         recyclerViewFriendRequests.setAdapter(customAdapterAreaOfInterest);
                     }
                 }
             }
         });
     }
+
 }

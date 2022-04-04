@@ -113,7 +113,7 @@
                         android:textColor="@color/white"
                         android:textSize="21sp"
                         android:textStyle="bold"
-                        app:drawableStartCompat="@drawable/ic_baseline_list_alt_24" />
+                        app:drawableStartCompat="@drawable/ic_baseline_interests_24" />
 
                     <ImageView
                         android:id="@+id/imageViewExpandAreasOfInterest"

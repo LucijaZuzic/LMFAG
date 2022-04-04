@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +27,7 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
         private final TextView textViewLevel;
         private final TextView textViewLevelPoints;
         private final ImageView floatingActionButtonRemoveAreaOfInterest;
+        private final ProgressBar progressBar;
 
         public ViewHolder(View view) {
             super(view);
@@ -35,6 +37,7 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
             textViewLevel = (TextView) view.findViewById(R.id.textViewLevel);
             textViewLevelPoints = (TextView) view.findViewById(R.id.textViewLevelPoints);
             floatingActionButtonRemoveAreaOfInterest = (ImageView) view.findViewById(R.id.imageViewRemoveAreaOfInterest);
+            progressBar = (ProgressBar) view.findViewById(R.id.determinateBar);
         }
 
         public TextView getTextViewAreaOfInterest() {
@@ -47,6 +50,9 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
             return textViewLevelPoints;
         }
         public ImageView getFloatingActionButtonRemoveAreaOfInterest() { return floatingActionButtonRemoveAreaOfInterest; }
+        public ProgressBar getProgressBar() {
+            return progressBar;
+        }
     }
 
     public CustomAdapterAreaOfInterestRemove(List<String> areasOfInterest, List<Double> levelPoints, EditProfile editProfile) {
@@ -77,10 +83,15 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
         viewHolder.getTextViewAreaOfInterest().setText(localAreasOfInterest.get(position));
+        viewHolder.getTextViewAreaOfInterest().setCompoundDrawablesWithIntrinsicBounds(EventTypeToDrawable.getEventTypeToDrawable(localAreasOfInterest.get(position)), 0, 0, 0);
         Integer level = (int) (Math.floor(localLevelPoints.get(position) / 1000));
         String text_level = Integer.toString(level);
         Double upper_bound = Math.ceil(localLevelPoints.get(position)/ 1000) * 1000;
+        if (upper_bound.equals(0.0)) {
+            upper_bound = 1000.0;
+        }
         String text_level_points = localLevelPoints.get(position).toString() + "/" + upper_bound;
+        viewHolder.getProgressBar().setProgress((int)((localLevelPoints.get(position) - (upper_bound - 1000)) / 10));
         viewHolder.getTextViewLevel().setText(text_level);
         viewHolder.getTextViewLevelPoints().setText(text_level_points);
         String text = localAreasOfInterest.get(position);

@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.lmfag.R;
 
 public class CustomAdapterRating extends RecyclerView.Adapter<CustomAdapterRating.ViewHolder> {
 

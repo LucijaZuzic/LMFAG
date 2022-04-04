@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.lmfag">
+    package="com.example.lmfag" >
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
@@ -14,7 +14,16 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.LMFAG">
+        android:theme="@style/Theme.LMFAG" >
+        <activity
+            android:name=".MyMessages"
+            android:exported="false" />
+        <activity
+            android:name=".ViewMessages"
+            android:exported="false" />
+        <activity
+            android:name=".MyEvents"
+            android:exported="false" />
         <activity
             android:name=".ViewProfile"
             android:exported="false" />
@@ -50,7 +59,7 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

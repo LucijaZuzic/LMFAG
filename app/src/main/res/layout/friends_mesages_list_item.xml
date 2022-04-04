@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:id="@+id/list_entry"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_height="wrap_content">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image_friend"
+            android:layout_height="96dp"
+            android:layout_width="96dp"
+            android:gravity="center"
+            android:layout_marginBottom="10dp"
+            app:civ_circle_background_color="@color/blue_gray_100"
+            android:src="@drawable/ic_baseline_profile_picture_24"
+            app:civ_border_color="@color/my_pink"
+            app:civ_border_width="10dp" />
+
+        <TextView
+            android:background="@drawable/gradient"
+            android:id="@+id/textViewUsernameFriend"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textSize="21sp"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:padding="5px"
+            android:textColor="@color/white"
+            android:text="@string/username" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:id="@+id/list_entry_nested"
+        android:padding="5px"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textViewSender"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:hint="@string/lastest_message" />
+
+        <TextView
+            android:id="@+id/textViewLatestMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/lastest_message" />
+        <TextView
+            android:id="@+id/textViewTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:hint="@string/lastest_message" />
+ </LinearLayout>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

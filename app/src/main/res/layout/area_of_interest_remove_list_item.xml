@@ -17,7 +17,7 @@
         android:textColor="@color/white"
         android:textSize="21sp"
         android:text="@string/area_of_interest"
-        app:drawableStartCompat="@drawable/ic_baseline_workspace_premium_24" />
+        app:drawableStartCompat="@drawable/ic_baseline_interests_24" />
 
     <LinearLayout
         android:layout_marginTop="10dp"

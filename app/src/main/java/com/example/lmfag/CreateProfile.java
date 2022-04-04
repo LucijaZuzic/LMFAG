@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -49,6 +50,7 @@ public class CreateProfile extends AppCompatActivity {
     Context context = this;
     List<String> areas_array = new ArrayList<>();
     List<Double> points_array = new ArrayList<>();
+    private String selected_item;
     Uri uri;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +63,27 @@ public class CreateProfile extends AppCompatActivity {
         getBack();
         showAreasOfInterest();
         changeProfilePicture();
+        Spinner sp = findViewById(R.id.sp);
+        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
+
+                selected_item = adapter.getItemAtPosition(i).toString();
+                ImageView iv = findViewById(R.id.imageViewEventType);
+                iv.setImageDrawable(getDrawable(EventTypeToDrawable.getEventTypeToDrawable(selected_item)));
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView)
+            {
+
+            }
+        });
     }
 
     void changeProfilePicture() {
         CircleImageView circleImageView = findViewById(R.id.profile_image);
-        ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+        ActivityResultLauncher<Intent> photoPicker = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
@@ -80,10 +98,11 @@ public class CreateProfile extends AppCompatActivity {
                         }
                     }
                 });
+
         circleImageView.setOnClickListener(view -> {
             Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
             photoPickerIntent.setType("image/*");
-            someActivityResultLauncher.launch(photoPickerIntent);
+            photoPicker.launch(photoPickerIntent);
         });
     }
 
@@ -132,7 +151,7 @@ public class CreateProfile extends AppCompatActivity {
             String text = sp.getSelectedItem().toString();
             if (areas_array.contains(text)) {
                 points_array.remove(areas_array.indexOf(text));
-                areas_array.remove(areas_array.indexOf(text));
+                areas_array.remove(text);
                 RecyclerView recyclerViewAreasOfInterest = findViewById(R.id.recyclerViewAreasOfInterest);
                 CustomAdapterAreaOfInterestRemove customAdapterAreaOfInterestRemove = new CustomAdapterAreaOfInterestRemove(areas_array, points_array, this);
                 recyclerViewAreasOfInterest.setAdapter(customAdapterAreaOfInterestRemove);
@@ -145,7 +164,7 @@ public class CreateProfile extends AppCompatActivity {
         ImageView floatingActionButtonRemoveAreaOfInterest = findViewById(R.id.imageViewRemoveAreaOfInterest);
         if (areas_array.contains(text) && areas_array.contains(text)) {
             points_array.remove(areas_array.indexOf(text));
-            areas_array.remove(areas_array.indexOf(text));
+            areas_array.remove(text);
             RecyclerView recyclerViewAreasOfInterest = findViewById(R.id.recyclerViewAreasOfInterest);
             CustomAdapterAreaOfInterestRemove customAdapterAreaOfInterestRemove = new CustomAdapterAreaOfInterestRemove(areas_array, points_array, this);
             recyclerViewAreasOfInterest.setAdapter(customAdapterAreaOfInterestRemove);

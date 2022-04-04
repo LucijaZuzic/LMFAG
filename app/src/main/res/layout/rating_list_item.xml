@@ -7,7 +7,7 @@
 
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_image"
+        android:id="@+id/profile_image_player"
         android:layout_marginEnd="10dp"
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -35,13 +35,14 @@
             android:gravity="center"
             android:background="@drawable/gradient"
             android:textStyle="bold"
+            android:id="@+id/textViewPlayer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/username" />
+            android:hint="@string/username" />
 
         <RatingBar
             android:contentDescription="@string/rating_bar"
-            android:id="@+id/simpleRatingBar"
+            android:id="@+id/simpleRatingBarPlayer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"

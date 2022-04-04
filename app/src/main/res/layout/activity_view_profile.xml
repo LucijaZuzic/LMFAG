@@ -141,7 +141,7 @@
                 android:src="@drawable/ic_baseline_description_24" />
 
             <TextView
-                android:id="@+id/editTextMyDescription"
+                android:id="@+id/textViewMyDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
@@ -182,7 +182,7 @@
                     android:textColor="@color/white"
                     android:textSize="21sp"
                     android:textStyle="bold"
-                    app:drawableStartCompat="@drawable/ic_baseline_list_alt_24" />
+                    app:drawableStartCompat="@drawable/ic_baseline_interests_24" />
 
                 <ImageView
                     android:id="@+id/imageViewExpandAreasOfInterest"
@@ -268,22 +268,22 @@
             android:baselineAligned="false">
 
             <LinearLayout
-                android:gravity="center"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:gravity="center"
                     android:id="@+id/imageViewSendFriendRequest"
                     android:layout_width="96dp"
                     android:layout_height="48dp"
+                    android:background="@drawable/gradient"
                     android:clickable="true"
                     android:contentDescription="@string/send_friend_request"
                     android:focusable="true"
-                    android:background="@drawable/gradient"
-                    android:src="@drawable/ic_baseline_person_add_24"/>
+                    android:gravity="center"
+                    android:src="@drawable/ic_baseline_person_add_24" />
 
             </LinearLayout>
 
@@ -296,7 +296,7 @@
 
                 <ImageView
                     android:gravity="center"
-                    android:id="@+id/imageViewDiscard"
+                    android:id="@+id/imageViewMyMesages"
                     android:layout_width="96dp"
                     android:layout_height="48dp"
                     android:clickable="true"
