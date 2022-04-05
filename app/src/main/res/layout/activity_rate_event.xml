@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-            <TextView
+        <TextView
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -27,22 +27,29 @@
                 android:textStyle="bold"
                 android:textSize="21sp"
                 android:text="@string/rate_event"/>
-        <TextView
-                android:layout_marginTop="10dp"
-                android:background="@drawable/gradient"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-            android:drawableStart="@drawable/ic_baseline_emoji_events_24"
-                android:padding="5dp"
-                android:gravity="center"
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/organizerBanner"
+            android:orientation="vertical">
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/gradient"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/organizer"
                 android:textColor="@color/white"
-                android:textStyle="bold"
                 android:textSize="21sp"
-                android:text="@string/organizer" />
+                android:textStyle="bold"
+                app:drawableStartCompat="@drawable/ic_baseline_emoji_events_24" />
 
-            <LinearLayout
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:gravity="center"
                 android:layout_marginTop="10dp"
@@ -92,6 +99,7 @@
                         android:rating="2" />
 
                 </LinearLayout>
+        </LinearLayout>
             </LinearLayout>
             <TextView
                 android:layout_marginTop="10dp"
@@ -101,13 +109,13 @@
                 android:layout_marginLeft="10dp"
                 android:id="@+id/textViewUsers"
                 android:padding="5dp"
-                android:drawableStart="@drawable/ic_baseline_groups_24"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 android:textSize="21sp"
-                android:text="@string/players" />
+                android:text="@string/players"
+                app:drawableStartCompat="@drawable/ic_baseline_groups_24" />
 
 
         <androidx.recyclerview.widget.RecyclerView

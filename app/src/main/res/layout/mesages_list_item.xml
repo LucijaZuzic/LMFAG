@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
     android:id="@+id/list_entry"
-    android:gravity="right"
     android:orientation="horizontal">
 
 
@@ -15,10 +14,21 @@
         android:id="@+id/list_entry_nested"
         android:orientation="horizontal">
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image_bubble"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:src="@drawable/ic_baseline_profile_picture_24"
+            app:civ_border_color="@color/my_pink"
+            app:civ_border_width="0dp"
+            app:civ_circle_background_color="@color/blue_gray_100" />
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:orientation="vertical">
 
             <LinearLayout
@@ -30,24 +40,23 @@
                 android:orientation="vertical">
             <TextView
                 android:id="@+id/textViewSender"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:visibility="gone"
-                android:hint="@string/lastest_message" />
+                android:textStyle="bold"
+                android:hint="@string/latest_message" />
 
             <TextView
                 android:id="@+id/textViewLatestMessage"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="@string/lastest_message" />
+                android:hint="@string/latest_message" />
             </LinearLayout>
             <TextView
                 android:id="@+id/textViewTime"
-                android:visibility="gone"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="@string/lastest_message" />
+                android:visibility="gone"
+                android:hint="@string/latest_message" />
 
         </LinearLayout>
     </LinearLayout>

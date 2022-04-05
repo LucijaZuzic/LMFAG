@@ -44,12 +44,13 @@
 
             <EditText
                 android:id="@+id/editTextMessage"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:layout_weight="0.9"
                 android:ems="10"
                 android:hint="@string/enter_message"
+                android:importantForAutofill="no"
                 android:inputType="textPersonName"
                 android:minHeight="48dp" />
 
@@ -60,13 +61,14 @@
                 android:minHeight="48dp"
                 android:background="@drawable/gradient"
                 android:minWidth="48dp"
+                android:contentDescription="@string/send_message"
                 app:srcCompat="@drawable/ic_baseline_send_24" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_marginTop="10dp"
             android:id="@+id/recyclerViewMessages"
-            app:stackFromEnd="true"
+            app:stackFromEnd="false"
             android:layout_width="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:layout_height="wrap_content"

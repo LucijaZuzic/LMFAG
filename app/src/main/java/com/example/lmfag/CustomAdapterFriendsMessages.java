@@ -58,6 +58,7 @@ public class CustomAdapterFriendsMessages extends RecyclerView.Adapter<CustomAda
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView textViewUsername;
         private final CircleImageView profile_image;
+        private final CircleImageView profile_image_two;
         private TextView latestMessage;
         private TextView sender;
         private TextView time;
@@ -70,6 +71,7 @@ public class CustomAdapterFriendsMessages extends RecyclerView.Adapter<CustomAda
 
             textViewUsername = (TextView) view.findViewById(R.id.textViewUsernameFriend);
             profile_image = (CircleImageView) view.findViewById(R.id.profile_image_friend);
+            profile_image_two = (CircleImageView) view.findViewById(R.id.profile_image_bubble);
             latestMessage = (TextView) view.findViewById(R.id.textViewLatestMessage);
             sender = (TextView) view.findViewById(R.id.textViewSender);
             nested = (LinearLayout) view.findViewById(R.id.list_entry_nested);
@@ -81,6 +83,9 @@ public class CustomAdapterFriendsMessages extends RecyclerView.Adapter<CustomAda
         }
         public CircleImageView getProfileImage() {
             return profile_image;
+        }
+        public CircleImageView getProfileImageTwo() {
+            return profile_image_two;
         }
         public TextView getLatest() {
             return latestMessage;
@@ -131,16 +136,14 @@ public class CustomAdapterFriendsMessages extends RecyclerView.Adapter<CustomAda
         // contents of the view with that element
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users").document(localFriendUsernames.get(position));
-        if (!localFriendUsernames.get(position).equals(preferences.getString("userID", ""))) {
-            viewHolder.getProfileImage().setOnClickListener(view -> {
-                SharedPreferences.Editor editor = preferences.edit();
-                String name = localFriendUsernames.get(position);
-                editor.putString("friendID", name);
-                editor.apply();
-                Intent myIntent = new Intent(context, ViewMessages.class);
-                context.startActivity(myIntent);
-            });
-        }
+        viewHolder.getProfileImage().setOnClickListener(view -> {
+            SharedPreferences.Editor editor = preferences.edit();
+            String name = localFriendUsernames.get(position);
+            editor.putString("friendID", name);
+            editor.apply();
+            Intent myIntent = new Intent(context, ViewMessages.class);
+            context.startActivity(myIntent);
+        });
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
@@ -168,81 +171,62 @@ public class CustomAdapterFriendsMessages extends RecyclerView.Adapter<CustomAda
         viewHolder.getNested().setOnClickListener(view -> {
             if (viewHolder.getTime().getVisibility() == View.GONE) {
                 viewHolder.getTime().setVisibility(View.VISIBLE);
-                viewHolder.getSender().setVisibility(View.VISIBLE);
             } else {
                 viewHolder.getTime().setVisibility(View.GONE);
-                viewHolder.getSender().setVisibility(View.GONE);
             }
         });
         db.collection("messages")
-                .whereIn("sender", Arrays.asList(preferences.getString("userID",""),other))
-                .limit(1).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .whereIn("receiver", Arrays.asList(preferences.getString("userID",""),other))
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                int number_entry = 0;
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
-
-                            viewHolder.getLatest().setText(document.getData().get("messages").toString());
-
-                            Timestamp start_timestamp = (Timestamp)(document.getData().get("timestamp"));
-                            Date start_date = start_timestamp.toDate();
-                            Calendar cldr_start = Calendar.getInstance();
-                            cldr_start.setTime(start_date);
-                            viewHolder.getTime().setText(DateFormat.getDateTimeInstance().format(cldr_start.getTime()));
-                            DocumentReference docRef = db.collection("users").document(document.getData().get("sender").toString());
-                            docRef.get().addOnCompleteListener(task2 -> {
-                                if (task.isSuccessful()) {
-                                    DocumentSnapshot document2 = task2.getResult();
-                                    if (document2.exists()) {
-                                        Map<String, Object> data = document2.getData();
-
-                                        viewHolder.getSender().setText(data.get("username").toString());
-                                        FirebaseStorage storage = FirebaseStorage.getInstance();
-                                        StorageReference storageRef = storage.getReference();
-                                        StorageReference imagesRef = storageRef.child("profile_pictures/" + document2.getId());
-                                        final long ONE_MEGABYTE = 1024 * 1024;
-                                        imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                                            // Data for "images/island.jpg" is returns, use this as needed
-                                            CircleImageView circleImageView = viewHolder.getProfileImage();
-                                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-                                            circleImageView.setImageBitmap(bmp);
-                                            SharedPreferences.Editor editor = preferences.edit();
-                                            editor.putString("friendID", document.getId());
-                                            editor.apply();
-                                            viewHolder.getProfileImage().setOnClickListener(view -> {
-                                                Intent myIntent = new Intent(context, ViewMessages.class);
-                                                context.startActivity(myIntent);
+                            if (number_entry > 0) {
+                                continue;
+                            }
+                            if (document.get("sender").toString().equals(preferences.getString("userID", "")) || document.get("sender").toString().equals(other)) {
+                                number_entry = 1;
+                                viewHolder.getLatest().setText(document.getData().get("messages").toString());
+                                Timestamp start_timestamp = (Timestamp) (document.getData().get("timestamp"));
+                                Date start_date = start_timestamp.toDate();
+                                Calendar cldr_start = Calendar.getInstance();
+                                cldr_start.setTime(start_date);
+                                viewHolder.getTime().setText(DateFormat.getDateTimeInstance().format(cldr_start.getTime()));
+                                DocumentReference docRef = db.collection("users").document(document.getData().get("sender").toString());
+                                docRef.get().addOnCompleteListener(task2 -> {
+                                    if (task2.isSuccessful()) {
+                                        DocumentSnapshot document2 = task2.getResult();
+                                        if (document2.exists()) {
+                                            Map<String, Object> data = document2.getData();
+                                            viewHolder.getSender().setText(data.get("username").toString());
+                                            FirebaseStorage storage = FirebaseStorage.getInstance();
+                                            StorageReference storageRef = storage.getReference();
+                                            StorageReference imagesRef = storageRef.child("profile_pictures/" + document2.getId());
+                                            final long ONE_MEGABYTE = 1024 * 1024;
+                                            imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+                                                // Data for "images/island.jpg" is returns, use this as needed
+                                                CircleImageView circleImageView = viewHolder.getProfileImageTwo();
+                                                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                                circleImageView.setImageBitmap(bmp);
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception exception) {
+                                                    // Handle any errors
+                                                }
                                             });
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception exception) {
-                                                // Handle any errors
-                                            }
-                                        });
-                                        //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                                    } else {
-
-                                        //Log.d(TAG, "No such document");
+                                        }
                                     }
-                                } else {
-                                    //Log.d(TAG, "get failed with ", task.getException());
-                                }
-                            });
+                                });
+                            }
                         }
-
                     }
                 }
             }
         });
-
-        /*db.collection("messages")
-                .whereEqualTo("sender", localFriendUsernames.get(position))
-                .orderBy("timestamp", Index.IndexField.Order.DESCENDING).addSnapshotListener(
-
-
-
-        )*/
     }
 
     // Return the size of your dataset (invoked by the layout manager)

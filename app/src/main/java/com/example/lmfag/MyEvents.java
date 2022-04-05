@@ -60,20 +60,17 @@ public class MyEvents extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         List<String> events_array = new ArrayList<>();
         String userID = preferences.getString("userID", "");
-        String eventID = preferences.getString("eventID", "");
         if (!userID.equals("")) {
-            db.collection("events_attending").whereEqualTo("event", eventID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            db.collection("event_attending").whereEqualTo("user", userID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
                         if (task.getResult().size() > 0) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                if (document.getData().get("user").equals(userID)) {
-                                    events_array.add(document.getId());
-                                }
+                                events_array.add(document.getData().get("event").toString());
                             }
                             CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(events_array, context, preferences);
-                            recyclerViewEventsOrganizer.setAdapter(customAdapterEvents);
+                            recyclerViewEventsPlayer.setAdapter(customAdapterEvents);
                         }
                     }
                 }

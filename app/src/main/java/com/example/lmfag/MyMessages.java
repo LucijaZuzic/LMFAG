@@ -54,32 +54,29 @@ public class MyMessages extends AppCompatActivity {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String me = preferences.getString("userID", "");
         if (me.equals("")) {
-            return;
+            Intent myIntent = new Intent(context, MainActivity.class);
+            startActivity(myIntent);
         }
-        db.collection("messages").whereEqualTo("sender", me).limit(1000).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection("messages").whereEqualTo("sender", me).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            if(!(document.getId().equals(preferences.getString("userID", "")))) {
-                                String receiver = document.getData().get("receiver").toString();
-                                if (!friends_array.contains(receiver)) {
-                                    friends_array.add(receiver);
-                                }
+                            String receiver = document.getData().get("receiver").toString();
+                            if (!friends_array.contains(receiver) && !receiver.equals(me)) {
+                                friends_array.add(receiver);
                             }
                         }
-                        db.collection("messages").whereEqualTo("receiver", me).limit(1000).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        db.collection("messages").whereEqualTo("receiver", me).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 if (task.isSuccessful()) {
                                     if (task.getResult().size() > 0) {
                                         for (QueryDocumentSnapshot document : task.getResult()) {
-                                            if(!(document.getId().equals(preferences.getString("userID", "")))) {
-                                                String sender = document.getData().get("sender").toString();
-                                                if (!friends_array.contains(sender)) {
-                                                    friends_array.add(sender);
-                                                }
+                                            String sender = document.getData().get("sender").toString();
+                                            if (!friends_array.contains(sender) && !sender.equals(me)) {
+                                                friends_array.add(sender);
                                             }
                                         }
                                         CustomAdapterFriendsMessages customAdapterFriends = new CustomAdapterFriendsMessages(friends_array, context, preferences);

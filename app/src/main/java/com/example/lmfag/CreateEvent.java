@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -33,6 +34,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import kotlinx.coroutines.SchedulerTaskKt;
 
 public class CreateEvent extends AppCompatActivity {
 
@@ -95,6 +98,16 @@ public class CreateEvent extends AppCompatActivity {
 
             }
         });
+        ImageView location_choose = findViewById(R.id.imageViewChooseLocation);
+        location_choose.setOnClickListener(view -> {
+            Intent myIntent = new Intent(context, ChooseLocation.class);
+            startActivity(myIntent);
+        });
+        ImageView close = findViewById(R.id.imageViewDiscard);
+        close.setOnClickListener(view -> {
+            Intent myIntent = new Intent(context, ViewEvent.class);
+            startActivity(myIntent);
+        });
     }
 
     void setDate() {
@@ -110,7 +123,7 @@ public class CreateEvent extends AppCompatActivity {
                         if (cldr_start.getTime().before(Calendar.getInstance().getTime())) {
                             Snackbar.make(imageViewChooseStartDate, "Event can't begin in the past.", Snackbar.LENGTH_SHORT).show();
                         }
-                        if (cldr_start.getTime().after(cldr_end.getTime())) {
+                        if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
                             Snackbar.make(imageViewChooseStartDate, "Event can't end before beginning.", Snackbar.LENGTH_SHORT).show();
                         }
                     }, year_start, month_start, day_start);
@@ -128,7 +141,7 @@ public class CreateEvent extends AppCompatActivity {
                         if (cldr_end.getTime().before(Calendar.getInstance().getTime())) {
                             Snackbar.make(imageViewChooseStartDate, "Event can't end in the past.", Snackbar.LENGTH_SHORT).show();
                         }
-                        if (cldr_start.getTime().after(cldr_end.getTime())) {
+                        if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
                             Snackbar.make(imageViewChooseEndDate, "Event can't end before beginning.", Snackbar.LENGTH_SHORT).show();
                         }
                     }, year_end, month_end, day_end);
@@ -148,7 +161,7 @@ public class CreateEvent extends AppCompatActivity {
                         if (cldr_start.getTime().before(Calendar.getInstance().getTime())) {
                             Snackbar.make(imageViewChooseStartDate, "Event can't begin in the past.", Snackbar.LENGTH_SHORT).show();
                         }
-                        if (cldr_start.getTime().after(cldr_end.getTime())) {
+                        if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
                             Snackbar.make(imageViewChooseStartTime, "Event can't end before beginning.", Snackbar.LENGTH_SHORT).show();
                         }
                     }, hours_start, minutes_start, true);
@@ -165,7 +178,7 @@ public class CreateEvent extends AppCompatActivity {
                         if (cldr_end.getTime().before(Calendar.getInstance().getTime())) {
                             Snackbar.make(imageViewChooseEndDate, "Event can't end in the past.", Snackbar.LENGTH_SHORT).show();
                         }
-                        if (cldr_start.getTime().after(cldr_end.getTime())) {
+                        if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
                             Snackbar.make(imageViewChooseStartTime, "Event can't end before beginning.", Snackbar.LENGTH_SHORT).show();
                         }
                     }, hours_end, minutes_end, true);
@@ -201,6 +214,10 @@ public class CreateEvent extends AppCompatActivity {
             if (task.isSuccessful()) {
                 if(task.getResult().size() == 0) {
                     docRef.add(docData);
+                } else {
+                    for (QueryDocumentSnapshot doc: task.getResult()) {
+                        docRef.document(doc.getId()).set(docData);
+                    }
                 }
             }
         });
@@ -234,21 +251,23 @@ public class CreateEvent extends AppCompatActivity {
         String eventID = preferences.getString("eventID", "");
         if (eventID.equals("")) {
             writeDB(docData, attending);
+        } else {
+            db.collection("events")
+                    .document(eventID)
+                    .set(docData)
+                    .addOnSuccessListener(aVoid -> {
+                        //Log.d(TAG, "DocumentSnapshot successfully written!");
+                        Snackbar.make(apply, R.string.updated_event, Snackbar.LENGTH_SHORT).show();
+                        if (attending) {
+                            writeAttending();
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Snackbar.make(apply, R.string.write_failed, Snackbar.LENGTH_SHORT).show();
+                        //Log.w(TAG, "Error writing document", e);
+                    });
         }
-        db.collection("events")
-                .document(eventID)
-                .set(docData)
-                .addOnSuccessListener(aVoid -> {
-                    //Log.d(TAG, "DocumentSnapshot successfully written!");
-                    Snackbar.make(apply, R.string.updated_event, Snackbar.LENGTH_SHORT).show();
-                    if (attending) {
-                        writeAttending();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Snackbar.make(apply, R.string.write_failed, Snackbar.LENGTH_SHORT).show();
-                    //Log.w(TAG, "Error writing document", e);
-                });
+
     }
     void fetchDataFromUI() {
         Map<String, Object> docData = new HashMap<>();
@@ -273,7 +292,7 @@ public class CreateEvent extends AppCompatActivity {
         String userID = preferences.getString("userID", "");
         docData.put("organizer", userID);
         docData.put("location", new GeoPoint(latitude, longitude));
-        if (cldr_start.getTime().after(cldr_end.getTime())) {
+        if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
             Snackbar.make(imageViewChooseStartTime, "Event can't end before beginning.", Snackbar.LENGTH_SHORT).show();
         } else {
             setDB(docData, switch_organizer.isChecked());
@@ -314,6 +333,11 @@ public class CreateEvent extends AppCompatActivity {
                         Timestamp end_timestamp = (Timestamp)(docData.get("ending"));
                         Date end_date = end_timestamp.toDate();
                         cldr_end.setTime(end_date);
+                        if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime())) {
+                            Snackbar.make(sp, "Can't edit an event that finished.", Snackbar.LENGTH_SHORT).show();
+                            Intent myIntent = new Intent(context, ViewEvent.class);
+                            startActivity(myIntent);
+                        }
                         textViewChooseStartDate.setText(DateFormat.getDateInstance().format(cldr_start.getTime()));
                         textViewChooseStartTime.setText(DateFormat.getTimeInstance().format(cldr_start.getTime()));
                         textViewChooseEndDate.setText(DateFormat.getDateInstance().format(cldr_end.getTime()));
@@ -325,6 +349,8 @@ public class CreateEvent extends AppCompatActivity {
                         location.setText(latitude + ":" + longitude);
                         String userID = preferences.getString("userID", "");
                         if (userID.equals("")) {
+                            Intent myIntent = new Intent(context, MainActivity.class);
+                            startActivity(myIntent);
                             return;
                         }
                         CollectionReference docRef2 = db.collection("event_attending");

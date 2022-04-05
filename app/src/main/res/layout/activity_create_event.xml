@@ -414,7 +414,7 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/floatingActionButtonChooseLocation"
+                android:id="@+id/imageViewChooseLocation"
                 android:layout_width="54dp"
                 android:layout_height="54dp"
                 android:padding="10dp"
