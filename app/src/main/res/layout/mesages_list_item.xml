@@ -1,64 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/list_entry"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
-    android:id="@+id/list_entry"
+    android:layout_marginBottom="10dp"
     android:orientation="horizontal">
 
 
     <LinearLayout
+        android:id="@+id/list_entry_nested"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/list_entry_nested"
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image_bubble"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
             android:gravity="center"
             android:src="@drawable/ic_baseline_profile_picture_24"
             app:civ_border_color="@color/my_pink"
             app:civ_border_width="0dp"
             app:civ_circle_background_color="@color/blue_gray_100" />
 
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
+            <androidx.cardview.widget.CardView
                 android:id="@+id/background_change"
-                android:background="@drawable/rounded_corner_no_highlight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:orientation="vertical">
-            <TextView
-                android:id="@+id/textViewSender"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:hint="@string/latest_message" />
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="25dp"
+                app:cardBackgroundColor="@color/blue_gray_100"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="10dp"
+                app:contentPadding="10dp">
 
-            <TextView
-                android:id="@+id/textViewLatestMessage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="@string/latest_message" />
-            </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:id="@+id/textViewSender"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/latest_message"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textViewLatestMessage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/latest_message" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
             <TextView
                 android:id="@+id/textViewTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
                 android:visibility="gone"
-                android:hint="@string/latest_message" />
-
+                android:hint="@string/latest_message"  />
         </LinearLayout>
+
     </LinearLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

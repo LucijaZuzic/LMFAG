@@ -16,6 +16,8 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -46,7 +48,7 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
         private final TextView messageTextView;
         private final TextView senderTextView;
         private final TextView time;
-        private final LinearLayout background;
+        private final CardView background;
         private final LinearLayout layout;
         private final CircleImageView profile_image_two;
 
@@ -58,7 +60,7 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
             time = (TextView) view.findViewById(R.id.textViewTime);
             senderTextView = (TextView) view.findViewById(R.id.textViewSender);
             layout = (LinearLayout) view.findViewById(R.id.list_entry_nested);
-            background = (LinearLayout) view.findViewById(R.id.background_change);
+            background = (CardView) view.findViewById(R.id.background_change);
             profile_image_two = (CircleImageView) view.findViewById(R.id.profile_image_bubble);
         }
 
@@ -74,7 +76,7 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
         public LinearLayout getLayout() {
             return layout;
         }
-        public LinearLayout getBackground() {
+        public CardView getBackground() {
             return background;
         }
         public CircleImageView getProfileImageTwo() {
@@ -122,7 +124,7 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
         });
         if (!sender.get(position).equals(me)) {
             viewHolder.getLayout().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-            viewHolder.getBackground().setBackground(context.getDrawable(R.drawable.rounded_corner_highlight));
+            viewHolder.getBackground().setCardBackgroundColor(ContextCompat.getColor(context, R.color.purple_200));
             viewHolder.getSenderTextView().setTextColor(context.getResources().getColor(R.color.white));
             viewHolder.getMessageTextView().setTextColor(context.getResources().getColor(R.color.white));
             //viewHolder.getTime().setTextColor(context.getResources().getColor(R.color.white));
@@ -133,7 +135,7 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which){
                             case DialogInterface.BUTTON_POSITIVE:
-                                db.collection("messages").document(delete_id).update("messages", "Deleted by sender.");
+                                db.collection("messages").document(delete_id).update("messages", R.string.deleted_by_sender);
                                 context.refresh();
                                 break;
 
@@ -144,7 +146,7 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
                     }
                 };
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.context);
-                builder.setMessage("Do you want to delete this message?").setPositiveButton("Yes", dialogClickListener).setNegativeButton("No", dialogClickListener).show();
+                builder.setMessage(R.string.delete_message).setPositiveButton(R.string.yes, dialogClickListener).setNegativeButton(R.string.no, dialogClickListener).show();
                 return true;
             });
         }

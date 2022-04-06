@@ -30,6 +30,7 @@ import com.google.firebase.storage.StorageReference;
 
 import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
+import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
@@ -151,6 +152,13 @@ public class ViewEvent extends AppCompatActivity {
         super.onResume();
         fillData();
         checkSubscribed();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        latitude = preferences.getFloat("newEventLatitude", (float)latitude);
+        longitude = preferences.getFloat("newEventLongitude", (float)longitude);
+        String formattedLocation = getString(R.string.location) + ": " + getString(R.string.latitude) + ": " + Double.toString(Math.round(latitude * 10000) / 10000.0) + " "
+                + getString(R.string.longitude) + ": " + Double.toString(Math.round(longitude * 10000) / 10000.0);
+        TextView location = findViewById(R.id.textViewChooseLocation);
+        location.setText(formattedLocation);
     }
     void refresh() {
         Intent myIntent = new Intent(context, ViewEvent.class);
@@ -275,7 +283,7 @@ public class ViewEvent extends AppCompatActivity {
                                     if (areas_array.contains(event_type)) {
                                         if (minimum_level > 0) {
                                             if (points_array.get(areas_array.indexOf(event_type)) < minimum_level * 1000) {
-                                                Snackbar.make(switch_notify, "Your level is not high enough to participate.", Snackbar.LENGTH_SHORT).show();
+                                                Snackbar.make(switch_notify, R.string.level_low, Snackbar.LENGTH_SHORT).show();
                                             } else {
                                                 if (public_event) {
                                                     docuRef.add(docData);
@@ -287,7 +295,7 @@ public class ViewEvent extends AppCompatActivity {
                                         }
                                     } else {
                                         if (minimum_level > 0) {
-                                            Snackbar.make(switch_notify, "Your level is not high enough to participate.", Snackbar.LENGTH_SHORT).show();
+                                            Snackbar.make(switch_notify, R.string.level_low, Snackbar.LENGTH_SHORT).show();
                                         }
                                     }
                                 }
@@ -295,7 +303,7 @@ public class ViewEvent extends AppCompatActivity {
                         }
                     });
                 } else {
-                    Snackbar.make(switch_notify, "Too many participants.", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(switch_notify, R.string.too_many, Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
@@ -470,6 +478,8 @@ public class ViewEvent extends AppCompatActivity {
                     longitude = location_point.getLongitude();
 
                     // Loading map
+                    Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
+
                     map = findViewById(R.id.map);
                     map.setTileSource(TileSourceFactory.MAPNIK);
                     map.setMultiTouchControls(true);
@@ -478,12 +488,14 @@ public class ViewEvent extends AppCompatActivity {
                     chosenLocationMarker = new Marker(map);
                     chosenLocationMarker.setDraggable(false);
                     // Centering map based on current location
+
+                    myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context), map);
+                    myLocationOverlay.disableMyLocation();
+                    myLocationOverlay.disableFollowLocation();
                     mapController.setCenter(new org.osmdroid.util.GeoPoint(latitude, longitude));
                     chosenLocationMarker.setPosition(new org.osmdroid.util.GeoPoint(latitude, longitude));
-                    String formattedLocation = String.format(
-                            "Location:\nLatitude %.4f\nLongitude: %.4f",
-                            latitude, longitude
-                    );
+                    String formattedLocation = getString(R.string.location) + ": " + getString(R.string.latitude) + ": " + Double.toString(Math.round(latitude * 10000) / 10000.0) + " "
+                            + getString(R.string.longitude) + ": " + Double.toString(Math.round(longitude * 10000) / 10000.0);
                     location.setText(formattedLocation);
 
                     map.getOverlays().add(chosenLocationMarker);

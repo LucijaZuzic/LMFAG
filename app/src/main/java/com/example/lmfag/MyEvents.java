@@ -8,6 +8,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -32,8 +35,57 @@ public class MyEvents extends AppCompatActivity {
         recyclerViewEventsPlayer = findViewById(R.id.recyclerViewEventsPlayer);
         recyclerViewEventsOrganizer = findViewById(R.id.recyclerViewEventsOrganizer);
         getOrganizerEvents();
+        showOrganizer();
+        showPlayer();
         getPlayerEvents();
     }
+
+
+    void showFriends() {
+        LinearLayout ll_friends_show = findViewById(R.id.linearLayoutShowFriends);
+        RecyclerView ll_friends = findViewById(R.id.recyclerViewFriends);
+        ImageView iv_friends = findViewById(R.id.imageViewExpandFriends);
+        ll_friends_show.setOnClickListener(view -> {
+            if (ll_friends.getVisibility() == View.GONE) {
+                ll_friends.setVisibility(View.VISIBLE);
+                iv_friends.setImageResource(R.drawable.ic_baseline_expand_less_24);
+            } else {
+                ll_friends.setVisibility(View.GONE);
+                iv_friends.setImageResource(R.drawable.ic_baseline_expand_more_24);
+            }
+        });
+    }
+
+    void showOrganizer() {
+        LinearLayout ll_areas_show = findViewById(R.id.linearLayoutShowOrganizer);
+        RecyclerView ll_areas = findViewById(R.id.recyclerViewEventsOrganizer);
+        ImageView iv_areas = findViewById(R.id.imageViewExpandOrganizer);
+        ll_areas_show.setOnClickListener(view -> {
+            if (ll_areas.getVisibility() == View.GONE) {
+                ll_areas.setVisibility(View.VISIBLE);
+                iv_areas.setImageResource(R.drawable.ic_baseline_expand_less_24);
+            } else {
+                ll_areas.setVisibility(View.GONE);
+                iv_areas.setImageResource(R.drawable.ic_baseline_expand_more_24);
+            }
+        });
+    }
+    void showPlayer() {
+        LinearLayout ll_areas_show = findViewById(R.id.linearLayoutShowPlayer);
+        RecyclerView ll_areas = findViewById(R.id.recyclerViewEventsPlayer);
+        ImageView iv_areas = findViewById(R.id.imageViewExpandPlayer);
+        ll_areas_show.setOnClickListener(view -> {
+            if (ll_areas.getVisibility() == View.GONE) {
+                ll_areas.setVisibility(View.VISIBLE);
+                iv_areas.setImageResource(R.drawable.ic_baseline_expand_less_24);
+            } else {
+                ll_areas.setVisibility(View.GONE);
+                iv_areas.setImageResource(R.drawable.ic_baseline_expand_more_24);
+            }
+        });
+    }
+
+
 
     void getOrganizerEvents() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();

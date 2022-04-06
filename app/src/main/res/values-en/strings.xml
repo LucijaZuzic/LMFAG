@@ -76,9 +76,29 @@
     <string name="notifications">Notifications</string>
     <string name="date">Date</string>
     <string name="time">Time</string>
+    <string name="created_event">Created event!</string>
+    <string name="updated_event">Updated event</string>
     <string name="initial_minimum_level">0</string>
+    <string name="enter_search_value">Enter search value.</string>
+    <string name="latest_message">Latest message</string>
     <string name="enter_message">Enter message.</string>
+    <string name="choose_duration">Choose duration</string>
+    <string name="duration">Duration</string>
+    <string name="choose_start_date">Choose start date</string>
+    <string name="choose_start_time">Choose start time</string>
+    <string name="choose_end_time">Choose end time</string>
+    <string name="choose_end_date">Choose end date</string>
+    <string name="organizer_edit">Only organizer can edit event.</string>
+    <string name="enter_event_name">Enter event name.</string>
+    <string name="enter_organizer_name">Enter organizer name.</string>
     <string name="event_start">Event start</string>
+    <string name="event_end">Event end</string>
+    <string name="private_event">Private event</string>
+    <string name="indoor">Indoor</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="enter_longitude">Enter longitude</string>
+    <string name="enter_latitude">Enter latitude</string>
     <string-array name="event_types">
         <item>skiing</item>
         <item>hiking</item>
@@ -123,8 +143,20 @@
         <item>areas of interest</item>
         <item>description</item>
         <item>location</item>
-        <item>levels</item>
+        <item>username</item>
+    </string-array>
+    <string-array name="friend_sort_params">
         <item>rank</item>
         <item>username</item>
+    </string-array>
+    <string-array name="event_search_params">
+        <item>event type</item>
+        <item>event name</item>
+        <item>description</item>
+    </string-array>
+    <string-array name="event_sort_params">
+        <item>start time</item>
+        <item>event type</item>
+        <item>event name</item>
     </string-array>
 </resources>

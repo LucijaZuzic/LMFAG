@@ -20,6 +20,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 
+import com.firebase.geofire.GeoFireUtils;
+import com.firebase.geofire.GeoLocation;
 import com.google.android.material.slider.RangeSlider;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
@@ -29,6 +31,15 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import org.osmdroid.api.IMapController;
+import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -39,6 +50,10 @@ import kotlinx.coroutines.SchedulerTaskKt;
 
 public class CreateEvent extends AppCompatActivity {
 
+    private MapView map;
+    private IMapController mapController;
+    private MyLocationNewOverlay myLocationOverlay;
+    private Marker chosenLocationMarker;
     final Calendar cldr_start = Calendar.getInstance();
     int hours_start = cldr_start.get(Calendar.HOUR_OF_DAY);
     int minutes_start = cldr_start.get(Calendar.MINUTE);
@@ -109,7 +124,18 @@ public class CreateEvent extends AppCompatActivity {
             startActivity(myIntent);
         });
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        latitude = preferences.getFloat("newEventLatitude", (float)latitude);
+        longitude = preferences.getFloat("newEventLongitude", (float)longitude);
+        String formattedLocation = getString(R.string.location) + ": " + getString(R.string.latitude) + ": " + Double.toString(Math.round(latitude * 10000) / 10000.0) + " "
+                + getString(R.string.longitude) + ": " + Double.toString(Math.round(longitude * 10000) / 10000.0);
+        TextView location = findViewById(R.id.textViewChooseLocation);
+        location.setText(formattedLocation);
+    }
     void setDate() {
         imageViewChooseStartDate.setOnClickListener(v -> {
             // time picker dialog
@@ -292,6 +318,7 @@ public class CreateEvent extends AppCompatActivity {
         String userID = preferences.getString("userID", "");
         docData.put("organizer", userID);
         docData.put("location", new GeoPoint(latitude, longitude));
+        docData.put("geo_hash", GeoFireUtils.getGeoHashForLocation(new GeoLocation(latitude, longitude)));
         if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
             Snackbar.make(imageViewChooseStartTime, "Event can't end before beginning.", Snackbar.LENGTH_SHORT).show();
         } else {
@@ -346,7 +373,32 @@ public class CreateEvent extends AppCompatActivity {
                         GeoPoint location_point = (GeoPoint)(docData.get("location"));
                         latitude = location_point.getLatitude();
                         longitude = location_point.getLongitude();
-                        location.setText(latitude + ":" + longitude);
+                        // Loading map
+                        Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
+
+                        map = findViewById(R.id.map);
+                        map.setTileSource(TileSourceFactory.MAPNIK);
+                        map.setMultiTouchControls(true);
+                        mapController = map.getController();
+
+                        chosenLocationMarker = new Marker(map);
+                        chosenLocationMarker.setDraggable(false);
+                        // Centering map based on current location
+
+                        myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context), map);
+                        myLocationOverlay.disableMyLocation();
+                        myLocationOverlay.disableFollowLocation();
+                        mapController.setCenter(new org.osmdroid.util.GeoPoint(latitude, longitude));
+                        chosenLocationMarker.setPosition(new org.osmdroid.util.GeoPoint(latitude, longitude));
+                        String formattedLocation = getString(R.string.location) + ": " + getString(R.string.latitude) + ": " + Double.toString(Math.round(latitude * 10000) / 10000.0) + " "
+                                + getString(R.string.longitude) + ": " + Double.toString(Math.round(longitude * 10000) / 10000.0);
+                        location.setText(formattedLocation);
+
+                        map.getOverlays().add(chosenLocationMarker);
+                        mapController.setZoom(17.0);
+
+
+
                         String userID = preferences.getString("userID", "");
                         if (userID.equals("")) {
                             Intent myIntent = new Intent(context, MainActivity.class);

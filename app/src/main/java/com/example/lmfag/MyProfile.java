@@ -3,11 +3,14 @@ package com.example.lmfag;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 
@@ -56,6 +59,7 @@ public class MyProfile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
+
         showFriends();
         showAreasOfInterest();
         recyclerViewFriends = findViewById(R.id.recyclerViewFriends);
@@ -103,6 +107,9 @@ public class MyProfile extends AppCompatActivity {
         } else if (id == R.id.my_events) {
             Intent myIntent = new Intent(context, MyEvents.class);
             startActivity(myIntent);
+        } else if (id == R.id.events_nearby) {
+            Intent myIntent = new Intent(context, EventsNearby.class);
+            startActivity(myIntent);
         }
         drawer.closeDrawer(GravityCompat.START);
     }
@@ -111,6 +118,18 @@ public class MyProfile extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String theme = preferences.getString("theme", "");
+
+        if (!theme.equals("night"))
+        {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            menu.getItem(0).setIcon(R.drawable.ic_baseline_nights_stay_24);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            menu.getItem(0).setIcon(R.drawable.ic_baseline_wb_sunny_24);
+        }
         return true;
     }
     @Override
@@ -129,6 +148,22 @@ public class MyProfile extends AppCompatActivity {
                 }
                 flag = !flag;
                 return true;
+            case R.id.dayNightSwitch:
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                String theme = preferences.getString("theme", "");
+
+                SharedPreferences.Editor editor = preferences.edit();
+                if (!theme.equals("night"))
+                {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    editor.putString("theme", "night");
+                    editor.apply();
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    editor.putString("theme", "day");
+                    editor.apply();
+                }
+                recreate();
             default:
                 return super.onOptionsItemSelected(item);
         }

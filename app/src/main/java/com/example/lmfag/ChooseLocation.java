@@ -1,5 +1,7 @@
 package com.example.lmfag;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -24,7 +26,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +50,7 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.security.Permission;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Set;
 
 public class ChooseLocation extends AppCompatActivity {
@@ -54,8 +59,16 @@ public class ChooseLocation extends AppCompatActivity {
     private MyLocationNewOverlay myLocationOverlay;
     private Marker chosenLocationMarker;
     private TextView coordinatesView;
-    private ImageButton confirmButton;
+    private TextView markerView;
+    private ImageView confirmButton, updateButton;
+    private EditText enterLongitude, enterLatitude;
 
+    public static <K, V> V getOrDefault(@NonNull Map<K, V> map, K key, V defaultValue) {
+        V v;
+        return (((v = map.get(key)) != null) || map.containsKey(key))
+                ? v
+                : defaultValue;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +78,38 @@ public class ChooseLocation extends AppCompatActivity {
 
         setContentView(R.layout.activity_choose_location);
 
+
+        enterLatitude = findViewById(R.id.inputLatitude);
+        enterLongitude = findViewById(R.id.inputLongitude);
+        updateButton = findViewById(R.id.updateLocation);
+
+        //Request permission dialog
+        ActivityResultLauncher<String[]> locationPermissionRequest =
+                registerForActivityResult(new ActivityResultContracts
+                                .RequestMultiplePermissions(), result -> {
+                            Boolean fineLocationGranted = getOrDefault(result, Manifest.permission.ACCESS_FINE_LOCATION, false);
+                            Boolean coarseLocationGranted = getOrDefault(result, Manifest.permission.ACCESS_COARSE_LOCATION,false);
+                            if (fineLocationGranted != null && fineLocationGranted) {
+                                // Precise location access granted.
+                            } else if (coarseLocationGranted != null && coarseLocationGranted) {
+                                // Only approximate location access granted.
+                            } else {
+                                // No location access granted.
+                            }
+                        }
+                );
+        // ...
+
+        // Before you perform the actual permission request, check whether your app
+        // already has the permissions, and whether your app needs to show a permission
+        // rationale dialog. For more details, see Request permissions.
+        locationPermissionRequest.launch(new String[] {
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+        });
+
         // Init text view
+        markerView = findViewById(R.id.marker);
         coordinatesView = findViewById(R.id.coordinates);
 
         // Loading map
@@ -78,6 +122,7 @@ public class ChooseLocation extends AppCompatActivity {
         myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context), map);
         myLocationOverlay.enableMyLocation();
         myLocationOverlay.disableFollowLocation();
+
         myLocationOverlay.runOnFirstFix(new Runnable() {
             @Override
             public void run() {
@@ -86,10 +131,9 @@ public class ChooseLocation extends AppCompatActivity {
                     public void run() {
                         mapController.setCenter(myLocationOverlay.getMyLocation());
                         chosenLocationMarker.setPosition(myLocationOverlay.getMyLocation());
-                        String formattedLocation = String.format(
-                                "Location:\nLatitude %.4f\nLongitude: %.4f",
-                                myLocationOverlay.getMyLocation().getLatitude(), myLocationOverlay.getMyLocation().getLongitude()
-                        );
+                        String formattedLocation = getString(org.osmdroid.library.R.string.my_location) + ": " + getString(R.string.latitude) + ": " +
+                                Double.toString(Math.round(myLocationOverlay.getMyLocation().getLatitude() * 10000) / 10000.0) + " "
+                                + getString(R.string.longitude) + ": " + Double.toString(Math.round(myLocationOverlay.getMyLocation().getLongitude() * 10000) / 10000.0);
                         coordinatesView.setText(formattedLocation);
                     }
                 });
@@ -107,8 +151,16 @@ public class ChooseLocation extends AppCompatActivity {
 
             @Override
             public boolean longPressHelper(GeoPoint p) {
-                Toast.makeText(ChooseLocation.this, "Setting new marker location...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChooseLocation.this, getString(R.string.setting_location), Toast.LENGTH_SHORT).show();
                 chosenLocationMarker.setPosition(p);
+                enterLatitude.setText(Double.toString(p.getLatitude()));
+                enterLongitude.setText(Double.toString(p.getLongitude()));
+                String formattedLocation = getString(R.string.marker_location) + ": " + getString(R.string.latitude) + ": " +
+                        Double.toString(Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0) + " "
+                        + getString(R.string.longitude) + ": " + Double.toString(Math.round(chosenLocationMarker.getPosition().getLongitude() * 10000) / 10000.0);
+
+                mapController.setCenter(chosenLocationMarker.getPosition());
+                markerView.setText(formattedLocation);
                 return true;
             }
         };
@@ -124,28 +176,45 @@ public class ChooseLocation extends AppCompatActivity {
 
             @Override
             public void onMarkerDragEnd(Marker marker) {
-                String formattedLocation = String.format(
-                        "Location:\nLatitude %.4f\nLongitude: %.4f",
-                        marker.getPosition().getLatitude(), marker.getPosition().getLongitude()
-                );
-                coordinatesView.setText(formattedLocation);
+                String formattedLocation = getString(R.string.marker_location) + ": " + getString(R.string.latitude) + ": " +
+                        Double.toString(Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0) + " "
+                        + getString(R.string.longitude) + ": " + Double.toString(Math.round(chosenLocationMarker.getPosition().getLongitude() * 10000) / 10000.0);
+
+                mapController.setCenter(chosenLocationMarker.getPosition());
+                enterLatitude.setText(Double.toString(chosenLocationMarker.getPosition().getLatitude()));
+                enterLongitude.setText(Double.toString(chosenLocationMarker.getPosition().getLongitude()));
+                markerView.setText(formattedLocation);
             }
 
             @Override
             public void onMarkerDragStart(Marker marker) {
-                Toast.makeText(ChooseLocation.this, "Waiting for new location", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChooseLocation.this, getString(R.string.waiting_location), Toast.LENGTH_SHORT).show();
             }
         });
         map.getOverlays().add(chosenLocationMarker);
 
         // Confirm button
         confirmButton = findViewById(R.id.confirm_button);
-        confirmButton.setMinimumHeight(confirmButton.getWidth());
+
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 saveMarkerLocationToSP();
                 finish();
+            }
+        });
+        updateButton.setOnClickListener(view -> {
+            if (enterLongitude.getText().toString().length() != 0 && enterLatitude.getText().toString().length() != 0) {
+                Float temp_latitude = Float.parseFloat(enterLatitude.getText().toString());
+                Float temp_longitude = Float.parseFloat(enterLongitude.getText().toString());
+                chosenLocationMarker.setPosition(new GeoPoint(temp_latitude, temp_longitude));
+
+                mapController.setCenter(chosenLocationMarker.getPosition());
+                String formattedLocation = getString(R.string.marker_location) + ": " + getString(R.string.latitude) + ": " +
+                        Double.toString(Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0) + " "
+                        + getString(R.string.longitude) + ": " + Double.toString(Math.round(chosenLocationMarker.getPosition().getLongitude() * 10000) / 10000.0);
+
+                markerView.setText(formattedLocation);
             }
         });
     }
