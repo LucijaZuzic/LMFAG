@@ -91,6 +91,10 @@
     <string name="organizer_edit">Only organizer can edit event.</string>
     <string name="enter_event_name">Enter event name.</string>
     <string name="enter_organizer_name">Enter organizer name.</string>
+    <string name="event_start">Event start</string>
+    <string name="event_end">Event end</string>
+    <string name="private_event">Private event</string>
+    <string name="indoor">Indoor</string>
     <string-array name="event_types">
         <item>skiing</item>
         <item>hiking</item>

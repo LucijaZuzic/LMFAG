@@ -78,6 +78,7 @@
     <string name="time">Time</string>
     <string name="initial_minimum_level">0</string>
     <string name="enter_message">Enter message.</string>
+    <string name="event_start">Event start</string>
     <string-array name="event_types">
         <item>skiing</item>
         <item>hiking</item>

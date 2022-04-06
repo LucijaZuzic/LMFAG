@@ -14,11 +14,14 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.05"
+        android:background="@drawable/gradient"
         android:gravity="center|center_horizontal|center_vertical"
         android:paddingStart="30dp"
         android:paddingEnd="30dp"
-        android:text="Choose event location"
-        android:textColor="#FFFFFF" />
+        android:text="@string/choose_location"
+        android:textSize="21dp"
+        android:textStyle="bold"
+        android:textColor="@color/white" />
 
     <org.osmdroid.views.MapView
         android:id="@+id/map"
@@ -42,18 +45,18 @@
             android:layout_weight="0.8"
             android:gravity="center|center_horizontal|center_vertical"
             android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:textColor="#FFFFFF" />
+            android:paddingEnd="20dp"  />
 
         <ImageButton
             android:id="@+id/confirm_button"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_gravity="center"
             android:layout_weight="0.2"
-            android:backgroundTint="#003F83"
+            android:layout_margin="10dp"
+            android:background="@drawable/gradient"
             app:srcCompat="@drawable/ic_baseline_check_24"
-            app:tint="#FAFAFA" />
+            app:tint="@color/white" />
 
     </LinearLayout>
 

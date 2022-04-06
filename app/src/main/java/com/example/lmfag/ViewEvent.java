@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.media.metrics.Event;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,6 +27,14 @@ import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import org.osmdroid.api.IGeoPoint;
+import org.osmdroid.api.IMapController;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -42,7 +51,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ViewEvent extends AppCompatActivity {
     Context context = this;
     final Calendar cldr_start = Calendar.getInstance();
-
+    private MapView map;
+    private IMapController mapController;
+    private MyLocationNewOverlay myLocationOverlay;
+    private Marker chosenLocationMarker;
     final Calendar cldr_end = Calendar.getInstance();
     String event_type;
     ImageView imageViewChooseStartDate, imageViewChooseStartTime, imageViewChooseEndDate, imageViewChooseEndTime, apply;
@@ -411,8 +423,8 @@ public class ViewEvent extends AppCompatActivity {
                     TextView eventName = findViewById(R.id.textViewEventName);
                     TextView description = findViewById(R.id.textViewEvenDescription);
                     TextView minimumlevel = findViewById(R.id.textViewMinimumLevel);
-                    ImageView switchpublic = findViewById(R.id.imageViewPublic);
-                    ImageView switcout = findViewById(R.id.imageViewOutdoor);
+                    TextView switchpublic = findViewById(R.id.textViewPublic);
+                    TextView switcout = findViewById(R.id.textViewOutdoor);
                     TextView slider = findViewById(R.id.textViewNumberOfPlayers);
                     SwitchCompat switch_notify = findViewById(R.id.switchNotifications);
                     eventName.setText(docData.get("event_name").toString());
@@ -420,14 +432,18 @@ public class ViewEvent extends AppCompatActivity {
                     description.setText(docData.get("event_description").toString());
                     minimumlevel.setText(docData.get("minimum_level").toString());
                     if (docData.get("public").toString().equals("true")) {
-                        switchpublic.setImageDrawable(getDrawable(R.drawable.ic_baseline_lock_open_24));
+                        switchpublic.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_baseline_lock_open_24,0,0,0);
+                        switchpublic.setText(R.string.public_event);
                     } else {
-                        switchpublic.setImageDrawable(getDrawable(R.drawable.ic_baseline_lock_24));
+                        switchpublic.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_baseline_lock_open_24,0,0,0);
+                        switchpublic.setText(R.string.private_event);
                     }
                     if (docData.get("outdoors").toString().equals("true")) {
-                        switcout.setImageDrawable(getDrawable(R.drawable.ic_baseline_nature_people_24));
+                        switcout.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_baseline_nature_people_24,0,0,0);
+                        switcout.setText(R.string.outdoor);
                     } else {
-                        switcout.setImageDrawable(getDrawable(R.drawable.ic_baseline_attribution_24));
+                        switcout.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_baseline_attribution_24,0,0,0);
+                        switcout.setText(R.string.indoor);
                     }
                     Float val1 = Float.parseFloat(docData.get("minimum_players").toString());
                     Float val2 = Float.parseFloat(docData.get("maximum_players").toString());
@@ -448,11 +464,31 @@ public class ViewEvent extends AppCompatActivity {
                     textViewChooseEndDate.setText(DateFormat.getDateInstance().format(cldr_end.getTime()));
                     textViewChooseEndTime.setText(DateFormat.getTimeInstance().format(cldr_end.getTime()));
                     public_event = docData.get("public").toString().equals("true");
-                    GeoPoint locationpoint = (GeoPoint)(docData.get("location"));
-                    latitude = locationpoint.getLatitude();
-                    longitude = locationpoint.getLongitude();
+                    GeoPoint location_point = (GeoPoint)(docData.get("location"));
                     TextView location = findViewById(R.id.textViewChooseLocation);
-                    location.setText(latitude + ":" + longitude);
+                    latitude = location_point.getLatitude();
+                    longitude = location_point.getLongitude();
+
+                    // Loading map
+                    map = findViewById(R.id.map);
+                    map.setTileSource(TileSourceFactory.MAPNIK);
+                    map.setMultiTouchControls(true);
+                    mapController = map.getController();
+
+                    chosenLocationMarker = new Marker(map);
+                    chosenLocationMarker.setDraggable(false);
+                    // Centering map based on current location
+                    mapController.setCenter(new org.osmdroid.util.GeoPoint(latitude, longitude));
+                    chosenLocationMarker.setPosition(new org.osmdroid.util.GeoPoint(latitude, longitude));
+                    String formattedLocation = String.format(
+                            "Location:\nLatitude %.4f\nLongitude: %.4f",
+                            latitude, longitude
+                    );
+                    location.setText(formattedLocation);
+
+                    map.getOverlays().add(chosenLocationMarker);
+                    mapController.setZoom(17.0);
+
                     getOrganizerData(docData.get("organizer").toString());
                     CollectionReference docRef2 = db.collection("event_attending");
                     docRef2.whereEqualTo("event", eventID).whereEqualTo("user", userID).get().addOnCompleteListener(task2 -> {
