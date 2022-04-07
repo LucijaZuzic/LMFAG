@@ -71,7 +71,22 @@
                 app:srcCompat="@drawable/ic_baseline_search_24" />
         </LinearLayout>
     </LinearLayout></androidx.cardview.widget.CardView>
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/gradient"
+            android:drawableStart="@drawable/ic_baseline_filter_alt_24"
+            android:gravity="center"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:padding="5dp"
+            android:text="@string/results"
+            android:textColor="@color/white"
+            android:textSize="21sp"
+            android:textStyle="bold" />
 
 
         <androidx.recyclerview.widget.RecyclerView

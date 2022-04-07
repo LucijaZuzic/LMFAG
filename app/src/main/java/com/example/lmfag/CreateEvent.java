@@ -123,7 +123,32 @@ public class CreateEvent extends AppCompatActivity {
             Intent myIntent = new Intent(context, ViewEvent.class);
             startActivity(myIntent);
         });
+        firstMapSetup();
     }
+    void firstMapSetup() {
+        // Loading map
+        Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
+
+        map = findViewById(R.id.map);
+        map.setTileSource(TileSourceFactory.MAPNIK);
+        map.setMultiTouchControls(true);
+        mapController = map.getController();
+
+        chosenLocationMarker = new Marker(map);
+        chosenLocationMarker.setDraggable(false);
+        chosenLocationMarker.setIcon(getDrawable(R.drawable.map_marker));
+        // Centering map based on current location
+
+        myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context), map);
+        myLocationOverlay.disableMyLocation();
+        myLocationOverlay.disableFollowLocation();
+        chosenLocationMarker.setPosition(new org.osmdroid.util.GeoPoint(latitude, longitude));
+
+        map.getOverlays().add(chosenLocationMarker);
+        mapController.setZoom(17.0);
+        mapController.setCenter(new org.osmdroid.util.GeoPoint(latitude, longitude));
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -135,6 +160,8 @@ public class CreateEvent extends AppCompatActivity {
                 + getString(R.string.longitude) + ": " + Double.toString(Math.round(longitude * 10000) / 10000.0);
         TextView location = findViewById(R.id.textViewChooseLocation);
         location.setText(formattedLocation);
+        chosenLocationMarker.setPosition(new org.osmdroid.util.GeoPoint(latitude, longitude));
+        mapController.setCenter(new org.osmdroid.util.GeoPoint(latitude, longitude));
     }
     void setDate() {
         imageViewChooseStartDate.setOnClickListener(v -> {
@@ -373,31 +400,12 @@ public class CreateEvent extends AppCompatActivity {
                         GeoPoint location_point = (GeoPoint)(docData.get("location"));
                         latitude = location_point.getLatitude();
                         longitude = location_point.getLongitude();
-                        // Loading map
-                        Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
 
-                        map = findViewById(R.id.map);
-                        map.setTileSource(TileSourceFactory.MAPNIK);
-                        map.setMultiTouchControls(true);
-                        mapController = map.getController();
-
-                        chosenLocationMarker = new Marker(map);
-                        chosenLocationMarker.setDraggable(false);
-                        // Centering map based on current location
-
-                        myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context), map);
-                        myLocationOverlay.disableMyLocation();
-                        myLocationOverlay.disableFollowLocation();
-                        mapController.setCenter(new org.osmdroid.util.GeoPoint(latitude, longitude));
-                        chosenLocationMarker.setPosition(new org.osmdroid.util.GeoPoint(latitude, longitude));
                         String formattedLocation = getString(R.string.location) + ": " + getString(R.string.latitude) + ": " + Double.toString(Math.round(latitude * 10000) / 10000.0) + " "
                                 + getString(R.string.longitude) + ": " + Double.toString(Math.round(longitude * 10000) / 10000.0);
                         location.setText(formattedLocation);
-
-                        map.getOverlays().add(chosenLocationMarker);
-                        mapController.setZoom(17.0);
-
-
+                        chosenLocationMarker.setPosition(new org.osmdroid.util.GeoPoint(latitude, longitude));
+                        mapController.setCenter(new org.osmdroid.util.GeoPoint(latitude, longitude));
 
                         String userID = preferences.getString("userID", "");
                         if (userID.equals("")) {

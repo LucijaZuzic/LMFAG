@@ -168,6 +168,7 @@ public class ChooseLocation extends AppCompatActivity {
 
         // Init marker
         chosenLocationMarker = new Marker(map);
+        chosenLocationMarker.setIcon(getDrawable(R.drawable.map_marker));
         chosenLocationMarker.setDraggable(true);
         chosenLocationMarker.setOnMarkerDragListener(new Marker.OnMarkerDragListener() {
             @Override

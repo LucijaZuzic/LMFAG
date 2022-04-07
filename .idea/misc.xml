@@ -17,6 +17,7 @@
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_home_24.xml" value="0.297" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_interests_24.xml" value="0.263" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_location_city_24.xml" value="0.196" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_location_on_24.xml" value="0.204" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_location_searching_24.xml" value="0.196" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_mail_24.xml" value="0.2095" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_manage_search_24.xml" value="0.196" />
@@ -50,9 +51,9 @@
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_maps_marker.xml" value="0.20208333333333334" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_my_events.xml" value="0.17" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_my_messages.xml" value="0.18802083333333333" />
-        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_my_profile.xml" value="0.12" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_my_profile.xml" value="0.22" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_rate_event.xml" value="0.25" />
-        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_view_event.xml" value="0.14" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_view_event.xml" value="0.25" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_view_messages.xml" value="0.2576271186440678" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_view_profile.xml" value="0.22832369942196531" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/app_bar_main.xml" value="0.18802083333333333" />
@@ -104,6 +105,7 @@
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/values-en/drawable/rounded_corner_no_highlight.xml" value="0.231" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/xml/drawable/ic_baseline_nights_stay_24.xml" value="0.196" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/xml/drawable/ic_baseline_wb_sunny_24.xml" value="0.196" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/xml/drawable/map_marker.xml" value="0.204" />
       </map>
     </option>
   </component>

@@ -17,7 +17,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="10dp"
-            android:layout_marginBottom="10dp"
             android:background="@drawable/gradient"
             android:drawableStart="@drawable/ic_baseline_person_24"
             android:gravity="center"
@@ -55,60 +54,56 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
                     android:layout_marginBottom="10dp"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginEnd="5dp"
                         android:background="@drawable/gradient"
                         android:gravity="center"
-                        android:minWidth="48dp"
-                        android:minHeight="48dp"
-                        android:padding="5dp"
+                        android:minWidth="54dp"
+                        android:minHeight="54dp"
                         android:src="@drawable/ic_baseline_person_24"
                         android:textColor="@color/white"
                         android:textStyle="bold" />
-
-                    <EditText
-                        android:id="@+id/editTextUsername"
-                        android:layout_width="0dp"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_weight="0.5"
-                        android:autofillHints="username"
-                        android:ems="10"
-                        android:hint="@string/username"
-                        android:inputType="textPersonName"
-                        android:minHeight="48dp" />
+                        android:layout_marginStart="5dp" >
+                        <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/editTextUsername"
+                            android:autofillHints="username"
+                            android:ems="10"
+                            android:hint="@string/username"
+                            android:inputType="textPersonName"
+                            android:minHeight="48dp" />
+                    </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
                     android:gravity="center"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:background="@drawable/gradient"
                         android:contentDescription="@string/password"
                         android:gravity="center"
-                        android:minWidth="48dp"
-                        android:minHeight="48dp"
-                        android:padding="5dp"
+                        android:minWidth="54dp"
+                        android:minHeight="54dp"
                         android:src="@drawable/ic_baseline_password_24" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/etPasswordLayout"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginStart="10dp"
                         app:passwordToggleEnabled="true">
 

@@ -2,6 +2,7 @@ package com.example.lmfag;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
@@ -35,6 +36,7 @@ public class FindEvents extends AppCompatActivity {
     Spinner search_params;
     Spinner sort_params;
     Spinner sp;
+    CardView nameCard, organizerCard, typeCard;
     private String selected_item;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,9 @@ public class FindEvents extends AppCompatActivity {
         setContentView(R.layout.activity_find_events);
         preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         recyclerViewFindEvents = findViewById(R.id.recyclerViewEvents);
+        nameCard = findViewById(R.id.nameCard);
+        organizerCard = findViewById(R.id.organizerCard);
+        typeCard = findViewById(R.id.typeCard);
         sp = findViewById(R.id.sp);
         fillSpinner();
         sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -68,7 +73,21 @@ public class FindEvents extends AppCompatActivity {
             getAllEventsWithOrganizer();
         });
     }
-
+    public void showName(View view) {
+        nameCard.setVisibility(View.VISIBLE);
+        organizerCard.setVisibility(View.GONE);
+        typeCard.setVisibility(View.GONE);
+    }
+    public void showOrganizer(View view) {
+        nameCard.setVisibility(View.GONE);
+        organizerCard.setVisibility(View.VISIBLE);
+        typeCard.setVisibility(View.GONE);
+    }
+    public void showType(View view) {
+        nameCard.setVisibility(View.GONE);
+        organizerCard.setVisibility(View.GONE);
+        typeCard.setVisibility(View.VISIBLE);
+    }
 
     void fillSpinner() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,

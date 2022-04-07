@@ -140,11 +140,35 @@ public class ViewEvent extends AppCompatActivity {
                     });
             }
         });
+        firstMapSetup();
     }
     @Override
     public void onBackPressed() {
         Intent myIntent = new Intent(context, MyProfile.class);
         context.startActivity(myIntent);
+    }
+    void firstMapSetup() {
+        // Loading map
+        Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
+
+        map = findViewById(R.id.map);
+        map.setTileSource(TileSourceFactory.MAPNIK);
+        map.setMultiTouchControls(true);
+        mapController = map.getController();
+
+        chosenLocationMarker = new Marker(map);
+        chosenLocationMarker.setDraggable(false);
+        chosenLocationMarker.setIcon(getDrawable(R.drawable.map_marker));
+        // Centering map based on current location
+
+        myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context), map);
+        myLocationOverlay.disableMyLocation();
+        myLocationOverlay.disableFollowLocation();
+        chosenLocationMarker.setPosition(new org.osmdroid.util.GeoPoint(latitude, longitude));
+
+        map.getOverlays().add(chosenLocationMarker);
+        mapController.setZoom(17.0);
+        mapController.setCenter(new org.osmdroid.util.GeoPoint(latitude, longitude));
     }
 
     @Override
@@ -159,6 +183,8 @@ public class ViewEvent extends AppCompatActivity {
                 + getString(R.string.longitude) + ": " + Double.toString(Math.round(longitude * 10000) / 10000.0);
         TextView location = findViewById(R.id.textViewChooseLocation);
         location.setText(formattedLocation);
+        chosenLocationMarker.setPosition(new org.osmdroid.util.GeoPoint(latitude, longitude));
+        mapController.setCenter(new org.osmdroid.util.GeoPoint(latitude, longitude));
     }
     void refresh() {
         Intent myIntent = new Intent(context, ViewEvent.class);
@@ -429,6 +455,7 @@ public class ViewEvent extends AppCompatActivity {
                 if (document.exists()) {
                     Map<String, Object> docData = document.getData();
                     TextView eventName = findViewById(R.id.textViewEventName);
+                    TextView eventType = findViewById(R.id.textViewEventType);
                     TextView description = findViewById(R.id.textViewEvenDescription);
                     TextView minimumlevel = findViewById(R.id.textViewMinimumLevel);
                     TextView switchpublic = findViewById(R.id.textViewPublic);
@@ -436,7 +463,8 @@ public class ViewEvent extends AppCompatActivity {
                     TextView slider = findViewById(R.id.textViewNumberOfPlayers);
                     SwitchCompat switch_notify = findViewById(R.id.switchNotifications);
                     eventName.setText(docData.get("event_name").toString());
-                    eventName.setCompoundDrawablesRelativeWithIntrinsicBounds(EventTypeToDrawable.getEventTypeToDrawable(docData.get("event_type").toString()), 0, 0 ,0);
+                    eventType.setText(docData.get("event_type").toString());
+                    eventType.setCompoundDrawablesRelativeWithIntrinsicBounds(EventTypeToDrawable.getEventTypeToDrawable(docData.get("event_type").toString()), 0, 0 ,0);
                     description.setText(docData.get("event_description").toString());
                     minimumlevel.setText(docData.get("minimum_level").toString());
                     if (docData.get("public").toString().equals("true")) {
@@ -477,29 +505,11 @@ public class ViewEvent extends AppCompatActivity {
                     latitude = location_point.getLatitude();
                     longitude = location_point.getLongitude();
 
-                    // Loading map
-                    Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
-
-                    map = findViewById(R.id.map);
-                    map.setTileSource(TileSourceFactory.MAPNIK);
-                    map.setMultiTouchControls(true);
-                    mapController = map.getController();
-
-                    chosenLocationMarker = new Marker(map);
-                    chosenLocationMarker.setDraggable(false);
-                    // Centering map based on current location
-
-                    myLocationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(context), map);
-                    myLocationOverlay.disableMyLocation();
-                    myLocationOverlay.disableFollowLocation();
-                    mapController.setCenter(new org.osmdroid.util.GeoPoint(latitude, longitude));
                     chosenLocationMarker.setPosition(new org.osmdroid.util.GeoPoint(latitude, longitude));
                     String formattedLocation = getString(R.string.location) + ": " + getString(R.string.latitude) + ": " + Double.toString(Math.round(latitude * 10000) / 10000.0) + " "
                             + getString(R.string.longitude) + ": " + Double.toString(Math.round(longitude * 10000) / 10000.0);
                     location.setText(formattedLocation);
-
-                    map.getOverlays().add(chosenLocationMarker);
-                    mapController.setZoom(17.0);
+                    mapController.setCenter(new org.osmdroid.util.GeoPoint(latitude, longitude));
 
                     getOrganizerData(docData.get("organizer").toString());
                     CollectionReference docRef2 = db.collection("event_attending");

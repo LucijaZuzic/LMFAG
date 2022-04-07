@@ -115,6 +115,7 @@
     <string name="deleted_by_sender">Deleted by sender.</string>
     <string name="player">Player</string>
     <string name="enter_search_radius">Enter search radius (km).</string>
+    <string name="results">Results</string>
     <string-array name="event_types">
         <item>skiing</item>
         <item>hiking</item>

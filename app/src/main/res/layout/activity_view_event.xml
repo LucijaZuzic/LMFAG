@@ -11,17 +11,32 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-
         <TextView
             android:id="@+id/textViewEventName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/gradient"
+            android:drawableStart="@drawable/ic_baseline_calendar_today_24"
+            android:gravity="center"
+            android:hint="@string/event_name"
+            android:minHeight="48dp"
+            android:padding="5dp"
+            android:textColor="@color/white"
+            android:textSize="21sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewEventType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:background="@drawable/gradient"
             android:drawableStart="@drawable/ic_baseline_interests_24"
             android:gravity="center"
-            android:hint="@string/event_name"
-            android:inputType="textPersonName"
+            android:hint="@string/event_type"
             android:minHeight="48dp"
             android:padding="5dp"
             android:textColor="@color/white"
@@ -47,10 +62,8 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/profile_image"
-                        android:layout_width="0dp"
-                        android:layout_weight="0.5"
-                        android:minHeight="80dp"
-                        android:layout_height="wrap_content"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
                         android:src="@drawable/ic_baseline_profile_picture_24"
                         app:civ_border_color="@color/my_pink"
                         app:civ_border_width="10dp"
@@ -59,9 +72,8 @@
 
                     <TextView
                         android:id="@+id/textViewOrganizer"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
                         android:layout_marginStart="10dp"
                         android:layout_marginEnd="10dp"
                         android:background="@drawable/gradient"
@@ -174,7 +186,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="20dp"
                 android:layout_weight="0.5"
@@ -220,7 +232,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="20dp"
                 android:layout_weight="0.5"
@@ -271,7 +283,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="20dp"
                 android:layout_weight="0.5"
@@ -372,7 +384,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="20dp"
                 android:layout_weight="0.5"
@@ -472,7 +484,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             app:cardCornerRadius="10dp"
@@ -533,7 +544,7 @@
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switchNotifications"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/gradient"
@@ -548,7 +559,7 @@
 
             <ImageView
                 android:id="@+id/imageViewApply"
-                android:layout_width="96dp"
+                android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/gradient"
@@ -564,7 +575,7 @@
 
             <ImageView
                 android:id="@+id/imageViewRate"
-                android:layout_width="96dp"
+                android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="@drawable/gradient"
                 android:clickable="true"
