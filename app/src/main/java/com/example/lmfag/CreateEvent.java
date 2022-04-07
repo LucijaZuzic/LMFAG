@@ -41,9 +41,12 @@ import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import kotlinx.coroutines.SchedulerTaskKt;
@@ -244,8 +247,56 @@ public class CreateEvent extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp.setAdapter(adapter);
     }
-
     void writeAttending() {
+        TextView minimum_level_et = findViewById(R.id.editTextMinimumLevel);
+        SwitchCompat switch_public = findViewById(R.id.switchPublic);
+        Double minimum_level = Double.parseDouble(minimum_level_et.getText().toString());
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference docuRef = db.collection("event_attending");
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String userID = preferences.getString("userID", "");
+
+                    db.collection("users").document(userID).get().addOnCompleteListener(task2 -> {
+                        if (task2.isSuccessful()) {
+                            DocumentSnapshot document2 = task2.getResult();
+                            if (document2.exists()) {
+                                Map<String, Object> data = document2.getData();
+                                String area_string = data.get("areas_of_interest").toString();
+                                if (area_string.length() > 2) {
+                                    String[] area_string_array = area_string.substring(1, area_string.length() - 1).split(", ");
+                                    List<String> areas_array = new ArrayList<>();
+                                    Collections.addAll(areas_array, area_string_array);
+                                    String points_string = data.get("points_levels").toString();
+                                    String[] points_string_array = points_string.substring(1, points_string.length() - 1).split(", ");
+                                    List<Float> points_array = new ArrayList<>();
+                                    for (String s : points_string_array) {
+                                        points_array.add(Float.parseFloat(s));
+                                    }
+                                    if (areas_array.contains(selected_item)) {
+                                        if (minimum_level > 0) {
+                                            if (points_array.get(areas_array.indexOf(selected_item)) < minimum_level * 1000) {
+                                                Snackbar.make(apply, R.string.level_low, Snackbar.LENGTH_SHORT).show();
+                                            } else {
+                                                writeAttendingToDB();
+                                            }
+                                        } else {
+                                            writeAttendingToDB();
+                                        }
+                                    } else {
+                                        if (minimum_level > 0) {
+                                            Snackbar.make(apply, R.string.level_low, Snackbar.LENGTH_SHORT).show();
+                                        } else {
+                                            writeAttendingToDB();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+    }
+
+    void writeAttendingToDB() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String eventID = preferences.getString("eventID", "");

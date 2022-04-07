@@ -318,10 +318,24 @@ public class ViewEvent extends AppCompatActivity {
                                                 }
                                                 refresh();
                                             }
+                                        } else {
+                                            if (public_event) {
+                                                docuRef.add(docData);
+                                            } else {
+                                                checkFriends(docuRef, docData);
+                                            }
+                                            refresh();
                                         }
                                     } else {
                                         if (minimum_level > 0) {
                                             Snackbar.make(switch_notify, R.string.level_low, Snackbar.LENGTH_SHORT).show();
+                                        } else {
+                                            if (public_event) {
+                                                docuRef.add(docData);
+                                            } else {
+                                                checkFriends(docuRef, docData);
+                                            }
+                                            refresh();
                                         }
                                     }
                                 }
