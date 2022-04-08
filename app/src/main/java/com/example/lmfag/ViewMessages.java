@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -42,13 +43,14 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ViewMessages extends AppCompatActivity {
+public class ViewMessages extends MenuInterface {
     ViewMessages context = this;
     RecyclerView recyclerViewMessages;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_messages);
+        DrawerHelper.fillNavbarData(this);
         recyclerViewMessages = findViewById(R.id.recyclerViewMessages);
         getFriendData();
         getAllMessages();
@@ -75,7 +77,7 @@ public class ViewMessages extends AppCompatActivity {
         getAllMessages();
     }
     void refresh() {
-        Intent myIntent = new Intent(context, MyMessages.class);
+        Intent myIntent = new Intent(context, ViewMessages.class);
         context.startActivity(myIntent);
     }
 
@@ -137,25 +139,36 @@ public class ViewMessages extends AppCompatActivity {
         String me = preferences.getString("userID", "");
         String other = preferences.getString("friendID", "");
         if (me.equals("")) {
+            Intent myIntent = new Intent(context, MainActivity.class);
+            startActivity(myIntent);
+            return;
+        }
+        if (other.equals(me)) {
+            Snackbar.make(recyclerViewMessages, R.string.visiting_myself, Snackbar.LENGTH_SHORT).show();
+            Intent myIntent = new Intent(context, MyProfile.class);
+            startActivity(myIntent);
             return;
         }
         db.collection("messages")
-            .whereIn("sender", Arrays.asList(me, other))
-            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .whereIn("receiver", Arrays.asList(me, other))
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Map<String, Object> map = document.getData();
-                            messages.add(map.get("messages").toString());
-                            Timestamp start_timestamp = (Timestamp)(map.get("timestamp"));
-                            Date start_date = start_timestamp.toDate();
-                            Calendar cldr_start = Calendar.getInstance();
-                            cldr_start.setTime(start_date);
-                            times.add(DateFormat.getDateTimeInstance().format(cldr_start.getTime()));
-                            sender.add(map.get("sender").toString());
-                            ids.add(document.getId());
+                            if (map.get("sender").toString().equals(me) || map.get("sender").toString().equals(other)) {
+                                messages.add(map.get("messages").toString());
+                                Timestamp start_timestamp = (Timestamp) (map.get("timestamp"));
+                                Date start_date = start_timestamp.toDate();
+                                Calendar cldr_start = Calendar.getInstance();
+                                cldr_start.setTime(start_date);
+                                times.add(DateFormat.getDateTimeInstance().format(cldr_start.getTime()));
+                                sender.add(map.get("sender").toString());
+                                ids.add(document.getId());
+                            }
                         }
                     }
                     CustomAdapterMessages customAdapter = new CustomAdapterMessages(messages, times, sender, ids, me, context);

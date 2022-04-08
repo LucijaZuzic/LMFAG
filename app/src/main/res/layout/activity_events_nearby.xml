@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".EventsNearby">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="10dp"
+                app:contentPadding="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/gradient"
+                        android:drawableStart="@drawable/ic_baseline_location_searching_24"
+                        android:gravity="center"
+                        android:minWidth="48dp"
+                        android:minHeight="48dp"
+                        android:padding="5dp"
+                        android:text="@string/events_nearby"
+                        android:textColor="@color/white"
+                        android:textSize="21sp"
+                        android:textStyle="bold" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10dp"
+                                android:text="@string/marker_latitude"></TextView>
+
+                            <EditText
+                                android:id="@+id/inputLatitude"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10dp"
+                                android:hint="@string/enter_latitude"
+                                android:importantForAutofill="no"
+                                android:inputType="numberDecimal"
+                                android:minHeight="48dp"
+                                android:textColorHint="#BCAAA4" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10dp"
+                                android:text="@string/marker_longitude"></TextView>
+
+                            <EditText
+                                android:id="@+id/inputLongitude"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/enter_longitude"
+                                android:importantForAutofill="no"
+                                android:inputType="numberDecimal"
+                                android:minHeight="48dp"
+                                android:textColorHint="#BCAAA4"></EditText>
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/updateLocation"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="10dp"
+                            android:background="@drawable/gradient"
+                            android:clickable="true"
+                            android:contentDescription="@string/choose_location"
+                            android:focusable="true"
+                            android:src="@drawable/ic_baseline_location_on_24">
+
+                        </ImageView>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+
+                        <EditText
+                            android:id="@+id/editTextRadius"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="10dp"
+                            android:layout_weight="0.9"
+                            android:ems="10"
+                            android:hint="@string/enter_search_radius"
+                            android:inputType="textPersonName"
+                            android:minHeight="48dp" />
+
+                        <ImageView
+                            android:id="@+id/imageViewBeginSearchRadius"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/gradient"
+                            android:minWidth="48dp"
+                            android:minHeight="48dp"
+                            app:srcCompat="@drawable/ic_baseline_search_24" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <org.osmdroid.views.MapView
+                android:id="@+id/map"
+                android:layout_width="match_parent"
+                android:layout_height="380dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp">
+
+            </org.osmdroid.views.MapView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewEventsNearby"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+
+            </androidx.recyclerview.widget.RecyclerView>
+        </LinearLayout>
+
+    </ScrollView>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@drawable/gradient"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
+        app:menu="@menu/activity_main_drawer" />
+</androidx.drawerlayout.widget.DrawerLayout>

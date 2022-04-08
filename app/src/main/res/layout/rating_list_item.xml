@@ -1,56 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    app:cardElevation="10dp"
+    app:cardCornerRadius="10dp"
+    app:contentPadding="10dp"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
     android:layout_marginTop="10dp"
+    android:layout_marginBottom="20dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_image_player"
-        android:layout_marginEnd="10dp"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="0.3"
-        app:civ_circle_background_color="@color/blue_gray_100"
-        android:src="@drawable/ic_baseline_profile_picture_24"
-        app:civ_border_color="@color/my_pink"
-        app:civ_border_width="10dp" />
-
-
     <LinearLayout
-        android:layout_width="0dp"
-        android:gravity="center"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.7"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
-        <TextView
-            android:padding="5dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="10dp"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image_player"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_marginEnd="10dp"
-            android:textSize="21sp"
-            android:textColor="@color/white"
+            android:layout_weight="0.3"
+            android:src="@drawable/ic_baseline_profile_picture_24"
+            app:civ_border_color="@color/my_pink"
+            app:civ_border_width="10dp"
+            app:civ_circle_background_color="@color/blue_gray_100" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.7"
             android:gravity="center"
-            android:background="@drawable/gradient"
-            android:textStyle="bold"
-            android:id="@+id/textViewPlayer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="@string/username" />
+            android:orientation="vertical">
 
-        <RatingBar
-            android:contentDescription="@string/rating_bar"
-            android:id="@+id/simpleRatingBarPlayer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="10dp"
-            android:progressBackgroundTint="#CFD8DC"
-            android:progressTint="@color/my_pink"
-            android:rating="2" />
+            <TextView
+                android:id="@+id/textViewPlayer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/gradient"
+                android:gravity="center"
+                android:hint="@string/username"
+                android:padding="5dp"
+                android:textColor="@color/white"
+                android:textSize="21sp"
+                android:textStyle="bold" />
 
+            <RatingBar
+                android:id="@+id/simpleRatingBarPlayer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:contentDescription="@string/rating_bar"
+                android:progressBackgroundTint="#CFD8DC"
+                android:progressTint="@color/my_pink"
+                android:rating="2" />
+
+        </LinearLayout>
     </LinearLayout>
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.cardview.widget.CardView>

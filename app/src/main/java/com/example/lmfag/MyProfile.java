@@ -1,12 +1,9 @@
 package com.example.lmfag;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,132 +13,56 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+
+
+
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
+
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
+
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MyProfile extends AppCompatActivity {
+public class MyProfile extends MenuInterface {
 
     Context context = this;
-    boolean flag = false;
     RecyclerView recyclerViewFriends;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
+
         showFriends();
         showAreasOfInterest();
         recyclerViewFriends = findViewById(R.id.recyclerViewFriends);
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        selectDrawerItem(menuItem);
-                        return true;
-                    }
-                });
+        DrawerHelper.fillNavbarData(this);
     }
+
     @Override
     protected void onResume() {
         super.onResume();
         fillUserData();
         getFriends();
     }
-    public void selectDrawerItem(MenuItem menuItem) {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        int id = menuItem.getItemId();
-        if (id == R.id.create_event) {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putString("eventID", "");
-            editor.apply();
-            Intent myIntent = new Intent(context, CreateEvent.class);
-            startActivity(myIntent);
-        } else if (id == R.id.edit_profile) {
-            Intent myIntent = new Intent(context, EditProfile.class);
-            startActivity(myIntent);
-        } else if (id == R.id.find_friends) {
-            Intent myIntent = new Intent(context, FindFriends.class);
-            startActivity(myIntent);
-        } else if (id == R.id.friend_requests) {
-            Intent myIntent = new Intent(context, FriendRequests.class);
-            startActivity(myIntent);
-        } else if (id == R.id.find_events) {
-            Intent myIntent = new Intent(context, FindEvents.class);
-            startActivity(myIntent);
-        } else if (id == R.id.my_messages) {
-            Intent myIntent = new Intent(context, MyMessages.class);
-            startActivity(myIntent);
-        } else if (id == R.id.my_events) {
-            Intent myIntent = new Intent(context, MyEvents.class);
-            startActivity(myIntent);
-        }
-        drawer.closeDrawer(GravityCompat.START);
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.logout:
-                logout();
-                return true;
-            case R.id.menu_open:
-                DrawerLayout drawer = findViewById(R.id.drawer_layout);
-                if (flag) {
-                    drawer.closeDrawer(GravityCompat.START);
-                } else {
-                    drawer.openDrawer(GravityCompat.START);
-                }
-                flag = !flag;
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    public void logout() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("userID", "");
-        editor.apply();
-        Intent myIntent = new Intent(context, MainActivity.class);
-        startActivity(myIntent);
-    }
     void fillUserData() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -272,4 +193,5 @@ public class MyProfile extends AppCompatActivity {
             }
         });
     }
+
 }

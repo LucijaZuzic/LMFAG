@@ -38,7 +38,7 @@ import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ViewProfile extends AppCompatActivity {
+public class ViewProfile extends MenuInterface {
     Context context = this;
     ImageView friendRequest;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -47,6 +47,7 @@ public class ViewProfile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_profile);
+        DrawerHelper.fillNavbarData(this);
         showFriends();
         showAreasOfInterest();
         recyclerViewFriends = findViewById(R.id.recyclerViewFriends);
@@ -58,11 +59,7 @@ public class ViewProfile extends AppCompatActivity {
             context.startActivity(myIntent);
         });
     }
-    @Override
-    public void onBackPressed() {
-        Intent myIntent = new Intent(context, MyProfile.class);
-        context.startActivity(myIntent);
-    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -191,37 +188,31 @@ public class ViewProfile extends AppCompatActivity {
     }
     void checkSentTwoDir(String sender, String receiver, boolean send) {
         db.collection("friend_requests").whereEqualTo("sender", receiver).whereEqualTo("receiver", sender)
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    if (task.getResult().size() > 0) {
-                        if (send) {
-                            Snackbar.make(friendRequest, R.string.already_sent, Snackbar.LENGTH_SHORT).show();
+                .get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().size() > 0) {
+                            if (send) {
+                                Snackbar.make(friendRequest, R.string.already_sent, Snackbar.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            checkFriendsOneDir(sender, receiver, send);
                         }
-                    } else {
-                        checkFriendsOneDir(sender, receiver, send);
                     }
-                }
-            }
-        });
+                });
     }
     void checkSentOneDir(String sender, String receiver, boolean send) {
         db.collection("friend_requests").whereEqualTo("sender", sender).whereEqualTo("receiver", receiver)
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    if (task.getResult().size() > 0) {
-                        if (send) {
-                            Snackbar.make(friendRequest, R.string.already_sent, Snackbar.LENGTH_SHORT).show();
+                .get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().size() > 0) {
+                            if (send) {
+                                Snackbar.make(friendRequest, R.string.already_sent, Snackbar.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            checkSentTwoDir(sender, receiver, send);
                         }
-                    } else {
-                        checkSentTwoDir(sender, receiver, send);
                     }
-                }
-            }
-        });
+                });
     }
 
     void sendFriendRequest() {
@@ -242,6 +233,8 @@ public class ViewProfile extends AppCompatActivity {
         String me = preferences.getString("userID", "");
         if (name.equals(me)) {
             Snackbar.make(friendRequest, R.string.visiting_myself, Snackbar.LENGTH_SHORT).show();
+            Intent myIntent = new Intent(context, MyProfile.class);
+            startActivity(myIntent);
             return;
         }
         if (name.equalsIgnoreCase(""))
@@ -299,11 +292,8 @@ public class ViewProfile extends AppCompatActivity {
                         CircleImageView circleImageView = findViewById(R.id.profile_image);
                         Bitmap bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
                         circleImageView.setImageBitmap(bmp);
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Handle any errors
-                        }
+                    }).addOnFailureListener(exception -> {
+                        // Handle any errors
                     });
                     //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                 } else {

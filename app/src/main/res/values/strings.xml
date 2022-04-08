@@ -80,7 +80,7 @@
     <string name="updated_event">Updated event</string>
     <string name="initial_minimum_level">0</string>
     <string name="enter_search_value">Enter search value.</string>
-    <string name="lastest_message">Latest message</string>
+    <string name="latest_message">Latest message</string>
     <string name="enter_message">Enter message.</string>
     <string name="choose_duration">Choose duration</string>
     <string name="duration">Duration</string>
@@ -89,6 +89,36 @@
     <string name="choose_end_time">Choose end time</string>
     <string name="choose_end_date">Choose end date</string>
     <string name="organizer_edit">Only organizer can edit event.</string>
+    <string name="enter_event_name">Enter event name.</string>
+    <string name="enter_organizer_name">Enter organizer name.</string>
+    <string name="event_start">Event start</string>
+    <string name="event_end">Event end</string>
+    <string name="private_event">Private event</string>
+    <string name="indoor">Indoor</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="marker_latitude">Marker latitude</string>
+    <string name="marker_longitude">Marker longitude</string>
+    <string name="waiting_location">Waiting for new location</string>
+    <string name="setting_location">Setting new marker location...</string>
+    <string name="enter_longitude">Enter longitude</string>
+    <string name="enter_latitude">Enter latitude</string>
+    <string name="marker_location">Marker location</string>
+    <string name="confirm_location">Confirm location</string>
+    <string name="level_low">Your level is not high enough to participate.</string>
+    <string name="too_many">Too many participants.</string>
+    <string name="create_profile">Create profile</string>
+    <string name="enter_a_username_to_search">Enter a username to search.</string>
+    <string name="delete_message">Do you want to delete this message?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="deleted_by_sender">Deleted by sender.</string>
+    <string name="player">Player</string>
+    <string name="enter_search_radius">Enter search radius (km).</string>
+    <string name="results">Results</string>
+    <string name="begin_past">Event can\'t begin in the past.</string>
+    <string name="end_before_beginning">Event can\'t end before beginning.</string>
+    <string name="end_past">Event can\'t end in the past.</string>
     <string-array name="event_types">
         <item>skiing</item>
         <item>hiking</item>

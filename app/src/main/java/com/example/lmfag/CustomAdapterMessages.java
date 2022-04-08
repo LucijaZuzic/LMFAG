@@ -2,24 +2,35 @@ package com.example.lmfag;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 import java.util.Map;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMessages.ViewHolder> {
 
@@ -37,8 +48,9 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
         private final TextView messageTextView;
         private final TextView senderTextView;
         private final TextView time;
-        private final LinearLayout background;
+        private final CardView background;
         private final LinearLayout layout;
+        private final CircleImageView profile_image_two;
 
         public ViewHolder(View view) {
             super(view);
@@ -48,7 +60,8 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
             time = (TextView) view.findViewById(R.id.textViewTime);
             senderTextView = (TextView) view.findViewById(R.id.textViewSender);
             layout = (LinearLayout) view.findViewById(R.id.list_entry_nested);
-            background = (LinearLayout) view.findViewById(R.id.background_change);
+            background = (CardView) view.findViewById(R.id.background_change);
+            profile_image_two = (CircleImageView) view.findViewById(R.id.profile_image_bubble);
         }
 
         public TextView getMessageTextView() {
@@ -63,8 +76,11 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
         public LinearLayout getLayout() {
             return layout;
         }
-        public LinearLayout getBackground() {
+        public CardView getBackground() {
             return background;
+        }
+        public CircleImageView getProfileImageTwo() {
+            return profile_image_two;
         }
     }
 
@@ -107,9 +123,8 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
             }
         });
         if (!sender.get(position).equals(me)) {
-            viewHolder.getLayout().setGravity(Gravity.RIGHT);
-            viewHolder.getBackground().setBackground(context.getDrawable(R.drawable.rounded_corner_highlight));
-            viewHolder.getBackground().setPadding(5,5,5,5);
+            viewHolder.getLayout().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+            viewHolder.getBackground().setCardBackgroundColor(ContextCompat.getColor(context, R.color.purple_200));
             viewHolder.getSenderTextView().setTextColor(context.getResources().getColor(R.color.white));
             viewHolder.getMessageTextView().setTextColor(context.getResources().getColor(R.color.white));
             //viewHolder.getTime().setTextColor(context.getResources().getColor(R.color.white));
@@ -120,7 +135,7 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which){
                             case DialogInterface.BUTTON_POSITIVE:
-                                db.collection("messages").document(delete_id).update("messages", "Deleted by sender.");
+                                db.collection("messages").document(delete_id).update("messages", R.string.deleted_by_sender);
                                 context.refresh();
                                 break;
 
@@ -130,10 +145,8 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
                         }
                     }
                 };
-                if (sender.get(position).equals(me)) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this.context);
-                    builder.setMessage("Do you want to delete this message?").setPositiveButton("Yes", dialogClickListener).setNegativeButton("No", dialogClickListener).show();
-                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(this.context);
+                builder.setMessage(R.string.delete_message).setPositiveButton(R.string.yes, dialogClickListener).setNegativeButton(R.string.no, dialogClickListener).show();
                 return true;
             });
         }
@@ -146,6 +159,21 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
 
                     viewHolder.getSenderTextView().setText(data.get("username").toString());
 
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    StorageReference storageRef = storage.getReference();
+                    StorageReference imagesRef = storageRef.child("profile_pictures/" + document.getId());
+                    final long ONE_MEGABYTE = 1024 * 1024;
+                    imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+                        // Data for "images/island.jpg" is returns, use this as needed
+                        CircleImageView circleImageView = viewHolder.getProfileImageTwo();
+                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        circleImageView.setImageBitmap(bmp);
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle any errors
+                        }
+                    });
                     //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                 } else {
 
