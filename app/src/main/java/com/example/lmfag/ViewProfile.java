@@ -38,7 +38,7 @@ import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ViewProfile extends AppCompatActivity {
+public class ViewProfile extends MenuInterface {
     Context context = this;
     ImageView friendRequest;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -47,6 +47,7 @@ public class ViewProfile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_profile);
+        DrawerHelper.fillNavbarData(this);
         showFriends();
         showAreasOfInterest();
         recyclerViewFriends = findViewById(R.id.recyclerViewFriends);
@@ -58,11 +59,7 @@ public class ViewProfile extends AppCompatActivity {
             context.startActivity(myIntent);
         });
     }
-    @Override
-    public void onBackPressed() {
-        Intent myIntent = new Intent(context, MyProfile.class);
-        context.startActivity(myIntent);
-    }
+
     @Override
     protected void onResume() {
         super.onResume();

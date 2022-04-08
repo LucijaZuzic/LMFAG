@@ -29,7 +29,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FindEvents extends AppCompatActivity {
+public class FindEvents extends MenuInterface {
     Context context = this;
     RecyclerView recyclerViewFindEvents;
     SharedPreferences preferences;
@@ -42,6 +42,8 @@ public class FindEvents extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_events);
+        DrawerHelper.fillNavbarData(this);
+
         preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         recyclerViewFindEvents = findViewById(R.id.recyclerViewEvents);
         nameCard = findViewById(R.id.nameCard);

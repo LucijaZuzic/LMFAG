@@ -21,7 +21,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyEvents extends AppCompatActivity {
+public class MyEvents extends MenuInterface {
 
     Context context = this;
     RecyclerView recyclerViewEventsOrganizer, recyclerViewEventsPlayer;
@@ -31,6 +31,7 @@ public class MyEvents extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_events);
+        DrawerHelper.fillNavbarData(this);
         preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         recyclerViewEventsPlayer = findViewById(R.id.recyclerViewEventsPlayer);
         recyclerViewEventsOrganizer = findViewById(R.id.recyclerViewEventsOrganizer);

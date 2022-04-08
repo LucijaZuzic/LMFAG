@@ -1,6 +1,6 @@
 package com.example.lmfag;
 
-import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.appcompat.widget.SwitchCompat;
 
 import android.app.DatePickerDialog;
@@ -8,13 +8,15 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.EditText;
+
+import android.widget.CompoundButton;
+
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -51,11 +53,24 @@ import java.util.Map;
 
 import kotlinx.coroutines.SchedulerTaskKt;
 
-public class CreateEvent extends AppCompatActivity {
+public class CreateEvent extends MenuInterface {
 
     private MapView map;
     private IMapController mapController;
     private MyLocationNewOverlay myLocationOverlay;
+    SharedPreferences preferences;
+    SharedPreferences.Editor editor;
+
+    FirebaseFirestore db;
+    TextView eventName;
+    TextView description;
+    TextView minimum_level;
+    SwitchCompat switch_public;
+    SwitchCompat switch_out;
+    SwitchCompat switch_organizer;
+    SwitchCompat switch_notify;
+    RangeSlider slider;
+    TextView location;
     private Marker chosenLocationMarker;
     final Calendar cldr_start = Calendar.getInstance();
     int hours_start = cldr_start.get(Calendar.HOUR_OF_DAY);
@@ -81,7 +96,19 @@ public class CreateEvent extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
-
+        preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        editor = preferences.edit();
+        db = FirebaseFirestore.getInstance();
+        DrawerHelper.fillNavbarData(this);
+        eventName = findViewById(R.id.editTextEventName);
+        description = findViewById(R.id.editTextEventDescription);
+        minimum_level = findViewById(R.id.editTextMinimumLevel);
+        switch_public = findViewById(R.id.switchPublic);
+        switch_out = findViewById(R.id.switchOutdoor);
+        switch_organizer = findViewById(R.id.switchOrganizerPlaying);
+        switch_notify = findViewById(R.id.switchNotifications);
+        slider = findViewById(R.id.range_slider);
+        location = findViewById(R.id.textViewChooseLocation);
         imageViewChooseStartDate = findViewById(R.id.imageViewChooseStartDate);
         textViewChooseStartDate = findViewById(R.id.textViewChooseStartDate);
 
@@ -93,6 +120,9 @@ public class CreateEvent extends AppCompatActivity {
 
         imageViewChooseEndTime = findViewById(R.id.imageViewChooseEndTime);
         textViewChooseEndTime = findViewById(R.id.textViewChooseEndTime);
+
+
+        map = findViewById(R.id.map);
 
         apply = findViewById(R.id.imageViewApply);
         sp = findViewById(R.id.sp);
@@ -128,11 +158,11 @@ public class CreateEvent extends AppCompatActivity {
         });
         firstMapSetup();
     }
+
     void firstMapSetup() {
         // Loading map
         Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
 
-        map = findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setMultiTouchControls(true);
         mapController = map.getController();
@@ -150,22 +180,34 @@ public class CreateEvent extends AppCompatActivity {
         map.getOverlays().add(chosenLocationMarker);
         mapController.setZoom(17.0);
         mapController.setCenter(new org.osmdroid.util.GeoPoint(latitude, longitude));
+
+
+        switch_organizer.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    switch_notify.setVisibility(View.VISIBLE);
+                } else {
+                    switch_notify.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        latitude = preferences.getFloat("newEventLatitude", (float)latitude);
-        longitude = preferences.getFloat("newEventLongitude", (float)longitude);
+
+        latitude = preferences.getFloat("newEventLatitude", (float) latitude);
+        longitude = preferences.getFloat("newEventLongitude", (float) longitude);
         String formattedLocation = getString(R.string.location) + ": " + getString(R.string.latitude) + ": " + Double.toString(Math.round(latitude * 10000) / 10000.0) + " "
                 + getString(R.string.longitude) + ": " + Double.toString(Math.round(longitude * 10000) / 10000.0);
-        TextView location = findViewById(R.id.textViewChooseLocation);
+
         location.setText(formattedLocation);
         chosenLocationMarker.setPosition(new org.osmdroid.util.GeoPoint(latitude, longitude));
         mapController.setCenter(new org.osmdroid.util.GeoPoint(latitude, longitude));
     }
+
     void setDate() {
         imageViewChooseStartDate.setOnClickListener(v -> {
             // time picker dialog
@@ -177,10 +219,10 @@ public class CreateEvent extends AppCompatActivity {
                         cldr_start.set(year_start, month_start, day_start, hours_start, minutes_start);
                         textViewChooseStartDate.setText(DateFormat.getDateInstance().format(cldr_start.getTime()));
                         if (cldr_start.getTime().before(Calendar.getInstance().getTime())) {
-                            Snackbar.make(imageViewChooseStartDate, "Event can't begin in the past.", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(imageViewChooseStartDate, R.string.begin_past, Snackbar.LENGTH_SHORT).show();
                         }
                         if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
-                            Snackbar.make(imageViewChooseStartDate, "Event can't end before beginning.", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(imageViewChooseStartDate, R.string.end_before_beginning, Snackbar.LENGTH_SHORT).show();
                         }
                     }, year_start, month_start, day_start);
             picker.show();
@@ -195,10 +237,10 @@ public class CreateEvent extends AppCompatActivity {
                         cldr_end.set(year_end, month_end, day_end, hours_end, minutes_end);
                         textViewChooseEndDate.setText(DateFormat.getDateInstance().format(cldr_end.getTime()));
                         if (cldr_end.getTime().before(Calendar.getInstance().getTime())) {
-                            Snackbar.make(imageViewChooseStartDate, "Event can't end in the past.", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(imageViewChooseStartDate, R.string.end_past, Snackbar.LENGTH_SHORT).show();
                         }
                         if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
-                            Snackbar.make(imageViewChooseEndDate, "Event can't end before beginning.", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(imageViewChooseEndDate, R.string.end_before_beginning, Snackbar.LENGTH_SHORT).show();
                         }
                     }, year_end, month_end, day_end);
             picker.show();
@@ -215,10 +257,10 @@ public class CreateEvent extends AppCompatActivity {
                         cldr_start.set(year_start, month_start, day_start, hours_start, minutes_start);
                         textViewChooseStartTime.setText(DateFormat.getTimeInstance().format(cldr_start.getTime()));
                         if (cldr_start.getTime().before(Calendar.getInstance().getTime())) {
-                            Snackbar.make(imageViewChooseStartDate, "Event can't begin in the past.", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(imageViewChooseStartDate, R.string.begin_past, Snackbar.LENGTH_SHORT).show();
                         }
                         if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
-                            Snackbar.make(imageViewChooseStartTime, "Event can't end before beginning.", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(imageViewChooseStartTime, R.string.end_before_beginning, Snackbar.LENGTH_SHORT).show();
                         }
                     }, hours_start, minutes_start, true);
             picker.show();
@@ -241,67 +283,66 @@ public class CreateEvent extends AppCompatActivity {
             picker.show();
         });
     }
+
     void fillSpinner() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.event_types, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp.setAdapter(adapter);
     }
+
     void writeAttending() {
-        TextView minimum_level_et = findViewById(R.id.editTextMinimumLevel);
-        SwitchCompat switch_public = findViewById(R.id.switchPublic);
-        Double minimum_level = Double.parseDouble(minimum_level_et.getText().toString());
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        Double minimum_level_val = Double.parseDouble(minimum_level.getText().toString());
         CollectionReference docuRef = db.collection("event_attending");
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
         String userID = preferences.getString("userID", "");
 
-                    db.collection("users").document(userID).get().addOnCompleteListener(task2 -> {
-                        if (task2.isSuccessful()) {
-                            DocumentSnapshot document2 = task2.getResult();
-                            if (document2.exists()) {
-                                Map<String, Object> data = document2.getData();
-                                String area_string = data.get("areas_of_interest").toString();
-                                if (area_string.length() > 2) {
-                                    String[] area_string_array = area_string.substring(1, area_string.length() - 1).split(", ");
-                                    List<String> areas_array = new ArrayList<>();
-                                    Collections.addAll(areas_array, area_string_array);
-                                    String points_string = data.get("points_levels").toString();
-                                    String[] points_string_array = points_string.substring(1, points_string.length() - 1).split(", ");
-                                    List<Float> points_array = new ArrayList<>();
-                                    for (String s : points_string_array) {
-                                        points_array.add(Float.parseFloat(s));
-                                    }
-                                    if (areas_array.contains(selected_item)) {
-                                        if (minimum_level > 0) {
-                                            if (points_array.get(areas_array.indexOf(selected_item)) < minimum_level * 1000) {
-                                                Snackbar.make(apply, R.string.level_low, Snackbar.LENGTH_SHORT).show();
-                                            } else {
-                                                writeAttendingToDB();
-                                            }
-                                        } else {
-                                            writeAttendingToDB();
-                                        }
-                                    } else {
-                                        if (minimum_level > 0) {
-                                            Snackbar.make(apply, R.string.level_low, Snackbar.LENGTH_SHORT).show();
-                                        } else {
-                                            writeAttendingToDB();
-                                        }
-                                    }
+        db.collection("users").document(userID).get().addOnCompleteListener(task2 -> {
+            if (task2.isSuccessful()) {
+                DocumentSnapshot document2 = task2.getResult();
+                if (document2.exists()) {
+                    Map<String, Object> data = document2.getData();
+                    String area_string = data.get("areas_of_interest").toString();
+                    if (area_string.length() > 2) {
+                        String[] area_string_array = area_string.substring(1, area_string.length() - 1).split(", ");
+                        List<String> areas_array = new ArrayList<>();
+                        Collections.addAll(areas_array, area_string_array);
+                        String points_string = data.get("points_levels").toString();
+                        String[] points_string_array = points_string.substring(1, points_string.length() - 1).split(", ");
+                        List<Float> points_array = new ArrayList<>();
+                        for (String s : points_string_array) {
+                            points_array.add(Float.parseFloat(s));
+                        }
+                        if (areas_array.contains(selected_item)) {
+                            if (minimum_level_val > 0) {
+                                if (points_array.get(areas_array.indexOf(selected_item)) < minimum_level_val * 1000) {
+                                    Snackbar.make(apply, R.string.level_low, Snackbar.LENGTH_SHORT).show();
+                                } else {
+                                    writeAttendingToDB();
                                 }
+                            } else {
+                                writeAttendingToDB();
+                            }
+                        } else {
+                            if (minimum_level_val > 0) {
+                                Snackbar.make(apply, R.string.level_low, Snackbar.LENGTH_SHORT).show();
+                            } else {
+                                writeAttendingToDB();
                             }
                         }
-                    });
+                    }
+                }
+            }
+        });
 
     }
 
     void writeAttendingToDB() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+
         String eventID = preferences.getString("eventID", "");
         String userID = preferences.getString("userID", "");
-        SwitchCompat switch_notify = findViewById(R.id.switchNotifications);
         Map<String, Object> docData = new HashMap<>();
         docData.put("event", eventID);
         docData.put("user", userID);
@@ -316,25 +357,25 @@ public class CreateEvent extends AppCompatActivity {
         CollectionReference docRef = db.collection("event_attending");
         docRef.whereEqualTo("event", eventID).whereEqualTo("user", userID).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                if(task.getResult().size() == 0) {
+                if (task.getResult().size() == 0) {
                     docRef.add(docData);
                 } else {
-                    for (QueryDocumentSnapshot doc: task.getResult()) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
                         docRef.document(doc.getId()).set(docData);
                     }
                 }
             }
         });
     }
+
     void writeDB(Map<String, Object> docData, boolean attending) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("events")
                 .add(docData)
                 .addOnSuccessListener(aVoid -> {
                     //Log.d(TAG, "DocumentSnapshot successfully written!");
                     Snackbar.make(apply, R.string.created_event, Snackbar.LENGTH_SHORT).show();
-                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    SharedPreferences.Editor editor = preferences.edit();
+
+
                     editor.putString("eventID", aVoid.getId());
                     editor.apply();
                     if (attending) {
@@ -349,9 +390,10 @@ public class CreateEvent extends AppCompatActivity {
                     //Log.w(TAG, "Error writing document", e);
                 });
     }
+
     void setDB(Map<String, Object> docData, boolean attending) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
         String eventID = preferences.getString("eventID", "");
         if (eventID.equals("")) {
             writeDB(docData, attending);
@@ -373,15 +415,10 @@ public class CreateEvent extends AppCompatActivity {
         }
 
     }
+
     void fetchDataFromUI() {
         Map<String, Object> docData = new HashMap<>();
-        EditText eventName = findViewById(R.id.editTextEventName);
-        EditText description = findViewById(R.id.editTextEventDescription);
-        EditText minimum_level = findViewById(R.id.editTextMinimumLevel);
-        SwitchCompat switch_public = findViewById(R.id.switchPublic);
-        SwitchCompat switch_out = findViewById(R.id.switchOutdoor);
-        SwitchCompat switch_organizer = findViewById(R.id.switchOrganizerPlaying);
-        RangeSlider slider = findViewById(R.id.range_slider);
+
         docData.put("event_name", eventName.getText().toString());
         docData.put("event_type", selected_item);
         docData.put("event_description", description.getText().toString());
@@ -392,7 +429,7 @@ public class CreateEvent extends AppCompatActivity {
         docData.put("maximum_players", slider.getValues().get(1));
         docData.put("datetime", new Timestamp(cldr_start.getTime()));
         docData.put("ending", new Timestamp(cldr_end.getTime()));
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
         String userID = preferences.getString("userID", "");
         docData.put("organizer", userID);
         docData.put("location", new GeoPoint(latitude, longitude));
@@ -403,88 +440,83 @@ public class CreateEvent extends AppCompatActivity {
             setDB(docData, switch_organizer.isChecked());
         }
     }
+
     void fillData() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+
         String eventID = preferences.getString("eventID", "");
-        if (!eventID.equals("")) {
-            DocumentReference docRef = db.collection("events").document(eventID);
-            docRef.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Map<String, Object> docData = document.getData();
-                        TextView eventName = findViewById(R.id.editTextEventName);
-                        TextView description = findViewById(R.id.editTextEventDescription);
-                        TextView minimum_level = findViewById(R.id.editTextMinimumLevel);
-                        SwitchCompat switch_public = findViewById(R.id.switchPublic);
-                        SwitchCompat switch_out = findViewById(R.id.switchOutdoor);
-                        SwitchCompat switch_organizer = findViewById(R.id.switchOrganizerPlaying);
-                        SwitchCompat switch_notify = findViewById(R.id.switchNotifications);
-                        RangeSlider slider = findViewById(R.id.range_slider);
-                        TextView location = findViewById(R.id.textViewChooseLocation);
-                        eventName.setText(docData.get("event_name").toString());
-                        sp.setSelection(((ArrayAdapter)sp.getAdapter()).getPosition(docData.get("event_type").toString()));
-                        description.setText(docData.get("event_description").toString());
-                        minimum_level.setText(docData.get("minimum_level").toString());
-                        switch_public.setChecked(docData.get("public").toString().equals("true"));
-                        switch_out.setChecked(docData.get("outdoors").toString().equals("true"));
-                        Float val1 = Float.parseFloat(docData.get("minimum_players").toString());
-                        Float val2 = Float.parseFloat(docData.get("maximum_players").toString());
-                        slider.setValues(val1, val2);
-                        Timestamp start_timestamp = (Timestamp)(docData.get("datetime"));
-                        Date start_date = start_timestamp.toDate();
-                        cldr_start.setTime(start_date);
-                        Timestamp end_timestamp = (Timestamp)(docData.get("ending"));
-                        Date end_date = end_timestamp.toDate();
-                        cldr_end.setTime(end_date);
-                        if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime())) {
-                            Snackbar.make(sp, "Can't edit an event that finished.", Snackbar.LENGTH_SHORT).show();
-                            Intent myIntent = new Intent(context, ViewEvent.class);
-                            startActivity(myIntent);
-                        }
-                        textViewChooseStartDate.setText(DateFormat.getDateInstance().format(cldr_start.getTime()));
-                        textViewChooseStartTime.setText(DateFormat.getTimeInstance().format(cldr_start.getTime()));
-                        textViewChooseEndDate.setText(DateFormat.getDateInstance().format(cldr_end.getTime()));
-                        textViewChooseEndTime.setText(DateFormat.getTimeInstance().format(cldr_end.getTime()));
+        if (eventID.equals("")) {
 
-                        GeoPoint location_point = (GeoPoint)(docData.get("location"));
-                        latitude = location_point.getLatitude();
-                        longitude = location_point.getLongitude();
+        } else {
+            if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime())) {
+                Snackbar.make(sp, "Can't edit an event that finished.", Snackbar.LENGTH_SHORT).show();
+                onBackPressed();
+            } else {
 
-                        String formattedLocation = getString(R.string.location) + ": " + getString(R.string.latitude) + ": " + Double.toString(Math.round(latitude * 10000) / 10000.0) + " "
-                                + getString(R.string.longitude) + ": " + Double.toString(Math.round(longitude * 10000) / 10000.0);
-                        location.setText(formattedLocation);
-                        chosenLocationMarker.setPosition(new org.osmdroid.util.GeoPoint(latitude, longitude));
-                        mapController.setCenter(new org.osmdroid.util.GeoPoint(latitude, longitude));
+                DocumentReference docRef = db.collection("events").document(eventID);
+                docRef.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Map<String, Object> docData = document.getData();
+                            eventName.setText(docData.get("event_name").toString());
+                            sp.setSelection(((ArrayAdapter) sp.getAdapter()).getPosition(docData.get("event_type").toString()));
+                            description.setText(docData.get("event_description").toString());
+                            minimum_level.setText(docData.get("minimum_level").toString());
+                            switch_public.setChecked(docData.get("public").toString().equals("true"));
+                            switch_out.setChecked(docData.get("outdoors").toString().equals("true"));
+                            Float val1 = Float.parseFloat(docData.get("minimum_players").toString());
+                            Float val2 = Float.parseFloat(docData.get("maximum_players").toString());
+                            slider.setValues(val1, val2);
+                            Timestamp start_timestamp = (Timestamp) (docData.get("datetime"));
+                            Date start_date = start_timestamp.toDate();
+                            cldr_start.setTime(start_date);
+                            Timestamp end_timestamp = (Timestamp) (docData.get("ending"));
+                            Date end_date = end_timestamp.toDate();
+                            cldr_end.setTime(end_date);
+                            textViewChooseStartDate.setText(DateFormat.getDateInstance().format(cldr_start.getTime()));
+                            textViewChooseStartTime.setText(DateFormat.getTimeInstance().format(cldr_start.getTime()));
+                            textViewChooseEndDate.setText(DateFormat.getDateInstance().format(cldr_end.getTime()));
+                            textViewChooseEndTime.setText(DateFormat.getTimeInstance().format(cldr_end.getTime()));
 
-                        String userID = preferences.getString("userID", "");
-                        if (userID.equals("")) {
-                            Intent myIntent = new Intent(context, MainActivity.class);
-                            startActivity(myIntent);
-                            return;
-                        }
-                        CollectionReference docRef2 = db.collection("event_attending");
-                        docRef2.whereEqualTo("event", eventID).whereEqualTo("user", userID).get().addOnCompleteListener(task2 -> {
-                            if (task2.isSuccessful()) {
-                                if(task2.getResult().size() == 0) {
+                            GeoPoint location_point = (GeoPoint) (docData.get("location"));
+                            latitude = location_point.getLatitude();
+                            longitude = location_point.getLongitude();
+
+                            String formattedLocation = getString(R.string.location) + ": " + getString(R.string.latitude) + ": " + Double.toString(Math.round(latitude * 10000) / 10000.0) + " "
+                                    + getString(R.string.longitude) + ": " + Double.toString(Math.round(longitude * 10000) / 10000.0);
+                            location.setText(formattedLocation);
+                            chosenLocationMarker.setPosition(new org.osmdroid.util.GeoPoint(latitude, longitude));
+                            mapController.setCenter(new org.osmdroid.util.GeoPoint(latitude, longitude));
+
+                            String userID = preferences.getString("userID", "");
+                            if (userID.equals("")) {
+                                Intent myIntent = new Intent(context, MainActivity.class);
+                                startActivity(myIntent);
+                                return;
+                            }
+                            CollectionReference docRef2 = db.collection("event_attending");
+                            docRef2.whereEqualTo("event", eventID).whereEqualTo("user", userID).get().addOnCompleteListener(task2 -> {
+                                if (task2.isSuccessful()) {
+                                    if (task2.getResult().size() == 0) {
+                                        switch_organizer.setChecked(false);
+                                        switch_notify.setChecked(false);
+                                    } else {
+                                        for (QueryDocumentSnapshot document2 : task2.getResult()) {
+                                            Map<String, Object> docData2 = document2.getData();
+                                            switch_organizer.setChecked(true);
+                                            switch_notify.setChecked(docData2.get("notifications").toString().equals("true"));
+                                        }
+                                    }
+                                } else {
                                     switch_organizer.setChecked(false);
                                     switch_notify.setChecked(false);
-                                } else {
-                                    for (QueryDocumentSnapshot document2: task2.getResult()) {
-                                        Map<String, Object> docData2 = document2.getData();
-                                        switch_organizer.setChecked(true);
-                                        switch_notify.setChecked(docData2.get("notifications").toString().equals("true"));
-                                    }
                                 }
-                            } else {
-                                switch_organizer.setChecked(false);
-                                switch_notify.setChecked(false);
-                            }
-                        });
+                            });
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     }
 }

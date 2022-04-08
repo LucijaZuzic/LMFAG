@@ -3,6 +3,9 @@ package com.example.lmfag;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
@@ -15,6 +18,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,6 +31,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -44,13 +51,14 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class EditProfile extends AppCompatActivity {
+public class EditProfile extends MenuInterface {
     boolean blocked = false;
     Context context = this;
     List<String> areas_array = new ArrayList<>();
     List<Double> points_array = new ArrayList<>();
     String old_password = "";
     Uri uri;
+
     private String selecteditem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +88,9 @@ public class EditProfile extends AppCompatActivity {
 
             }
         });
+        DrawerHelper.fillNavbarData(this);
+
+
     }
 
     void changeProfilePicture() {

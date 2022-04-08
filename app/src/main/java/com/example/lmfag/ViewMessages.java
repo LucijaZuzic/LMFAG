@@ -43,13 +43,14 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ViewMessages extends AppCompatActivity {
+public class ViewMessages extends MenuInterface {
     ViewMessages context = this;
     RecyclerView recyclerViewMessages;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_messages);
+        DrawerHelper.fillNavbarData(this);
         recyclerViewMessages = findViewById(R.id.recyclerViewMessages);
         getFriendData();
         getAllMessages();

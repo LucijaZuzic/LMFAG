@@ -116,6 +116,9 @@
     <string name="player">Player</string>
     <string name="enter_search_radius">Enter search radius (km).</string>
     <string name="results">Results</string>
+    <string name="begin_past">Event can\'t begin in the past.</string>
+    <string name="end_before_beginning">Event can\'t end before beginning.</string>
+    <string name="end_past">Event can\'t end in the past.</string>
     <string-array name="event_types">
         <item>skiing</item>
         <item>hiking</item>

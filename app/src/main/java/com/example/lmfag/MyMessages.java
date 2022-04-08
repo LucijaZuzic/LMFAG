@@ -30,7 +30,7 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MyMessages extends AppCompatActivity {
+public class MyMessages extends MenuInterface {
     Context context = this;
     RecyclerView recyclerViewMessages;
     SharedPreferences preferences;
@@ -38,16 +38,13 @@ public class MyMessages extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_messages);
+        DrawerHelper.fillNavbarData(this);
         preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         recyclerViewMessages = findViewById(R.id.recyclerViewMessages);
         getAllFriends();
     }
 
-    @Override
-    public void onBackPressed() {
-        Intent myIntent = new Intent(context, MyProfile.class);
-        context.startActivity(myIntent);
-    }
+
     void getAllFriends() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         List<String> friends_array = new ArrayList<>();

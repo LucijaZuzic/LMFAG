@@ -40,7 +40,7 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class RateEvent extends AppCompatActivity {
+public class RateEvent extends MenuInterface {
     String organizer;
     List<String> people = new ArrayList<>();
     List<Float> ratings = new ArrayList<>();
@@ -52,6 +52,7 @@ public class RateEvent extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rate_event);
+        DrawerHelper.fillNavbarData(this);
         findViewById(R.id.imageViewApply).setOnClickListener(view -> {
             for (int i = 0; i < people.size(); i++) {
                 updatePlayer(people.get(i), ratings.get(i));

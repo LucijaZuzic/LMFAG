@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FindFriends extends AppCompatActivity {
+public class FindFriends extends MenuInterface {
     Context context = this;
     RecyclerView recyclerViewFindFriends;
     SharedPreferences preferences;
@@ -39,6 +39,8 @@ public class FindFriends extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_friends);
+
+        DrawerHelper.fillNavbarData(this);
         preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         recyclerViewFindFriends = findViewById(R.id.recyclerViewFriends);
         imageViewBeginSearch = findViewById(R.id.imageViewBeginSearch);
@@ -56,11 +58,7 @@ public class FindFriends extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sort_params.setAdapter(adapter);
     }
-    @Override
-    public void onBackPressed() {
-        Intent myIntent = new Intent(context, MyProfile.class);
-        context.startActivity(myIntent);
-    }
+
     void getAllFriends() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         List<String> friends_array = new ArrayList<>();

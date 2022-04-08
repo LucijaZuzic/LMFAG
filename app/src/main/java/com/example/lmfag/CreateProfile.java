@@ -3,7 +3,7 @@ package com.example.lmfag;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
@@ -44,7 +44,15 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class CreateProfile extends AppCompatActivity {
+public class CreateProfile extends MenuInterface {
+
+    TextView myUsername;
+    TextView myLocation;
+    TextView myDescription;
+    ImageView apply, discard;
+    EditText passwordEdit;
+
+    FirebaseFirestore db;
 
     boolean blocked = false;
     Context context = this;
@@ -52,10 +60,19 @@ public class CreateProfile extends AppCompatActivity {
     List<Double> points_array = new ArrayList<>();
     private String selected_item;
     Uri uri;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_profile);
+        db = FirebaseFirestore.getInstance();
+        myUsername = findViewById(R.id.editTextUsername);
+        myLocation = findViewById(R.id.editTextMyLocation);
+        myDescription = findViewById(R.id.editTextMyDescription);
+        passwordEdit = findViewById(R.id.editTextPassword);
+        apply = findViewById(R.id.imageViewApply);
+        discard = findViewById(R.id.imageViewDiscard);
+        DrawerHelper.fillNavbarData(this);
         fillSpinner();
         addAreaOfInterest();
         removeAreaOfInterest();
@@ -64,8 +81,7 @@ public class CreateProfile extends AppCompatActivity {
         showAreasOfInterest();
         changeProfilePicture();
         Spinner sp = findViewById(R.id.sp);
-        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-        {
+        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
 
@@ -73,9 +89,9 @@ public class CreateProfile extends AppCompatActivity {
                 ImageView iv = findViewById(R.id.imageViewEventType);
                 iv.setImageDrawable(getDrawable(EventTypeToDrawable.getEventTypeToDrawable(selected_item)));
             }
+
             @Override
-            public void onNothingSelected(AdapterView<?> parentView)
-            {
+            public void onNothingSelected(AdapterView<?> parentView) {
 
             }
         });
@@ -120,6 +136,7 @@ public class CreateProfile extends AppCompatActivity {
             }
         });
     }
+
     void fillSpinner() {
         Spinner sp = findViewById(R.id.sp);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -144,6 +161,7 @@ public class CreateProfile extends AppCompatActivity {
             }
         });
     }
+
     void removeAreaOfInterest() {
         ImageView floatingActionButtonRemoveAreaOfInterest = findViewById(R.id.imageViewRemoveAreaOfInterest);
         floatingActionButtonRemoveAreaOfInterest.setOnClickListener(view -> {
@@ -160,6 +178,7 @@ public class CreateProfile extends AppCompatActivity {
             }
         });
     }
+
     void removeAreaOfInterest(String text) {
         ImageView floatingActionButtonRemoveAreaOfInterest = findViewById(R.id.imageViewRemoveAreaOfInterest);
         if (areas_array.contains(text) && areas_array.contains(text)) {
@@ -172,8 +191,8 @@ public class CreateProfile extends AppCompatActivity {
             Snackbar.make(floatingActionButtonRemoveAreaOfInterest, R.string.area_of_interest_not_present, Snackbar.LENGTH_SHORT).show();
         }
     }
+
     void getBack() {
-        ImageView discard = findViewById(R.id.imageViewDiscard);
         discard.setOnClickListener(view -> {
             if (blocked) {
                 Snackbar.make(discard, R.string.go_back_upload, Snackbar.LENGTH_SHORT).show();
@@ -186,8 +205,8 @@ public class CreateProfile extends AppCompatActivity {
 
 
     void writeDB(Map<String, Object> docData) {
-        ImageView apply = findViewById(R.id.imageViewApply);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+
         db.collection("users")
                 .add(docData)
                 .addOnSuccessListener(aVoid -> {
@@ -224,11 +243,9 @@ public class CreateProfile extends AppCompatActivity {
     }
 
     void createProfile() {
-        ImageView apply = findViewById(R.id.imageViewApply);
+
         apply.setOnClickListener(view -> {
 
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            TextView myUsername = findViewById(R.id.editTextUsername);
             String text = myUsername.getText().toString();
             CollectionReference docRef = db.collection("users");
             docRef.whereEqualTo("username", text).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -238,10 +255,6 @@ public class CreateProfile extends AppCompatActivity {
                         if (task.getResult().size() > 0) {
                             Snackbar.make(apply, R.string.username_taken, Snackbar.LENGTH_SHORT).show();
                         } else {
-                            TextView myUsername = findViewById(R.id.editTextUsername);
-                            TextView myLocation = findViewById(R.id.editTextMyLocation);
-                            TextView myDescription = findViewById(R.id.editTextMyDescription);
-                            EditText passwordEdit = findViewById(R.id.editTextPassword);
                             Map<String, Object> docData = new HashMap<>();
                             docData.put("username", myUsername.getText().toString());
                             docData.put("location", myLocation.getText().toString());

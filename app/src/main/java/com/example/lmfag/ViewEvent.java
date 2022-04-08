@@ -49,7 +49,7 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ViewEvent extends AppCompatActivity {
+public class ViewEvent extends MenuInterface {
     Context context = this;
     final Calendar cldr_start = Calendar.getInstance();
     private MapView map;
@@ -70,6 +70,7 @@ public class ViewEvent extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_event);
+        DrawerHelper.fillNavbarData(this);
         imageViewChooseStartDate = findViewById(R.id.imageViewChooseStartDate);
         textViewChooseStartDate = findViewById(R.id.textViewChooseStartDate);
 
@@ -104,10 +105,7 @@ public class ViewEvent extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.imageViewDiscard).setOnClickListener(view -> {
-            Intent myIntent = new Intent(context, MyProfile.class);
-            context.startActivity(myIntent);
-        });
+
         ImageView imageViewRate = findViewById(R.id.imageViewRate);
         imageViewRate.setOnClickListener(view -> {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -142,11 +140,7 @@ public class ViewEvent extends AppCompatActivity {
         });
         firstMapSetup();
     }
-    @Override
-    public void onBackPressed() {
-        Intent myIntent = new Intent(context, MyProfile.class);
-        context.startActivity(myIntent);
-    }
+
     void firstMapSetup() {
         // Loading map
         Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);

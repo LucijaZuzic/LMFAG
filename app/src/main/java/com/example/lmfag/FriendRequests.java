@@ -32,7 +32,7 @@ import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class FriendRequests extends AppCompatActivity {
+public class FriendRequests extends MenuInterface {
     RecyclerView recyclerViewFriendRequests;
     FriendRequests context = this;
 
@@ -40,6 +40,7 @@ public class FriendRequests extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_requests);
+        DrawerHelper.fillNavbarData(this);
         recyclerViewFriendRequests = findViewById(R.id.recyclerViewFriendRequests);
     }
     void refresh() {
@@ -52,11 +53,7 @@ public class FriendRequests extends AppCompatActivity {
         getFriendRequests();
     }
 
-    @Override
-    public void onBackPressed() {
-        Intent myIntent = new Intent(context, MyProfile.class);
-        context.startActivity(myIntent);
-    }
+
     void getFriendRequests() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());

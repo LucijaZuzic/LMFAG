@@ -50,7 +50,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EventsNearby extends AppCompatActivity {
+public class EventsNearby extends MenuInterface {
 
     private MapView map;
     private IMapController mapController;
@@ -78,6 +78,8 @@ public class EventsNearby extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_events_nearby);
+
+        DrawerHelper.fillNavbarData(this);
 
         enterLatitude = findViewById(R.id.inputLatitude);
         enterLongitude = findViewById(R.id.inputLongitude);
