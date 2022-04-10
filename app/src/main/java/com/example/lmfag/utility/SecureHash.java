@@ -1,4 +1,4 @@
-package com.example.lmfag;
+package com.example.lmfag.utility;
 
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;

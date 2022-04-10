@@ -1,11 +1,10 @@
-package com.example.lmfag;
+package com.example.lmfag.utility.adapters;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
+import com.example.lmfag.activities.ViewMessages;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -29,18 +28,13 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.google.firestore.admin.v1.Index;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.prefs.Preferences;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -124,9 +118,8 @@ public class CustomAdapterFriendsMessages extends RecyclerView.Adapter<CustomAda
     }
     // Replace the contents of a view (invoked by the layout manager)
 
-    void getOrganizerData(String name) {
+    private void getOrganizerData(String name) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
     }
 
     @Override

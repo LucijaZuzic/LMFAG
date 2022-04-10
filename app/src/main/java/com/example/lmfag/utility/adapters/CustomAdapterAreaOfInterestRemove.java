@@ -1,4 +1,4 @@
-package com.example.lmfag;
+package com.example.lmfag.utility.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +8,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.lmfag.activities.EditProfile;
+import com.example.lmfag.R;
+import com.example.lmfag.activities.CreateProfile;
+import com.example.lmfag.utility.EventTypeToDrawable;
 
 import java.util.List;
 

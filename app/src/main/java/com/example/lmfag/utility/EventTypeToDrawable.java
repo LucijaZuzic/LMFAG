@@ -1,4 +1,6 @@
-package com.example.lmfag;
+package com.example.lmfag.utility;
+
+import com.example.lmfag.R;
 
 public class EventTypeToDrawable {
     public static int getEventTypeToDrawable(String eventType) {

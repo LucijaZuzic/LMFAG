@@ -1,4 +1,4 @@
-package com.example.lmfag;
+package com.example.lmfag.activities;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -24,6 +24,11 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.lmfag.utility.adapters.CustomAdapterAreaOfInterestRemove;
+import com.example.lmfag.utility.DrawerHelper;
+import com.example.lmfag.utility.EventTypeToDrawable;
+import com.example.lmfag.R;
+import com.example.lmfag.utility.SecureHash;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -46,20 +51,20 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CreateProfile extends MenuInterface {
 
-    TextView myUsername;
-    TextView myLocation;
-    TextView myDescription;
-    ImageView apply, discard;
-    EditText passwordEdit;
+    private TextView myUsername;
+    private TextView myLocation;
+    private TextView myDescription;
+    private ImageView apply, discard;
+    private EditText passwordEdit;
 
-    FirebaseFirestore db;
+    private FirebaseFirestore db;
 
-    boolean blocked = false;
-    Context context = this;
-    List<String> areas_array = new ArrayList<>();
-    List<Double> points_array = new ArrayList<>();
+    private boolean blocked = false;
+    private Context context = this;
+    private List<String> areas_array = new ArrayList<>();
+    private List<Double> points_array = new ArrayList<>();
     private String selected_item;
-    Uri uri;
+    private Uri uri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,7 +167,7 @@ public class CreateProfile extends MenuInterface {
         });
     }
 
-    void removeAreaOfInterest() {
+    private void removeAreaOfInterest() {
         ImageView floatingActionButtonRemoveAreaOfInterest = findViewById(R.id.imageViewRemoveAreaOfInterest);
         floatingActionButtonRemoveAreaOfInterest.setOnClickListener(view -> {
             Spinner sp = findViewById(R.id.sp);
@@ -179,7 +184,7 @@ public class CreateProfile extends MenuInterface {
         });
     }
 
-    void removeAreaOfInterest(String text) {
+    public void removeAreaOfInterest(String text) {
         ImageView floatingActionButtonRemoveAreaOfInterest = findViewById(R.id.imageViewRemoveAreaOfInterest);
         if (areas_array.contains(text) && areas_array.contains(text)) {
             points_array.remove(areas_array.indexOf(text));

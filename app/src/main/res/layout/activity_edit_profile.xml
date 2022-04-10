@@ -11,7 +11,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".EditProfile">
+        tools:context=".activities.EditProfile">
 
         <LinearLayout
             android:id="@+id/main_layout"

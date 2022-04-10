@@ -1,4 +1,4 @@
-package com.example.lmfag;
+package com.example.lmfag.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,10 +12,11 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.example.lmfag.MainActivity;
 import com.example.lmfag.R;
+import com.example.lmfag.activities.MainActivity;
 
 public class MenuInterface extends AppCompatActivity {
+    private boolean flag = false;
 
     public void logout() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -45,7 +46,6 @@ public class MenuInterface extends AppCompatActivity {
         return true;
     }
 
-    boolean flag = false;
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection

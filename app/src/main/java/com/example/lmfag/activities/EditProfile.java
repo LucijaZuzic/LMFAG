@@ -1,11 +1,7 @@
-package com.example.lmfag;
+package com.example.lmfag.activities;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
@@ -18,9 +14,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -31,7 +24,11 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.android.material.navigation.NavigationView;
+import com.example.lmfag.utility.EventTypeToDrawable;
+import com.example.lmfag.R;
+import com.example.lmfag.utility.SecureHash;
+import com.example.lmfag.utility.adapters.CustomAdapterAreaOfInterestRemove;
+import com.example.lmfag.utility.DrawerHelper;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -52,12 +49,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class EditProfile extends MenuInterface {
-    boolean blocked = false;
-    Context context = this;
-    List<String> areas_array = new ArrayList<>();
-    List<Double> points_array = new ArrayList<>();
-    String old_password = "";
-    Uri uri;
+    private boolean blocked = false;
+    private Context context = this;
+    private List<String> areas_array = new ArrayList<>();
+    private List<Double> points_array = new ArrayList<>();
+    private String old_password = "";
+    private Uri uri;
 
     private String selecteditem;
     @Override
@@ -93,7 +90,7 @@ public class EditProfile extends MenuInterface {
 
     }
 
-    void changeProfilePicture() {
+    private void changeProfilePicture() {
         CircleImageView circleImageView = findViewById(R.id.profile_image);
         ActivityResultLauncher<Intent> photoPicker = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -118,7 +115,7 @@ public class EditProfile extends MenuInterface {
         });
     }
 
-    void showAreasOfInterest() {
+    private void showAreasOfInterest() {
         LinearLayout ll_areas_show = findViewById(R.id.linearLayoutShowAreasOfInterest);
         RecyclerView ll_areas = findViewById(R.id.recyclerViewAreasOfInterest);
         ImageView iv_areas = findViewById(R.id.imageViewExpandAreasOfInterest);
@@ -132,7 +129,8 @@ public class EditProfile extends MenuInterface {
             }
         });
     }
-    void fillSpinner() {
+
+    private void fillSpinner() {
         Spinner sp = findViewById(R.id.sp);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.event_types, android.R.layout.simple_spinner_item);
@@ -140,7 +138,7 @@ public class EditProfile extends MenuInterface {
         sp.setAdapter(adapter);
     }
 
-    void addAreaOfInterest() {
+    private void addAreaOfInterest() {
         ImageView floatingActionButtonAreaOfInterest = findViewById(R.id.imageViewButtonAreaOfInterest);
         floatingActionButtonAreaOfInterest.setOnClickListener(view -> {
             Spinner sp = findViewById(R.id.sp);
@@ -156,7 +154,8 @@ public class EditProfile extends MenuInterface {
             }
         });
     }
-    void removeAreaOfInterest() {
+
+    public void removeAreaOfInterest() {
         ImageView floatingActionButtonRemoveAreaOfInterest = findViewById(R.id.imageViewRemoveAreaOfInterest);
         floatingActionButtonRemoveAreaOfInterest.setOnClickListener(view -> {
             Spinner sp = findViewById(R.id.sp);
@@ -172,7 +171,8 @@ public class EditProfile extends MenuInterface {
             }
         });
     }
-    void removeAreaOfInterest(String text) {
+
+    public void removeAreaOfInterest(String text) {
         ImageView floatingActionButtonRemoveAreaOfInterest = findViewById(R.id.imageViewRemoveAreaOfInterest);
         if (areas_array.contains(text)) {
             points_array.remove(areas_array.indexOf(text));
@@ -184,7 +184,8 @@ public class EditProfile extends MenuInterface {
             Snackbar.make(floatingActionButtonRemoveAreaOfInterest, R.string.area_of_interest_not_present, Snackbar.LENGTH_SHORT).show();
         }
     }
-    void getBack() {
+
+    private void getBack() {
         ImageView discard = findViewById(R.id.imageViewDiscard);
         discard.setOnClickListener(view -> {
             if (blocked) {
@@ -196,7 +197,7 @@ public class EditProfile extends MenuInterface {
         });
     }
 
-    void writeDB(Map<String, Object> docData) {
+    private void writeDB(Map<String, Object> docData) {
         ImageView apply = findViewById(R.id.imageViewApply);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -223,7 +224,8 @@ public class EditProfile extends MenuInterface {
                     //Log.w(TAG, "Error writing document", e);
                 });
     }
-    void createProfile() {
+
+    private void createProfile() {
         ImageView apply = findViewById(R.id.imageViewApply);
         CheckBox check = findViewById(R.id.checkbox);
         apply.setOnClickListener(view -> {
@@ -282,7 +284,7 @@ public class EditProfile extends MenuInterface {
         });
     }
 
-    void fillUserData() {
+    private void fillUserData() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         EditProfile ep = this;
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());

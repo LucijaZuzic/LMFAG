@@ -1,8 +1,6 @@
-package com.example.lmfag;
+package com.example.lmfag.activities;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
@@ -13,41 +11,40 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.example.lmfag.R;
+import com.example.lmfag.utility.adapters.CustomAdapterRating;
+import com.example.lmfag.utility.DrawerHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RateEvent extends MenuInterface {
-    String organizer;
-    List<String> people = new ArrayList<>();
-    List<Float> ratings = new ArrayList<>();
-    Context context = this;
-    RateEvent rateEvent = this;
-    RecyclerView recyclerViewPlayers;
-    String event_type;
+    private String organizer;
+    private List<String> people = new ArrayList<>();
+    private List<Float> ratings = new ArrayList<>();
+    private Context context = this;
+    private RateEvent rateEvent = this;
+    private RecyclerView recyclerViewPlayers;
+    private String event_type;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +63,8 @@ public class RateEvent extends MenuInterface {
             context.startActivity(myIntent);
         });
     }
-    void checkRated() {
+
+    private void checkRated() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String eventID = preferences.getString("eventID", "");
@@ -90,6 +88,7 @@ public class RateEvent extends MenuInterface {
             }
         });
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -97,10 +96,12 @@ public class RateEvent extends MenuInterface {
         recyclerViewPlayers = findViewById(R.id.recyclerViewPlayers);
         fillData();
     }
-    void updateRating(int index, Float value) {
+
+    public void updateRating(int index, Float value) {
         ratings.set(index, value);
     }
-    void getWhoAttended() {
+
+    private void getWhoAttended() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String eventID = preferences.getString("eventID", "");
@@ -134,81 +135,83 @@ public class RateEvent extends MenuInterface {
                 }
             }
         });
-
     }
-        void fillData() {
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            String eventID = preferences.getString("eventID", "");
-            String userID = preferences.getString("userID", "");
-            if (eventID.equals("")) {
-                Intent myIntent = new Intent(context, MyProfile.class);
-                startActivity(myIntent);
-                return;
+
+    private void fillData() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String eventID = preferences.getString("eventID", "");
+        String userID = preferences.getString("userID", "");
+        if (eventID.equals("")) {
+            Intent myIntent = new Intent(context, MyProfile.class);
+            startActivity(myIntent);
+            return;
+        }
+        DocumentReference docRef = db.collection("events").document(eventID);
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Map<String, Object> docData = document.getData();
+                    organizer = docData.get("organizer").toString();
+                    if (organizer.equals(userID)) {
+                        findViewById(R.id.organizerBanner).setVisibility(View.GONE);
+                    }
+                    getOrganizerData(organizer);
+                    getEventType();
+                }
             }
-            DocumentReference docRef = db.collection("events").document(eventID);
-            docRef.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Map<String, Object> docData = document.getData();
-                        organizer = docData.get("organizer").toString();
-                        if (organizer.equals(userID)) {
-                            findViewById(R.id.organizerBanner).setVisibility(View.GONE);
-                        }
-                        getOrganizerData(organizer);
-                        getEventType();
-                    }
-                }
-            });
-        }
-        void getOrganizerData(String name) {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            DocumentReference docRef = db.collection("users").document(name);
-            docRef.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Map<String, Object> data = document.getData();
+        });
+    }
 
-                        TextView myUsername = findViewById(R.id.textViewOrganizer);
-                        myUsername.setText(data.get("username").toString());
+    private void getOrganizerData(String name) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("users").document(name);
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Map<String, Object> data = document.getData();
 
-                        FirebaseStorage storage = FirebaseStorage.getInstance();
-                        StorageReference storageRef = storage.getReference();
-                        StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
-                        final long ONE_MEGABYTE = 1024 * 1024;
-                        imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                            // Data for "images/island.jpg" is returns, use this as needed
-                            CircleImageView circleImageView = findViewById(R.id.profile_image_organizer);
-                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-                            circleImageView.setImageBitmap(bmp);
-                            findViewById(R.id.profile_image_organizer).setOnClickListener(view -> {
-                                SharedPreferences.Editor editor = preferences.edit();
-                                editor.putString("friendID", name);
-                                editor.apply();
-                                Intent myIntent = new Intent(context, ViewProfile.class);
-                                startActivity(myIntent);
-                            });
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                // Handle any errors
-                            }
+                    TextView myUsername = findViewById(R.id.textViewOrganizer);
+                    myUsername.setText(data.get("username").toString());
+
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    StorageReference storageRef = storage.getReference();
+                    StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
+                    final long ONE_MEGABYTE = 1024 * 1024;
+                    imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+                        // Data for "images/island.jpg" is returns, use this as needed
+                        CircleImageView circleImageView = findViewById(R.id.profile_image_organizer);
+                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+                        circleImageView.setImageBitmap(bmp);
+                        findViewById(R.id.profile_image_organizer).setOnClickListener(view -> {
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("friendID", name);
+                            editor.apply();
+                            Intent myIntent = new Intent(context, ViewProfile.class);
+                            startActivity(myIntent);
                         });
-                        //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                    } else {
-                        Intent myIntent = new Intent(context, MainActivity.class);
-                        startActivity(myIntent);
-                        //Log.d(TAG, "No such document");
-                    }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle any errors
+                        }
+                    });
+                    //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                 } else {
-                    //Log.d(TAG, "get failed with ", task.getException());
+                    Intent myIntent = new Intent(context, MainActivity.class);
+                    startActivity(myIntent);
+                    //Log.d(TAG, "No such document");
                 }
-            });
-        }
-    void getEventType() {
+            } else {
+                //Log.d(TAG, "get failed with ", task.getException());
+            }
+        });
+    }
+
+    private void getEventType() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String eventID = preferences.getString("eventID", "");
@@ -228,7 +231,8 @@ public class RateEvent extends MenuInterface {
             }
         });
     }
-    void updatePlayer(String playerID, Float rating) {
+
+    private void updatePlayer(String playerID, Float rating) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users").document(playerID);
         docRef.get().addOnCompleteListener(task -> {
@@ -272,5 +276,4 @@ public class RateEvent extends MenuInterface {
             }
         });
     }
-
 }

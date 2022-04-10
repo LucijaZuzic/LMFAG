@@ -1,4 +1,4 @@
-package com.example.lmfag;
+package com.example.lmfag.activities;
 
 
 import androidx.appcompat.widget.SwitchCompat;
@@ -22,6 +22,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 
+import com.example.lmfag.BuildConfig;
+import com.example.lmfag.utility.DrawerHelper;
+import com.example.lmfag.utility.EventTypeToDrawable;
+import com.example.lmfag.R;
 import com.firebase.geofire.GeoFireUtils;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.material.slider.RangeSlider;
@@ -50,8 +54,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import kotlinx.coroutines.SchedulerTaskKt;
 
 public class CreateEvent extends MenuInterface {
 

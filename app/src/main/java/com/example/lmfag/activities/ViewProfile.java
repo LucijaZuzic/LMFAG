@@ -1,7 +1,5 @@
-package com.example.lmfag;
+package com.example.lmfag.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
@@ -17,15 +15,15 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
+import com.example.lmfag.R;
+import com.example.lmfag.utility.adapters.CustomAdapterAreaOfInterest;
+import com.example.lmfag.utility.adapters.CustomAdapterFriends;
+import com.example.lmfag.utility.DrawerHelper;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -39,10 +37,11 @@ import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ViewProfile extends MenuInterface {
-    Context context = this;
-    ImageView friendRequest;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    RecyclerView recyclerViewFriends;
+    private Context context = this;
+    private ImageView friendRequest;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private RecyclerView recyclerViewFriends;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,11 +70,12 @@ public class ViewProfile extends MenuInterface {
         checkFriendsOneDir(sender, receiver, false);
     }
 
-    void refresh() {
+    private void refresh() {
         Intent myIntent = new Intent(context, ViewProfile.class);
         context.startActivity(myIntent);
     }
-    void showFriends() {
+
+    private void showFriends() {
         LinearLayout ll_friends_show = findViewById(R.id.linearLayoutShowFriends);
         RecyclerView ll_friends = findViewById(R.id.recyclerViewFriends);
         ImageView iv_friends = findViewById(R.id.imageViewExpandFriends);
@@ -90,7 +90,7 @@ public class ViewProfile extends MenuInterface {
         });
     }
 
-    void showAreasOfInterest() {
+    private void showAreasOfInterest() {
         LinearLayout ll_areas_show = findViewById(R.id.linearLayoutShowAreasOfInterest);
         RecyclerView ll_areas = findViewById(R.id.recyclerViewAreasOfInterest);
         ImageView iv_areas = findViewById(R.id.imageViewExpandAreasOfInterest);
@@ -105,7 +105,7 @@ public class ViewProfile extends MenuInterface {
         });
     }
 
-    void writeToDb(String sender, String receiver) {
+    private void writeToDb(String sender, String receiver) {
         Map<String, Object> docData = new HashMap<>();
         docData.put("sender", sender);
         docData.put("receiver", receiver);
@@ -121,7 +121,7 @@ public class ViewProfile extends MenuInterface {
         });
     }
 
-    void checkFriendsTwoDir(String sender, String receiver, boolean send) {
+    private void checkFriendsTwoDir(String sender, String receiver, boolean send) {
         db.collection("friends").document(sender).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
@@ -159,7 +159,7 @@ public class ViewProfile extends MenuInterface {
         });
     }
 
-    void checkFriendsOneDir(String sender, String receiver, boolean send) {
+    private void checkFriendsOneDir(String sender, String receiver, boolean send) {
         db.collection("friends").document(receiver).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
@@ -186,7 +186,8 @@ public class ViewProfile extends MenuInterface {
             }
         });
     }
-    void checkSentTwoDir(String sender, String receiver, boolean send) {
+
+    private void checkSentTwoDir(String sender, String receiver, boolean send) {
         db.collection("friend_requests").whereEqualTo("sender", receiver).whereEqualTo("receiver", sender)
                 .get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -200,7 +201,8 @@ public class ViewProfile extends MenuInterface {
                     }
                 });
     }
-    void checkSentOneDir(String sender, String receiver, boolean send) {
+
+    private void checkSentOneDir(String sender, String receiver, boolean send) {
         db.collection("friend_requests").whereEqualTo("sender", sender).whereEqualTo("receiver", receiver)
                 .get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -215,7 +217,7 @@ public class ViewProfile extends MenuInterface {
                 });
     }
 
-    void sendFriendRequest() {
+    private void sendFriendRequest() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String sender = preferences.getString("userID", "");
         String receiver = preferences.getString("friendID", "");
@@ -226,7 +228,7 @@ public class ViewProfile extends MenuInterface {
         checkSentOneDir(sender, receiver, true);
     }
 
-    void fillUserData() {
+    private void fillUserData() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String name = preferences.getString("friendID", "");
@@ -306,8 +308,8 @@ public class ViewProfile extends MenuInterface {
             }
         });
     }
-    void getFriends() {
 
+    private void getFriends() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String name = preferences.getString("friendID", "");

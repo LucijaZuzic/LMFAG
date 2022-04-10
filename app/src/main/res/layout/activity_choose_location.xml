@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:weightSum="1"
-        tools:context=".ChooseLocation">
+        tools:context=".activities.ChooseLocation">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"

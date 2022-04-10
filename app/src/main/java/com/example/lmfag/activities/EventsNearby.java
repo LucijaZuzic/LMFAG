@@ -1,10 +1,8 @@
-package com.example.lmfag;
+package com.example.lmfag.activities;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,22 +11,23 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.lmfag.utility.EventTypeToDrawable;
+import com.example.lmfag.R;
+import com.example.lmfag.utility.adapters.CustomAdapterEvent;
+import com.example.lmfag.utility.DrawerHelper;
 import com.firebase.geofire.GeoFireUtils;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQueryBounds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
@@ -36,7 +35,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.osmdroid.api.IMapController;
-import org.osmdroid.config.Configuration;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.views.MapView;
@@ -46,23 +44,21 @@ import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class EventsNearby extends MenuInterface {
-
     private MapView map;
     private IMapController mapController;
     private MyLocationNewOverlay myLocationOverlay;
     private Marker chosenLocationMarker;
-    List<Map<String, Object>> matchingDocs = new ArrayList<Map<String, Object>>();
-    List<String> docIds = new ArrayList<String>();
-    RecyclerView eventNearbyRecycler;
-    ImageView startSearch;
-    Context context = this;
-    SharedPreferences preferences;
-    EditText enterRadius;
+    private List<Map<String, Object>> matchingDocs = new ArrayList<Map<String, Object>>();
+    private List<String> docIds = new ArrayList<String>();
+    private RecyclerView eventNearbyRecycler;
+    private ImageView startSearch;
+    private Context context = this;
+    private SharedPreferences preferences;
+    private EditText enterRadius;
     private ImageView updateButton;
 
     private EditText enterLongitude, enterLatitude;
@@ -74,6 +70,7 @@ public class EventsNearby extends MenuInterface {
                 ? v
                 : defaultValue;
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,7 +110,7 @@ public class EventsNearby extends MenuInterface {
         });
     }
 
-    void firstMapSetup() {
+    private void firstMapSetup() {
         //Request permission dialog
         ActivityResultLauncher<String[]> locationPermissionRequest =
                 registerForActivityResult(new ActivityResultContracts
@@ -221,8 +218,7 @@ public class EventsNearby extends MenuInterface {
         map.getOverlays().add(chosenLocationMarker);
     }
 
-    void getEventsThatAreInRadius(float latitude, float longitude, double radiusInKm) {
-
+    private void getEventsThatAreInRadius(float latitude, float longitude, double radiusInKm) {
         // Find cities within a distance in kilometers of location
         final GeoLocation center = new GeoLocation(latitude, longitude);
         final double radiusInM = radiusInKm * 1000;

@@ -1,12 +1,10 @@
-package com.example.lmfag;
+package com.example.lmfag.activities;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -17,10 +15,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
+import com.example.lmfag.R;
+import com.example.lmfag.utility.adapters.CustomAdapterEvent;
+import com.example.lmfag.utility.DrawerHelper;
+import com.example.lmfag.utility.EventTypeToDrawable;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -30,14 +30,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FindEvents extends MenuInterface {
-    Context context = this;
-    RecyclerView recyclerViewFindEvents;
-    SharedPreferences preferences;
-    Spinner search_params;
-    Spinner sort_params;
-    Spinner sp;
-    CardView nameCard, organizerCard, typeCard;
+    private Context context = this;
+    private RecyclerView recyclerViewFindEvents;
+    private SharedPreferences preferences;
+    private Spinner search_params;
+    private Spinner sort_params;
+    private Spinner sp;
+    private CardView nameCard, organizerCard, typeCard;
     private String selected_item;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,11 +76,13 @@ public class FindEvents extends MenuInterface {
             getAllEventsWithOrganizer();
         });
     }
+
     public void showName(View view) {
         nameCard.setVisibility(View.VISIBLE);
         organizerCard.setVisibility(View.GONE);
         typeCard.setVisibility(View.GONE);
     }
+
     public void showOrganizer(View view) {
         nameCard.setVisibility(View.GONE);
         organizerCard.setVisibility(View.VISIBLE);
@@ -91,7 +94,7 @@ public class FindEvents extends MenuInterface {
         typeCard.setVisibility(View.VISIBLE);
     }
 
-    void fillSpinner() {
+    private void fillSpinner() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.event_types, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -107,7 +110,8 @@ public class FindEvents extends MenuInterface {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sort_params.setAdapter(adapter);
     }
-    void getAllEvents() {
+
+    private void getAllEvents() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         List<String> events_array = new ArrayList<>();
         Query q = db.collection("events");
@@ -130,7 +134,8 @@ public class FindEvents extends MenuInterface {
             }
         });
     }
-    void getAllEventsWithName() {
+
+    private void getAllEventsWithName() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         List<String> events_array = new ArrayList<>();
         Query q = db.collection("events");
@@ -161,7 +166,7 @@ public class FindEvents extends MenuInterface {
         });
     }
 
-    void getAllEventsWithOrganizer() {
+    private void getAllEventsWithOrganizer() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         List<String> events_array = new ArrayList<>();
         Query q = db.collection("events");

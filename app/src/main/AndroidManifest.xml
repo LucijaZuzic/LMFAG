@@ -17,52 +17,52 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LMFAG">
         <activity
-            android:name=".EventsNearby"
+            android:name=".activities.EventsNearby"
             android:exported="false" />
         <activity
-            android:name=".MyMessages"
+            android:name=".activities.MyMessages"
             android:exported="false" />
         <activity
-            android:name=".ViewMessages"
+            android:name=".activities.ViewMessages"
             android:exported="false" />
         <activity
-            android:name=".MyEvents"
+            android:name=".activities.MyEvents"
             android:exported="false" />
         <activity
-            android:name=".ViewProfile"
+            android:name=".activities.ViewProfile"
             android:exported="false" />
         <activity
-            android:name=".CreateProfile"
+            android:name=".activities.CreateProfile"
             android:exported="false" />
         <activity
-            android:name=".ChooseLocation"
+            android:name=".activities.ChooseLocation"
             android:exported="false" />
         <activity
-            android:name=".FriendRequests"
+            android:name=".activities.FriendRequests"
             android:exported="false" />
         <activity
-            android:name=".FindFriends"
+            android:name=".activities.FindFriends"
             android:exported="false" />
         <activity
-            android:name=".FindEvents"
+            android:name=".activities.FindEvents"
             android:exported="false" />
         <activity
-            android:name=".ViewEvent"
+            android:name=".activities.ViewEvent"
             android:exported="false" />
         <activity
-            android:name=".EditProfile"
+            android:name=".activities.EditProfile"
             android:exported="false" />
         <activity
-            android:name=".RateEvent"
+            android:name=".activities.RateEvent"
             android:exported="false" />
         <activity
-            android:name=".CreateEvent"
+            android:name=".activities.CreateEvent"
             android:exported="false" />
         <activity
-            android:name=".MyProfile"
+            android:name=".activities.MyProfile"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

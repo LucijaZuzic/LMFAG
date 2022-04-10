@@ -1,4 +1,4 @@
-package com.example.lmfag;
+package com.example.lmfag.utility.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.lmfag.R;
+import com.example.lmfag.activities.ViewEvent;
+import com.example.lmfag.utility.EventTypeToDrawable;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;

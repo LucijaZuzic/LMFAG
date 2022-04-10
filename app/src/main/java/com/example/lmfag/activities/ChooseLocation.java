@@ -1,4 +1,4 @@
-package com.example.lmfag;
+package com.example.lmfag.activities;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -18,6 +18,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.lmfag.utility.DrawerHelper;
+import com.example.lmfag.R;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;

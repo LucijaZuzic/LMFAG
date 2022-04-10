@@ -1,33 +1,30 @@
-package com.example.lmfag;
+package com.example.lmfag.utility;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.lmfag.CreateEvent;
-import com.example.lmfag.CustomAdapterAreaOfInterest;
-import com.example.lmfag.EditProfile;
-import com.example.lmfag.EventsNearby;
-import com.example.lmfag.FindEvents;
-import com.example.lmfag.FindFriends;
-import com.example.lmfag.FriendRequests;
-import com.example.lmfag.MainActivity;
-import com.example.lmfag.MyEvents;
-import com.example.lmfag.MyMessages;
+import com.example.lmfag.activities.EditProfile;
+import com.example.lmfag.activities.EventsNearby;
+import com.example.lmfag.activities.FindEvents;
+import com.example.lmfag.activities.FindFriends;
+import com.example.lmfag.activities.FriendRequests;
+import com.example.lmfag.activities.MainActivity;
+import com.example.lmfag.activities.MyEvents;
+import com.example.lmfag.activities.MyMessages;
+import com.example.lmfag.activities.MyProfile;
 import com.example.lmfag.R;
+import com.example.lmfag.activities.CreateEvent;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.DocumentReference;
@@ -36,11 +33,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -82,7 +75,7 @@ public class DrawerHelper {
     }
 
 
-    static void fillNavbarData(Activity context) {
+    public static void fillNavbarData(Activity context) {
         NavigationView navigationView = context.findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {

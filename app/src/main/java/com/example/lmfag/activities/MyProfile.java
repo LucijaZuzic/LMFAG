@@ -1,4 +1,4 @@
-package com.example.lmfag;
+package com.example.lmfag.activities;
 
 import androidx.annotation.NonNull;
 
@@ -23,6 +23,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 
+import com.example.lmfag.R;
+import com.example.lmfag.utility.adapters.CustomAdapterAreaOfInterest;
+import com.example.lmfag.utility.adapters.CustomAdapterFriends;
+import com.example.lmfag.utility.DrawerHelper;
 import com.google.android.gms.tasks.OnFailureListener;
 
 import com.google.firebase.firestore.DocumentReference;
@@ -42,9 +46,9 @@ import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MyProfile extends MenuInterface {
+    private Context context = this;
+    private RecyclerView recyclerViewFriends;
 
-    Context context = this;
-    RecyclerView recyclerViewFriends;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +67,7 @@ public class MyProfile extends MenuInterface {
         getFriends();
     }
 
-    void fillUserData() {
+    private void fillUserData() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String name = preferences.getString("userID", "");
@@ -141,7 +145,7 @@ public class MyProfile extends MenuInterface {
         });
     }
 
-    void showFriends() {
+    private void showFriends() {
         LinearLayout ll_friends_show = findViewById(R.id.linearLayoutShowFriends);
         RecyclerView ll_friends = findViewById(R.id.recyclerViewFriends);
         ImageView iv_friends = findViewById(R.id.imageViewExpandFriends);
@@ -156,7 +160,7 @@ public class MyProfile extends MenuInterface {
         });
     }
 
-    void showAreasOfInterest() {
+    private void showAreasOfInterest() {
         LinearLayout ll_areas_show = findViewById(R.id.linearLayoutShowAreasOfInterest);
         RecyclerView ll_areas = findViewById(R.id.recyclerViewAreasOfInterest);
         ImageView iv_areas = findViewById(R.id.imageViewExpandAreasOfInterest);
@@ -171,7 +175,7 @@ public class MyProfile extends MenuInterface {
         });
     }
 
-    void getFriends() {
+    private void getFriends() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String name = preferences.getString("userID", "");
@@ -193,5 +197,4 @@ public class MyProfile extends MenuInterface {
             }
         });
     }
-
 }

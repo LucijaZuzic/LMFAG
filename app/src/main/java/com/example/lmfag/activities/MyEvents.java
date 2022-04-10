@@ -1,7 +1,6 @@
-package com.example.lmfag;
+package com.example.lmfag.activities;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
@@ -12,6 +11,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.example.lmfag.R;
+import com.example.lmfag.utility.adapters.CustomAdapterEvent;
+import com.example.lmfag.utility.DrawerHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -23,9 +25,9 @@ import java.util.List;
 
 public class MyEvents extends MenuInterface {
 
-    Context context = this;
-    RecyclerView recyclerViewEventsOrganizer, recyclerViewEventsPlayer;
-    SharedPreferences preferences;
+    private Context context = this;
+    private RecyclerView recyclerViewEventsOrganizer, recyclerViewEventsPlayer;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,7 @@ public class MyEvents extends MenuInterface {
     }
 
 
-    void showFriends() {
+    private void showFriends() {
         LinearLayout ll_friends_show = findViewById(R.id.linearLayoutShowFriends);
         RecyclerView ll_friends = findViewById(R.id.recyclerViewFriends);
         ImageView iv_friends = findViewById(R.id.imageViewExpandFriends);
@@ -57,7 +59,7 @@ public class MyEvents extends MenuInterface {
         });
     }
 
-    void showOrganizer() {
+    private void showOrganizer() {
         LinearLayout ll_areas_show = findViewById(R.id.linearLayoutShowOrganizer);
         RecyclerView ll_areas = findViewById(R.id.recyclerViewEventsOrganizer);
         ImageView iv_areas = findViewById(R.id.imageViewExpandOrganizer);
@@ -71,7 +73,8 @@ public class MyEvents extends MenuInterface {
             }
         });
     }
-    void showPlayer() {
+
+    private void showPlayer() {
         LinearLayout ll_areas_show = findViewById(R.id.linearLayoutShowPlayer);
         RecyclerView ll_areas = findViewById(R.id.recyclerViewEventsPlayer);
         ImageView iv_areas = findViewById(R.id.imageViewExpandPlayer);
@@ -86,14 +89,12 @@ public class MyEvents extends MenuInterface {
         });
     }
 
-
-
-    void getOrganizerEvents() {
+    private void getOrganizerEvents() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         List<String> events_array = new ArrayList<>();
         String userID = preferences.getString("userID", "");
         if (!userID.equals("")) {
-            db.collection("events").whereEqualTo("organizer",userID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            db.collection("events").whereEqualTo("organizer", userID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
@@ -109,7 +110,8 @@ public class MyEvents extends MenuInterface {
             });
         }
     }
-    void getPlayerEvents() {
+
+    private void getPlayerEvents() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         List<String> events_array = new ArrayList<>();
         String userID = preferences.getString("userID", "");

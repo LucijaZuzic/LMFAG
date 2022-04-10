@@ -1,8 +1,7 @@
-package com.example.lmfag;
+package com.example.lmfag.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +10,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
+import com.example.lmfag.R;
+import com.example.lmfag.utility.SecureHash;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         EditText myU = findViewById(R.id.editTextUsername);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String name = preferences.getString("userID", "");
+
         if(!name.equalsIgnoreCase(""))
         {
             FirebaseFirestore db = FirebaseFirestore.getInstance();

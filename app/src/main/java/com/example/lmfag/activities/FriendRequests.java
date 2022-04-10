@@ -1,40 +1,30 @@
-package com.example.lmfag;
+package com.example.lmfag.activities;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.widget.TextView;
 
+import com.example.lmfag.R;
+import com.example.lmfag.utility.adapters.CustomAdapterFriendRequest;
+import com.example.lmfag.utility.DrawerHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FriendRequests extends MenuInterface {
-    RecyclerView recyclerViewFriendRequests;
-    FriendRequests context = this;
+    private RecyclerView recyclerViewFriendRequests;
+    private FriendRequests context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +33,8 @@ public class FriendRequests extends MenuInterface {
         DrawerHelper.fillNavbarData(this);
         recyclerViewFriendRequests = findViewById(R.id.recyclerViewFriendRequests);
     }
-    void refresh() {
+
+    public void refresh() {
         Intent myIntent = new Intent(context, FriendRequests.class);
         context.startActivity(myIntent);
     }
@@ -54,7 +45,7 @@ public class FriendRequests extends MenuInterface {
     }
 
 
-    void getFriendRequests() {
+    private void getFriendRequests() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String receiver = preferences.getString("userID", "");
@@ -78,5 +69,4 @@ public class FriendRequests extends MenuInterface {
             }
         });
     }
-
 }

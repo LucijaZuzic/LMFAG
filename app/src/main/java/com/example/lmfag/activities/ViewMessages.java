@@ -1,11 +1,8 @@
-package com.example.lmfag;
+package com.example.lmfag.activities;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -17,6 +14,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.lmfag.R;
+import com.example.lmfag.utility.adapters.CustomAdapterMessages;
+import com.example.lmfag.utility.DrawerHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -32,7 +32,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.text.DateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -44,8 +43,9 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ViewMessages extends MenuInterface {
-    ViewMessages context = this;
-    RecyclerView recyclerViewMessages;
+    private ViewMessages context = this;
+    private RecyclerView recyclerViewMessages;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,12 +76,13 @@ public class ViewMessages extends MenuInterface {
         getFriendData();
         getAllMessages();
     }
-    void refresh() {
+
+    public void refresh() {
         Intent myIntent = new Intent(context, ViewMessages.class);
         context.startActivity(myIntent);
     }
 
-    void getFriendData( ) {
+    private void getFriendData( ) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String name = preferences.getString("friendID", "");
@@ -129,7 +130,7 @@ public class ViewMessages extends MenuInterface {
         });
     }
 
-    void getAllMessages() {
+    private void getAllMessages() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         List<String> messages = new ArrayList<>();
         List<String> times = new ArrayList<>();

@@ -1,7 +1,6 @@
-package com.example.lmfag;
+package com.example.lmfag.activities;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
 import android.content.Context;
@@ -9,13 +8,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.metrics.Event;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.lmfag.BuildConfig;
+import com.example.lmfag.R;
+import com.example.lmfag.utility.DrawerHelper;
+import com.example.lmfag.utility.EventTypeToDrawable;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
@@ -28,7 +29,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import org.osmdroid.api.IGeoPoint;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -39,7 +39,6 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -50,22 +49,23 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ViewEvent extends MenuInterface {
-    Context context = this;
+    private Context context = this;
     final Calendar cldr_start = Calendar.getInstance();
     private MapView map;
     private IMapController mapController;
     private MyLocationNewOverlay myLocationOverlay;
     private Marker chosenLocationMarker;
     final Calendar cldr_end = Calendar.getInstance();
-    String event_type;
-    ImageView imageViewChooseStartDate, imageViewChooseStartTime, imageViewChooseEndDate, imageViewChooseEndTime, apply;
-    TextView textViewChooseStartDate, textViewChooseStartTime, textViewChooseEndDate, textViewChooseEndTime;
-    double longitude = 45.23;
-    double latitude = 45.36;
-    String organizer;
-    boolean public_event;
-    Float participate_minimum, participate_maximum;
-    Float minimum_level;
+    private String event_type;
+    private ImageView imageViewChooseStartDate, imageViewChooseStartTime, imageViewChooseEndDate, imageViewChooseEndTime, apply;
+    private TextView textViewChooseStartDate, textViewChooseStartTime, textViewChooseEndDate, textViewChooseEndTime;
+    private double longitude = 45.23;
+    private double latitude = 45.36;
+    private String organizer;
+    private boolean public_event;
+    private Float participate_minimum, participate_maximum;
+    private Float minimum_level;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,7 +141,7 @@ public class ViewEvent extends MenuInterface {
         firstMapSetup();
     }
 
-    void firstMapSetup() {
+    private void firstMapSetup() {
         // Loading map
         Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
 
@@ -180,11 +180,13 @@ public class ViewEvent extends MenuInterface {
         chosenLocationMarker.setPosition(new org.osmdroid.util.GeoPoint(latitude, longitude));
         mapController.setCenter(new org.osmdroid.util.GeoPoint(latitude, longitude));
     }
-    void refresh() {
+
+    private void refresh() {
         Intent myIntent = new Intent(context, ViewEvent.class);
         context.startActivity(myIntent);
     }
-    void checkSubscribed() {
+
+    private void checkSubscribed() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String eventID = preferences.getString("eventID", "");
@@ -222,7 +224,8 @@ public class ViewEvent extends MenuInterface {
             }
         });
     }
-    void checkOtherDirection(CollectionReference docuRef, Map<String, Object> docData) {
+
+    private void checkOtherDirection(CollectionReference docuRef, Map<String, Object> docData) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String userID = preferences.getString("userID", "");
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -245,7 +248,8 @@ public class ViewEvent extends MenuInterface {
                 }
             });
     }
-    void checkFriends(CollectionReference docuRef, Map<String, Object> docData) {
+
+    private void checkFriends(CollectionReference docuRef, Map<String, Object> docData) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference dr = db.collection("friends");
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -268,7 +272,8 @@ public class ViewEvent extends MenuInterface {
                 }
             });
     }
-    void checkNumberOfParticipantsAdd(CollectionReference docuRef, Map<String, Object> docData) {
+
+    private void checkNumberOfParticipantsAdd(CollectionReference docuRef, Map<String, Object> docData) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String eventID = preferences.getString("eventID", "");
@@ -342,7 +347,8 @@ public class ViewEvent extends MenuInterface {
             }
         });
     }
-    void checkNumberOfParticipantsRemove(QueryDocumentSnapshot docuRef) {
+
+    private void checkNumberOfParticipantsRemove(QueryDocumentSnapshot docuRef) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String eventID = preferences.getString("eventID", "");
@@ -367,7 +373,7 @@ public class ViewEvent extends MenuInterface {
         });
     }
 
-    void subscribe() {
+    private void subscribe() {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             String eventID = preferences.getString("eventID", "");
@@ -399,7 +405,7 @@ public class ViewEvent extends MenuInterface {
         }
 
 
-    void getOrganizerData(String name) {
+    private void getOrganizerData(String name) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users").document(name);
@@ -446,7 +452,7 @@ public class ViewEvent extends MenuInterface {
         });
     }
 
-    void fillData() {
+    private void fillData() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String eventID = preferences.getString("eventID", "");
@@ -456,6 +462,7 @@ public class ViewEvent extends MenuInterface {
             startActivity(myIntent);
             return;
         }
+
         DocumentReference docRef = db.collection("events").document(eventID);
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
