@@ -50,6 +50,11 @@ public class MainActivity extends AppCompatActivity {
         onStart(savedInstanceState);
     }
 
+    @Override
+    public void onBackPressed() {
+        // Do nothing to prevent going back to previous activity
+    }
+
     protected void onStart(Bundle savedInstanceState) {
         Context context = this;
         ImageView myBR = findViewById(R.id.imageViewRegister);
