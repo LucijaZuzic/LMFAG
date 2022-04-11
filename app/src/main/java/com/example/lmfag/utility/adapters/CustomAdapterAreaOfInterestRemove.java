@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.lmfag.activities.EditProfile;
+import com.example.lmfag.activities.EditProfileActivity;
 import com.example.lmfag.R;
-import com.example.lmfag.activities.CreateProfile;
+import com.example.lmfag.activities.CreateProfileActivity;
 import com.example.lmfag.utility.EventTypeToDrawable;
 
 import java.util.List;
@@ -20,8 +20,8 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
 
     private List<String> localAreasOfInterest;
     private List<Double> localLevelPoints;
-    private EditProfile editProfile = null;
-    private CreateProfile createProfile = null;
+    private EditProfileActivity editProfileActivity = null;
+    private CreateProfileActivity createProfileActivity = null;
 
     /**
      * Provide a reference to the type of views that you are using
@@ -60,15 +60,15 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
         }
     }
 
-    public CustomAdapterAreaOfInterestRemove(List<String> areasOfInterest, List<Double> levelPoints, EditProfile editProfile) {
+    public CustomAdapterAreaOfInterestRemove(List<String> areasOfInterest, List<Double> levelPoints, EditProfileActivity editProfileActivity) {
         localAreasOfInterest = areasOfInterest;
         localLevelPoints = levelPoints;
-        this.editProfile = editProfile;
+        this.editProfileActivity = editProfileActivity;
     }
-    public CustomAdapterAreaOfInterestRemove(List<String> areasOfInterest, List<Double> levelPoints, CreateProfile createProfile) {
+    public CustomAdapterAreaOfInterestRemove(List<String> areasOfInterest, List<Double> levelPoints, CreateProfileActivity createProfileActivity) {
         localAreasOfInterest = areasOfInterest;
         localLevelPoints = levelPoints;
-        this.createProfile = createProfile;
+        this.createProfileActivity = createProfileActivity;
     }
 
     // Create new views (invoked by the layout manager)
@@ -103,11 +103,11 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
         viewHolder.getFloatingActionButtonRemoveAreaOfInterest().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (editProfile != null) {
-                    editProfile.removeAreaOfInterest(text);
+                if (editProfileActivity != null) {
+                    editProfileActivity.removeAreaOfInterest(text);
                 }
-                if (createProfile != null) {
-                    createProfile.removeAreaOfInterest(text);
+                if (createProfileActivity != null) {
+                    createProfileActivity.removeAreaOfInterest(text);
                 }
             }
         });

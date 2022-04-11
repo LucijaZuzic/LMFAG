@@ -47,7 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class EventsNearby extends MenuInterface {
+public class EventsNearbyActivity extends MenuInterfaceActivity {
     private MapView map;
     private IMapController mapController;
     private MyLocationNewOverlay myLocationOverlay;
@@ -176,7 +176,7 @@ public class EventsNearby extends MenuInterface {
 
             @Override
             public boolean longPressHelper(org.osmdroid.util.GeoPoint p) {
-                Toast.makeText(EventsNearby.this, getString(R.string.setting_location), Toast.LENGTH_SHORT).show();
+                Toast.makeText(EventsNearbyActivity.this, getString(R.string.setting_location), Toast.LENGTH_SHORT).show();
                 chosenLocationMarker.setPosition(p);
                 enterLatitude.setText(Double.toString(p.getLatitude()));
                 enterLongitude.setText(Double.toString(p.getLongitude()));
@@ -212,7 +212,7 @@ public class EventsNearby extends MenuInterface {
 
             @Override
             public void onMarkerDragStart(Marker marker) {
-                Toast.makeText(EventsNearby.this, getString(R.string.waiting_location), Toast.LENGTH_SHORT).show();
+                Toast.makeText(EventsNearbyActivity.this, getString(R.string.waiting_location), Toast.LENGTH_SHORT).show();
             }
         });
         map.getOverlays().add(chosenLocationMarker);
@@ -281,7 +281,7 @@ public class EventsNearby extends MenuInterface {
                                                SharedPreferences.Editor editor = preferences.edit();
                                                editor.putString("eventID", doc.getId());
                                                editor.apply();
-                                               Intent myIntent = new Intent(context, ViewEvent.class);
+                                               Intent myIntent = new Intent(context, ViewEventActivity.class);
                                                startActivity(myIntent);
                                                return false;
                                            }

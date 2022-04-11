@@ -16,50 +16,60 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LMFAG">
+
+        <receiver
+            android:name=".receivers.ConnectionChangeReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
         <activity
-            android:name=".activities.EventsNearby"
+            android:name=".activities.EventsNearbyActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.MyMessages"
+            android:name=".activities.MyMessagesActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.ViewMessages"
+            android:name=".activities.ViewMessagesActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.MyEvents"
+            android:name=".activities.MyEventsActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.ViewProfile"
+            android:name=".activities.ViewProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.CreateProfile"
+            android:name=".activities.CreateProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.ChooseLocation"
+            android:name=".activities.ChooseLocationActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.FriendRequests"
+            android:name=".activities.FriendRequestsActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.FindFriends"
+            android:name=".activities.FindFriendsActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.FindEvents"
+            android:name=".activities.FindEventsActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.ViewEvent"
+            android:name=".activities.ViewEventActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.EditProfile"
+            android:name=".activities.EditProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.RateEvent"
+            android:name=".activities.RateEventActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.CreateEvent"
+            android:name=".activities.CreateEventActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.MyProfile"
+            android:name=".activities.MyProfileActivity"
             android:exported="false" />
         <activity
             android:name=".activities.MainActivity"

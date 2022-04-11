@@ -21,7 +21,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyMessages extends MenuInterface {
+public class MyMessagesActivity extends MenuInterfaceActivity {
     private Context context = this;
     private RecyclerView recyclerViewMessages;
     private SharedPreferences preferences;

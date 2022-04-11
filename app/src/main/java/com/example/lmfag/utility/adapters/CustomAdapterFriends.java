@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
-import com.example.lmfag.activities.ViewProfile;
+import com.example.lmfag.activities.ViewProfileActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -92,7 +92,7 @@ public class CustomAdapterFriends extends RecyclerView.Adapter<CustomAdapterFrie
                 String name = localFriendUsernames.get(position);
                 editor.putString("friendID", name);
                 editor.apply();
-                Intent myIntent = new Intent(context, ViewProfile.class);
+                Intent myIntent = new Intent(context, ViewProfileActivity.class);
                 context.startActivity(myIntent);
             });
         }

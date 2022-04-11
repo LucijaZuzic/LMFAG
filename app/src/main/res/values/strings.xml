@@ -119,6 +119,7 @@
     <string name="begin_past">Event can\'t begin in the past.</string>
     <string name="end_before_beginning">Event can\'t end before beginning.</string>
     <string name="end_past">Event can\'t end in the past.</string>
+    <string name="no_connection">Internet connection lost!</string>
     <string-array name="event_types">
         <item>skiing</item>
         <item>hiking</item>

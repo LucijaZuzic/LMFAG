@@ -15,7 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
-import com.example.lmfag.activities.ViewMessages;
+import com.example.lmfag.activities.ViewMessagesActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -134,7 +134,7 @@ public class CustomAdapterFriendsMessages extends RecyclerView.Adapter<CustomAda
             String name = localFriendUsernames.get(position);
             editor.putString("friendID", name);
             editor.apply();
-            Intent myIntent = new Intent(context, ViewMessages.class);
+            Intent myIntent = new Intent(context, ViewMessagesActivity.class);
             context.startActivity(myIntent);
         });
         docRef.get().addOnCompleteListener(task -> {

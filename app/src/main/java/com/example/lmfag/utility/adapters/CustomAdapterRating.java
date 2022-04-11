@@ -15,8 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
-import com.example.lmfag.activities.RateEvent;
-import com.example.lmfag.activities.ViewProfile;
+import com.example.lmfag.activities.RateEventActivity;
+import com.example.lmfag.activities.ViewProfileActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -34,7 +34,7 @@ public class CustomAdapterRating extends RecyclerView.Adapter<CustomAdapterRatin
     private List<String> localFriendUsernames;
     private Context context;
     private SharedPreferences preferences;
-    private RateEvent rateEvent;
+    private RateEventActivity rateEventActivity;
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -68,11 +68,11 @@ public class CustomAdapterRating extends RecyclerView.Adapter<CustomAdapterRatin
      * @param dataSet String[] containing the data to populate views to be used
      * by RecyclerView.
      */
-    public CustomAdapterRating(List<String> dataSet, Context context, SharedPreferences preferences, RateEvent rate) {
+    public CustomAdapterRating(List<String> dataSet, Context context, SharedPreferences preferences, RateEventActivity rate) {
         localFriendUsernames = dataSet;
         this.context = context;
         this.preferences = preferences;
-        this.rateEvent = rate;
+        this.rateEventActivity = rate;
     }
 
     // Create new views (invoked by the layout manager)
@@ -100,7 +100,7 @@ public class CustomAdapterRating extends RecyclerView.Adapter<CustomAdapterRatin
             // Called when the user swipes the RatingBar
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                rateEvent.updateRating(rating_position, viewHolder.getRatingBar().getRating());
+                rateEventActivity.updateRating(rating_position, viewHolder.getRatingBar().getRating());
             }
         });
         if (!name.equals(preferences.getString("userID", ""))) {
@@ -108,7 +108,7 @@ public class CustomAdapterRating extends RecyclerView.Adapter<CustomAdapterRatin
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("friendID", name);
                 editor.apply();
-                Intent myIntent = new Intent(context, ViewProfile.class);
+                Intent myIntent = new Intent(context, ViewProfileActivity.class);
                 context.startActivity(myIntent);
             });
         }

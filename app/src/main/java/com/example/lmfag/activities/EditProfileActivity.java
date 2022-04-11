@@ -48,7 +48,7 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class EditProfile extends MenuInterface {
+public class EditProfileActivity extends MenuInterfaceActivity {
     private boolean blocked = false;
     private Context context = this;
     private List<String> areas_array = new ArrayList<>();
@@ -192,7 +192,7 @@ public class EditProfile extends MenuInterface {
                 Snackbar.make(discard, R.string.go_back_upload, Snackbar.LENGTH_SHORT).show();
                 return;
             }
-            Intent myIntent = new Intent(context, MyProfile.class);
+            Intent myIntent = new Intent(context, MyProfileActivity.class);
             startActivity(myIntent);
         });
     }
@@ -216,7 +216,7 @@ public class EditProfile extends MenuInterface {
                     //Log.d(TAG, "DocumentSnapshot successfully written!");
                     Snackbar.make(apply, R.string.write_success, Snackbar.LENGTH_SHORT).show();
                     Snackbar.make(apply, R.string.logged_in, Snackbar.LENGTH_SHORT).show();
-                    Intent myIntent = new Intent(context, MyProfile.class);
+                    Intent myIntent = new Intent(context, MyProfileActivity.class);
                     startActivity(myIntent);
                 })
                 .addOnFailureListener(e -> {
@@ -286,7 +286,7 @@ public class EditProfile extends MenuInterface {
 
     private void fillUserData() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        EditProfile ep = this;
+        EditProfileActivity ep = this;
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String name = preferences.getString("userID", "");
         if(name.equalsIgnoreCase(""))

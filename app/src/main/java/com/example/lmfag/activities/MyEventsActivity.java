@@ -23,7 +23,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyEvents extends MenuInterface {
+public class MyEventsActivity extends MenuInterfaceActivity {
 
     private Context context = this;
     private RecyclerView recyclerViewEventsOrganizer, recyclerViewEventsPlayer;

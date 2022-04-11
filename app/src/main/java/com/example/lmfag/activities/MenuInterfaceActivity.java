@@ -15,7 +15,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.lmfag.R;
 import com.example.lmfag.activities.MainActivity;
 
-public class MenuInterface extends AppCompatActivity {
+public class MenuInterfaceActivity extends AppCompatActivity {
     private boolean flag = false;
 
     public void logout() {

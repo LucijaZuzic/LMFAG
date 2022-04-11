@@ -48,7 +48,7 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ViewEvent extends MenuInterface {
+public class ViewEventActivity extends MenuInterfaceActivity {
     private Context context = this;
     final Calendar cldr_start = Calendar.getInstance();
     private MapView map;
@@ -94,10 +94,10 @@ public class ViewEvent extends MenuInterface {
             if (me.equals(organizer)) {
                 if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime())) {
                     Snackbar.make(imageViewChooseEndTime, "Can't edit an event that finished.", Snackbar.LENGTH_SHORT).show();
-                    Intent myIntent = new Intent(context, ViewEvent.class);
+                    Intent myIntent = new Intent(context, ViewEventActivity.class);
                     startActivity(myIntent);
                 } else {
-                    Intent myIntent = new Intent(context, CreateEvent.class);
+                    Intent myIntent = new Intent(context, CreateEventActivity.class);
                     context.startActivity(myIntent);
                 }
             } else {
@@ -130,7 +130,7 @@ public class ViewEvent extends MenuInterface {
                                     }
                                 }
                                 if (!found) {
-                                    Intent myIntent = new Intent(context, RateEvent.class);
+                                    Intent myIntent = new Intent(context, RateEventActivity.class);
                                     context.startActivity(myIntent);
                                 }
                             }
@@ -182,7 +182,7 @@ public class ViewEvent extends MenuInterface {
     }
 
     private void refresh() {
-        Intent myIntent = new Intent(context, ViewEvent.class);
+        Intent myIntent = new Intent(context, ViewEventActivity.class);
         context.startActivity(myIntent);
     }
 
@@ -192,7 +192,7 @@ public class ViewEvent extends MenuInterface {
         String eventID = preferences.getString("eventID", "");
         String userID = preferences.getString("userID", "");
         if (eventID.equals("")) {
-            Intent myIntent = new Intent(context, MyProfile.class);
+            Intent myIntent = new Intent(context, MyProfileActivity.class);
             startActivity(myIntent);
             return;
         }
@@ -431,7 +431,7 @@ public class ViewEvent extends MenuInterface {
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.putString("friendID", name);
                             editor.apply();
-                            Intent myIntent = new Intent(context, ViewProfile.class);
+                            Intent myIntent = new Intent(context, ViewProfileActivity.class);
                             startActivity(myIntent);
                         });
                     }).addOnFailureListener(new OnFailureListener() {
@@ -458,7 +458,7 @@ public class ViewEvent extends MenuInterface {
         String eventID = preferences.getString("eventID", "");
         String userID = preferences.getString("userID", "");
         if (eventID.equals("")) {
-            Intent myIntent = new Intent(context, MyProfile.class);
+            Intent myIntent = new Intent(context, MyProfileActivity.class);
             startActivity(myIntent);
             return;
         }

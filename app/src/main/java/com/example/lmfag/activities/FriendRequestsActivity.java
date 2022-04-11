@@ -22,9 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FriendRequests extends MenuInterface {
+public class FriendRequestsActivity extends MenuInterfaceActivity {
     private RecyclerView recyclerViewFriendRequests;
-    private FriendRequests context = this;
+    private FriendRequestsActivity context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class FriendRequests extends MenuInterface {
     }
 
     public void refresh() {
-        Intent myIntent = new Intent(context, FriendRequests.class);
+        Intent myIntent = new Intent(context, FriendRequestsActivity.class);
         context.startActivity(myIntent);
     }
     @Override

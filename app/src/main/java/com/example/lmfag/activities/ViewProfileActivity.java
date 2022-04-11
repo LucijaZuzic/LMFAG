@@ -36,7 +36,7 @@ import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ViewProfile extends MenuInterface {
+public class ViewProfileActivity extends MenuInterfaceActivity {
     private Context context = this;
     private ImageView friendRequest;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -54,7 +54,7 @@ public class ViewProfile extends MenuInterface {
         friendRequest.setOnClickListener(view -> sendFriendRequest());
         ImageView message = findViewById(R.id.imageViewMyMesages);
         message.setOnClickListener(view -> {
-            Intent myIntent = new Intent(context, ViewMessages.class);
+            Intent myIntent = new Intent(context, ViewMessagesActivity.class);
             context.startActivity(myIntent);
         });
     }
@@ -71,7 +71,7 @@ public class ViewProfile extends MenuInterface {
     }
 
     private void refresh() {
-        Intent myIntent = new Intent(context, ViewProfile.class);
+        Intent myIntent = new Intent(context, ViewProfileActivity.class);
         context.startActivity(myIntent);
     }
 
@@ -235,7 +235,7 @@ public class ViewProfile extends MenuInterface {
         String me = preferences.getString("userID", "");
         if (name.equals(me)) {
             Snackbar.make(friendRequest, R.string.visiting_myself, Snackbar.LENGTH_SHORT).show();
-            Intent myIntent = new Intent(context, MyProfile.class);
+            Intent myIntent = new Intent(context, MyProfileActivity.class);
             startActivity(myIntent);
             return;
         }

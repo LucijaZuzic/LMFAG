@@ -41,7 +41,7 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.util.Map;
 
 
-public class ChooseLocation extends MenuInterface {
+public class ChooseLocationActivity extends MenuInterfaceActivity {
     private MapView map;
     private IMapController mapController;
     private MyLocationNewOverlay myLocationOverlay;
@@ -139,7 +139,7 @@ public class ChooseLocation extends MenuInterface {
 
             @Override
             public boolean longPressHelper(GeoPoint p) {
-                Toast.makeText(ChooseLocation.this, getString(R.string.setting_location), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChooseLocationActivity.this, getString(R.string.setting_location), Toast.LENGTH_SHORT).show();
                 chosenLocationMarker.setPosition(p);
                 enterLatitude.setText(Double.toString(p.getLatitude()));
                 enterLongitude.setText(Double.toString(p.getLongitude()));
@@ -177,7 +177,7 @@ public class ChooseLocation extends MenuInterface {
 
             @Override
             public void onMarkerDragStart(Marker marker) {
-                Toast.makeText(ChooseLocation.this, getString(R.string.waiting_location), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ChooseLocationActivity.this, getString(R.string.waiting_location), Toast.LENGTH_SHORT).show();
             }
         });
         map.getOverlays().add(chosenLocationMarker);

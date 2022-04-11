@@ -36,12 +36,12 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class RateEvent extends MenuInterface {
+public class RateEventActivity extends MenuInterfaceActivity {
     private String organizer;
     private List<String> people = new ArrayList<>();
     private List<Float> ratings = new ArrayList<>();
     private Context context = this;
-    private RateEvent rateEvent = this;
+    private RateEventActivity rateEventActivity = this;
     private RecyclerView recyclerViewPlayers;
     private String event_type;
 
@@ -55,11 +55,11 @@ public class RateEvent extends MenuInterface {
                 updatePlayer(people.get(i), ratings.get(i));
             }
             checkRated();
-            Intent myIntent = new Intent(context, ViewEvent.class);
+            Intent myIntent = new Intent(context, ViewEventActivity.class);
             startActivity(myIntent);
         });
         findViewById(R.id.imageViewDiscard).setOnClickListener(view -> {
-            Intent myIntent = new Intent(context, ViewEvent.class);
+            Intent myIntent = new Intent(context, ViewEventActivity.class);
             context.startActivity(myIntent);
         });
     }
@@ -107,7 +107,7 @@ public class RateEvent extends MenuInterface {
         String eventID = preferences.getString("eventID", "");
         String userID = preferences.getString("userID", "");
         if (eventID.equals("")) {
-            Intent myIntent = new Intent(context, MyProfile.class);
+            Intent myIntent = new Intent(context, MyProfileActivity.class);
             startActivity(myIntent);
             return;
         }
@@ -128,7 +128,7 @@ public class RateEvent extends MenuInterface {
                         }
                     }
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    CustomAdapterRating customAdapter = new CustomAdapterRating(people, context, preferences, rateEvent);
+                    CustomAdapterRating customAdapter = new CustomAdapterRating(people, context, preferences, rateEventActivity);
                     recyclerViewPlayers.setAdapter(customAdapter);
                 } else {
 
@@ -143,7 +143,7 @@ public class RateEvent extends MenuInterface {
         String eventID = preferences.getString("eventID", "");
         String userID = preferences.getString("userID", "");
         if (eventID.equals("")) {
-            Intent myIntent = new Intent(context, MyProfile.class);
+            Intent myIntent = new Intent(context, MyProfileActivity.class);
             startActivity(myIntent);
             return;
         }
@@ -190,7 +190,7 @@ public class RateEvent extends MenuInterface {
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.putString("friendID", name);
                             editor.apply();
-                            Intent myIntent = new Intent(context, ViewProfile.class);
+                            Intent myIntent = new Intent(context, ViewProfileActivity.class);
                             startActivity(myIntent);
                         });
                     }).addOnFailureListener(new OnFailureListener() {
@@ -216,7 +216,7 @@ public class RateEvent extends MenuInterface {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String eventID = preferences.getString("eventID", "");
         if (eventID.equals("")) {
-            Intent myIntent = new Intent(context, MyProfile.class);
+            Intent myIntent = new Intent(context, MyProfileActivity.class);
             startActivity(myIntent);
             return;
         }

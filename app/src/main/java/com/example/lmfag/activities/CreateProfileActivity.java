@@ -49,7 +49,7 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class CreateProfile extends MenuInterface {
+public class CreateProfileActivity extends MenuInterfaceActivity {
 
     private TextView myUsername;
     private TextView myLocation;
@@ -234,7 +234,7 @@ public class CreateProfile extends MenuInterface {
                         }).addOnSuccessListener(taskSnapshot -> {
                             blocked = false;
                             Snackbar.make(apply, R.string.image_upload_finished, Snackbar.LENGTH_SHORT).show();
-                            Intent myIntent = new Intent(context, MyProfile.class);
+                            Intent myIntent = new Intent(context, MyProfileActivity.class);
                             startActivity(myIntent);
                             // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                             // ...

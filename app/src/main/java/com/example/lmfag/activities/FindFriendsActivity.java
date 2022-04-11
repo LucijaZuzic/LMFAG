@@ -25,7 +25,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FindFriends extends MenuInterface {
+public class FindFriendsActivity extends MenuInterfaceActivity {
     private Context context = this;
     private RecyclerView recyclerViewFindFriends;
     private SharedPreferences preferences;

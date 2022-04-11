@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
-import com.example.lmfag.activities.ViewEvent;
+import com.example.lmfag.activities.ViewEventActivity;
 import com.example.lmfag.utility.EventTypeToDrawable;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -79,7 +79,7 @@ public class CustomAdapterEvent extends RecyclerView.Adapter<CustomAdapterEvent.
             String name = localEventNames.get(position);
             editor.putString("eventID", name);
             editor.apply();
-            Intent myIntent = new Intent(context, ViewEvent.class);
+            Intent myIntent = new Intent(context, ViewEventActivity.class);
             context.startActivity(myIntent);
         });
 

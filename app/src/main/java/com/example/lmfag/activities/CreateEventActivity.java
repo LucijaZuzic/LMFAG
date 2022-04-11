@@ -55,7 +55,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CreateEvent extends MenuInterface {
+public class CreateEventActivity extends MenuInterfaceActivity {
 
     private MapView map;
     private IMapController mapController;
@@ -150,12 +150,12 @@ public class CreateEvent extends MenuInterface {
         });
         ImageView location_choose = findViewById(R.id.imageViewChooseLocation);
         location_choose.setOnClickListener(view -> {
-            Intent myIntent = new Intent(context, ChooseLocation.class);
+            Intent myIntent = new Intent(context, ChooseLocationActivity.class);
             startActivity(myIntent);
         });
         ImageView close = findViewById(R.id.imageViewDiscard);
         close.setOnClickListener(view -> {
-            Intent myIntent = new Intent(context, ViewEvent.class);
+            Intent myIntent = new Intent(context, ViewEventActivity.class);
             startActivity(myIntent);
         });
         firstMapSetup();
@@ -384,7 +384,7 @@ public class CreateEvent extends MenuInterface {
                         writeAttending();
                     }
                     editor.apply();
-                    Intent myIntent = new Intent(context, MyProfile.class);
+                    Intent myIntent = new Intent(context, MyProfileActivity.class);
                     startActivity(myIntent);
                 })
                 .addOnFailureListener(e -> {

@@ -18,7 +18,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
-import com.example.lmfag.activities.ViewMessages;
+import com.example.lmfag.activities.ViewMessagesActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -38,7 +38,7 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
     private List<String> timestamp;
     private List<String> ids;
     private String me;
-    private ViewMessages context;
+    private ViewMessagesActivity context;
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -83,7 +83,7 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
         }
     }
 
-    public CustomAdapterMessages(List<String> msg, List<String> times, List<String> senders, List<String> ids, String me, ViewMessages context) {
+    public CustomAdapterMessages(List<String> msg, List<String> times, List<String> senders, List<String> ids, String me, ViewMessagesActivity context) {
         message = msg;
         this.ids = ids;
         timestamp = times;

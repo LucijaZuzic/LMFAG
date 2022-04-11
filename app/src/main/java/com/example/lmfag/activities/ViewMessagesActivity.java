@@ -42,8 +42,8 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ViewMessages extends MenuInterface {
-    private ViewMessages context = this;
+public class ViewMessagesActivity extends MenuInterfaceActivity {
+    private ViewMessagesActivity context = this;
     private RecyclerView recyclerViewMessages;
 
     @Override
@@ -78,7 +78,7 @@ public class ViewMessages extends MenuInterface {
     }
 
     public void refresh() {
-        Intent myIntent = new Intent(context, ViewMessages.class);
+        Intent myIntent = new Intent(context, ViewMessagesActivity.class);
         context.startActivity(myIntent);
     }
 
@@ -109,7 +109,7 @@ public class ViewMessages extends MenuInterface {
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.putString("friendID", name);
                             editor.apply();
-                            Intent myIntent = new Intent(context, ViewProfile.class);
+                            Intent myIntent = new Intent(context, ViewProfileActivity.class);
                             startActivity(myIntent);
                         });
                     }).addOnFailureListener(new OnFailureListener() {
@@ -146,7 +146,7 @@ public class ViewMessages extends MenuInterface {
         }
         if (other.equals(me)) {
             Snackbar.make(recyclerViewMessages, R.string.visiting_myself, Snackbar.LENGTH_SHORT).show();
-            Intent myIntent = new Intent(context, MyProfile.class);
+            Intent myIntent = new Intent(context, MyProfileActivity.class);
             startActivity(myIntent);
             return;
         }

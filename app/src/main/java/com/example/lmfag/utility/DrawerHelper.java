@@ -14,17 +14,17 @@ import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.example.lmfag.activities.EditProfile;
-import com.example.lmfag.activities.EventsNearby;
-import com.example.lmfag.activities.FindEvents;
-import com.example.lmfag.activities.FindFriends;
-import com.example.lmfag.activities.FriendRequests;
+import com.example.lmfag.activities.EditProfileActivity;
+import com.example.lmfag.activities.EventsNearbyActivity;
+import com.example.lmfag.activities.FindEventsActivity;
+import com.example.lmfag.activities.FindFriendsActivity;
+import com.example.lmfag.activities.FriendRequestsActivity;
 import com.example.lmfag.activities.MainActivity;
-import com.example.lmfag.activities.MyEvents;
-import com.example.lmfag.activities.MyMessages;
-import com.example.lmfag.activities.MyProfile;
+import com.example.lmfag.activities.MyEventsActivity;
+import com.example.lmfag.activities.MyMessagesActivity;
+import com.example.lmfag.activities.MyProfileActivity;
 import com.example.lmfag.R;
-import com.example.lmfag.activities.CreateEvent;
+import com.example.lmfag.activities.CreateEventActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.DocumentReference;
@@ -47,28 +47,28 @@ public class DrawerHelper {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString("eventID", "");
             editor.apply();
-            Intent myIntent = new Intent(context, CreateEvent.class);
+            Intent myIntent = new Intent(context, CreateEventActivity.class);
             context.startActivity(myIntent);
         } else if (id == R.id.edit_profile) {
-            Intent myIntent = new Intent(context, EditProfile.class);
+            Intent myIntent = new Intent(context, EditProfileActivity.class);
             context.startActivity(myIntent);
         } else if (id == R.id.find_friends) {
-            Intent myIntent = new Intent(context, FindFriends.class);
+            Intent myIntent = new Intent(context, FindFriendsActivity.class);
             context.startActivity(myIntent);
         } else if (id == R.id.friend_requests) {
-            Intent myIntent = new Intent(context, FriendRequests.class);
+            Intent myIntent = new Intent(context, FriendRequestsActivity.class);
             context.startActivity(myIntent);
         } else if (id == R.id.find_events) {
-            Intent myIntent = new Intent(context, FindEvents.class);
+            Intent myIntent = new Intent(context, FindEventsActivity.class);
             context.startActivity(myIntent);
         } else if (id == R.id.my_messages) {
-            Intent myIntent = new Intent(context, MyMessages.class);
+            Intent myIntent = new Intent(context, MyMessagesActivity.class);
             context.startActivity(myIntent);
         } else if (id == R.id.my_events) {
-            Intent myIntent = new Intent(context, MyEvents.class);
+            Intent myIntent = new Intent(context, MyEventsActivity.class);
             context.startActivity(myIntent);
         } else if (id == R.id.events_nearby) {
-            Intent myIntent = new Intent(context, EventsNearby.class);
+            Intent myIntent = new Intent(context, EventsNearbyActivity.class);
             context.startActivity(myIntent);
         }
         drawer.closeDrawer(GravityCompat.START);
@@ -107,7 +107,7 @@ public class DrawerHelper {
 
                     CardView backProfile = context.findViewById(R.id.goBackToProfile);
                     backProfile.setOnClickListener(view -> {
-                        Intent myIntent = new Intent(context, MyProfile.class);
+                        Intent myIntent = new Intent(context, MyProfileActivity.class);
                         context.startActivity(myIntent);
                         return;
                     });

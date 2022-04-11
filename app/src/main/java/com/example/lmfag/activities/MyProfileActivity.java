@@ -45,7 +45,7 @@ import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MyProfile extends MenuInterface {
+public class MyProfileActivity extends MenuInterfaceActivity {
     private Context context = this;
     private RecyclerView recyclerViewFriends;
 
