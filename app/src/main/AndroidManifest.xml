@@ -17,15 +17,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LMFAG">
 
-        <receiver
-            android:name=".receivers.ConnectionChangeReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
-
         <activity
             android:name=".activities.EventsNearbyActivity"
             android:exported="false" />

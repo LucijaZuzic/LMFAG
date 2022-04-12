@@ -9,6 +9,7 @@ import androidx.cardview.widget.CardView;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -19,8 +20,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.lmfag.R;
+import com.example.lmfag.receivers.ConnectionChangeReceiver;
 import com.example.lmfag.utility.SecureHash;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -37,16 +40,18 @@ import java.security.spec.InvalidKeySpecException;
 
 
 public class MainActivity extends AppCompatActivity {
-    public static Context contextOfApplication;
-    public static Context getContextOfApplication()
-    {
-        return contextOfApplication;
-    }
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean receiverRegistered = preferences.getBoolean("receiverRegistered", false);
+        if (!receiverRegistered) {
+            ConnectionChangeReceiver connectionChangeReceiver = new ConnectionChangeReceiver();
+            getApplication().registerReceiver(connectionChangeReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
+            preferences.edit().putBoolean("receiverRegistered", true).apply();
+        }
+
         onStart(savedInstanceState);
     }
 
