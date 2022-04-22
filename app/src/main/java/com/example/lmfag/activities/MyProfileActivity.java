@@ -76,13 +76,13 @@ public class MyProfileActivity extends MenuInterfaceActivity {
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                 switch (position) {
                     case 0:
-                        tab.setText("My info");
+                        tab.setIcon(getDrawable(R.drawable.ic_baseline_person_24));
                         break;
                     case 1:
-                        tab.setText("My friends");
+                        tab.setIcon(getDrawable(R.drawable.ic_baseline_groups_24));
                         break;
                     case 2:
-                        tab.setText("My AOI");
+                        tab.setIcon(getDrawable(R.drawable.ic_baseline_interests_24));
                         break;
                 }
             }
