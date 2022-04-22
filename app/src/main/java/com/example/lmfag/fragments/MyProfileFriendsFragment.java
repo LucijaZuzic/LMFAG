@@ -53,22 +53,22 @@ public class MyProfileFriendsFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        fillUserData();
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_my_profile_friends, container, false);
     }
 
-    private void fillUserData() {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        fillUserData(view);
+    }
+
+    private void fillUserData(@NonNull View view) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-        RecyclerView recyclerViewFriends = activity.findViewById(R.id.recyclerViewFriends);
+        RecyclerView recyclerViewFriends = view.findViewById(R.id.recyclerViewFriends);
         String name = preferences.getString("userID", "");
         db.collection("friends")
                 .document(name)

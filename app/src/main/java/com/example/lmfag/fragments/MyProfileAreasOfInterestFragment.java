@@ -61,12 +61,12 @@ public class MyProfileAreasOfInterestFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        fillUserData();
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        fillUserData(view);
     }
 
-    private void fillUserData() {
+    private void fillUserData(@NonNull View view) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         String name = preferences.getString("userID", "");
@@ -83,7 +83,7 @@ public class MyProfileAreasOfInterestFragment extends Fragment {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     Map<String, Object> data = document.getData();
-                    RecyclerView recyclerViewAreasOfInterest = activity.findViewById(R.id.recyclerViewAreasOfInterest);
+                    RecyclerView recyclerViewAreasOfInterest = view.findViewById(R.id.recyclerViewAreasOfInterest);
                     String area_string = data.get("areas_of_interest").toString();
                     if (area_string.length() > 2) {
                         String[] area_string_array = area_string.substring(1, area_string.length() - 1).split(", ");

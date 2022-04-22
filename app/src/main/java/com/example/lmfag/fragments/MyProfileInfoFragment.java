@@ -54,7 +54,6 @@ public class MyProfileInfoFragment extends Fragment {
         super.onCreate(savedInstanceState);
         context = this.getContext();
         activity = getActivity();
-        fillUserData();
     }
 
     @Override
@@ -64,7 +63,13 @@ public class MyProfileInfoFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_my_profile_info, container, false);
     }
 
-    private void fillUserData() {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        fillUserData(view);
+    }
+
+    private void fillUserData(@NonNull View view) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         String name = preferences.getString("userID", "");
@@ -81,11 +86,11 @@ public class MyProfileInfoFragment extends Fragment {
                 if (document.exists()) {
                     Map<String, Object> data = document.getData();
 
-                    TextView myUsername = activity.findViewById(R.id.textViewUsername);
-                    TextView myLocation = activity.findViewById(R.id.textViewMyLocation);
-                    TextView myDescription = activity.findViewById(R.id.textViewMyDescription);
-//                    TextView myOrganizerRank = activity.findViewById(R.id.textViewMyOrganizerRank);
-                    TextView myOrganizerRankPoints = activity.findViewById(R.id.textViewRankPoints);
+                    TextView myUsername = view.findViewById(R.id.textViewUsername);
+                    TextView myLocation = view.findViewById(R.id.textViewMyLocation);
+                    TextView myDescription = view.findViewById(R.id.textViewMyDescription);
+                    TextView myOrganizerRank = view.findViewById(R.id.textViewMyOrganizerRank);
+                    TextView myOrganizerRankPoints = view.findViewById(R.id.textViewRankPoints);
                     myUsername.setText(data.get("username").toString());
                     myLocation.setText(data.get("location").toString());
                     Double points_rank = Double.parseDouble(data.get("points_rank").toString());
@@ -96,9 +101,9 @@ public class MyProfileInfoFragment extends Fragment {
                         upper_bound = 1000.0;
                     }
                     String text_rank_points = points_rank + "/" + upper_bound;
-                    ProgressBar progressBar = activity.findViewById(R.id.determinateBar);
+                    ProgressBar progressBar = view.findViewById(R.id.determinateBar);
                     progressBar.setProgress((int)((points_rank - (upper_bound - 1000)) / 10));
-//                    myOrganizerRank.setText(text_rank);
+                    myOrganizerRank.setText("Rank: " + text_rank);
                     myOrganizerRankPoints.setText(text_rank_points);
                     myDescription.setText(Objects.requireNonNull(data.get("description")).toString());
                     FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -107,7 +112,7 @@ public class MyProfileInfoFragment extends Fragment {
                     final long ONE_MEGABYTE = 1024 * 1024;
                     imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
                         // Data for "images/island.jpg" is returns, use this as needed
-                        CircleImageView circleImageView = activity.findViewById(R.id.profile_image);
+                        CircleImageView circleImageView = view.findViewById(R.id.profile_image);
                         Bitmap bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
                         circleImageView.setImageBitmap(bmp);
                     }).addOnFailureListener(new OnFailureListener() {
@@ -116,14 +121,10 @@ public class MyProfileInfoFragment extends Fragment {
                             // Handle any errors
                         }
                     });
-                    //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                 } else {
                     Intent myIntent = new Intent(context, MainActivity.class);
                     startActivity(myIntent);
-                    //Log.d(TAG, "No such document");
                 }
-            } else {
-                //Log.d(TAG, "get failed with ", task.getException());
             }
         });
     }
