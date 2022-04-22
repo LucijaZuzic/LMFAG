@@ -116,6 +116,8 @@
     <string name="player">Player</string>
     <string name="enter_search_radius">Enter search radius (km).</string>
     <string name="results">Results</string>
+    <string name="my_friends">My friends</string>
+    <string name="my_areas_of_interest">My areas of interest</string>
     <string name="begin_past">Event can\'t begin in the past.</string>
     <string name="end_before_beginning">Event can\'t end before beginning.</string>
     <string name="end_past">Event can\'t end in the past.</string>
@@ -180,4 +182,6 @@
         <item>event type</item>
         <item>event name</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

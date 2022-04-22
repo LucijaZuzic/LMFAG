@@ -106,7 +106,27 @@
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/xml/drawable/ic_baseline_nights_stay_24.xml" value="0.196" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/xml/drawable/ic_baseline_wb_sunny_24.xml" value="0.196" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/xml/drawable/map_marker.xml" value="0.204" />
+        <entry key="..\:/fax/RMA/LMFAG/app/src/main/res/drawable/background_gradient.xml" value="0.2265" />
+        <entry key="..\:/fax/RMA/LMFAG/app/src/main/res/drawable/gradient.xml" value="0.2265" />
+        <entry key="..\:/fax/RMA/LMFAG/app/src/main/res/drawable/maroon_drawable.xml" value="0.1605" />
+        <entry key="..\:/fax/RMA/LMFAG/app/src/main/res/drawable/progress_bar_states.xml" value="0.2595" />
         <entry key="..\:/fax/RMA/LMFAG/app/src/main/res/layout/activity_main.xml" value="0.22826086956521738" />
+        <entry key="..\:/fax/RMA/LMFAG/app/src/main/res/layout/activity_my_events.xml" value="0.22826086956521738" />
+        <entry key="..\:/fax/RMA/LMFAG/app/src/main/res/layout/activity_my_messages.xml" value="0.22826086956521738" />
+        <entry key="..\:/fax/RMA/LMFAG/app/src/main/res/layout/activity_my_profile.xml" value="0.2" />
+        <entry key="..\:/fax/RMA/LMFAG/app/src/main/res/layout/activity_view_messages.xml" value="0.22826086956521738" />
+        <entry key="..\:/fax/RMA/LMFAG/app/src/main/res/layout/activity_view_profile.xml" value="0.22826086956521738" />
+        <entry key="..\:/fax/RMA/LMFAG/app/src/main/res/layout/area_of_interest_list_item.xml" value="0.22826086956521738" />
+        <entry key="..\:/fax/RMA/LMFAG/app/src/main/res/layout/area_of_interest_remove_list_item.xml" value="0.22826086956521738" />
+        <entry key="..\:/fax/RMA/LMFAG/app/src/main/res/layout/event_list_item.xml" value="0.22826086956521738" />
+        <entry key="..\:/fax/RMA/LMFAG/app/src/main/res/layout/fragment_my_profile_areas_of_interest.xml" value="0.15104166666666666" />
+        <entry key="..\:/fax/RMA/LMFAG/app/src/main/res/layout/fragment_my_profile_friends.xml" value="0.264" />
+        <entry key="..\:/fax/RMA/LMFAG/app/src/main/res/layout/fragment_my_profile_info.xml" value="0.22826086956521738" />
+        <entry key="..\:/fax/RMA/LMFAG/app/src/main/res/layout/friend_list_item.xml" value="0.15104166666666666" />
+        <entry key="..\:/fax/RMA/LMFAG/app/src/main/res/layout/nav_header.xml" value="0.22826086956521738" />
+        <entry key="..\:/fax/RMA/LMFAG/app/src/main/res/menu/menu.xml" value="0.16875" />
+        <entry key="..\:/fax/RMA/LMFAG/app/src/main/res/values-en/drawable/main_button_shape.xml" value="0.2265" />
+        <entry key="..\:/fax/RMA/LMFAG/app/src/main/res/values-en/drawable/mine.xml" value="0.1775" />
       </map>
     </option>
   </component>

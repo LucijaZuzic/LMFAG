@@ -8,319 +8,28 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activities.MyProfileActivity">
+        android:orientation="vertical"
+        android:weightSum="1">
 
-        <LinearLayout
-            android:id="@+id/main_layout"
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:contentDescription="tab"
+            app:tabIndicatorHeight="3dp" />
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_image"
-                android:layout_width="196dp"
-                android:layout_height="196dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:src="@drawable/ic_baseline_profile_picture_24"
-                app:civ_border_color="@color/my_pink"
-                app:civ_border_width="10dp"
-                app:civ_circle_background_color="@color/blue_gray_100" />
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.9">
 
-            <TextView
-                android:id="@+id/textViewUsername"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/gradient"
-                android:ems="10"
-                android:gravity="center"
-                android:minHeight="48dp"
-                android:text="@string/username"
-                android:textColor="@color/white"
-                android:textSize="21sp"
-                android:textStyle="bold" />
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_marginTop="10dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="10dp"
-                app:contentPadding="10dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:background="@drawable/gradient"
-                        android:drawableStart="@drawable/ic_baseline_emoji_events_24"
-                        android:gravity="center"
-                        android:minWidth="48dp"
-                        android:minHeight="48dp"
-                        android:padding="5dp"
-                        android:text="@string/organizer_rank"
-                        android:textColor="@color/white"
-                        android:textSize="21sp"
-                        android:textStyle="bold" />
-
-
-                    <LinearLayout
-
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:baselineAligned="false"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginEnd="5dp"
-                            android:layout_weight="0.25"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/textViewMyOrganizerRank"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/gradient"
-                                android:padding="5dp"
-                                android:text="@string/rank"
-                                android:textAlignment="center"
-                                android:textColor="@color/white"
-                                android:textSize="21sp"
-                                android:textStyle="bold"
-                                app:drawableTopCompat="@drawable/ic_baseline_emoji_events_24" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="5dp"
-                            android:layout_weight="0.75"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/textViewRankPoints"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@string/rank_points" />
-
-                            <ProgressBar
-                                android:id="@+id/determinateBar"
-                                style="@android:style/Widget.ProgressBar.Horizontal"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:progress="75"
-                                android:progressDrawable="@drawable/progress_bar_states" />
-                        </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="10dp"
-                app:contentPadding="10dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/gradient"
-                        android:drawableStart="@drawable/ic_baseline_home_24"
-                        android:gravity="center"
-                        android:minWidth="48dp"
-                        android:minHeight="48dp"
-                        android:padding="5dp"
-                        android:text="@string/location"
-                        android:textColor="@color/white"
-                        android:textSize="21sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/textViewMyLocation"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:autofillHints="postalAddress"
-                        android:gravity="center"
-                        android:hint="@string/enter_a_location"
-                        android:inputType="textPostalAddress"
-                        android:minHeight="48dp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="10dp"
-                app:contentPadding="10dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/gradient"
-                        android:drawableStart="@drawable/ic_baseline_description_24"
-                        android:gravity="center"
-                        android:minWidth="48dp"
-                        android:minHeight="48dp"
-                        android:padding="5dp"
-                        android:text="@string/user_description"
-                        android:textColor="@color/white"
-                        android:textSize="21sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/textViewMyDescription"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:hint="@string/enter_a_description"
-                        android:importantForAutofill="no"
-                        android:inputType="textMultiLine"
-                        android:minHeight="48dp" />
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/linearLayoutShowAreasOfInterest"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/gradient"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:minHeight="48dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/textViewAreasOfInterest"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.9"
-                        android:gravity="center"
-                        android:padding="5dp"
-                        android:text="@string/areas_of_interest"
-                        android:textColor="@color/white"
-                        android:textSize="21sp"
-                        android:textStyle="bold"
-                        app:drawableStartCompat="@drawable/ic_baseline_interests_24" />
-
-                    <ImageView
-                        android:id="@+id/imageViewExpandAreasOfInterest"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.1"
-                        android:contentDescription="@string/expand_areas_of_interest"
-                        app:srcCompat="@drawable/ic_baseline_expand_more_24" />
-                </LinearLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewAreasOfInterest"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
-
-                </androidx.recyclerview.widget.RecyclerView>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/linearLayoutShowFriends"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/gradient"
-                    android:clickable="true"
-
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:minHeight="48dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/textViewFriends"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.9"
-                        android:gravity="center"
-                        android:padding="5dp"
-                        android:text="@string/friends"
-                        android:textColor="@color/white"
-                        android:textSize="21sp"
-                        android:textStyle="bold"
-                        app:drawableStartCompat="@drawable/ic_baseline_people_alt_24" />
-
-                    <ImageView
-                        android:id="@+id/imageViewExpandFriends"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.1"
-                        android:contentDescription="@string/expand_friends"
-                        app:srcCompat="@drawable/ic_baseline_expand_more_24" />
-                </LinearLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewFriends"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
-
-                </androidx.recyclerview.widget.RecyclerView>
-
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+        </androidx.viewpager2.widget.ViewPager2>
+    </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
@@ -333,4 +42,5 @@
         app:itemIconTint="@color/white"
         app:itemTextColor="@color/white"
         app:menu="@menu/activity_main_drawer" />
+
 </androidx.drawerlayout.widget.DrawerLayout>

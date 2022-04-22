@@ -23,7 +23,7 @@
             android:id="@+id/textViewAreaOfInterest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/gradient"
+            android:background="@drawable/teal_drawable"
             android:drawableStart="@drawable/ic_baseline_interests_24"
             android:gravity="center"
             android:padding="5dp"
@@ -50,7 +50,7 @@
                     android:id="@+id/textViewLevel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/gradient"
+                    android:background="@drawable/teal_drawable"
                     android:padding="5dp"
                     android:text="@string/level"
                     android:textAlignment="center"
@@ -68,19 +68,33 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textViewLevelPoints"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/level_points" />
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center">
 
-                <ProgressBar
-                    android:id="@+id/determinateBar"
-                    style="@android:style/Widget.ProgressBar.Horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:progress="75"
-                    android:progressDrawable="@drawable/progress_bar_states" />
+                    <ProgressBar
+                        android:id="@+id/determinateBar"
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:progress="0"
+                        android:progressDrawable="@drawable/progress_bar_states"
+                        android:progressTint="@color/teal_700" />
+
+                    <TextView
+                        android:id="@+id/textViewLevelPoints"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="@string/level_points"
+                        android:textAlignment="center"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </FrameLayout>
+
             </LinearLayout>
         </LinearLayout>
 
