@@ -5,8 +5,8 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:openDrawer="start">
+    android:fitsSystemWindows="true">
+    <!--tools:openDrawer="start"-->
 
     <ScrollView
         android:layout_width="match_parent"
@@ -19,6 +19,7 @@
             android:orientation="vertical">
 
             <androidx.cardview.widget.CardView
+                app:cardBackgroundColor="@color/dark_teal_700"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -34,30 +35,32 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/profile_image"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.3"
                         android:src="@drawable/ic_baseline_profile_picture_24"
-                        app:civ_border_color="@color/my_pink"
-                        app:civ_border_width="10dp"
-                        app:civ_circle_background_color="@color/blue_gray_100" />
+                        />
 
 
                     <TextView
                         android:id="@+id/textViewUsernameFriend"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:background="@drawable/gradient"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.7"
+                        android:fontFamily="sans-serif-condensed-light"
                         android:gravity="center"
                         android:hint="@string/username"
                         android:padding="5dp"
-                        android:textColor="@color/white"
+
                         android:textSize="21sp"
                         android:textStyle="bold" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                app:cardBackgroundColor="@color/dark_teal_700"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -76,6 +79,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="10dp"
+                        android:fontFamily="sans-serif-condensed-light"
                         android:layout_weight="0.9"
                         android:ems="10"
                         android:hint="@string/enter_message"
@@ -87,7 +91,6 @@
                         android:id="@+id/imageViewSend"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/gradient"
                         android:contentDescription="@string/send_message"
                         android:minWidth="48dp"
                         android:minHeight="48dp"

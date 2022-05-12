@@ -5,8 +5,8 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:openDrawer="start">
+    android:fitsSystemWindows="true">
+    <!--tools:openDrawer="start"-->
 
     <ScrollView
         android:layout_width="match_parent"
@@ -18,18 +18,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="10dp"
-                app:contentPadding="10dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:layout_marginBottom="10dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -38,13 +32,12 @@
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
+                        android:fontFamily="sans-serif-condensed-light"
                         android:layout_marginBottom="10dp"
-
-                        android:background="@drawable/gradient"
+                        android:drawableTint="@color/teal_700"
                         android:gravity="center"
                         android:padding="5dp"
                         android:text="@string/find_friends"
-                        android:textColor="@color/white"
                         android:textSize="21sp"
                         android:textStyle="bold"
                         app:drawableStartCompat="@drawable/ic_baseline_person_search_24" />
@@ -60,6 +53,7 @@
                         <EditText
                             android:id="@+id/editTextSearchValue"
                             android:layout_width="wrap_content"
+                            android:fontFamily="sans-serif-condensed-light"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="10dp"
                             android:layout_weight="0.9"
@@ -73,13 +67,13 @@
                             android:id="@+id/imageViewBeginSearch"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/gradient"
+                            android:background="@drawable/teal_drawable"
                             android:minWidth="48dp"
                             android:minHeight="48dp"
+                            android:padding="5dp"
                             app:srcCompat="@drawable/ic_baseline_search_24" />
                     </LinearLayout>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:layout_width="match_parent"
@@ -87,14 +81,14 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:background="@drawable/gradient"
+                android:fontFamily="sans-serif-condensed-light"
+                android:drawableTint="@color/teal_700"
                 android:drawableStart="@drawable/ic_baseline_filter_alt_24"
                 android:gravity="center"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 android:padding="5dp"
                 android:text="@string/results"
-                android:textColor="@color/white"
                 android:textSize="21sp"
                 android:textStyle="bold" />
 

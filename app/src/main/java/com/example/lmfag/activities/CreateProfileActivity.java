@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.lmfag.utility.adapters.CustomAdapterAreaOfInterestAdd;
 import com.example.lmfag.utility.adapters.CustomAdapterAreaOfInterestRemove;
 import com.example.lmfag.utility.DrawerHelper;
 import com.example.lmfag.utility.EventTypeToDrawable;
@@ -43,6 +44,7 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,15 +63,27 @@ public class CreateProfileActivity extends MenuInterfaceActivity {
 
     private boolean blocked = false;
     private Context context = this;
+
     private List<String> areas_array = new ArrayList<>();
+    private List<String> areas_not_present_array;
+
     private List<Double> points_array = new ArrayList<>();
-    private String selected_item;
     private Uri uri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_profile);
+        areas_not_present_array = new ArrayList(Arrays.asList(getResources().getStringArray(R.array.event_types)));
+
+        RecyclerView recyclerViewAreasOfInterest = findViewById(R.id.recyclerViewAreasOfInterest);
+        CustomAdapterAreaOfInterestRemove customAdapterAreaOfInterestRemove = new CustomAdapterAreaOfInterestRemove(areas_array, points_array, this);
+        recyclerViewAreasOfInterest.setAdapter(customAdapterAreaOfInterestRemove);
+
+        RecyclerView recyclerViewAreasOfInterestNew = findViewById(R.id.recyclerViewAreasOfInterestNew);
+        CustomAdapterAreaOfInterestAdd customAdapterAreaOfInterestAdd = new CustomAdapterAreaOfInterestAdd(areas_not_present_array, this);
+        recyclerViewAreasOfInterestNew.setAdapter(customAdapterAreaOfInterestAdd);
+
         db = FirebaseFirestore.getInstance();
         myUsername = findViewById(R.id.editTextUsername);
         myLocation = findViewById(R.id.editTextMyLocation);
@@ -78,28 +92,10 @@ public class CreateProfileActivity extends MenuInterfaceActivity {
         apply = findViewById(R.id.imageViewApply);
         discard = findViewById(R.id.imageViewDiscard);
         DrawerHelper.fillNavbarData(this);
-        fillSpinner();
-        addAreaOfInterest();
-        removeAreaOfInterest();
         createProfile();
         getBack();
         showAreasOfInterest();
         changeProfilePicture();
-        Spinner sp = findViewById(R.id.sp);
-        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
-
-                selected_item = adapter.getItemAtPosition(i).toString();
-                ImageView iv = findViewById(R.id.imageViewEventType);
-                iv.setImageDrawable(getDrawable(EventTypeToDrawable.getEventTypeToDrawable(selected_item)));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-
-            }
-        });
     }
 
     void changeProfilePicture() {
@@ -140,60 +136,56 @@ public class CreateProfileActivity extends MenuInterfaceActivity {
                 iv_areas.setImageResource(R.drawable.ic_baseline_expand_more_24);
             }
         });
-    }
 
-    void fillSpinner() {
-        Spinner sp = findViewById(R.id.sp);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.event_types, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sp.setAdapter(adapter);
-    }
-
-    void addAreaOfInterest() {
-        ImageView floatingActionButtonAreaOfInterest = findViewById(R.id.imageViewButtonAreaOfInterest);
-        floatingActionButtonAreaOfInterest.setOnClickListener(view -> {
-            Spinner sp = findViewById(R.id.sp);
-            String text = sp.getSelectedItem().toString();
-            if (!areas_array.contains(text)) {
-                areas_array.add(text);
-                points_array.add(0.0);
-                RecyclerView recyclerViewAreasOfInterest = findViewById(R.id.recyclerViewAreasOfInterest);
-                CustomAdapterAreaOfInterestRemove customAdapterAreaOfInterestRemove = new CustomAdapterAreaOfInterestRemove(areas_array, points_array, this);
-                recyclerViewAreasOfInterest.setAdapter(customAdapterAreaOfInterestRemove);
+        LinearLayout ll_areas_show_new = findViewById(R.id.linearLayoutShowAreasOfInterestNew);
+        RecyclerView ll_areas_new = findViewById(R.id.recyclerViewAreasOfInterestNew);
+        ImageView iv_areas_new = findViewById(R.id.imageViewExpandAreasOfInterestNew);
+        ll_areas_show_new.setOnClickListener(view -> {
+            if (ll_areas_new.getVisibility() == View.GONE) {
+                ll_areas_new.setVisibility(View.VISIBLE);
+                iv_areas_new.setImageResource(R.drawable.ic_baseline_expand_less_24);
             } else {
-                Snackbar.make(floatingActionButtonAreaOfInterest, R.string.area_of_interest_already_added, Snackbar.LENGTH_SHORT).show();
+                ll_areas_new.setVisibility(View.GONE);
+                iv_areas_new.setImageResource(R.drawable.ic_baseline_expand_more_24);
             }
         });
     }
 
-    private void removeAreaOfInterest() {
-        ImageView floatingActionButtonRemoveAreaOfInterest = findViewById(R.id.imageViewRemoveAreaOfInterest);
-        floatingActionButtonRemoveAreaOfInterest.setOnClickListener(view -> {
-            Spinner sp = findViewById(R.id.sp);
-            String text = sp.getSelectedItem().toString();
-            if (areas_array.contains(text)) {
-                points_array.remove(areas_array.indexOf(text));
-                areas_array.remove(text);
-                RecyclerView recyclerViewAreasOfInterest = findViewById(R.id.recyclerViewAreasOfInterest);
-                CustomAdapterAreaOfInterestRemove customAdapterAreaOfInterestRemove = new CustomAdapterAreaOfInterestRemove(areas_array, points_array, this);
-                recyclerViewAreasOfInterest.setAdapter(customAdapterAreaOfInterestRemove);
-            } else {
-                Snackbar.make(floatingActionButtonRemoveAreaOfInterest, R.string.area_of_interest_not_present, Snackbar.LENGTH_SHORT).show();
-            }
-        });
-    }
+    public void addAreaOfInterest(String text) {
+        if (!areas_array.contains(text)) {
+            areas_array.add(text);
+            points_array.add(0.0);
+            areas_not_present_array.remove(text);
+            java.util.Collections.sort(areas_not_present_array);
 
-    public void removeAreaOfInterest(String text) {
-        ImageView floatingActionButtonRemoveAreaOfInterest = findViewById(R.id.imageViewRemoveAreaOfInterest);
-        if (areas_array.contains(text) && areas_array.contains(text)) {
-            points_array.remove(areas_array.indexOf(text));
-            areas_array.remove(text);
             RecyclerView recyclerViewAreasOfInterest = findViewById(R.id.recyclerViewAreasOfInterest);
             CustomAdapterAreaOfInterestRemove customAdapterAreaOfInterestRemove = new CustomAdapterAreaOfInterestRemove(areas_array, points_array, this);
             recyclerViewAreasOfInterest.setAdapter(customAdapterAreaOfInterestRemove);
+
+            RecyclerView recyclerViewAreasOfInterestNew = findViewById(R.id.recyclerViewAreasOfInterestNew);
+            CustomAdapterAreaOfInterestAdd customAdapterAreaOfInterestAdd = new CustomAdapterAreaOfInterestAdd(areas_not_present_array, this);
+            recyclerViewAreasOfInterestNew.setAdapter(customAdapterAreaOfInterestAdd);
         } else {
-            Snackbar.make(floatingActionButtonRemoveAreaOfInterest, R.string.area_of_interest_not_present, Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(discard, R.string.area_of_interest_already_added, Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    public void removeAreaOfInterest(String text) {
+        if (areas_array.contains(text) && areas_array.contains(text)) {
+            points_array.remove(areas_array.indexOf(text));
+            areas_array.remove(text);
+            areas_not_present_array.add(text);
+            java.util.Collections.sort(areas_not_present_array);
+
+            RecyclerView recyclerViewAreasOfInterest = findViewById(R.id.recyclerViewAreasOfInterest);
+            CustomAdapterAreaOfInterestRemove customAdapterAreaOfInterestRemove = new CustomAdapterAreaOfInterestRemove(areas_array, points_array, this);
+            recyclerViewAreasOfInterest.setAdapter(customAdapterAreaOfInterestRemove);
+
+            RecyclerView recyclerViewAreasOfInterestNew = findViewById(R.id.recyclerViewAreasOfInterestNew);
+            CustomAdapterAreaOfInterestAdd customAdapterAreaOfInterestAdd = new CustomAdapterAreaOfInterestAdd(areas_not_present_array, this);
+            recyclerViewAreasOfInterestNew.setAdapter(customAdapterAreaOfInterestAdd);
+        } else {
+            Snackbar.make(discard, R.string.area_of_interest_not_present, Snackbar.LENGTH_SHORT).show();
         }
     }
 

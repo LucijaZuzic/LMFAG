@@ -103,6 +103,7 @@
 
                         <EditText
                             android:id="@+id/editTextUsername"
+                            android:fontFamily="sans-serif-condensed-light"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:autofillHints="username"
@@ -140,6 +141,7 @@
 
                         <EditText
                             android:id="@+id/editTextPassword"
+                            android:fontFamily="sans-serif-condensed-light"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:autofillHints="password"

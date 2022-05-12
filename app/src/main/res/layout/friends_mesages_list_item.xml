@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:id="@+id/list_entry"
     android:gravity="center_vertical"
+    app:cardBackgroundColor="@color/dark_teal_700"
     app:cardElevation="10dp"
     app:cardCornerRadius="10dp"
     app:contentPadding="10dp"
@@ -28,21 +29,17 @@
             android:layout_width="96dp"
             android:gravity="center"
             android:layout_marginBottom="10dp"
-            app:civ_circle_background_color="@color/blue_gray_100"
-            android:src="@drawable/ic_baseline_profile_picture_24"
-            app:civ_border_color="@color/my_pink"
-            app:civ_border_width="10dp" />
+            android:src="@drawable/ic_baseline_profile_picture_24" />
 
         <TextView
-            android:background="@drawable/gradient"
             android:id="@+id/textViewUsernameFriend"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:textSize="21sp"
             android:gravity="center"
+            android:fontFamily="sans-serif-condensed-light"
             android:textStyle="bold"
             android:padding="5dp"
-            android:textColor="@color/white"
             android:text="@string/username" />
 
     </LinearLayout>
@@ -67,10 +64,7 @@
                 android:layout_height="48dp"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:src="@drawable/ic_baseline_profile_picture_24"
-                app:civ_border_color="@color/my_pink"
-                app:civ_border_width="0dp"
-                app:civ_circle_background_color="@color/blue_gray_100" />
+                android:src="@drawable/ic_baseline_profile_picture_24"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -97,6 +91,7 @@
                     android:padding="5dp">
 
                     <TextView
+                        android:fontFamily="sans-serif-condensed-light"
                         android:id="@+id/textViewSender"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -104,6 +99,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:fontFamily="sans-serif-condensed-light"
                         android:id="@+id/textViewLatestMessage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -114,6 +110,7 @@
             </androidx.cardview.widget.CardView>
 
                 <TextView
+                    android:fontFamily="sans-serif-condensed-light"
                     android:id="@+id/textViewTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

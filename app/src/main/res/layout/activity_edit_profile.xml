@@ -5,8 +5,8 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:openDrawer="start">
+    android:fitsSystemWindows="true">
+    <!--tools:openDrawer="start"-->
 
     <ScrollView
         android:layout_width="match_parent"
@@ -25,13 +25,12 @@
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/gradient"
                 android:drawableStart="@drawable/ic_baseline_settings_24"
                 android:gravity="center"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 android:text="@string/edit_profile"
-                android:textColor="@color/white"
+                android:drawableTint="@color/teal_700"
                 android:textSize="21sp"
                 android:textStyle="bold" />
             <de.hdodenhof.circleimageview.CircleImageView
@@ -41,12 +40,9 @@
                 android:layout_height="196dp"
                 android:layout_width="196dp"
                 android:layout_gravity="center"
-                app:civ_circle_background_color="@color/blue_gray_100"
-                android:src="@drawable/ic_baseline_profile_picture_24"
-                app:civ_border_color="@color/my_pink"
-                app:civ_border_width="10dp" />
+                android:src="@drawable/ic_baseline_profile_picture_24" />
 
-            <androidx.cardview.widget.CardView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -69,12 +65,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_marginEnd="5dp"
-                            android:background="@drawable/gradient"
+                            android:background="@drawable/teal_drawable"
                             android:gravity="center"
                             android:minWidth="54dp"
                             android:minHeight="54dp"
                             android:src="@drawable/ic_baseline_person_24"
-                            android:textColor="@color/white"
+                            android:drawableTint="@color/teal_700"
                             android:textStyle="bold" />
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"
@@ -86,6 +82,7 @@
                                 android:id="@+id/editTextUsername"
                                 android:autofillHints="username"
                                 android:ems="10"
+                                android:fontFamily="sans-serif-condensed-light"
                                 android:hint="@string/username"
                                 android:inputType="textPersonName"
                                 android:minHeight="48dp" />
@@ -101,7 +98,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:background="@drawable/gradient"
+                            android:background="@drawable/teal_drawable"
                             android:contentDescription="@string/password"
                             android:gravity="center"
                             android:minWidth="54dp"
@@ -124,6 +121,7 @@
                                 android:ems="10"
                                 android:hint="@string/password"
                                 android:inputType="textPassword"
+                                android:fontFamily="sans-serif-condensed-light"
                                 android:minHeight="48dp" />
                         </com.google.android.material.textfield.TextInputLayout>
 
@@ -133,19 +131,18 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:gravity="center"
-                            android:textColor="@color/white"
                             android:textSize="21sp"
                             android:textStyle="bold"
                             android:buttonTint="@color/white"
-                            android:drawableTint="@color/white"
-                            android:background="@drawable/gradient"
+                            android:textColor="@color/white"
+                            android:background="@drawable/teal_drawable"
                             android:contentDescription="@string/update_password"/>
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -153,7 +150,7 @@
                 android:orientation="vertical">
             </LinearLayout>
 
-            <androidx.cardview.widget.CardView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_margin="10dp"
                 app:contentPadding="10dp"
@@ -169,12 +166,12 @@
                         android:gravity="center"
                         android:minWidth="48dp"
                         android:minHeight="48dp"
-                        android:textColor="@color/white"
+                        android:drawableTint="@color/teal_700"
+                        android:fontFamily="sans-serif-condensed-light"
                         android:textSize="21sp"
                         android:textStyle="bold"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/gradient"
                         android:text="@string/location"
                         android:drawableStart="@drawable/ic_baseline_home_24" />
 
@@ -185,15 +182,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:minHeight="48dp"
+                        android:fontFamily="sans-serif-condensed-light"
                         android:inputType="textPostalAddress"
                         android:hint="@string/enter_a_location"
                         android:autofillHints="postalAddress" />
 
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </LinearLayout>
 
 
-            <androidx.cardview.widget.CardView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_margin="10dp"
                 app:contentPadding="10dp"
@@ -210,12 +208,12 @@
                         android:minWidth="48dp"
                         android:minHeight="48dp"
                         android:gravity="center"
-                        android:background="@drawable/gradient"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/white"
+                        android:drawableTint="@color/teal_700"
                         android:textSize="21sp"
                         android:textStyle="bold"
+                        android:fontFamily="sans-serif-condensed-light"
                         android:text="@string/user_description"
                         android:drawableStart="@drawable/ic_baseline_description_24" />
 
@@ -227,219 +225,182 @@
                         android:inputType="textMultiLine"
                         android:minHeight="48dp"
                         android:hint="@string/enter_a_description"
+                        android:fontFamily="sans-serif-condensed-light"
                         android:importantForAutofill="no" />
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </LinearLayout>
+
+            <TextView
+                android:fontFamily="sans-serif-condensed-light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_baseline_interests_24"
+                android:gravity="center"
+                android:minWidth="48dp"
+                android:layout_margin="10dp"
+                android:minHeight="48dp"
+                android:padding="5dp"
+                android:text="@string/area_of_interest"
+                android:drawableTint="@color/teal_700"
+                android:textSize="21dp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginBottom="10dp"
-                android:gravity="center"
                 android:layout_marginEnd="10dp"
-                android:orientation="horizontal">
-
-
-            </LinearLayout>
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_margin="10dp"
-                app:contentPadding="10dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="10dp"
-                android:layout_height="wrap_content">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-                        <TextView
-                            android:gravity="center"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:minWidth="48dp"
-                            android:textColor="@color/white"
-                            android:textSize="21dp"
-                            android:textStyle="bold"
-                            android:minHeight="48dp"
-                            android:padding="5dp"
-                            android:background="@drawable/gradient"
-                            android:text="@string/area_of_interest"
-                            android:drawableStart="@drawable/ic_baseline_interests_24" />
-
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:orientation="horizontal">
-                            <ImageView
-                                android:gravity="center"
-                                android:id="@+id/imageViewEventType"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:minWidth="48dp"
-                                android:textColor="@color/white"
-                                android:textSize="21dp"
-                                android:textStyle="bold"
-                                android:minHeight="48dp"
-                                android:padding="5dp"
-                                android:layout_marginEnd="10dp"
-                                android:background="@drawable/gradient"
-                                android:contentDescription="@string/area_of_interest"
-                                android:src="@drawable/ic_baseline_interests_24" />
-
-                            <Spinner
-                                android:id="@+id/sp"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0.5"
-                                android:layout_marginEnd="10dp"
-                                android:contentDescription="@string/choose_an_activity_category"
-                                android:minHeight="48dp" />
-
-                            <ImageView
-                                android:id="@+id/imageViewRemoveAreaOfInterest"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="5dp"
-                                android:layout_marginEnd="5dp"
-                                android:background="@drawable/gradient"
-                                android:clickable="true"
-                                android:contentDescription="@string/remove_area_of_interest"
-                                android:focusable="true"
-                                android:gravity="center"
-                                android:minWidth="48dp"
-                                android:minHeight="48dp"
-                                android:padding="5dp"
-                                android:src="@drawable/ic_baseline_remove_24"  />
-
-                            <ImageView
-                                android:id="@+id/imageViewButtonAreaOfInterest"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="5dp"
-                                android:background="@drawable/gradient"
-                                android:clickable="true"
-                                android:contentDescription="@string/add_area_of_interest"
-                                android:focusable="true"
-                                android:gravity="center"
-                                android:minWidth="48dp"
-                                android:minHeight="48dp"
-                                android:padding="5dp"
-                                android:src="@drawable/ic_baseline_add_24"  >
-
-                            </ImageView>
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:background="@drawable/gradient"
-                    android:id="@+id/linearLayoutShowAreasOfInterest"
+                    android:id="@+id/linearLayoutShowAreasOfInterestNew"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/teal_drawable"
                     android:clickable="true"
                     android:focusable="true"
+                    android:gravity="center"
                     android:minHeight="48dp"
                     android:orientation="horizontal">
 
                     <TextView
+                        android:fontFamily="sans-serif-condensed-light"
+                        android:id="@+id/textViewAreasOfInterestNew"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.9"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="@string/not_added_areas_of_interest"
+                        android:textSize="21sp"
+                        android:textStyle="bold"
+                        app:drawableStartCompat="@drawable/ic_baseline_interests_24" />
+
+                    <ImageView
+                        android:background="@drawable/teal_drawable"
+                        android:id="@+id/imageViewExpandAreasOfInterestNew"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        android:contentDescription="@string/expand_not_added_areas_of_interest"
+                        app:srcCompat="@drawable/ic_baseline_expand_more_24" />
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewAreasOfInterestNew"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutShowAreasOfInterest"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/teal_drawable"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:minHeight="48dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:fontFamily="sans-serif-condensed-light"
                         android:id="@+id/textViewAreasOfInterest"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.9"
                         android:gravity="center"
                         android:padding="5dp"
-                        android:text="@string/areas_of_interest"
-                        android:textColor="@color/white"
+                        android:text="@string/added_areas_of_interest"
                         android:textSize="21sp"
                         android:textStyle="bold"
                         app:drawableStartCompat="@drawable/ic_baseline_interests_24" />
 
                     <ImageView
+                        android:background="@drawable/teal_drawable"
                         android:id="@+id/imageViewExpandAreasOfInterest"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.1"
-                        android:contentDescription="@string/expand_areas_of_interest"
+                        android:contentDescription="@string/expand_added_areas_of_interest"
                         app:srcCompat="@drawable/ic_baseline_expand_more_24" />
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewAreasOfInterest"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
                 </androidx.recyclerview.widget.RecyclerView>
 
             </LinearLayout>
             <LinearLayout
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:baselineAligned="false">
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:gravity="center"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:gravity="center"
                         android:id="@+id/imageViewApply"
                         android:layout_width="96dp"
                         android:layout_height="48dp"
+                        android:background="@drawable/teal_drawable"
                         android:clickable="true"
                         android:contentDescription="@string/apply"
                         android:focusable="true"
-                        android:background="@drawable/gradient"
-                        android:src="@drawable/ic_baseline_check_24"/>
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_baseline_check_24" />
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:gravity="center"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:gravity="center"
                         android:id="@+id/imageViewDiscard"
                         android:layout_width="96dp"
                         android:layout_height="48dp"
+                        android:background="@drawable/teal_drawable"
                         android:clickable="true"
                         android:contentDescription="@string/cancel"
                         android:focusable="true"
-                        android:background="@drawable/gradient"
-                        android:src="@drawable/ic_baseline_close_24"  />
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_baseline_close_24" />
 
                 </LinearLayout>
             </LinearLayout>

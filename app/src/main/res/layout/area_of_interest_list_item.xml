@@ -23,6 +23,7 @@
             android:id="@+id/textViewAreaOfInterest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed-light"
             android:drawableStart="@drawable/ic_baseline_interests_24"
             android:gravity="center"
             android:padding="5dp"
@@ -49,11 +50,11 @@
                     android:id="@+id/textViewLevel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-condensed-light"
                     android:background="@drawable/teal_drawable"
                     android:padding="5dp"
                     android:text="@string/level"
                     android:textAlignment="center"
-                    android:textColor="@color/white"
                     android:textSize="21sp"
                     android:textStyle="bold"
                     app:drawableTopCompat="@drawable/ic_baseline_workspace_premium_24" />
@@ -79,7 +80,7 @@
                         android:layout_height="30dp"
                         android:layout_gravity="center"
                         android:progress="0"
-                        android:progressDrawable="@drawable/progress_bar_states"
+                        android:progressDrawable="@drawable/progress_bar_states_teal"
                         android:progressTint="@color/teal_700" />
 
                     <TextView
@@ -87,6 +88,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:fontFamily="sans-serif-condensed-light"
                         android:gravity="center"
                         android:text="@string/level_points"
                         android:textAlignment="center"

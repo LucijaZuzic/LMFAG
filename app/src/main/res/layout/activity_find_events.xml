@@ -5,8 +5,8 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:openDrawer="start">
+    android:fitsSystemWindows="true">
+    <!--tools:openDrawer="start"-->
 
     <ScrollView
         android:layout_width="match_parent"
@@ -24,12 +24,11 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
-
-                android:background="@drawable/gradient"
+                android:drawableTint="@color/teal_700"
                 android:gravity="center"
+                android:fontFamily="sans-serif-condensed-light"
                 android:padding="5dp"
                 android:text="@string/find_events"
-                android:textColor="@color/white"
                 android:textSize="21sp"
                 android:textStyle="bold"
                 app:drawableStartCompat="@drawable/ic_baseline_manage_search_24" />
@@ -44,26 +43,28 @@
 
                 <RadioButton
                     android:id="@+id/chooseOrganizer"
+                    android:fontFamily="sans-serif-condensed-light"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/gradient"
+                    android:padding="5dp"
+                    android:drawableTint="@color/teal_700"
                     android:drawableStart="@drawable/ic_baseline_person_24"
                     android:onClick="showOrganizer"
                     android:text="@string/organizer"
-                    android:textColor="@color/white"
                     android:textSize="21sp"
                     android:textStyle="bold" />
 
                 <RadioButton
                     android:id="@+id/chooseEventName"
+                    android:fontFamily="sans-serif-condensed-light"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/gradient"
+                    android:padding="5dp"
+                    android:drawableTint="@color/teal_700"
                     android:drawableStart="@drawable/ic_baseline_calendar_today_24"
                     android:onClick="showName"
                     android:text="@string/event_name"
-                    android:textColor="@color/white"
                     android:textSize="21sp"
                     android:textStyle="bold" />
 
@@ -71,12 +72,13 @@
                     android:id="@+id/chooseEventType"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:fontFamily="sans-serif-condensed-light"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/gradient"
+                    android:padding="5dp"
+                    android:drawableTint="@color/teal_700"
                     android:drawableStart="@drawable/ic_baseline_interests_24"
                     android:onClick="showType"
                     android:text="@string/event_type"
-                    android:textColor="@color/white"
                     android:textSize="21sp"
                     android:textStyle="bold" />
             </RadioGroup>
@@ -275,15 +277,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:fontFamily="sans-serif-condensed-light"
                 android:layout_margin="10dp"
-                android:background="@drawable/gradient"
+                android:drawableTint="@color/teal_700"
                 android:drawableStart="@drawable/ic_baseline_filter_alt_24"
                 android:gravity="center"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 android:padding="5dp"
                 android:text="@string/results"
-                android:textColor="@color/white"
                 android:textSize="21sp"
                 android:textStyle="bold" />
 

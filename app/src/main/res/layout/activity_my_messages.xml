@@ -5,8 +5,8 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:openDrawer="start">
+    android:fitsSystemWindows="true">
+    <!--tools:openDrawer="start"-->
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -26,12 +26,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:drawableTint="@color/teal_700"
                 android:layout_marginEnd="10dp"
-                android:background="@drawable/gradient"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="@string/my_messages"
-                android:textColor="@color/white"
+                android:fontFamily="sans-serif-condensed-light"
                 android:textSize="21sp"
                 android:textStyle="bold"
                 app:drawableStartCompat="@drawable/ic_baseline_chat_bubble_24" />

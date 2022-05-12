@@ -13,6 +13,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
         android:gravity="center"
+        android:fontFamily="sans-serif-condensed-light"
         android:text="@string/my_friends"
         android:textSize="20dp" />
 

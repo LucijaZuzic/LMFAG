@@ -23,12 +23,12 @@
             android:id="@+id/textViewAreaOfInterest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/gradient"
+            android:fontFamily="sans-serif-condensed-light"
             android:drawableStart="@drawable/ic_baseline_interests_24"
             android:gravity="center"
             android:padding="5dp"
+            app:drawableTint="@color/teal_700"
             android:text="@string/area_of_interest"
-            android:textColor="@color/white"
             android:textSize="21sp"
             android:textStyle="bold" />
 
@@ -50,11 +50,11 @@
                     android:id="@+id/textViewLevel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/gradient"
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:background="@drawable/teal_drawable"
                     android:padding="5dp"
                     android:text="@string/level"
                     android:textAlignment="center"
-                    android:textColor="@color/white"
                     android:textSize="21sp"
                     android:textStyle="bold"
                     app:drawableTopCompat="@drawable/ic_baseline_workspace_premium_24" />
@@ -68,20 +68,36 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textViewLevelPoints"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/level_points" />
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center">
 
-                <ProgressBar
-                    android:id="@+id/determinateBar"
-                    style="@android:style/Widget.ProgressBar.Horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:progress="75"
-                    android:progressDrawable="@drawable/progress_bar_states" />
+                    <ProgressBar
+                        android:id="@+id/determinateBar"
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:progress="0"
+                        android:progressDrawable="@drawable/progress_bar_states_teal"
+                        android:progressTint="@color/teal_700" />
+
+                    <TextView
+                        android:id="@+id/textViewLevelPoints"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-condensed-light"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="@string/level_points"
+                        android:textAlignment="center"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </FrameLayout>
             </LinearLayout>
+
+
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="wrap_content"
@@ -94,7 +110,7 @@
                     android:id="@+id/imageViewRemoveAreaOfInterest"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/gradient"
+                    android:background="@drawable/teal_drawable"
                     android:clickable="true"
                     android:contentDescription="@string/remove_area_of_interest"
                     android:focusable="true"

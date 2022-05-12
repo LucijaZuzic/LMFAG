@@ -5,8 +5,8 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:openDrawer="start">
+    android:fitsSystemWindows="true">
+    <!--tools:openDrawer="start"-->
 
     <ScrollView
         android:layout_width="match_parent"
@@ -26,188 +26,164 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:src="@drawable/ic_baseline_profile_picture_24"
-                app:civ_border_color="@color/my_pink"
-                app:civ_border_width="10dp"
-                app:civ_circle_background_color="@color/blue_gray_100" />
+                android:src="@drawable/ic_baseline_profile_picture_24"  />
 
             <TextView
                 android:id="@+id/textViewUsername"
-                android:layout_width="wrap_content"
+                android:fontFamily="sans-serif-condensed-light"
+                android:layout_width="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/gradient"
+                android:layout_marginBottom="10dp" 
                 android:ems="10"
                 android:gravity="center"
                 android:minHeight="48dp"
-                android:text="@string/username"
-                android:textColor="@color/white"
+                android:text="@string/username" 
                 android:textSize="21sp"
                 android:textStyle="bold" />
 
-            <androidx.cardview.widget.CardView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="10dp"
-                app:contentPadding="10dp">
+                android:layout_marginBottom="10dp"
+                android:drawableStart="@drawable/ic_baseline_emoji_events_24"
+                android:drawableTint="@color/teal_700"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="sans-serif-condensed-light"
+                android:gravity="center"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:padding="5dp"
+                android:text="@string/organizer_rank"
+                android:textSize="21sp"
+                android:textStyle="bold" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:background="@drawable/gradient"
-                        android:drawableStart="@drawable/ic_baseline_emoji_events_24"
-                        android:gravity="center"
-                        android:minWidth="48dp"
-                        android:minHeight="48dp"
-                        android:padding="5dp"
-                        android:text="@string/organizer_rank"
-                        android:textColor="@color/white"
-                        android:textSize="21sp"
-                        android:textStyle="bold" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:baselineAligned="false"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginEnd="5dp"
-                            android:layout_weight="0.25"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/textViewMyOrganizerRank"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/gradient"
-                                android:padding="5dp"
-                                android:text="@string/rank"
-                                android:textAlignment="center"
-                                android:textColor="@color/white"
-                                android:textSize="21sp"
-                                android:textStyle="bold"
-                                app:drawableTopCompat="@drawable/ic_baseline_emoji_events_24" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="5dp"
-                            android:layout_weight="0.75"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/textViewRankPoints"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="@string/rank_points" />
-
-                            <ProgressBar
-                                android:id="@+id/determinateBar"
-                                style="@android:style/Widget.ProgressBar.Horizontal"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:progress="75"
-                                android:progressDrawable="@drawable/progress_bar_states" />
-                        </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="10dp"
-                app:contentPadding="10dp">
+                android:baselineAligned="false"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="0.25"
+                    android:gravity="center"
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/textViewMyOrganizerRank"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/gradient"
-                        android:drawableStart="@drawable/ic_baseline_home_24"
-                        android:gravity="center"
-                        android:minWidth="48dp"
-                        android:minHeight="48dp"
+                        android:background="@drawable/teal_drawable"
+                        android:fontFamily="sans-serif-condensed-light"
                         android:padding="5dp"
-                        android:text="@string/location"
-                        android:textColor="@color/white"
+                        android:text="@string/rank"
+                        android:textAlignment="center"
                         android:textSize="21sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        app:drawableTopCompat="@drawable/ic_baseline_emoji_events_24" />
+                </LinearLayout>
+
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.75"
+                    android:layout_gravity="center">
+
+                    <ProgressBar
+                        android:id="@+id/determinateBar"
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:progress="0"
+                        android:progressDrawable="@drawable/progress_bar_states_teal"
+                        android:progressTint="@color/teal_700" />
 
                     <TextView
-                        android:id="@+id/textViewMyLocation"
+                        android:id="@+id/textViewRankPoints"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:autofillHints="postalAddress"
+                        android:layout_gravity="center"
+                        android:fontFamily="sans-serif-condensed-light"
                         android:gravity="center"
-                        android:hint="@string/enter_a_location"
-                        android:inputType="textPostalAddress"
-                        android:minHeight="48dp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                        android:text="@string/rank_points"
+                        android:textAlignment="center"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </FrameLayout>
 
+            </LinearLayout>
 
-            <androidx.cardview.widget.CardView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="10dp"
-                app:contentPadding="10dp">
+                android:drawableStart="@drawable/ic_baseline_home_24"
+                android:drawableTint="@color/teal_700"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="sans-serif-condensed-light"
+                android:gravity="center"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:padding="5dp"
+                android:text="@string/location"
+                android:textSize="21sp"
+                android:textStyle="bold" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+            <TextView
+                android:id="@+id/textViewMyLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:autofillHints="postalAddress"
+                android:fontFamily="sans-serif-condensed-light"
+                android:gravity="center"
+                android:hint="@string/enter_a_location"
+                android:inputType="textPostalAddress"
+                android:minHeight="48dp" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/gradient"
-                        android:drawableStart="@drawable/ic_baseline_description_24"
-                        android:gravity="center"
-                        android:minWidth="48dp"
-                        android:minHeight="48dp"
-                        android:padding="5dp"
-                        android:text="@string/user_description"
-                        android:textColor="@color/white"
-                        android:textSize="21sp"
-                        android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_baseline_description_24"
+                android:drawableTint="@color/teal_700"
+                android:fontFamily="sans-serif-condensed-light"
+                android:gravity="center"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:padding="5dp"
+                android:text="@string/user_description"
+                android:textSize="21sp"
+                android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/textViewMyDescription"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:hint="@string/enter_a_description"
-                        android:importantForAutofill="no"
-                        android:inputType="textMultiLine"
-                        android:minHeight="48dp" />
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            <TextView
+                android:id="@+id/textViewMyDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed-light"
+                android:gravity="center"
+                android:hint="@string/enter_a_description"
+                android:importantForAutofill="no"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:inputType="textMultiLine"
+                android:minHeight="48dp" />
 
 
             <LinearLayout
@@ -215,13 +191,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:id="@+id/linearLayoutShowAreasOfInterest"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/gradient"
+                    android:background="@drawable/teal_drawable"
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center"
@@ -233,10 +210,10 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.9"
+                        android:fontFamily="sans-serif-condensed-light"
                         android:gravity="center"
                         android:padding="5dp"
                         android:text="@string/areas_of_interest"
-                        android:textColor="@color/white"
                         android:textSize="21sp"
                         android:textStyle="bold"
                         app:drawableStartCompat="@drawable/ic_baseline_interests_24" />
@@ -274,7 +251,7 @@
                     android:id="@+id/linearLayoutShowFriends"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/gradient"
+                    android:background="@drawable/teal_drawable"
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center"
@@ -289,7 +266,6 @@
                         android:gravity="center"
                         android:padding="5dp"
                         android:text="@string/friends"
-                        android:textColor="@color/white"
                         android:textSize="21sp"
                         android:textStyle="bold"
                         app:drawableStartCompat="@drawable/ic_baseline_people_alt_24" />
@@ -336,8 +312,9 @@
                         android:id="@+id/imageViewSendFriendRequest"
                         android:layout_width="96dp"
                         android:layout_height="48dp"
-                        android:background="@drawable/gradient"
+                        android:background="@drawable/teal_drawable"
                         android:clickable="true"
+                        android:padding="5dp"
                         android:contentDescription="@string/send_friend_request"
                         android:focusable="true"
                         android:gravity="center"
@@ -356,7 +333,8 @@
                         android:id="@+id/imageViewMyMesages"
                         android:layout_width="96dp"
                         android:layout_height="48dp"
-                        android:background="@drawable/gradient"
+                        android:padding="5dp"
+                        android:background="@drawable/teal_drawable"
                         android:clickable="true"
                         android:contentDescription="@string/send_message"
                         android:focusable="true"

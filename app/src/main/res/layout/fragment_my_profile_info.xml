@@ -35,8 +35,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="0.3"
-                    android:src="@drawable/ic_baseline_profile_picture_24"
-                    app:civ_circle_background_color="@color/blue_gray_100" />
+                    android:src="@drawable/ic_baseline_profile_picture_24" />
 
                 <TextView
                     android:id="@+id/textViewUsername"
@@ -50,7 +49,6 @@
                     android:minHeight="48dp"
                     android:text="@string/username"
                     android:textAlignment="center"
-                    android:textColor="@color/white"
                     android:textSize="28sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -81,6 +79,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.7"
                 android:gravity="center"
+                android:fontFamily="sans-serif-condensed-light"
                 android:hint="@string/enter_a_description"
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine"
@@ -114,6 +113,7 @@
                 android:layout_weight="0.7"
                 android:autofillHints="postalAddress"
                 android:gravity="center"
+                android:fontFamily="sans-serif-condensed-light"
                 android:hint="@string/enter_a_location"
                 android:inputType="textPostalAddress"
                 android:minHeight="48dp"
@@ -149,6 +149,7 @@
                 <TextView
                     android:id="@+id/textViewMyOrganizerRank"
                     android:layout_width="match_parent"
+                    android:fontFamily="sans-serif-condensed-light"
                     android:layout_height="0dp"
                     android:layout_weight="0.5"
                     android:gravity="center"
@@ -168,13 +169,14 @@
                         android:layout_gravity="center"
                         android:layout_weight="0.7"
                         android:contentDescription="@string/rank"
-                        android:progressDrawable="@drawable/progress_bar_states"
+                        android:progressDrawable="@drawable/progress_bar_states_teal"
                         android:progressTint="@color/teal_700" />
 
                     <TextView
                         android:id="@+id/textViewRankPoints"
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
+                        android:fontFamily="sans-serif-condensed-light"
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:textAlignment="gravity"

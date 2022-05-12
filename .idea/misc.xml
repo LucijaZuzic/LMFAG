@@ -36,14 +36,16 @@
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.196" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_shield_24.xml" value="0.297" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_launcher_background.xml" value="0.196" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/no_gradient.xml" value="0.2935" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/progress_bar_states.xml" value="0.3235" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/progress_bar_states_teal.xml" value="0.3675" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/rating_bar.xml" value="0.2185" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_choose_location.xml" value="0.22" />
-        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_create_event.xml" value="0.1" />
-        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_create_profile.xml" value="0.18" />
-        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_edit_profile.xml" value="0.1" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_create_event.xml" value="0.2" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_create_profile.xml" value="0.22" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_edit_profile.xml" value="0.18" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_events_nearby.xml" value="0.21354166666666666" />
-        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_find_events.xml" value="0.1" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_find_events.xml" value="0.18" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_find_friends.xml" value="0.22" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_friend_requests.xml" value="0.2546875" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_main.xml" value="0.3" />
@@ -53,11 +55,12 @@
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_my_messages.xml" value="0.18802083333333333" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_my_profile.xml" value="0.22" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_rate_event.xml" value="0.25" />
-        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_view_event.xml" value="0.25" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_view_event.xml" value="0.33" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_view_messages.xml" value="0.2576271186440678" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_view_profile.xml" value="0.1" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/app_bar_main.xml" value="0.18802083333333333" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/area_of_interest.xml" value="0.334375" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/area_of_interest_add_list_item.xml" value="0.2" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/area_of_interest_list_item.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/area_of_interest_remove_list_item.xml" value="0.22" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/content_main.xml" value="0.14492753623188406" />
@@ -69,6 +72,9 @@
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/fragment_home.xml" value="0.14492753623188406" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/fragment_login.xml" value="0.18802083333333333" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/fragment_my_profile.xml" value="0.18802083333333333" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/fragment_my_profile_areas_of_interest.xml" value="0.19479166666666667" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/fragment_my_profile_friends.xml" value="0.19479166666666667" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/fragment_my_profile_info.xml" value="0.19479166666666667" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/fragment_slideshow.xml" value="0.14492753623188406" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/friend_list_item.xml" value="0.26666666666666666" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/friend_request_item.xml" value="0.2578125" />

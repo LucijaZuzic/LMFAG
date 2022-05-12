@@ -9,13 +9,13 @@
 
     <TextView
         android:padding="5dp"
-        android:background="@drawable/gradient"
+        android:background="@drawable/teal_drawable"
         android:id="@+id/textViewEventName"
         android:layout_width="match_parent"
+        android:fontFamily="sans-serif-condensed-light"
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:gravity="center"
-        android:textColor="@color/white"
         android:textSize="21sp"
         android:drawableStart="@drawable/ic_baseline_interests_24"
         android:text="@string/event_name" />
