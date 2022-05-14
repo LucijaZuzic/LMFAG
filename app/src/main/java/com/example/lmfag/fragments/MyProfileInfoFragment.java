@@ -7,14 +7,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.ViewPager2;
-
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,30 +14,25 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.example.lmfag.R;
 import com.example.lmfag.activities.MainActivity;
-import com.example.lmfag.utility.adapters.CustomAdapterAreaOfInterest;
-import com.example.lmfag.utility.adapters.TabPagerAdapter;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MyProfileInfoFragment extends Fragment {
-    private ViewPager2 viewPager;
-    private TabPagerAdapter tabPagerAdapter;
     private Context context;
     private Activity activity;
 
@@ -103,7 +90,7 @@ public class MyProfileInfoFragment extends Fragment {
                     String text_rank_points = points_rank + "/" + upper_bound;
                     ProgressBar progressBar = view.findViewById(R.id.determinateBar);
                     progressBar.setProgress((int)((points_rank - (upper_bound - 1000)) / 10));
-                    myOrganizerRank.setText("Rank: " + text_rank);
+                    myOrganizerRank.setText(text_rank);
                     myOrganizerRankPoints.setText(text_rank_points);
                     myDescription.setText(Objects.requireNonNull(data.get("description")).toString());
                     FirebaseStorage storage = FirebaseStorage.getInstance();

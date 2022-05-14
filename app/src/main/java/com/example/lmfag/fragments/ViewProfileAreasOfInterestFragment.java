@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class MyProfileAreasOfInterestFragment extends Fragment {
+public class ViewProfileAreasOfInterestFragment extends Fragment {
     private Context context;
     private Activity activity;
 
@@ -42,7 +42,7 @@ public class MyProfileAreasOfInterestFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_profile_areas_of_interest, container, false);
+        return inflater.inflate(R.layout.fragment_view_profile_areas_of_interest, container, false);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class MyProfileAreasOfInterestFragment extends Fragment {
     private void fillUserData(@NonNull View view) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-        String name = preferences.getString("userID", "");
+        String name = preferences.getString("friendID", "");
         if(name.equalsIgnoreCase(""))
         {
             Intent myIntent = new Intent(context, MainActivity.class);

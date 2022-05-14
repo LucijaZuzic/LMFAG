@@ -1,20 +1,20 @@
 package com.example.lmfag.utility.adapters;
 
-import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.lmfag.fragments.MyProfileAreasOfInterestFragment;
+import com.example.lmfag.fragments.MyProfileEventsOrganizerFragment;
+import com.example.lmfag.fragments.MyProfileEventsPlayerFragment;
+import com.example.lmfag.fragments.MyProfileEventsSubscriberFragment;
 import com.example.lmfag.fragments.MyProfileFriendsFragment;
 import com.example.lmfag.fragments.MyProfileInfoFragment;
 
-public class TabPagerAdapter extends FragmentStateAdapter {
+public class TabPagerAdapterMyProfile extends FragmentStateAdapter {
 
-    public TabPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+    public TabPagerAdapterMyProfile(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
 
@@ -33,6 +33,12 @@ public class TabPagerAdapter extends FragmentStateAdapter {
             case 2:
                 fragment = new MyProfileAreasOfInterestFragment();
                 break;
+            case 3:
+                fragment = new MyProfileEventsOrganizerFragment();
+                break;
+            case 4:
+                fragment = new MyProfileEventsPlayerFragment();
+                break;
         }
 
         return fragment;
@@ -40,6 +46,6 @@ public class TabPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 3;
+        return 5;
     }
 }

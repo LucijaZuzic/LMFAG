@@ -8,103 +8,122 @@
     android:fitsSystemWindows="true">
     <!--tools:openDrawer="start"-->
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activities.FindFriendsActivity">
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
 
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:drawableTint="@color/teal_700"
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:text="@string/find_friends"
+                    android:textSize="21sp"
+                    android:textStyle="bold"
+                    app:drawableStartCompat="@drawable/ic_baseline_person_search_24" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    app:cardBackgroundColor="@color/dark_teal_700"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="10dp"
+                    app:contentPadding="10dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_marginBottom="10dp"
-                    android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <EditText
+                        android:id="@+id/editTextSearchValue"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
+                        android:layout_weight="0.9"
+                        android:ems="10"
                         android:fontFamily="sans-serif-condensed-light"
-                        android:layout_marginBottom="10dp"
-                        android:drawableTint="@color/teal_700"
-                        android:gravity="center"
+
+                        android:hint="@string/enter_a_username_to_search"
+                        android:inputType="textPersonName"
+                        android:minHeight="48dp" />
+
+                    <ImageView
+                        android:id="@+id/imageViewBeginSearch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="48dp"
+                        android:minHeight="48dp"
                         android:padding="5dp"
-                        android:text="@string/find_friends"
-                        android:textSize="21sp"
-                        android:textStyle="bold"
-                        app:drawableStartCompat="@drawable/ic_baseline_person_search_24" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:orientation="horizontal">
-
-                        <EditText
-                            android:id="@+id/editTextSearchValue"
-                            android:layout_width="wrap_content"
-                            android:fontFamily="sans-serif-condensed-light"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="10dp"
-                            android:layout_weight="0.9"
-                            android:ems="10"
-
-                            android:hint="@string/enter_a_username_to_search"
-                            android:inputType="textPersonName"
-                            android:minHeight="48dp" />
-
-                        <ImageView
-                            android:id="@+id/imageViewBeginSearch"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/teal_drawable"
-                            android:minWidth="48dp"
-                            android:minHeight="48dp"
-                            android:padding="5dp"
-                            app:srcCompat="@drawable/ic_baseline_search_24" />
-                    </LinearLayout>
+                        app:srcCompat="@drawable/ic_baseline_search_24" />
                 </LinearLayout>
+                </androidx.cardview.widget.CardView>
 
-            <TextView
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:drawableStart="@drawable/ic_baseline_filter_alt_24"
+                    android:drawableTint="@color/teal_700"
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:gravity="center"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:padding="5dp"
+                    android:text="@string/results"
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="?android:attr/listDivider" />
+
+            </LinearLayout>
+
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:fontFamily="sans-serif-condensed-light"
-                android:drawableTint="@color/teal_700"
-                android:drawableStart="@drawable/ic_baseline_filter_alt_24"
-                android:gravity="center"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:padding="5dp"
-                android:text="@string/results"
-                android:textSize="21sp"
-                android:textStyle="bold" />
+                android:layout_height="match_parent"
+                tools:context=".activities.FindFriendsActivity">
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewFriends"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewFriends"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+                </androidx.recyclerview.widget.RecyclerView>
+            </ScrollView>
 
-            </androidx.recyclerview.widget.RecyclerView>
 
         </LinearLayout>
-    </ScrollView>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"

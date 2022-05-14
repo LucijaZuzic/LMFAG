@@ -19,6 +19,7 @@
             android:orientation="vertical">
 
             <androidx.cardview.widget.CardView
+                app:cardBackgroundColor="@color/dark_teal_700"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -44,8 +45,7 @@
                         android:minHeight="48dp"
                         android:padding="5dp"
                         android:text="@string/events_nearby"
-                        android:drawableTint="@color/teal_700"
-                        android:textSize="21sp"
+                         android:textSize="21sp"
                         android:textStyle="bold" />
 
 
@@ -106,7 +106,6 @@
                             android:layout_height="48dp"
                             android:layout_gravity="center"
                             android:layout_marginStart="10dp"
-                            android:background="@drawable/teal_drawable"
                             android:clickable="true"
                             android:contentDescription="@string/choose_location"
                             android:focusable="true"
@@ -140,8 +139,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="5dp"
-                            android:background="@drawable/teal_drawable"
-                            android:minWidth="48dp"
+                             android:minWidth="48dp"
                             android:minHeight="48dp"
                             app:srcCompat="@drawable/ic_baseline_search_24" />
                     </LinearLayout>

@@ -8,6 +8,11 @@
     android:fitsSystemWindows="true">
     <!--tools:openDrawer="start"-->
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"></LinearLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -36,6 +41,16 @@
                 android:textSize="21sp"
                 android:textStyle="bold" />
 
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="?android:attr/listDivider" />
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image"
                 android:layout_width="196dp"
@@ -68,12 +83,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_marginEnd="5dp"
-                            android:background="@drawable/teal_drawable"
-                            android:gravity="center"
+                            app:tint="@color/teal_700"                            android:gravity="center"
                             android:minWidth="54dp"
                             android:minHeight="54dp"
                             android:src="@drawable/ic_baseline_person_24"
-                            android:drawableTint="@color/teal_700"
                             android:textStyle="bold" />
 
                         <com.google.android.material.textfield.TextInputLayout
@@ -103,7 +116,7 @@
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:background="@drawable/teal_drawable"
+                            app:tint="@color/teal_700"
                             android:contentDescription="@string/password"
                             android:gravity="center"
                             android:minWidth="54dp"
@@ -367,7 +380,7 @@
                         android:layout_width="96dp"
                         android:layout_height="48dp"
                         android:padding="5dp"
-                        android:background="@drawable/teal_drawable"
+                        app:tint="@color/teal_700"
                         android:clickable="true"
                         android:contentDescription="@string/apply"
                         android:focusable="true"
@@ -387,7 +400,8 @@
                         android:id="@+id/imageViewDiscard"
                         android:layout_width="96dp"
                         android:layout_height="48dp"
-                        android:background="@drawable/teal_drawable"
+
+                        app:tint="@color/teal_700"
                         android:clickable="true"
                         android:contentDescription="@string/cancel"
                         android:focusable="true"

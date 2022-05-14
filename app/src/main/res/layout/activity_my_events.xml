@@ -8,125 +8,28 @@
     android:fitsSystemWindows="true">
     <!--tools:openDrawer="start"-->
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activities.FindFriendsActivity">
+        android:orientation="vertical"
+        android:weightSum="1">
 
-        <LinearLayout
-
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.1"
+            android:contentDescription="tab"
+            app:tabIndicatorHeight="3dp" />
 
-            android:orientation="vertical">
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.9">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/linearLayoutShowOrganizer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/teal_drawable"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:minHeight="48dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/textViewOrganizer"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.9"
-                        android:gravity="center"
-                        android:padding="5dp"
-                        android:text="@string/organizer"
-                        android:textSize="21sp"
-                        android:textStyle="bold"
-                        android:fontFamily="sans-serif-condensed-light"
-                        app:drawableStartCompat="@drawable/ic_baseline_emoji_events_24" />
-
-                    <ImageView
-                        android:id="@+id/imageViewExpandOrganizer"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.1"
-                        android:contentDescription="@string/expand_areas_of_interest"
-                        app:srcCompat="@drawable/ic_baseline_expand_more_24" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewEventsOrganizer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:orientation="vertical"
-                android:visibility="gone"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
-
-            </androidx.recyclerview.widget.RecyclerView>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/linearLayoutShowPlayer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/teal_drawable"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:minHeight="48dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/textViewPlayer"
-                        android:layout_width="0dp"
-                        android:textStyle="bold"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.9"
-                        android:gravity="center"
-                        android:padding="5dp"
-                        android:text="@string/player"
-                        android:textSize="21sp"
-                        android:fontFamily="sans-serif-condensed-light"
-                        app:drawableStartCompat="@drawable/ic_baseline_person_add_24" />
-
-                    <ImageView
-                        android:id="@+id/imageViewExpandPlayer"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.1"
-                        android:contentDescription="@string/expand_areas_of_interest"
-                        app:srcCompat="@drawable/ic_baseline_expand_more_24" />
-                </LinearLayout>
-            </LinearLayout>
-
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewEventsPlayer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:orientation="vertical"
-                android:visibility="gone"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"></androidx.recyclerview.widget.RecyclerView>
-
-        </LinearLayout>
-    </ScrollView>
+        </androidx.viewpager2.widget.ViewPager2>
+    </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"

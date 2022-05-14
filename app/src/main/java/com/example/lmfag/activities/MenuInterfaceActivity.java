@@ -13,7 +13,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.lmfag.R;
-import com.example.lmfag.activities.MainActivity;
 
 public class MenuInterfaceActivity extends AppCompatActivity {
     private boolean flag = false;

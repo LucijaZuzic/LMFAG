@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -66,7 +67,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
     FirebaseFirestore db;
     TextView eventName;
     TextView description;
-    TextView minimum_level;
+    NumberPicker minimum_level;
     SwitchCompat switch_public;
     SwitchCompat switch_out;
     SwitchCompat switch_organizer;
@@ -105,6 +106,9 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         eventName = findViewById(R.id.editTextEventName);
         description = findViewById(R.id.editTextEventDescription);
         minimum_level = findViewById(R.id.editTextMinimumLevel);
+        minimum_level.setMinValue(0);
+        minimum_level.setMaxValue(20);
+        minimum_level.setWrapSelectorWheel(true);
         switch_public = findViewById(R.id.switchPublic);
         switch_out = findViewById(R.id.switchOutdoor);
         switch_organizer = findViewById(R.id.switchOrganizerPlaying);
@@ -294,8 +298,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
     }
 
     void writeAttending() {
-
-        Double minimum_level_val = Double.parseDouble(minimum_level.getText().toString());
+        Double minimum_level_val = Double.parseDouble(String.valueOf(minimum_level.getValue()));
         CollectionReference docuRef = db.collection("event_attending");
 
         String userID = preferences.getString("userID", "");
@@ -424,7 +427,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         docData.put("event_name", eventName.getText().toString());
         docData.put("event_type", selected_item);
         docData.put("event_description", description.getText().toString());
-        docData.put("minimum_level", Integer.parseInt(minimum_level.getText().toString()));
+        docData.put("minimum_level", Integer.parseInt(String.valueOf(minimum_level.getValue())));
         docData.put("public", switch_public.isChecked());
         docData.put("outdoors", switch_out.isChecked());
         docData.put("minimum_players", slider.getValues().get(0));
@@ -464,7 +467,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                             eventName.setText(docData.get("event_name").toString());
                             sp.setSelection(((ArrayAdapter) sp.getAdapter()).getPosition(docData.get("event_type").toString()));
                             description.setText(docData.get("event_description").toString());
-                            minimum_level.setText(docData.get("minimum_level").toString());
+                            minimum_level.setValue(Integer.parseInt(docData.get("minimum_level").toString()));
                             switch_public.setChecked(docData.get("public").toString().equals("true"));
                             switch_out.setChecked(docData.get("outdoors").toString().equals("true"));
                             Float val1 = Float.parseFloat(docData.get("minimum_players").toString());

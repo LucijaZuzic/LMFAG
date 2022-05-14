@@ -35,6 +35,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -172,6 +173,10 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
                             }
                         }
                     }
+                    //Collections.reverse(messages);
+                    //Collections.reverse(times);
+                    //Collections.reverse(sender);
+                    //Collections.reverse(ids);
                     CustomAdapterMessages customAdapter = new CustomAdapterMessages(messages, times, sender, ids, me, context);
                     recyclerViewMessages.setAdapter(customAdapter);
                 } else {

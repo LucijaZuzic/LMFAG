@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class MyProfileFriendsFragment extends Fragment {
+public class ViewProfileFriendsFragment extends Fragment {
     private Context context;
     private Activity activity;
 
@@ -39,7 +39,7 @@ public class MyProfileFriendsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_profile_friends, container, false);
+        return inflater.inflate(R.layout.fragment_view_profile_friends, container, false);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class MyProfileFriendsFragment extends Fragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         RecyclerView recyclerViewFriends = view.findViewById(R.id.recyclerViewFriends);
-        String name = preferences.getString("userID", "");
+        String name = preferences.getString("friendID", "");
         db.collection("friends")
                 .document(name)
                 .get().addOnCompleteListener(task -> {

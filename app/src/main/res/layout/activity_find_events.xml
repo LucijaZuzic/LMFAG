@@ -8,15 +8,16 @@
     android:fitsSystemWindows="true">
     <!--tools:openDrawer="start"-->
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activities.FindFriendsActivity">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
 
             <TextView
                 android:layout_width="match_parent"
@@ -25,70 +26,78 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
                 android:drawableTint="@color/teal_700"
-                android:gravity="center"
                 android:fontFamily="sans-serif-condensed-light"
+                android:gravity="center"
                 android:padding="5dp"
                 android:text="@string/find_events"
                 android:textSize="21sp"
                 android:textStyle="bold"
                 app:drawableStartCompat="@drawable/ic_baseline_manage_search_24" />
 
-            <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
                 android:orientation="vertical">
 
-                <RadioButton
-                    android:id="@+id/chooseOrganizer"
-                    android:fontFamily="sans-serif-condensed-light"
+                <RadioGroup
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="5dp"
-                    android:drawableTint="@color/teal_700"
-                    android:drawableStart="@drawable/ic_baseline_person_24"
-                    android:onClick="showOrganizer"
-                    android:text="@string/organizer"
-                    android:textSize="21sp"
-                    android:textStyle="bold" />
-
-                <RadioButton
-                    android:id="@+id/chooseEventName"
-                    android:fontFamily="sans-serif-condensed-light"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
-                    android:padding="5dp"
-                    android:drawableTint="@color/teal_700"
-                    android:drawableStart="@drawable/ic_baseline_calendar_today_24"
-                    android:onClick="showName"
-                    android:text="@string/event_name"
-                    android:textSize="21sp"
-                    android:textStyle="bold" />
+                    android:layout_marginEnd="10dp"
+                    android:orientation="vertical">
 
-                <RadioButton
-                    android:id="@+id/chooseEventType"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fontFamily="sans-serif-condensed-light"
-                    android:layout_marginTop="10dp"
-                    android:padding="5dp"
-                    android:drawableTint="@color/teal_700"
-                    android:drawableStart="@drawable/ic_baseline_interests_24"
-                    android:onClick="showType"
-                    android:text="@string/event_type"
-                    android:textSize="21sp"
-                    android:textStyle="bold" />
-            </RadioGroup>
+                    <RadioButton
+                        android:visibility="gone"
+                        android:id="@+id/chooseOrganizer"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:drawableStart="@drawable/ic_baseline_person_24"
+                        android:drawableTint="@color/teal_700"
+                        android:fontFamily="sans-serif-condensed-light"
+                        android:onClick="showOrganizer"
+                        android:padding="5dp"
+                        android:text="@string/filter_by_organizer"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="21sp"
+                        android:textStyle="bold" />
+
+                    <RadioButton
+                        android:id="@+id/chooseEventName"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:drawableStart="@drawable/ic_baseline_calendar_today_24"
+                        android:drawableTint="@color/teal_700"
+                        android:fontFamily="sans-serif-condensed-light"
+                        android:onClick="showName"
+                        android:padding="5dp"
+                        android:text="@string/filter_by_event_name"
+                        android:textSize="21sp"
+                        android:textStyle="bold" />
+
+                    <RadioButton
+                        android:id="@+id/chooseEventType"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp"
+                        android:drawableStart="@drawable/ic_baseline_interests_24"
+                        android:drawableTint="@color/teal_700"
+                        android:fontFamily="sans-serif-condensed-light"
+                        android:onClick="showType"
+                        android:padding="5dp"
+                        android:text="@string/filter_by_event_type"
+                        android:textSize="21sp"
+                        android:textStyle="bold" />
+                </RadioGroup>
+            </LinearLayout>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/organizerCard"
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:visibility="gone"
+                app:cardBackgroundColor="@color/dark_teal_700"
                 app:cardCornerRadius="10dp"
                 app:cardElevation="10dp"
                 app:contentPadding="10dp">
@@ -104,14 +113,12 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginBottom="10dp"
-                        android:background="@drawable/gradient"
                         android:drawableStart="@drawable/ic_baseline_person_24"
                         android:gravity="center"
                         android:minWidth="48dp"
                         android:minHeight="48dp"
                         android:padding="5dp"
                         android:text="@string/organizer"
-                        android:textColor="@color/white"
                         android:textSize="21sp"
                         android:textStyle="bold" />
 
@@ -136,7 +143,6 @@
                             android:id="@+id/imageViewBeginSearchOrganizerName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/gradient"
                             android:minWidth="48dp"
                             android:minHeight="48dp"
                             app:srcCompat="@drawable/ic_baseline_search_24" />
@@ -147,11 +153,12 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/nameCard"
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:visibility="gone"
                 app:cardCornerRadius="10dp"
                 app:cardElevation="10dp"
+                app:cardBackgroundColor="@color/dark_teal_700"
                 app:contentPadding="10dp">
 
                 <LinearLayout
@@ -165,14 +172,12 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginBottom="10dp"
-                        android:background="@drawable/gradient"
                         android:drawableStart="@drawable/ic_baseline_calendar_today_24"
                         android:gravity="center"
                         android:minWidth="48dp"
                         android:minHeight="48dp"
                         android:padding="5dp"
                         android:text="@string/event_name"
-                        android:textColor="@color/white"
                         android:textSize="21sp"
                         android:textStyle="bold" />
 
@@ -198,7 +203,6 @@
                             android:id="@+id/imageViewBeginSearchEventName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/gradient"
                             android:minWidth="48dp"
                             android:minHeight="48dp"
                             app:srcCompat="@drawable/ic_baseline_search_24" />
@@ -208,6 +212,7 @@
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/typeCard"
+                app:cardBackgroundColor="@color/dark_teal_700"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -227,14 +232,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:background="@drawable/gradient"
                         android:drawableStart="@drawable/ic_baseline_interests_24"
                         android:gravity="center"
                         android:minWidth="48dp"
                         android:minHeight="48dp"
                         android:padding="5dp"
                         android:text="@string/event_type"
-                        android:textColor="@color/white"
                         android:textSize="21sp"
                         android:textStyle="bold" />
 
@@ -250,8 +253,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginEnd="5dp"
-                            android:background="@drawable/gradient"
-                            android:contentDescription="@string/event_type"
+                             android:contentDescription="@string/event_type"
                             android:gravity="center"
                             android:minWidth="48dp"
                             android:minHeight="48dp"
@@ -277,10 +279,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:fontFamily="sans-serif-condensed-light"
                 android:layout_margin="10dp"
-                android:drawableTint="@color/teal_700"
                 android:drawableStart="@drawable/ic_baseline_filter_alt_24"
+                android:drawableTint="@color/teal_700"
+                android:fontFamily="sans-serif-condensed-light"
                 android:gravity="center"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
@@ -288,6 +290,24 @@
                 android:text="@string/results"
                 android:textSize="21sp"
                 android:textStyle="bold" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="?android:attr/listDivider" />
+
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".activities.FindFriendsActivity">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewEvents"
@@ -299,9 +319,9 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
             </androidx.recyclerview.widget.RecyclerView>
+        </ScrollView>
 
-        </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"

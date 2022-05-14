@@ -16,6 +16,7 @@
         tools:context=".activities.ChooseLocationActivity">
 
         <androidx.cardview.widget.CardView
+            app:cardBackgroundColor="@color/dark_teal_700"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -30,12 +31,11 @@
 
                 <TextView
                     android:id="@+id/title_view"
-                    android:fontFamily="sans-serif-condensed-light"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:drawableTint="@color/teal_700"
                     android:drawableStart="@drawable/ic_baseline_location_on_24"
+                    android:fontFamily="sans-serif-condensed-light"
                     android:gravity="center|center_horizontal|center_vertical"
                     android:padding="5dp"
                     android:text="@string/choose_location"
@@ -58,16 +58,16 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:fontFamily="sans-serif-condensed-light"
                             android:layout_marginBottom="10dp"
+                            android:fontFamily="sans-serif-condensed-light"
                             android:text="@string/marker_latitude"></TextView>
 
                         <EditText
                             android:id="@+id/inputLatitude"
-                            android:fontFamily="sans-serif-condensed-light"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
+                            android:fontFamily="sans-serif-condensed-light"
                             android:hint="@string/enter_latitude"
                             android:importantForAutofill="no"
                             android:inputType="numberDecimal"
@@ -77,8 +77,8 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:fontFamily="sans-serif-condensed-light"
                             android:layout_marginBottom="10dp"
+                            android:fontFamily="sans-serif-condensed-light"
                             android:text="@string/marker_longitude"></TextView>
 
                         <EditText
@@ -99,7 +99,6 @@
                         android:layout_height="48dp"
                         android:layout_gravity="center"
                         android:layout_marginStart="10dp"
-                        android:background="@drawable/teal_drawable"
                         android:clickable="true"
                         android:contentDescription="@string/choose_location"
                         android:focusable="true"
@@ -108,55 +107,55 @@
                     </ImageView>
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center|center_horizontal|center_vertical"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:id="@+id/coordinates"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="0.45"
+                        android:fontFamily="sans-serif-condensed-light"
+                        android:gravity="center|center_horizontal|center_vertical"
+                        android:text="@string/my_location"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/marker"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.45"
+                        android:fontFamily="sans-serif-condensed-light"
+                        android:gravity="center|center_horizontal|center_vertical"
+                        android:text="@string/choose_location"
+                        android:textStyle="bold" />
+
+
+                    <ImageView
+                        android:id="@+id/confirm_button"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="10dp"
+                        android:clickable="true"
+                        android:contentDescription="@string/confirm_location"
+                        android:focusable="true"
+                        android:fontFamily="sans-serif-condensed-light"
+                        android:padding="5dp"
+                        app:srcCompat="@drawable/ic_baseline_check_24" />
+
+                </LinearLayout>
+
             </LinearLayout>
+
         </androidx.cardview.widget.CardView>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:gravity="center|center_horizontal|center_vertical"
-            android:orientation="horizontal">
-
-
-            <TextView
-                android:id="@+id/coordinates"
-                android:fontFamily="sans-serif-condensed-light"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="0.45"
-                android:gravity="center|center_horizontal|center_vertical"
-                android:text="@string/my_location"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/marker"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.45"
-                android:fontFamily="sans-serif-condensed-light"
-                android:gravity="center|center_horizontal|center_vertical"
-                android:text="@string/choose_location"
-                android:textStyle="bold" />
-
-
-            <ImageView
-                android:id="@+id/confirm_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:padding="5dp"
-                android:fontFamily="sans-serif-condensed-light"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-                android:background="@drawable/teal_drawable"
-                android:clickable="true"
-                android:contentDescription="@string/confirm_location"
-                android:focusable="true"
-                app:srcCompat="@drawable/ic_baseline_check_24" />
-
-        </LinearLayout>
 
         <org.osmdroid.views.MapView
             android:id="@+id/map"

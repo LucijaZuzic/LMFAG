@@ -1,58 +1,18 @@
 package com.example.lmfag.activities;
 
-import androidx.annotation.NonNull;
+import android.os.Bundle;
 
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.annotation.NonNull;
 import androidx.viewpager2.widget.ViewPager2;
 
-
-import android.content.Context;
-import android.content.Intent;
-
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-
-
-
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-
-
 import com.example.lmfag.R;
-import com.example.lmfag.utility.adapters.CustomAdapterAreaOfInterest;
-import com.example.lmfag.utility.adapters.CustomAdapterFriends;
 import com.example.lmfag.utility.DrawerHelper;
-import com.example.lmfag.utility.adapters.TabPagerAdapter;
-import com.google.android.gms.tasks.OnFailureListener;
-
+import com.example.lmfag.utility.adapters.TabPagerAdapterMyProfile;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MyProfileActivity extends MenuInterfaceActivity {
-    private Context context = this;
-    private RecyclerView recyclerViewFriends;
-    private TabPagerAdapter tabPagerAdapter;
+    private TabPagerAdapterMyProfile tabPagerAdapterMyProfile;
     private ViewPager2 viewPager;
 
     @Override
@@ -60,15 +20,14 @@ public class MyProfileActivity extends MenuInterfaceActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
 
-        recyclerViewFriends = findViewById(R.id.recyclerViewFriends);
         DrawerHelper.fillNavbarData(this);
         fillPager();
     }
 
     private void fillPager() {
-        tabPagerAdapter = new TabPagerAdapter(this);
+        tabPagerAdapterMyProfile = new TabPagerAdapterMyProfile(this);
         viewPager = findViewById(R.id.pager);
-        viewPager.setAdapter(tabPagerAdapter);
+        viewPager.setAdapter(tabPagerAdapterMyProfile);
 
         TabLayout tabLayout = findViewById(R.id.tab);
         new TabLayoutMediator(tabLayout, viewPager, true, true, new TabLayoutMediator.TabConfigurationStrategy() {
@@ -83,6 +42,12 @@ public class MyProfileActivity extends MenuInterfaceActivity {
                         break;
                     case 2:
                         tab.setIcon(getDrawable(R.drawable.ic_baseline_interests_24));
+                        break;
+                    case 3:
+                        tab.setIcon(getDrawable(R.drawable.ic_baseline_emoji_events_24));
+                        break;
+                    case 4:
+                        tab.setIcon(getDrawable(R.drawable.ic_baseline_calendar_today_24));
                         break;
                 }
             }

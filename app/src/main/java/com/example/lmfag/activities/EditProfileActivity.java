@@ -1,9 +1,5 @@
 package com.example.lmfag.activities;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,21 +11,23 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.lmfag.utility.EventTypeToDrawable;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.lmfag.R;
+import com.example.lmfag.utility.DrawerHelper;
 import com.example.lmfag.utility.SecureHash;
 import com.example.lmfag.utility.adapters.CustomAdapterAreaOfInterestAdd;
 import com.example.lmfag.utility.adapters.CustomAdapterAreaOfInterestRemove;
-import com.example.lmfag.utility.DrawerHelper;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -41,20 +39,23 @@ import com.google.firebase.storage.UploadTask;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class EditProfileActivity extends MenuInterfaceActivity {
     private boolean blocked = false;
     private Context context = this;
-    private ImageView apply, discard;
+    private ImageView apply, discard, closeCard;
+    private FloatingActionButton openCard;
 
+    private LinearLayout openableCard;
     private List<String> areas_array = new ArrayList<>();
     private List<String> areas_not_present_array;
 
@@ -78,10 +79,18 @@ public class EditProfileActivity extends MenuInterfaceActivity {
 
         discard = findViewById(R.id.imageViewDiscard);
         apply = findViewById(R.id.imageViewApply);
+        openCard = findViewById(R.id.floatingActionButtonAddAreaOfInterest);
+        closeCard = findViewById(R.id.closeCard);
+        openableCard = findViewById(R.id.openableCard);
+        openCard.setOnClickListener(view -> {
+            openableCard.setVisibility(View.VISIBLE);
+        });
+        closeCard.setOnClickListener(view -> {
+            openableCard.setVisibility(View.GONE);
+        });
         fillUserData();
         createProfile();
         getBack();
-        showAreasOfInterest();
         changeProfilePicture();
         DrawerHelper.fillNavbarData(this);
     }
@@ -111,39 +120,15 @@ public class EditProfileActivity extends MenuInterfaceActivity {
         });
     }
 
-    void showAreasOfInterest() {
-        LinearLayout ll_areas_show = findViewById(R.id.linearLayoutShowAreasOfInterest);
-        RecyclerView ll_areas = findViewById(R.id.recyclerViewAreasOfInterest);
-        ImageView iv_areas = findViewById(R.id.imageViewExpandAreasOfInterest);
-        ll_areas_show.setOnClickListener(view -> {
-            if (ll_areas.getVisibility() == View.GONE) {
-                ll_areas.setVisibility(View.VISIBLE);
-                iv_areas.setImageResource(R.drawable.ic_baseline_expand_less_24);
-            } else {
-                ll_areas.setVisibility(View.GONE);
-                iv_areas.setImageResource(R.drawable.ic_baseline_expand_more_24);
-            }
-        });
-
-        LinearLayout ll_areas_show_new = findViewById(R.id.linearLayoutShowAreasOfInterestNew);
-        RecyclerView ll_areas_new = findViewById(R.id.recyclerViewAreasOfInterestNew);
-        ImageView iv_areas_new = findViewById(R.id.imageViewExpandAreasOfInterestNew);
-        ll_areas_show_new.setOnClickListener(view -> {
-            if (ll_areas_new.getVisibility() == View.GONE) {
-                ll_areas_new.setVisibility(View.VISIBLE);
-                iv_areas_new.setImageResource(R.drawable.ic_baseline_expand_less_24);
-            } else {
-                ll_areas_new.setVisibility(View.GONE);
-                iv_areas_new.setImageResource(R.drawable.ic_baseline_expand_more_24);
-            }
-        });
-    }
-
     public void addAreaOfInterest(String text) {
         if (!areas_array.contains(text)) {
             areas_array.add(text);
             points_array.add(0.0);
-            areas_not_present_array.remove(text);
+
+            areas_not_present_array = new ArrayList(Arrays.asList(getResources().getStringArray(R.array.event_types)));
+            for (String newArea: areas_array) {
+                areas_not_present_array.remove(newArea);
+            }
             java.util.Collections.sort(areas_not_present_array);
 
             RecyclerView recyclerViewAreasOfInterest = findViewById(R.id.recyclerViewAreasOfInterest);
@@ -162,7 +147,11 @@ public class EditProfileActivity extends MenuInterfaceActivity {
         if (areas_array.contains(text)) {
             points_array.remove(areas_array.indexOf(text));
             areas_array.remove(areas_array.indexOf(text));
-            areas_not_present_array.add(text);
+
+            areas_not_present_array = new ArrayList(Arrays.asList(getResources().getStringArray(R.array.event_types)));
+            for (String newArea: areas_array) {
+                areas_not_present_array.remove(newArea);
+            }
             java.util.Collections.sort(areas_not_present_array);
 
             RecyclerView recyclerViewAreasOfInterest = findViewById(R.id.recyclerViewAreasOfInterest);
