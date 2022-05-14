@@ -1,6 +1,8 @@
 package com.example.lmfag.activities;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
 import androidx.viewpager2.widget.ViewPager2;
@@ -18,17 +20,19 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MyProfileActivity extends MenuInterfaceActivity {
     private ViewPager2 viewPager;
-
+    private SharedPreferences preferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
 
         DrawerHelper.fillNavbarData(this);
-        fillPager();
+        preferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        int x = preferences.getInt("selectedTab", 0);
+        fillPager(x);
     }
 
-    private void fillPager() {
+    private void fillPager(int x) {
         TabPagerAdapter tabPagerAdapter = new TabPagerAdapter(this,
                 new MyProfileInfoFragment(), new MyProfileFriendsFragment(), new MyProfileAreasOfInterestFragment(),
                 new MyProfileEventsOrganizerFragment(), new MyProfileEventsPlayerFragment());
@@ -58,6 +62,11 @@ public class MyProfileActivity extends MenuInterfaceActivity {
                 }
             }
         }).attach();
+
+        viewPager.setCurrentItem(x);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("selectedTab", 0);
+        editor.apply();
     }
 
     @Override

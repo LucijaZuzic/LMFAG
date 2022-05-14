@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/event_remove_list_entry"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="10dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="5dp"
+    android:gravity="center"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="10dp"
+    app:contentPadding="10dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/textViewEventDelete"
+            android:layout_width="0dp"
+            android:layout_weight="0.8"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="TextView"
+            android:textSize="20sp" />
+        <ImageView
+            android:layout_width="0dp"
+            android:visibility="gone"
+            android:layout_weight="0.2"
+            android:id="@+id/imageViewDeleteEvent"
+            android:layout_height="wrap_content"
+            app:tint="@color/teal_700"
+            android:gravity="end"
+            android:src="@drawable/ic_baseline_delete_24"/>
+
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

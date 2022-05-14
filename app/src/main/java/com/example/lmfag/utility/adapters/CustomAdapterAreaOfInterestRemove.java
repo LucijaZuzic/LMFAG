@@ -1,18 +1,22 @@
 package com.example.lmfag.utility.adapters;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.activities.EditProfileActivity;
 import com.example.lmfag.R;
 import com.example.lmfag.activities.CreateProfileActivity;
 import com.example.lmfag.utility.EventTypeToDrawable;
+import com.example.lmfag.utility.MySwipe;
 
 import java.util.List;
 
@@ -31,7 +35,8 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
         private final TextView textViewAreaOfInterest;
         private final TextView textViewLevel;
         private final TextView textViewLevelPoints;
-        private final ImageView floatingActionButtonRemoveAreaOfInterest;
+        //private final ImageView floatingActionButtonRemoveAreaOfInterest;
+        private final CardView removableAreaOfInterest;
         private final ProgressBar progressBar;
 
         public ViewHolder(View view) {
@@ -41,8 +46,9 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
             textViewAreaOfInterest = (TextView) view.findViewById(R.id.textViewAreaOfInterest);
             textViewLevel = (TextView) view.findViewById(R.id.textViewLevel);
             textViewLevelPoints = (TextView) view.findViewById(R.id.textViewLevelPoints);
-            floatingActionButtonRemoveAreaOfInterest = (ImageView) view.findViewById(R.id.imageViewRemoveAreaOfInterest);
+            // = (ImageView) view.findViewById(R.id.imageViewRemoveAreaOfInterest);
             progressBar = (ProgressBar) view.findViewById(R.id.determinateBar);
+            removableAreaOfInterest = (CardView) view.findViewById(R.id.removableAreaOfInterest);
         }
 
         public TextView getTextViewAreaOfInterest() {
@@ -54,10 +60,11 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
         public TextView getTextViewLevelPoints() {
             return textViewLevelPoints;
         }
-        public ImageView getFloatingActionButtonRemoveAreaOfInterest() { return floatingActionButtonRemoveAreaOfInterest; }
+        //public ImageView getFloatingActionButtonRemoveAreaOfInterest() { return floatingActionButtonRemoveAreaOfInterest; }
         public ProgressBar getProgressBar() {
             return progressBar;
         }
+        public CardView getRemovableAreaOfInterest() { return removableAreaOfInterest; }
     }
 
     public CustomAdapterAreaOfInterestRemove(List<String> areasOfInterest, List<Double> levelPoints, EditProfileActivity editProfileActivity) {
@@ -100,7 +107,7 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
         viewHolder.getTextViewLevel().setText(text_level);
         viewHolder.getTextViewLevelPoints().setText(text_level_points);
         String text = localAreasOfInterest.get(position);
-        viewHolder.getFloatingActionButtonRemoveAreaOfInterest().setOnClickListener(new View.OnClickListener() {
+        /*viewHolder.getFloatingActionButtonRemoveAreaOfInterest().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (editProfileActivity != null) {
@@ -110,6 +117,66 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
                     createProfileActivity.removeAreaOfInterest(text);
                 }
             }
+        });*/
+        Context ctx1 = editProfileActivity;
+        Context ctx2 = createProfileActivity;
+        Context ctx = ctx1;
+        if (ctx == null) {
+            ctx = ctx2;
+       }
+        /*viewHolder.getRemovableAreaOfInterest().setOnTouchListener(new MySwipe(ctx) {
+            public void onSwipeTop() {
+
+            }
+            public void onSwipeRight() {
+                if (editProfileActivity != null) {
+                    editProfileActivity.removeAreaOfInterest(text);
+                }
+                if (createProfileActivity != null) {
+                    createProfileActivity.removeAreaOfInterest(text);
+                }
+            }
+            public void onSwipeLeft() {
+                if (editProfileActivity != null) {
+                    editProfileActivity.removeAreaOfInterest(text);
+                }
+                if (createProfileActivity != null) {
+                    createProfileActivity.removeAreaOfInterest(text);
+                }
+            }
+            public void onSwipeBottom() {
+
+            }
+
+        });*/
+
+        Context finalCtx = ctx;
+        viewHolder.getRemovableAreaOfInterest().setOnLongClickListener(view -> {
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which){
+                        case DialogInterface.BUTTON_POSITIVE:
+                            if (editProfileActivity != null) {
+                                editProfileActivity.removeAreaOfInterest(text);
+                            }
+                            if (createProfileActivity != null) {
+                                createProfileActivity.removeAreaOfInterest(text);
+                            }
+                            break;
+
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            //No button clicked
+                            break;
+                    }
+                }
+            };
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(finalCtx);
+            builder.setMessage("Are you sure you want to delete your area of interest " + text + "?").setPositiveButton("Yes", dialogClickListener)
+                    .setNegativeButton("No", dialogClickListener).show();
+
+            return true;
         });
     }
 

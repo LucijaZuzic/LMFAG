@@ -2,6 +2,7 @@ package com.example.lmfag.activities;
 
 
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -18,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -27,6 +29,8 @@ import com.example.lmfag.BuildConfig;
 import com.example.lmfag.utility.DrawerHelper;
 import com.example.lmfag.utility.EventTypeToDrawable;
 import com.example.lmfag.R;
+import com.example.lmfag.utility.adapters.CustomAdapterAreaOfInterestAdd;
+import com.example.lmfag.utility.adapters.CustomAdapterEventTypeAdd;
 import com.firebase.geofire.GeoFireUtils;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.material.slider.RangeSlider;
@@ -49,6 +53,7 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -93,7 +98,11 @@ public class CreateEventActivity extends MenuInterfaceActivity {
     private String selected_item;
     ImageView imageViewChooseStartDate, imageViewChooseStartTime, imageViewChooseEndDate, imageViewChooseEndTime, apply;
     TextView textViewChooseStartDate, textViewChooseStartTime, textViewChooseEndDate, textViewChooseEndTime;
-    Spinner sp;
+    //Spinner sp;
+    TextView sp;
+    List<String> all_areas;
+    private LinearLayout openableCard;
+    private ImageView closeCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +111,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         editor = preferences.edit();
         db = FirebaseFirestore.getInstance();
+
         DrawerHelper.fillNavbarData(this);
         eventName = findViewById(R.id.editTextEventName);
         description = findViewById(R.id.editTextEventDescription);
@@ -132,13 +142,19 @@ public class CreateEventActivity extends MenuInterfaceActivity {
 
         apply = findViewById(R.id.imageViewApply);
         sp = findViewById(R.id.sp);
-        fillSpinner();
+        all_areas = new ArrayList(Arrays.asList(getResources().getStringArray(R.array.event_types)));
+
+        RecyclerView recyclerViewAreasOfInterestNew = findViewById(R.id.recyclerViewAreasOfInterestNew);
+        CustomAdapterEventTypeAdd customAdapterEventTypeAdd = new CustomAdapterEventTypeAdd(all_areas, this);
+        recyclerViewAreasOfInterestNew.setAdapter(customAdapterEventTypeAdd);
+
+        //fillSpinner();
         setDate();
         setTime();
         fillData();
         ImageView apply = findViewById(R.id.imageViewApply);
         apply.setOnClickListener(view -> fetchDataFromUI());
-        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        /*sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
 
@@ -151,6 +167,14 @@ public class CreateEventActivity extends MenuInterfaceActivity {
             public void onNothingSelected(AdapterView<?> parentView) {
 
             }
+        });*/
+        closeCard = findViewById(R.id.closeCard);
+        openableCard = findViewById(R.id.openableCard);
+        sp.setOnClickListener(view -> {
+            openableCard.setVisibility(View.VISIBLE);
+        });
+        closeCard.setOnClickListener(view -> {
+            openableCard.setVisibility(View.GONE);
         });
         ImageView location_choose = findViewById(R.id.imageViewChooseLocation);
         location_choose.setOnClickListener(view -> {
@@ -165,6 +189,14 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         firstMapSetup();
     }
 
+    public void selectAreaOfInterest(String selected_item) {
+        this.selected_item = selected_item;
+        sp.setText(selected_item);
+        ImageView iv = findViewById(R.id.imageViewEventType);
+        iv.setImageDrawable(getDrawable(EventTypeToDrawable.getEventTypeToDrawable(selected_item)));
+
+        openableCard.setVisibility(View.GONE);
+    }
     void firstMapSetup() {
         // Loading map
         Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
@@ -290,12 +322,12 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         });
     }
 
-    void fillSpinner() {
+   /* void fillSpinner() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.event_types, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sp.setAdapter(adapter);
-    }
+    }*/
 
     void writeAttending() {
         Double minimum_level_val = Double.parseDouble(String.valueOf(minimum_level.getValue()));
@@ -425,7 +457,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         Map<String, Object> docData = new HashMap<>();
 
         docData.put("event_name", eventName.getText().toString());
-        docData.put("event_type", selected_item);
+        docData.put("event_type", sp.getText().toString());
         docData.put("event_description", description.getText().toString());
         docData.put("minimum_level", Integer.parseInt(String.valueOf(minimum_level.getValue())));
         docData.put("public", switch_public.isChecked());
@@ -465,7 +497,13 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                         if (document.exists()) {
                             Map<String, Object> docData = document.getData();
                             eventName.setText(docData.get("event_name").toString());
-                            sp.setSelection(((ArrayAdapter) sp.getAdapter()).getPosition(docData.get("event_type").toString()));
+                            //sp.setSelection(((ArrayAdapter) sp.getAdapter()).getPosition(docData.get("event_type").toString()));
+
+                            selected_item = docData.get("event_type").toString();
+                            sp.setText(docData.get("event_type").toString());
+                            ImageView iv = findViewById(R.id.imageViewEventType);
+                            iv.setImageDrawable(getDrawable(EventTypeToDrawable.getEventTypeToDrawable(selected_item)));
+
                             description.setText(docData.get("event_description").toString());
                             minimum_level.setValue(Integer.parseInt(docData.get("minimum_level").toString()));
                             switch_public.setChecked(docData.get("public").toString().equals("true"));

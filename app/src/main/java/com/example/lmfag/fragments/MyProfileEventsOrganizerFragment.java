@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.lmfag.R;
-import com.example.lmfag.utility.adapters.CustomAdapterEvent;
+import com.example.lmfag.utility.adapters.CustomAdapterEventDelete;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -54,7 +54,6 @@ public class MyProfileEventsOrganizerFragment extends Fragment {
     }
 
     private void getOrganizerEvents(@NonNull View view) {
-
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         RecyclerView recyclerViewEventsOrganizer = view.findViewById(R.id.recyclerViewList);
@@ -69,7 +68,7 @@ public class MyProfileEventsOrganizerFragment extends Fragment {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 events_array.add(document.getId());
                             }
-                            CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(events_array, context, preferences);
+                            CustomAdapterEventDelete customAdapterEvents = new CustomAdapterEventDelete(events_array, context, preferences);
                             recyclerViewEventsOrganizer.setAdapter(customAdapterEvents);
                         }
                     }
