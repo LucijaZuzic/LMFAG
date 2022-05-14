@@ -265,7 +265,7 @@ public class EventsNearbyActivity extends MenuInterfaceActivity {
                                         Marker newMarker = new Marker(map);
                                         Drawable unwrappedDrawable = getDrawable(EventTypeToDrawable.getEventTypeToDrawable(doc.getString("event_type")));
                                         Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
-                                        DrawableCompat.setTint(wrappedDrawable, ContextCompat.getColor(context, R.color.my_pink));
+                                        DrawableCompat.setTint(wrappedDrawable, ContextCompat.getColor(context, R.color.brown));
                                         newMarker.setIcon(wrappedDrawable);
                                         newMarker.setTitle(doc.getString("event_name"));
                                         newMarker.setSnippet(doc.getString("event_type"));

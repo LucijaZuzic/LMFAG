@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
@@ -31,17 +32,17 @@ public class CustomAdapterEvent extends RecyclerView.Adapter<CustomAdapterEvent.
      * (custom ViewHolder).
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textViewEventName;
+        private final CardView cardViewEventItem;
 
         public ViewHolder(View view) {
             super(view);
             // Define click listener for the ViewHolder's View
 
-            textViewEventName = (TextView) view.findViewById(R.id.textViewEventName);
+            cardViewEventItem = (CardView) view.findViewById(R.id.event_list_entry);
         }
 
-        public TextView getTextView() {
-            return textViewEventName;
+        public CardView getCardView() {
+            return cardViewEventItem;
         }
     }
 
@@ -74,7 +75,7 @@ public class CustomAdapterEvent extends RecyclerView.Adapter<CustomAdapterEvent.
         // contents of the view with that element
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("events").document(localEventNames.get(position));
-        viewHolder.getTextView().setOnClickListener(view -> {
+        viewHolder.getCardView().setOnClickListener(view -> {
             SharedPreferences.Editor editor = preferences.edit();
             String name = localEventNames.get(position);
             editor.putString("eventID", name);
@@ -87,7 +88,7 @@ public class CustomAdapterEvent extends RecyclerView.Adapter<CustomAdapterEvent.
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
-                    TextView et = viewHolder.getTextView();
+                    TextView et = (TextView) viewHolder.getCardView().getChildAt(0);
                     et.setText(document.get("event_name").toString());
                     et.setCompoundDrawablesWithIntrinsicBounds(EventTypeToDrawable.getEventTypeToDrawable(document.get("event_type").toString()), 0, 0, 0);
                 }

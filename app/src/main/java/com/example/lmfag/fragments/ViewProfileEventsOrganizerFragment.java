@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,19 +41,22 @@ public class ViewProfileEventsOrganizerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_view_events_organizer, container, false);
+        return inflater.inflate(R.layout.fragment_titled_list, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getOrganizerEvents(view);
+
+        TextView title = view.findViewById(R.id.list_title);
+        title.setText("Organizing events");
     }
 
     private void getOrganizerEvents(@NonNull View view) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-        RecyclerView recyclerViewEventsOrganizer = view.findViewById(R.id.recyclerViewEventsOrganizer);
+        RecyclerView recyclerViewEventsOrganizer = view.findViewById(R.id.recyclerViewList);
         List<String> events_array = new ArrayList<>();
         String friendID = preferences.getString("friendID", "");
         if (!friendID.equals("")) {

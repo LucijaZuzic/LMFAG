@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,20 +41,23 @@ public class ViewProfileEventsPlayerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_view_events_player, container, false);
+        return inflater.inflate(R.layout.fragment_titled_list_events_subsribed, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getPlayerEvents(view);
+
+        TextView title = view.findViewById(R.id.list_title);
+        title.setText("Playing events");
     }
 
     private void getPlayerEvents(@NonNull View view) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         List<String> events_array = new ArrayList<>();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-        RecyclerView recyclerViewEventsPlayer = view.findViewById(R.id.recyclerViewEventsPlayer);
+        RecyclerView recyclerViewEventsPlayer = view.findViewById(R.id.recyclerViewList);
         String friendID = preferences.getString("friendID", "");
         if (!friendID.equals("")) {
             db.collection("event_attending").whereEqualTo("user", friendID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

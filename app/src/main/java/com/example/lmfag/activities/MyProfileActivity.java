@@ -6,13 +6,17 @@ import androidx.annotation.NonNull;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.lmfag.R;
+import com.example.lmfag.fragments.MyProfileAreasOfInterestFragment;
+import com.example.lmfag.fragments.MyProfileEventsOrganizerFragment;
+import com.example.lmfag.fragments.MyProfileEventsPlayerFragment;
+import com.example.lmfag.fragments.MyProfileFriendsFragment;
+import com.example.lmfag.fragments.MyProfileInfoFragment;
 import com.example.lmfag.utility.DrawerHelper;
-import com.example.lmfag.utility.adapters.TabPagerAdapterMyProfile;
+import com.example.lmfag.utility.adapters.TabPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MyProfileActivity extends MenuInterfaceActivity {
-    private TabPagerAdapterMyProfile tabPagerAdapterMyProfile;
     private ViewPager2 viewPager;
 
     @Override
@@ -25,9 +29,11 @@ public class MyProfileActivity extends MenuInterfaceActivity {
     }
 
     private void fillPager() {
-        tabPagerAdapterMyProfile = new TabPagerAdapterMyProfile(this);
+        TabPagerAdapter tabPagerAdapter = new TabPagerAdapter(this,
+                new MyProfileInfoFragment(), new MyProfileFriendsFragment(), new MyProfileAreasOfInterestFragment(),
+                new MyProfileEventsOrganizerFragment(), new MyProfileEventsPlayerFragment());
         viewPager = findViewById(R.id.pager);
-        viewPager.setAdapter(tabPagerAdapterMyProfile);
+        viewPager.setAdapter(tabPagerAdapter);
 
         TabLayout tabLayout = findViewById(R.id.tab);
         new TabLayoutMediator(tabLayout, viewPager, true, true, new TabLayoutMediator.TabConfigurationStrategy() {

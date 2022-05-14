@@ -86,6 +86,8 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_weight="0.75"
             tools:context=".activities.EditProfileActivity">
 
@@ -244,7 +246,6 @@
                             android:id="@+id/editTextMyLocation"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
                             android:autofillHints="postalAddress"
                             android:drawableStart="@drawable/ic_baseline_home_24"
                             android:drawableTint="@color/teal_700"
@@ -286,7 +287,6 @@
                             android:id="@+id/editTextMyDescription"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
                             android:drawableStart="@drawable/ic_baseline_description_24"
                             android:drawableTint="@color/teal_700"
                             android:fontFamily="sans-serif-condensed-light"
@@ -298,21 +298,39 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:drawableStart="@drawable/ic_baseline_interests_24"
-                    android:fontFamily="sans-serif-condensed-light"
-                    android:gravity="center"
-                    android:minWidth="48dp"
-                    android:minHeight="48dp"
-                    android:padding="5dp"
-                    android:text="@string/area_of_interest"
-                    android:textSize="21dp"
-                    android:textStyle="bold"
-                    app:drawableTint="@color/teal_700" />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_weight="0.8"
+                        android:drawableStart="@drawable/ic_baseline_interests_24"
+                        android:fontFamily="sans-serif-condensed-light"
+                        android:gravity="center"
+                        android:minWidth="48dp"
+                        android:minHeight="48dp"
+                        android:padding="5dp"
+                        android:text="@string/area_of_interest"
+                        android:textSize="21dp"
+                        android:textStyle="bold"
+                        app:drawableTint="@color/teal_700" />
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/floatingActionButtonAddAreaOfInterest"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.2"
+                        android:clickable="true"
+                        app:backgroundTint="@color/teal_700"
+                        app:srcCompat="@drawable/ic_baseline_add_24"
+                        app:tint="@color/white" />
+                </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewAreasOfInterest"
@@ -333,22 +351,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
+            android:background="@color/light_grey"
             android:baselineAligned="false"
             android:orientation="horizontal">
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/floatingActionButtonAddAreaOfInterest"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:clickable="true"
-                app:backgroundTint="@color/teal_700"
-                app:srcCompat="@drawable/ic_baseline_interests_24"
-                app:tint="@color/white" />
 
             <LinearLayout
                 android:layout_width="0dp"

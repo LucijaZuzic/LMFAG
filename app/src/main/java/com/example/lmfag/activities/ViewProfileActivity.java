@@ -7,12 +7,12 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.lmfag.R;
 import com.example.lmfag.utility.DrawerHelper;
-import com.example.lmfag.utility.adapters.TabPagerAdapterViewProfile;
+import com.example.lmfag.utility.adapters.TabPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class ViewProfileActivity extends MenuInterfaceActivity {
-    private TabPagerAdapterViewProfile tabPagerAdapterViewProfile;
+    private TabPagerAdapter tabPagerAdapterViewProfile;
     private ViewPager2 viewPager;
 
     @Override
@@ -25,7 +25,7 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
     }
 
     private void fillPager() {
-        tabPagerAdapterViewProfile = new TabPagerAdapterViewProfile(this);
+        tabPagerAdapterViewProfile = new TabPagerAdapter(this);
         viewPager = findViewById(R.id.pager);
         viewPager.setAdapter(tabPagerAdapterViewProfile);
 

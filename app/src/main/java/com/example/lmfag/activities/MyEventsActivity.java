@@ -6,14 +6,14 @@ import androidx.annotation.NonNull;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.lmfag.R;
+import com.example.lmfag.fragments.MyProfileEventsOrganizerFragment;
+import com.example.lmfag.fragments.MyProfileEventsPlayerFragment;
 import com.example.lmfag.utility.DrawerHelper;
-import com.example.lmfag.utility.adapters.TabPagerAdapterMyEvents;
+import com.example.lmfag.utility.adapters.TabPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MyEventsActivity extends MenuInterfaceActivity {
-
-    private com.example.lmfag.utility.adapters.TabPagerAdapterMyEvents TabPagerAdapterMyEvents;
     private ViewPager2 viewPager;
 
     @Override
@@ -26,9 +26,9 @@ public class MyEventsActivity extends MenuInterfaceActivity {
     }
 
     private void fillPager() {
-        TabPagerAdapterMyEvents = new TabPagerAdapterMyEvents(this);
+        TabPagerAdapter tabPagerAdapter = new TabPagerAdapter(this, new MyProfileEventsOrganizerFragment(), new MyProfileEventsPlayerFragment());
         viewPager = findViewById(R.id.pager);
-        viewPager.setAdapter(TabPagerAdapterMyEvents);
+        viewPager.setAdapter(tabPagerAdapter);
 
         TabLayout tabLayout = findViewById(R.id.tab);
         new TabLayoutMediator(tabLayout, viewPager, true, true, new TabLayoutMediator.TabConfigurationStrategy() {
@@ -44,10 +44,5 @@ public class MyEventsActivity extends MenuInterfaceActivity {
                 }
             }
         }).attach();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 }

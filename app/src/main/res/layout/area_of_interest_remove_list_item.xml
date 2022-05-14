@@ -4,9 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="10dp"
+    android:layout_marginTop="5dp"
     android:layout_marginEnd="10dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginBottom="20dp"
+    android:layout_marginBottom="5dp"
     android:gravity="center"
     android:orientation="vertical"
     app:cardCornerRadius="10dp"
@@ -23,14 +23,14 @@
             android:id="@+id/textViewAreaOfInterest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-condensed-light"
             android:drawableStart="@drawable/ic_baseline_interests_24"
+            android:fontFamily="sans-serif-condensed-light"
             android:gravity="center"
             android:padding="5dp"
-            app:drawableTint="@color/teal_700"
             android:text="@string/area_of_interest"
             android:textSize="21sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:drawableTint="@color/teal_700" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -51,12 +51,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
-                    app:drawableTint="@color/teal_700"
                     android:padding="5dp"
                     android:text="@string/level"
                     android:textAlignment="center"
                     android:textSize="21sp"
                     android:textStyle="bold"
+                    app:drawableTint="@color/teal_700"
                     app:drawableTopCompat="@drawable/ic_baseline_workspace_premium_24" />
             </LinearLayout>
 
@@ -87,8 +87,8 @@
                         android:id="@+id/textViewLevelPoints"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-condensed-light"
                         android:layout_gravity="center"
+                        android:fontFamily="sans-serif-condensed-light"
                         android:gravity="center"
                         android:text="@string/level_points"
                         android:textAlignment="center"
@@ -96,7 +96,6 @@
                         android:textStyle="bold" />
                 </FrameLayout>
             </LinearLayout>
-
 
 
             <androidx.appcompat.widget.LinearLayoutCompat

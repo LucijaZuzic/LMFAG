@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,12 +43,15 @@ public class MyProfileEventsPlayerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_events_player, container, false);
+        return inflater.inflate(R.layout.fragment_titled_list_events_subsribed, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        TextView title = view.findViewById(R.id.list_title);
+        title.setText("My playing events");
+
         SwitchCompat notificationsOnly = view.findViewById(R.id.onlyShowNotificationToggle);
         if (only_notified) {
             getSubscriberEvents(view);
@@ -68,7 +72,7 @@ public class MyProfileEventsPlayerFragment extends Fragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         List<String> events_array = new ArrayList<>();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-        RecyclerView recyclerViewEventsPlayer = view.findViewById(R.id.recyclerViewEventsPlayer);
+        RecyclerView recyclerViewEventsPlayer = view.findViewById(R.id.recyclerViewList);
         String userID = preferences.getString("userID", "");
         if (!userID.equals("")) {
             db.collection("event_attending").whereEqualTo("user", userID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -91,7 +95,7 @@ public class MyProfileEventsPlayerFragment extends Fragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         List<String> events_array = new ArrayList<>();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-        RecyclerView recyclerViewEventsPlayer = view.findViewById(R.id.recyclerViewEventsPlayer);
+        RecyclerView recyclerViewEventsPlayer = view.findViewById(R.id.recyclerViewList);
         String userID = preferences.getString("userID", "");
         if (!userID.equals("")) {
             db.collection("event_attending").whereEqualTo("user", userID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

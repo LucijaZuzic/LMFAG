@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/event_list_entry"
     android:layout_width="match_parent"
-    android:layout_marginTop="10dp"
-    android:orientation="vertical"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="10dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="5dp"
     android:gravity="center"
-    android:layout_height="wrap_content">
+    app:cardCornerRadius="10dp"
+    app:cardElevation="10dp"
+    app:contentPadding="10dp">
 
     <TextView
-        android:padding="5dp"
-        android:background="@drawable/teal_drawable"
-        android:id="@+id/textViewEventName"
-        android:layout_width="match_parent"
-        android:fontFamily="sans-serif-condensed-light"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:drawablePadding="10dp"
         android:gravity="center"
-        android:textSize="21sp"
-        android:drawableStart="@drawable/ic_baseline_interests_24"
-        android:text="@string/event_name" />
-
-
-
-</androidx.appcompat.widget.LinearLayoutCompat>
+        android:text="TextView"
+        android:textSize="20sp"
+        app:drawableTint="@color/dark_teal_700" />
+</androidx.cardview.widget.CardView>

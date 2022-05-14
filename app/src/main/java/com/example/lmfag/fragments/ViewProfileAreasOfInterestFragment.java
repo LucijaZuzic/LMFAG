@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,7 +43,7 @@ public class ViewProfileAreasOfInterestFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_view_profile_areas_of_interest, container, false);
+        return inflater.inflate(R.layout.fragment_titled_list, container, false);
     }
 
     @Override
@@ -52,6 +53,9 @@ public class ViewProfileAreasOfInterestFragment extends Fragment {
     }
 
     private void fillUserData(@NonNull View view) {
+        TextView title = view.findViewById(R.id.list_title);
+        title.setText("Areas of interest");
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         String name = preferences.getString("friendID", "");
@@ -68,7 +72,7 @@ public class ViewProfileAreasOfInterestFragment extends Fragment {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     Map<String, Object> data = document.getData();
-                    RecyclerView recyclerViewAreasOfInterest = view.findViewById(R.id.recyclerViewAreasOfInterest);
+                    RecyclerView recyclerViewAreasOfInterest = view.findViewById(R.id.recyclerViewList);
                     String area_string = data.get("areas_of_interest").toString();
                     if (area_string.length() > 2) {
                         String[] area_string_array = area_string.substring(1, area_string.length() - 1).split(", ");

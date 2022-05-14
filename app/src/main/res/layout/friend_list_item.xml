@@ -7,7 +7,7 @@
     android:layout_marginStart="10dp"
     android:layout_marginTop="10dp"
     android:layout_marginEnd="10dp"
-    android:layout_marginBottom="20dp"
+    android:layout_marginBottom="10dp"
     android:gravity="center"
     app:cardBackgroundColor="@color/dark_teal_700"
     app:cardCornerRadius="10dp"
@@ -23,8 +23,8 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image_friend"
             android:layout_width="0dp"
-            android:layout_marginEnd="10dp"
             android:layout_height="match_parent"
+            android:layout_marginEnd="10dp"
             android:layout_weight="0.3"
             android:src="@drawable/ic_baseline_profile_picture_24" />
 
