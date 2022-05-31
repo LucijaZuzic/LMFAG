@@ -38,6 +38,8 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
     private List<String> timestamp;
     private List<String> ids;
     private String me;
+    private String myUsername, otherUsername;
+    private Bitmap myImage, otherImage;
     private ViewMessagesActivity context;
     /**
      * Provide a reference to the type of views that you are using
@@ -83,13 +85,17 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
         }
     }
 
-    public CustomAdapterMessages(List<String> msg, List<String> times, List<String> senders, List<String> ids, String me, ViewMessagesActivity context) {
+    public CustomAdapterMessages(List<String> msg, List<String> times, List<String> senders, List<String> ids, String me, ViewMessagesActivity context, String myUsername, String otherUsername, Bitmap myImage, Bitmap otherImage) {
         message = msg;
         this.ids = ids;
         timestamp = times;
         sender = senders;
         this.me = me;
         this.context = context;
+        this.myUsername = myUsername;
+        this.myImage = myImage;
+        this.otherUsername = otherUsername;
+        this.otherImage = otherImage;
     }
 
     // Create new views (invoked by the layout manager)
@@ -121,13 +127,24 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
                 viewHolder.getTime().setVisibility(View.GONE);
             }
         });
+        CircleImageView circleImageView = viewHolder.getProfileImageTwo();
         if (!sender.get(position).equals(me)) {
+            viewHolder.getSenderTextView().setText(otherUsername);
+            if (otherImage != null) {
+                circleImageView.setImageBitmap(otherImage);
+            }
             viewHolder.getLayout().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
             viewHolder.getBackground().setCardBackgroundColor(ContextCompat.getColor(context, R.color.dark_teal_700));
-            viewHolder.getSenderTextView().setTextColor(context.getResources().getColor(R.color.white));
-            viewHolder.getMessageTextView().setTextColor(context.getResources().getColor(R.color.white));
+            //viewHolder.getSenderTextView().setTextColor(context.getResources().getColor(R.color.white));
+            //viewHolder.getMessageTextView().setTextColor(context.getResources().getColor(R.color.white));
             //viewHolder.getTime().setTextColor(context.getResources().getColor(R.color.white));
         } else {
+            viewHolder.getSenderTextView().setText(myUsername);
+            if (myImage != null) {
+                circleImageView.setImageBitmap(myImage);
+            }
+            viewHolder.getLayout().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+            viewHolder.getBackground().setCardBackgroundColor(ContextCompat.getColor(context, R.color.teal_700));
             viewHolder.getLayout().setOnLongClickListener(view -> {
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
@@ -135,7 +152,8 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
                         switch (which){
                             case DialogInterface.BUTTON_POSITIVE:
                                 db.collection("messages").document(delete_id).update("messages", R.string.deleted_by_sender);
-                                context.refresh();
+                                context.getFriendData();
+                                context.getAllMessages();
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:
@@ -149,39 +167,7 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
                 return true;
             });
         }
-        DocumentReference docRef = db.collection("users").document(sender.get(position));
-        docRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    Map<String, Object> data = document.getData();
-
-                    viewHolder.getSenderTextView().setText(data.get("username").toString());
-
-                    FirebaseStorage storage = FirebaseStorage.getInstance();
-                    StorageReference storageRef = storage.getReference();
-                    StorageReference imagesRef = storageRef.child("profile_pictures/" + document.getId());
-                    final long ONE_MEGABYTE = 1024 * 1024;
-                    imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                        // Data for "images/island.jpg" is returns, use this as needed
-                        CircleImageView circleImageView = viewHolder.getProfileImageTwo();
-                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        circleImageView.setImageBitmap(bmp);
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Handle any errors
-                        }
-                    });
-                    //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                } else {
-
-                }
-            } else {
-                //Log.d(TAG, "get failed with ", task.getException());
-            }
-        });
-        }
+    }
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {

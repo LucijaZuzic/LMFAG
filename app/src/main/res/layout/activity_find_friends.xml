@@ -14,6 +14,20 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:drawableTint="@color/teal_700"
+            android:fontFamily="sans-serif-condensed-light"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/find_friends"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            app:drawableStartCompat="@drawable/ic_baseline_person_search_24" />
 
 
             <LinearLayout
@@ -23,28 +37,11 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:drawableTint="@color/teal_700"
-                    android:fontFamily="sans-serif-condensed-light"
-                    android:gravity="center"
-                    android:padding="5dp"
-                    android:text="@string/find_friends"
-                    android:textSize="21sp"
-                    android:textStyle="bold"
-                    app:drawableStartCompat="@drawable/ic_baseline_person_search_24" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
                     android:layout_height="match_parent" >
 
                     <EditText
@@ -72,25 +69,23 @@
                 </LinearLayout>
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:drawableStart="@drawable/ic_baseline_filter_alt_24"
-                    android:drawableTint="@color/teal_700"
-                    android:fontFamily="sans-serif-condensed-light"
-                    android:gravity="center"
-                    android:minWidth="48dp"
-                    android:minHeight="48dp"
-                    android:padding="5dp"
-                    android:text="@string/results"
-                    android:textSize="21sp"
-                    android:textStyle="bold" />
 
 
-            </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:drawableStart="@drawable/ic_baseline_filter_alt_24"
+            android:drawableTint="@color/teal_700"
+            android:fontFamily="sans-serif-condensed-light"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/results"
+            android:textSize="21sp"
+            android:textStyle="bold" />
 
         <View
             android:id="@+id/divider"
@@ -98,9 +93,7 @@
             android:layout_height="5dp"
             android:layout_gravity="center"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="20dp"
             android:background="?android:attr/listDivider" />
             <ScrollView
                 android:layout_margin="10dp"

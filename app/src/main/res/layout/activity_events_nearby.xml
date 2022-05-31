@@ -12,30 +12,29 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="10dp"
                 android:orientation="vertical">
+                <TextView
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:drawableTint="@color/teal_700"
+                    android:drawableStart="@drawable/ic_baseline_location_searching_24"
+                    android:gravity="center"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    android:padding="5dp"
+                    android:text="@string/events_nearby"
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:padding="10dp"
                 android:orientation="vertical"
                 android:gravity="center" >
 
-                    <TextView
-                        android:fontFamily="sans-serif-condensed-light"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginBottom="10dp"
-                        android:drawableTint="@color/teal_700"
-                        android:drawableStart="@drawable/ic_baseline_location_searching_24"
-                        android:gravity="center"
-                        android:minWidth="48dp"
-                        android:minHeight="48dp"
-                        android:padding="5dp"
-                        android:text="@string/events_nearby"
-                         android:textSize="21sp"
-                        android:textStyle="bold" />
 
 
                     <LinearLayout
@@ -149,6 +148,7 @@
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switchMapOnOff"
                     android:layout_width="match_parent"
+                    android:layout_marginTop="10dp"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-condensed-light"
                     android:textSize="21sp"
@@ -167,9 +167,7 @@
                     android:layout_height="5dp"
                     android:layout_gravity="center"
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="20dp"
                     android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="20dp"
                     android:background="?android:attr/listDivider" />
 
 

@@ -16,6 +16,7 @@
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            app:civ_circle_background_color="@color/teal_700"
             android:id="@+id/profile_image_bubble"
             android:layout_width="48dp"
             android:layout_height="48dp"

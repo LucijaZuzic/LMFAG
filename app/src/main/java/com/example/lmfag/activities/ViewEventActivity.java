@@ -17,7 +17,9 @@ import com.example.lmfag.BuildConfig;
 import com.example.lmfag.R;
 import com.example.lmfag.utility.DrawerHelper;
 import com.example.lmfag.utility.EventTypeToDrawable;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
@@ -26,6 +28,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -97,7 +100,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
             String me = preferences.getString("userID", "");
             if (me.equals(organizer)) {
                 if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime())) {
-                    Snackbar.make(imageViewChooseEndTime, "Can't edit an event that finished.", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(imageViewChooseEndTime, R.string.edit_finished, Snackbar.LENGTH_SHORT).show();
                     Intent myIntent = new Intent(context, ViewEventActivity.class);
                     startActivity(myIntent);
                 } else {
@@ -145,6 +148,37 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         firstMapSetup();
     }
 
+    private void manageChannels() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String eventID = preferences.getString("eventID", "");
+        SwitchCompat switch_notify = findViewById(R.id.switchNotifications);
+        if (switch_notify.isChecked()) {
+            FirebaseMessaging.getInstance().subscribeToTopic(eventID)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            String msg = getString(R.string.msg_subscribed);
+                            if (!task.isSuccessful()) {
+                                msg = getString(R.string.msg_subscribe_failed);
+                            }
+                            Snackbar.make(switch_notify, msg, Snackbar.LENGTH_SHORT);
+                        }
+                    });
+        } else {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(eventID)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            String msg = getString(R.string.msg_subscribed);
+                            if (!task.isSuccessful()) {
+                                msg = getString(R.string.msg_subscribe_failed);
+                            }
+                            Snackbar.make(switch_notify, msg, Snackbar.LENGTH_SHORT);
+                        }
+                    });
+        }
+    }
+
     private void changeNotify() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -169,7 +203,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                         db.collection("event_attending")
                                 .document(doc.getId())
                                 .set(docData);
-                        Snackbar.make(switch_notify, R.string.update_notify, Snackbar.LENGTH_SHORT);
+                        manageChannels();
                     }
                 }
             }
@@ -272,6 +306,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                             Snackbar.make(apply, R.string.not_friend_organizer, Snackbar.LENGTH_SHORT).show();
                         } else {
                             docuRef.add(docData);
+                            manageChannels();
                             refresh();
                         }
                     } else {
@@ -296,6 +331,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                             checkOtherDirection(docuRef, docData);
                         } else {
                             docuRef.add(docData);
+                            manageChannels();
                             refresh();
                         }
                     } else {
@@ -346,6 +382,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                                             } else {
                                                 if (public_event) {
                                                     docuRef.add(docData);
+                                                    manageChannels();
                                                 } else {
                                                     checkFriends(docuRef, docData);
                                                 }
@@ -354,6 +391,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                                         } else {
                                             if (public_event) {
                                                 docuRef.add(docData);
+                                                manageChannels();
                                             } else {
                                                 checkFriends(docuRef, docData);
                                             }
@@ -365,6 +403,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                                         } else {
                                             if (public_event) {
                                                 docuRef.add(docData);
+                                                manageChannels();
                                             } else {
                                                 checkFriends(docuRef, docData);
                                             }
@@ -399,6 +438,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
             if (task.isSuccessful()) {
                 if(task.getResult().size() > participate_minimum) {
                     db.collection("event_attending").document(docuRef.getId()).delete();
+                    manageChannels();
                     refresh();
                 } else {
                     Snackbar.make(switch_notify, R.string.not_enough, Snackbar.LENGTH_SHORT).show();
@@ -555,7 +595,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                     longitude = location_point.getLongitude();
 
                     chosenLocationMarker.setPosition(new org.osmdroid.util.GeoPoint(latitude, longitude));
-                    String formattedLocation = getString(R.string.location) + ": " + getString(R.string.latitude) + ": " + Double.toString(Math.round(latitude * 10000) / 10000.0) + " "
+                    String formattedLocation = getString(R.string.location) + "\n" + getString(R.string.latitude) + ": " + Double.toString(Math.round(latitude * 10000) / 10000.0) + "\n"
                             + getString(R.string.longitude) + ": " + Double.toString(Math.round(longitude * 10000) / 10000.0);
                     location.setText(formattedLocation);
                     mapController.setCenter(new org.osmdroid.util.GeoPoint(latitude, longitude));

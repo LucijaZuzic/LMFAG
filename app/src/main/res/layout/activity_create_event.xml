@@ -81,9 +81,7 @@
             android:layout_height="5dp"
             android:layout_gravity="center"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="20dp"
             android:background="?android:attr/listDivider" />
 
         <ScrollView
@@ -93,6 +91,7 @@
             android:layout_marginEnd="20dp"
             android:layout_weight="0.75"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:elevation="10dp">
 
             <LinearLayout
@@ -622,16 +621,12 @@
             android:layout_height="5dp"
             android:layout_gravity="center"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="20dp"
             android:background="?android:attr/listDivider" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_margin="10dp"
             android:baselineAligned="false"
             android:orientation="horizontal">
 

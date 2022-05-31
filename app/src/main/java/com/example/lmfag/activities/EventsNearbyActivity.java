@@ -115,8 +115,8 @@ public class EventsNearbyActivity extends MenuInterfaceActivity {
                 chosenLocationMarker.setPosition(new org.osmdroid.util.GeoPoint(temp_latitude, temp_longitude));
 
                 mapController.setCenter(chosenLocationMarker.getPosition());
-                String formattedLocation = getString(R.string.marker_location) + ": " + getString(R.string.latitude) + ": " +
-                        Double.toString(Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0) + " "
+                String formattedLocation = getString(R.string.marker_location) + ":\n" + getString(R.string.latitude) + ": " +
+                        Double.toString(Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0) + "\n"
                         + getString(R.string.longitude) + ": " + Double.toString(Math.round(chosenLocationMarker.getPosition().getLongitude() * 10000) / 10000.0);
 
             }
@@ -198,8 +198,8 @@ public class EventsNearbyActivity extends MenuInterfaceActivity {
                         enterLatitude.setText(Double.toString(myLocationOverlay.getMyLocation().getLatitude()));
                         enterLongitude.setText(Double.toString(myLocationOverlay.getMyLocation().getLongitude()));
                         chosenLocationMarker.setPosition(myLocationOverlay.getMyLocation());
-                        String formattedLocation = getString(org.osmdroid.library.R.string.my_location) + ": " + getString(R.string.latitude) + ": " +
-                                Double.toString(Math.round(myLocationOverlay.getMyLocation().getLatitude() * 10000) / 10000.0) + " "
+                        String formattedLocation = getString(org.osmdroid.library.R.string.my_location) + ":\n" + getString(R.string.latitude) + ": " +
+                                Double.toString(Math.round(myLocationOverlay.getMyLocation().getLatitude() * 10000) / 10000.0) + "\n"
                                 + getString(R.string.longitude) + ": " + Double.toString(Math.round(myLocationOverlay.getMyLocation().getLongitude() * 10000) / 10000.0);
                     }
                 });

@@ -34,14 +34,13 @@
             android:layout_height="5dp"
             android:layout_gravity="center"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="20dp"
             android:background="?android:attr/listDivider" />
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_weight="0.75">
@@ -132,7 +131,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="10dp"
                     android:drawableTint="@color/teal_700"
                     android:fontFamily="sans-serif-condensed-light"
                     android:gravity="center"
@@ -154,6 +153,14 @@
             </LinearLayout>
         </ScrollView>
 
+        <View
+            android:id="@+id/divider_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="?android:attr/listDivider" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

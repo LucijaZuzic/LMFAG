@@ -119,8 +119,8 @@ public class ChooseLocationActivity extends MenuInterfaceActivity {
                     public void run() {
                         mapController.setCenter(myLocationOverlay.getMyLocation());
                         chosenLocationMarker.setPosition(myLocationOverlay.getMyLocation());
-                        String formattedLocation = getString(org.osmdroid.library.R.string.my_location) + ": " + getString(R.string.latitude) + ": " +
-                                Double.toString(Math.round(myLocationOverlay.getMyLocation().getLatitude() * 10000) / 10000.0) + " "
+                        String formattedLocation = getString(org.osmdroid.library.R.string.my_location) + ":\n" + getString(R.string.latitude) + ": " +
+                                Double.toString(Math.round(myLocationOverlay.getMyLocation().getLatitude() * 10000) / 10000.0) + "\n"
                                 + getString(R.string.longitude) + ": " + Double.toString(Math.round(myLocationOverlay.getMyLocation().getLongitude() * 10000) / 10000.0);
                         coordinatesView.setText(formattedLocation);
                     }
@@ -143,8 +143,8 @@ public class ChooseLocationActivity extends MenuInterfaceActivity {
                 chosenLocationMarker.setPosition(p);
                 enterLatitude.setText(Double.toString(p.getLatitude()));
                 enterLongitude.setText(Double.toString(p.getLongitude()));
-                String formattedLocation = getString(R.string.marker_location) + ": " + getString(R.string.latitude) + ": " +
-                        Double.toString(Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0) + " "
+                String formattedLocation = getString(R.string.marker_location) + ":\n" + getString(R.string.latitude) + ": " +
+                        Double.toString(Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0) + "\n"
                         + getString(R.string.longitude) + ": " + Double.toString(Math.round(chosenLocationMarker.getPosition().getLongitude() * 10000) / 10000.0);
 
                 mapController.setCenter(chosenLocationMarker.getPosition());
@@ -165,8 +165,8 @@ public class ChooseLocationActivity extends MenuInterfaceActivity {
 
             @Override
             public void onMarkerDragEnd(Marker marker) {
-                String formattedLocation = getString(R.string.marker_location) + ": " + getString(R.string.latitude) + ": " +
-                        Double.toString(Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0) + " "
+                String formattedLocation = getString(R.string.marker_location) + ":\n" + getString(R.string.latitude) + ": " +
+                        Double.toString(Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0) + "\n"
                         + getString(R.string.longitude) + ": " + Double.toString(Math.round(chosenLocationMarker.getPosition().getLongitude() * 10000) / 10000.0);
 
                 mapController.setCenter(chosenLocationMarker.getPosition());
@@ -199,8 +199,8 @@ public class ChooseLocationActivity extends MenuInterfaceActivity {
                 chosenLocationMarker.setPosition(new GeoPoint(temp_latitude, temp_longitude));
 
                 mapController.setCenter(chosenLocationMarker.getPosition());
-                String formattedLocation = getString(R.string.marker_location) + ": " + getString(R.string.latitude) + ": " +
-                        Double.toString(Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0) + " "
+                String formattedLocation = getString(R.string.marker_location) + ":\n" + getString(R.string.latitude) + ": " +
+                        Double.toString(Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0) + "\n"
                         + getString(R.string.longitude) + ": " + Double.toString(Math.round(chosenLocationMarker.getPosition().getLongitude() * 10000) / 10000.0);
 
                 markerView.setText(formattedLocation);

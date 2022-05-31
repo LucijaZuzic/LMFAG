@@ -6,6 +6,16 @@ import androidx.annotation.NonNull;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.lmfag.R;
+import com.example.lmfag.fragments.MyProfileAreasOfInterestFragment;
+import com.example.lmfag.fragments.MyProfileEventsOrganizerFragment;
+import com.example.lmfag.fragments.MyProfileEventsPlayerFragment;
+import com.example.lmfag.fragments.MyProfileFriendsFragment;
+import com.example.lmfag.fragments.MyProfileInfoFragment;
+import com.example.lmfag.fragments.ViewProfileAreasOfInterestFragment;
+import com.example.lmfag.fragments.ViewProfileEventsOrganizerFragment;
+import com.example.lmfag.fragments.ViewProfileEventsPlayerFragment;
+import com.example.lmfag.fragments.ViewProfileFriendsFragment;
+import com.example.lmfag.fragments.ViewProfileInfoFragment;
 import com.example.lmfag.utility.DrawerHelper;
 import com.example.lmfag.utility.adapters.TabPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
@@ -20,12 +30,13 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_profile);
 
-        DrawerHelper.fillNavbarData(this);
         fillPager();
     }
 
     private void fillPager() {
-        tabPagerAdapterViewProfile = new TabPagerAdapter(this);
+        tabPagerAdapterViewProfile = new TabPagerAdapter(this,
+                new ViewProfileInfoFragment(), new ViewProfileFriendsFragment(), new ViewProfileAreasOfInterestFragment(),
+                new ViewProfileEventsOrganizerFragment(), new ViewProfileEventsPlayerFragment());
         viewPager = findViewById(R.id.pager);
         viewPager.setAdapter(tabPagerAdapterViewProfile);
 

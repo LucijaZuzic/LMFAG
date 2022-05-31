@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.lmfag.R;
+import com.example.lmfag.utility.DrawerHelper;
 import com.example.lmfag.utility.adapters.CustomAdapterEvent;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -49,6 +50,7 @@ public class MyProfileEventsPlayerFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        DrawerHelper.fillNavbarData(activity);
         TextView title = view.findViewById(R.id.list_title);
         title.setText("My playing events");
 

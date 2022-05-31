@@ -26,7 +26,6 @@ public class MyProfileActivity extends MenuInterfaceActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
 
-        DrawerHelper.fillNavbarData(this);
         preferences = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
         int x = preferences.getInt("selectedTab", 0);
         fillPager(x);

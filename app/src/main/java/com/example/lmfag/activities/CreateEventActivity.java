@@ -2,12 +2,14 @@ package com.example.lmfag.activities;
 
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
@@ -238,11 +240,9 @@ public class CreateEventActivity extends MenuInterfaceActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-
         latitude = preferences.getFloat("newEventLatitude", (float) latitude);
         longitude = preferences.getFloat("newEventLongitude", (float) longitude);
-        String formattedLocation = getString(R.string.location) + ": " + getString(R.string.latitude) + ": " + Double.toString(Math.round(latitude * 10000) / 10000.0) + " "
+        String formattedLocation = getString(R.string.location) + "\n" + getString(R.string.latitude) + ": " + Double.toString(Math.round(latitude * 10000) / 10000.0) + "\n"
                 + getString(R.string.longitude) + ": " + Double.toString(Math.round(longitude * 10000) / 10000.0);
 
         location.setText(formattedLocation);
@@ -316,10 +316,10 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                         cldr_end.set(year_end, month_end, day_end, hours_end, minutes_end);
                         textViewChooseEndTime.setText(DateFormat.getTimeInstance().format(cldr_end.getTime()));
                         if (cldr_end.getTime().before(Calendar.getInstance().getTime())) {
-                            Snackbar.make(imageViewChooseEndDate, "Event can't end in the past.", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(imageViewChooseEndDate, R.string.end_in_past, Snackbar.LENGTH_SHORT).show();
                         }
                         if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
-                            Snackbar.make(imageViewChooseStartTime, "Event can't end before beginning.", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(imageViewChooseStartTime, R.string.end_before_begin, Snackbar.LENGTH_SHORT).show();
                         }
                     }, hours_end, minutes_end, true);
             picker.show();
@@ -483,7 +483,45 @@ public class CreateEventActivity extends MenuInterfaceActivity {
     }
 
     void deleteEvent(String docid) {
-        db.collection("events").document(docid).delete();
+
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+
+
+                        db.collection("events").document(docid).delete();
+                        db.collection("event_attending").whereEqualTo("event", docid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    if (task.getResult().size() > 0) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            db.collection("event_attending").document(document.getId()).delete();
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putInt("selectedTab", 3);
+                        editor.apply();
+                        Intent myIntent = new Intent(context, MyProfileActivity.class);
+                        context.startActivity(myIntent);
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(R.string.delete_event).setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+
+        /*db.collection("events").document(docid).delete();
         db.collection("event_attending").whereEqualTo("event", docid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -501,11 +539,10 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         editor.putString("eventID", "");
         editor.apply();
         Intent myIntent = new Intent(context, MyProfileActivity.class);
-        context.startActivity(myIntent);
+        context.startActivity(myIntent);*/
     }
 
     void fillData() {
-
 
         String eventID = preferences.getString("eventID", "");
         ImageView imageViewDelete = findViewById(R.id.imageViewDelete);
@@ -517,11 +554,6 @@ public class CreateEventActivity extends MenuInterfaceActivity {
             imageViewDelete.setOnClickListener(view -> {
                 deleteEvent(eventID);
             });
-            if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime())) {
-                Snackbar.make(sp, "Can't edit an event that finished.", Snackbar.LENGTH_SHORT).show();
-                onBackPressed();
-            } else {
-
                 DocumentReference docRef = db.collection("events").document(eventID);
                 docRef.get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -554,11 +586,16 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                             textViewChooseEndDate.setText(DateFormat.getDateInstance().format(cldr_end.getTime()));
                             textViewChooseEndTime.setText(DateFormat.getTimeInstance().format(cldr_end.getTime()));
 
+                            if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime())) {
+                                Snackbar.make(sp, R.string.cant_edit_finished, Snackbar.LENGTH_SHORT).show();
+                                onBackPressed();
+                            }
+
                             GeoPoint location_point = (GeoPoint) (docData.get("location"));
                             latitude = location_point.getLatitude();
                             longitude = location_point.getLongitude();
 
-                            String formattedLocation = getString(R.string.location) + ": " + getString(R.string.latitude) + ": " + Double.toString(Math.round(latitude * 10000) / 10000.0) + " "
+                            String formattedLocation = getString(R.string.location) + "\n" + getString(R.string.latitude) + ": " + Double.toString(Math.round(latitude * 10000) / 10000.0) + "\n"
                                     + getString(R.string.longitude) + ": " + Double.toString(Math.round(longitude * 10000) / 10000.0);
                             location.setText(formattedLocation);
                             chosenLocationMarker.setPosition(new org.osmdroid.util.GeoPoint(latitude, longitude));
@@ -593,5 +630,4 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                 });
             }
         }
-    }
 }

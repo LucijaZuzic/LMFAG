@@ -106,37 +106,41 @@ public class DrawerHelper {
                     Map<String, Object> data = document.getData();
 
                     TextView myUsername = context.findViewById(R.id.textViewUsername_nav);
-                    myUsername.setText(data.get("username").toString());
+                    if (myUsername != null) {
+                        myUsername.setText(data.get("username").toString());
+                    }
 
-
-                    CardView backProfile = context.findViewById(R.id.goBackToProfile);
-                    backProfile.setOnClickListener(view -> {
-                        Intent myIntent = new Intent(context, MyProfileActivity.class);
+                        CardView backProfile = context.findViewById(R.id.goBackToProfile);
+                    if (backProfile != null) {
+                        backProfile.setOnClickListener(view -> {
+                            Intent myIntent = new Intent(context, MyProfileActivity.class);
+                            context.startActivity(myIntent);
+                            return;
+                        });
+                    }
+                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                        StorageReference storageRef = storage.getReference();
+                        StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
+                        final long ONE_MEGABYTE = 1024 * 1024;
+                        imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+                            // Data for "images/island.jpg" is returns, use this as needed
+                            CircleImageView circleImageView = context.findViewById(R.id.profile_image_nav);
+                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+                            if (circleImageView != null) {
+                                circleImageView.setImageBitmap(bmp);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle any errors
+                            }
+                        });
+                        //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    } else {
+                        Intent myIntent = new Intent(context, MainActivity.class);
                         context.startActivity(myIntent);
-                        return;
-                    });
-
-                    FirebaseStorage storage = FirebaseStorage.getInstance();
-                    StorageReference storageRef = storage.getReference();
-                    StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
-                    final long ONE_MEGABYTE = 1024 * 1024;
-                    imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                        // Data for "images/island.jpg" is returns, use this as needed
-                        CircleImageView circleImageView = context.findViewById(R.id.profile_image_nav);
-                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-                        circleImageView.setImageBitmap(bmp);
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Handle any errors
-                        }
-                    });
-                    //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                } else {
-                    Intent myIntent = new Intent(context, MainActivity.class);
-                    context.startActivity(myIntent);
-                    //Log.d(TAG, "No such document");
-                }
+                        //Log.d(TAG, "No such document");
+                    }
             } else {
                 //Log.d(TAG, "get failed with ", task.getException());
             }

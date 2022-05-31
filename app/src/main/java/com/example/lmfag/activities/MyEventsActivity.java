@@ -21,7 +21,6 @@ public class MyEventsActivity extends MenuInterfaceActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_events);
 
-        DrawerHelper.fillNavbarData(this);
         fillPager();
     }
 

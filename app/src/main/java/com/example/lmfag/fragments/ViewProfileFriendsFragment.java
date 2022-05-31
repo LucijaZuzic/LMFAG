@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
+import com.example.lmfag.utility.DrawerHelper;
 import com.example.lmfag.utility.adapters.CustomAdapterFriends;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -46,6 +47,7 @@ public class ViewProfileFriendsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        DrawerHelper.fillNavbarData(activity);
         fillUserData(view);
 
         TextView title = view.findViewById(R.id.list_title);

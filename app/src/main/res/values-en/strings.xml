@@ -203,4 +203,11 @@
     <string name="rate_before_end">Event can\'t be rated before it ends</string>
     <string name="password_success_change">Password successfully changed.</string>
     <string name="username_success_change">Username successfully changed.</string>
+    <string name="end_in_past">Event can\'t end in the past.</string>
+    <string name="end_before_begin">Event can\'t end before beginning.</string>
+    <string name="edit_finished">Can\'t edit an event that finished.</string>
+    <string name="msg_subscribed">Successfully subscribed to topic.</string>
+    <string name="msg_subscribe_failed">Subscribe to topic failed.</string>
+    <string name="cant_edit_finished">" Can't edit an event that finished."</string>
+    <string name="delete_event">Are you sure you want to delete your event?</string>
 </resources>

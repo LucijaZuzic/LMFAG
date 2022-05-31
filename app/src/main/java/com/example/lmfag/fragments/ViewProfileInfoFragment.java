@@ -23,6 +23,7 @@ import com.example.lmfag.R;
 import com.example.lmfag.activities.MainActivity;
 import com.example.lmfag.activities.ViewMessagesActivity;
 import com.example.lmfag.activities.ViewProfileActivity;
+import com.example.lmfag.utility.DrawerHelper;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
@@ -61,6 +62,7 @@ public class ViewProfileInfoFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        DrawerHelper.fillNavbarData(activity);
         fillUserData(view);
         message = view.findViewById(R.id.imageViewMyMesages);
         friendRequest = view.findViewById(R.id.imageViewSendFriendRequest);

@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
 import com.example.lmfag.activities.MainActivity;
+import com.example.lmfag.utility.DrawerHelper;
 import com.example.lmfag.utility.adapters.CustomAdapterAreaOfInterest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -49,6 +50,7 @@ public class MyProfileAreasOfInterestFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        DrawerHelper.fillNavbarData(activity);
         TextView title = view.findViewById(R.id.list_title);
         title.setText("My areas of interest");
         fillUserData(view);

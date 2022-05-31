@@ -68,7 +68,8 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
             docData.put("messages", editTextMessage.getText().toString());
             docData.put("timestamp", Timestamp.now());
             db.collection("messages").add(docData);
-            refresh();
+            getFriendData();
+            getAllMessages();
         });
     }
     @Override
@@ -78,12 +79,7 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
         getAllMessages();
     }
 
-    public void refresh() {
-        Intent myIntent = new Intent(context, ViewMessagesActivity.class);
-        context.startActivity(myIntent);
-    }
-
-    private void getFriendData( ) {
+    public void getFriendData( ) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String name = preferences.getString("friendID", "");
@@ -131,7 +127,7 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
         });
     }
 
-    private void getAllMessages() {
+    public void getAllMessages() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         List<String> messages = new ArrayList<>();
         List<String> times = new ArrayList<>();
@@ -170,6 +166,7 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
                                 times.add(DateFormat.getDateTimeInstance().format(cldr_start.getTime()));
                                 sender.add(map.get("sender").toString());
                                 ids.add(document.getId());
+
                             }
                         }
                     }
@@ -177,9 +174,112 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
                     Collections.reverse(times);
                     Collections.reverse(sender);
                     Collections.reverse(ids);
-                    CustomAdapterMessages customAdapter = new CustomAdapterMessages(messages, times, sender, ids, me, context);
-                    recyclerViewMessages.setAdapter(customAdapter);
-                    recyclerViewMessages.scrollToPosition(customAdapter.getItemCount() - 1);
+                    final Bitmap[] myImage = new Bitmap[1];
+                    final Bitmap[] otherImage = new Bitmap[1];
+                    final String[] myUsername = new String[1];
+                    final String[] otherUsername = new String[1];
+                    String otherUser = "";
+                    for (String senderOther: sender) {
+                        if (!senderOther.equals(me)) {
+                            otherUser = senderOther;
+                            break;
+                        }
+                    }
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    DocumentReference docRef = db.collection("users").document(me);
+                    String finalOtherUser = otherUser;
+                    docRef.get().addOnCompleteListener(taskUser -> {
+                        if (taskUser.isSuccessful()) {
+                            DocumentSnapshot document = taskUser.getResult();
+                            if (document.exists()) {
+                                Map<String, Object> data = document.getData();
+                                myUsername[0] = data.get("username").toString();
+                                FirebaseStorage storage = FirebaseStorage.getInstance();
+                                StorageReference storageRef = storage.getReference();
+                                StorageReference imagesRef = storageRef.child("profile_pictures/" + document.getId());
+                                final long ONE_MEGABYTE = 1024 * 1024;
+                                imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+                                    // Data for "images/island.jpg" is returns, use this as needed
+                                    Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                    myImage[0] = bmp;
+                                    DocumentReference docRefOther = db.collection("users").document(finalOtherUser);
+                                    docRefOther.get().addOnCompleteListener(taskNew -> {
+                                        if (taskNew.isSuccessful()) {
+                                            DocumentSnapshot documentNew = taskNew.getResult();
+                                            if (documentNew.exists()) {
+                                                Map<String, Object> dataNew = documentNew.getData();
+                                                otherUsername[0] = dataNew.get("username").toString();
+                                                StorageReference imagesRefNew = storageRef.child("profile_pictures/" + documentNew.getId());
+                                                imagesRefNew.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytesNew -> {
+                                                    // Data for "images/island.jpg" is returns, use this as needed
+                                                    Bitmap bmpNew = BitmapFactory.decodeByteArray(bytesNew, 0, bytesNew.length);
+                                                    otherImage[0] = bmpNew;
+                                                    CustomAdapterMessages customAdapter = new CustomAdapterMessages(messages, times, sender, ids, me, context, myUsername[0], otherUsername[0], myImage[0], otherImage[0]);
+                                                    recyclerViewMessages.setAdapter(customAdapter);
+                                                    recyclerViewMessages.scrollToPosition(customAdapter.getItemCount() - 1);
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception exception) {
+                                                        // Handle any errors
+                                                        CustomAdapterMessages customAdapter = new CustomAdapterMessages(messages, times, sender, ids, me, context, myUsername[0], otherUsername[0], myImage[0], otherImage[0]);
+                                                        recyclerViewMessages.setAdapter(customAdapter);
+                                                        recyclerViewMessages.scrollToPosition(customAdapter.getItemCount() - 1);
+                                                    }
+                                                });
+                                                //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                                            } else {
+
+                                            }
+                                        } else {
+                                            //Log.d(TAG, "get failed with ", task.getException());
+                                        }
+                                    });
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        // Data for "images/island.jpg" is returns, use this as needed
+                                        DocumentReference docRefOther = db.collection("users").document(finalOtherUser);
+                                        docRefOther.get().addOnCompleteListener(taskNew -> {
+                                            if (taskNew.isSuccessful()) {
+                                                DocumentSnapshot documentNew = taskNew.getResult();
+                                                if (documentNew.exists()) {
+                                                    Map<String, Object> dataNew = documentNew.getData();
+                                                    otherUsername[0] = dataNew.get("username").toString();
+                                                    StorageReference imagesRefNew = storageRef.child("profile_pictures/" + documentNew.getId());
+                                                    imagesRefNew.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytesNew -> {
+                                                        // Data for "images/island.jpg" is returns, use this as needed
+                                                        Bitmap bmpNew = BitmapFactory.decodeByteArray(bytesNew, 0, bytesNew.length);
+                                                        otherImage[0] = bmpNew;
+                                                        CustomAdapterMessages customAdapter = new CustomAdapterMessages(messages, times, sender, ids, me, context, myUsername[0], otherUsername[0], myImage[0], otherImage[0]);
+                                                        recyclerViewMessages.setAdapter(customAdapter);
+                                                        recyclerViewMessages.scrollToPosition(customAdapter.getItemCount() - 1);
+                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception exception) {
+                                                            // Handle any errors
+                                                            CustomAdapterMessages customAdapter = new CustomAdapterMessages(messages, times, sender, ids, me, context, myUsername[0], otherUsername[0], myImage[0], otherImage[0]);
+                                                            recyclerViewMessages.setAdapter(customAdapter);
+                                                            recyclerViewMessages.scrollToPosition(customAdapter.getItemCount() - 1);
+                                                        }
+                                                    });
+                                                    //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                                                } else {
+
+                                                }
+                                            } else {
+                                                //Log.d(TAG, "get failed with ", task.getException());
+                                            }
+                                        });
+                                    }
+                                });
+                                //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                            } else {
+
+                            }
+                        } else {
+                            //Log.d(TAG, "get failed with ", task.getException());
+                        }
+                    });
 
                 } else {
                     Object ngs = task.getException();
