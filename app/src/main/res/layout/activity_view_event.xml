@@ -2,6 +2,7 @@
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.ViewEventActivity"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,9 +18,7 @@
             android:id="@+id/textViewEventName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
+            android:layout_margin="10dp"
             android:drawableStart="@drawable/ic_baseline_calendar_today_24"
             android:drawableTint="@color/teal_700"
             android:fontFamily="sans-serif-condensed-light"
@@ -45,44 +44,25 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="10dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_weight="0.75"
-            android:elevation="10dp"
-            tools:context=".activities.ViewEventActivity">
+            android:elevation="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textViewEventType"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-
-                    android:drawableStart="@drawable/ic_baseline_interests_24"
-                    android:drawableTint="@color/teal_700"
-                    android:fontFamily="sans-serif-condensed-light"
-                    android:gravity="center"
-                    android:hint="@string/event_type"
-                    android:minHeight="48dp"
-                    android:padding="5dp"
-                    android:textSize="21sp"
-                    android:textStyle="bold"
-                    app:drawableTint="@color/teal_700" />
-
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
                     android:layout_marginStart="10dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="30dp"
                     android:layout_marginEnd="10dp"
                     android:gravity="center"
-                    app:cardBackgroundColor="@color/dark_teal_700"
                     app:cardCornerRadius="10dp"
                     app:cardElevation="10dp"
                     app:contentPadding="10dp">
@@ -95,6 +75,7 @@
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/profile_image"
+                            app:civ_circle_background_color="@color/teal_700"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="0.3"
@@ -114,6 +95,23 @@
                             android:textStyle="bold" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/textViewEventType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:drawableStart="@drawable/ic_baseline_interests_24"
+                    android:drawableTint="@color/teal_700"
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:gravity="center"
+                    android:hint="@string/event_type"
+                    android:minHeight="48dp"
+                    android:padding="5dp"
+                    android:textSize="21sp"
+                    android:textStyle="bold"
+                    app:drawableTint="@color/teal_700" />
 
                 <TextView
                     android:id="@+id/textViewPublic"
@@ -156,7 +154,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="30dp"
                     android:layout_marginEnd="10dp"
-                    android:background="@drawable/bottom_border"
+                    android:layout_marginBottom="10dp"
                     android:fontFamily="sans-serif-condensed-light"
                     android:gravity="start"
                     android:padding="5dp"
@@ -184,10 +182,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
+                    android:layout_marginBottom="10dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="30dp"
                     android:layout_marginEnd="10dp"
-                    android:background="@drawable/bottom_border"
+
                     android:elegantTextHeight="false"
                     android:fontFamily="sans-serif-condensed-light"
                     android:gravity="start"
@@ -221,11 +220,12 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="30dp"
                     android:layout_marginEnd="10dp"
-                    android:background="@drawable/bottom_border"
+
                     android:fontFamily="sans-serif-condensed-light"
                     android:gravity="start"
                     android:minWidth="48dp"
                     android:minHeight="48dp"
+                    android:layout_marginBottom="10dp"
                     android:padding="10dp"
                     android:text="@string/number_of_players"
                     android:textSize="21sp"
@@ -250,10 +250,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
+                    android:layout_marginBottom="10dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="30dp"
                     android:layout_marginEnd="10dp"
-                    android:background="@drawable/bottom_border"
+
                     android:fontFamily="sans-serif-condensed-light"
                     android:gravity="start"
                     android:minWidth="48dp"
@@ -330,8 +331,8 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="30dp"
                     android:layout_marginEnd="10dp"
-                    android:background="@drawable/bottom_border"
-                    android:fontFamily="sans-serif-condensed-light"
+
+                    android:layout_marginBottom="10dp"                    android:fontFamily="sans-serif-condensed-light"
                     android:gravity="start"
                     android:minWidth="48dp"
                     android:minHeight="48dp"
@@ -407,8 +408,8 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="30dp"
                     android:layout_marginEnd="10dp"
-                    android:background="@drawable/bottom_border"
-                    android:fontFamily="sans-serif-condensed-light"
+
+                    android:layout_marginBottom="10dp"                    android:fontFamily="sans-serif-condensed-light"
                     android:gravity="start"
                     android:padding="5dp"
                     android:text="@string/location"
@@ -458,10 +459,20 @@
 
         </ScrollView>
 
+        <View
+            android:id="@+id/divider_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="20dp"
+            android:background="?android:attr/listDivider" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/light_grey"
             android:baselineAligned="false"
             android:gravity="center"
             android:orientation="vertical">
@@ -471,13 +482,41 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:layout_weight="0.5"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/imageViewApply"
+                    android:id="@+id/imageViewEdit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:contentDescription="@string/create_event"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:minHeight="48dp"
+                    android:padding="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/ic_baseline_edit_calendar_24"
+                    app:tint="@color/teal_700" />
+
+                <ImageView
+                    android:id="@+id/imageViewRate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
+                    android:clickable="true"
+                    android:contentDescription="@string/apply"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:minHeight="48dp"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_baseline_star_outline_24"
+                    app:tint="@color/teal_700" />
+                <ImageView
+                    android:id="@+id/imageViewApply"
+                    android:layout_marginEnd="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:clickable="true"
                     android:contentDescription="@string/apply"
                     android:focusable="true"
@@ -492,11 +531,13 @@
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switchNotifications"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
+                    android:fontFamily="sans-serif-condensed-light"
                     android:drawableStart="@drawable/ic_baseline_notifications_24"
                     android:drawableTint="@color/teal_700"
+
                     android:gravity="center"
                     android:minHeight="48dp"
                     android:padding="5dp"
@@ -511,34 +552,7 @@
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/imageViewRate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:layout_weight="0.5"
-                    android:clickable="true"
-                    android:contentDescription="@string/apply"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:minHeight="48dp"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_baseline_star_outline_24"
-                    app:tint="@color/teal_700" />
 
-                <ImageView
-                    android:id="@+id/imageViewEdit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:clickable="true"
-                    android:contentDescription="@string/create_event"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:minHeight="48dp"
-                    android:padding="10dp"
-                    android:src="@drawable/ic_baseline_edit_calendar_24"
-                    app:tint="@color/teal_700" />
 
             </LinearLayout>
 
@@ -553,7 +567,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@drawable/teal_drawable"
+        android:background="@drawable/gradient"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
         app:itemIconTint="@color/white"

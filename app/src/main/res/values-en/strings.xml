@@ -193,4 +193,14 @@
     <string name="filter_by_organizer">Organizer</string>
     <string name="expand_subscriber">Expand subscriber</string>
     <string name="subscriber">Subscriber</string>
+    <string name="change_username">Change username</string>
+    <string name="display_map">Display map</string>
+    <string name="update_notify">Successfully updated notification preferences</string>
+    <string name="not_friend_organizer">You need to be friends with the organizer to participate in a private event.</string>
+    <string name="not_enough">Not enough participants.</string>
+    <string name="rate_twice">You can\'t rate an event twice.</string>
+    <string name="not_participate_rate">You can\'t rate an event if you don\'t participate or organize.</string>
+    <string name="rate_before_end">Event can\'t be rated before it ends</string>
+    <string name="password_success_change">Password successfully changed.</string>
+    <string name="username_success_change">Username successfully changed.</string>
 </resources>

@@ -35,9 +35,8 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
         private final TextView textViewAreaOfInterest;
         private final TextView textViewLevel;
         private final TextView textViewLevelPoints;
-        //private final ImageView floatingActionButtonRemoveAreaOfInterest;
-        private final CardView removableAreaOfInterest;
-        private final ProgressBar progressBar;
+        private final CardView cardAreaOfInterest;
+        private final ProgressBar determinateBar;
 
         public ViewHolder(View view) {
             super(view);
@@ -46,9 +45,8 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
             textViewAreaOfInterest = (TextView) view.findViewById(R.id.textViewAreaOfInterest);
             textViewLevel = (TextView) view.findViewById(R.id.textViewLevel);
             textViewLevelPoints = (TextView) view.findViewById(R.id.textViewLevelPoints);
-            // = (ImageView) view.findViewById(R.id.imageViewRemoveAreaOfInterest);
-            progressBar = (ProgressBar) view.findViewById(R.id.determinateBar);
-            removableAreaOfInterest = (CardView) view.findViewById(R.id.removableAreaOfInterest);
+            determinateBar = (ProgressBar) view.findViewById(R.id.determinateBar);
+            cardAreaOfInterest = (CardView) view.findViewById(R.id.cardAreaOfInterest);
         }
 
         public TextView getTextViewAreaOfInterest() {
@@ -60,11 +58,10 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
         public TextView getTextViewLevelPoints() {
             return textViewLevelPoints;
         }
-        //public ImageView getFloatingActionButtonRemoveAreaOfInterest() { return floatingActionButtonRemoveAreaOfInterest; }
-        public ProgressBar getProgressBar() {
-            return progressBar;
+        public ProgressBar getDeterminateBar() {
+            return determinateBar;
         }
-        public CardView getRemovableAreaOfInterest() { return removableAreaOfInterest; }
+        public CardView getCardAreaOfInterest() { return cardAreaOfInterest; }
     }
 
     public CustomAdapterAreaOfInterestRemove(List<String> areasOfInterest, List<Double> levelPoints, EditProfileActivity editProfileActivity) {
@@ -83,7 +80,7 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.area_of_interest_remove_list_item, viewGroup, false);
+                .inflate(R.layout.area_of_interest_list_item, viewGroup, false);
 
         return new ViewHolder(view);
     }
@@ -103,76 +100,69 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
             upper_bound = 1000.0;
         }
         String text_level_points = localLevelPoints.get(position).toString() + "/" + upper_bound;
-        viewHolder.getProgressBar().setProgress((int)((localLevelPoints.get(position) - (upper_bound - 1000)) / 10));
+        viewHolder.getDeterminateBar().setProgress((int)((localLevelPoints.get(position) - (upper_bound - 1000)) / 10));
         viewHolder.getTextViewLevel().setText(text_level);
         viewHolder.getTextViewLevelPoints().setText(text_level_points);
         String text = localAreasOfInterest.get(position);
-        /*viewHolder.getFloatingActionButtonRemoveAreaOfInterest().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (editProfileActivity != null) {
-                    editProfileActivity.removeAreaOfInterest(text);
-                }
-                if (createProfileActivity != null) {
-                    createProfileActivity.removeAreaOfInterest(text);
-                }
-            }
-        });*/
         Context ctx1 = editProfileActivity;
         Context ctx2 = createProfileActivity;
         Context ctx = ctx1;
         if (ctx == null) {
             ctx = ctx2;
        }
-        /*viewHolder.getRemovableAreaOfInterest().setOnTouchListener(new MySwipe(ctx) {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        if (editProfileActivity != null) {
+                            editProfileActivity.removeAreaOfInterest(text);
+                        }
+                        if (createProfileActivity != null) {
+                            createProfileActivity.removeAreaOfInterest(text);
+                        }
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
+        viewHolder.getCardAreaOfInterest().setOnTouchListener(new MySwipe(ctx) {
             public void onSwipeTop() {
 
             }
             public void onSwipeRight() {
                 if (editProfileActivity != null) {
-                    editProfileActivity.removeAreaOfInterest(text);
+                    builder.setMessage("Are you sure you want to delete your area of interest " + text + "?").setPositiveButton("Yes", dialogClickListener)
+                            .setNegativeButton("No", dialogClickListener).show();
                 }
                 if (createProfileActivity != null) {
-                    createProfileActivity.removeAreaOfInterest(text);
+                    builder.setMessage("Are you sure you want to delete your area of interest " + text + "?").setPositiveButton("Yes", dialogClickListener)
+                            .setNegativeButton("No", dialogClickListener).show();
                 }
             }
             public void onSwipeLeft() {
                 if (editProfileActivity != null) {
-                    editProfileActivity.removeAreaOfInterest(text);
+                    builder.setMessage("Are you sure you want to delete your area of interest " + text + "?").setPositiveButton("Yes", dialogClickListener)
+                            .setNegativeButton("No", dialogClickListener).show();
                 }
                 if (createProfileActivity != null) {
-                    createProfileActivity.removeAreaOfInterest(text);
+                    builder.setMessage("Are you sure you want to delete your area of interest " + text + "?").setPositiveButton("Yes", dialogClickListener)
+                            .setNegativeButton("No", dialogClickListener).show();
                 }
             }
             public void onSwipeBottom() {
 
             }
 
-        });*/
+        });
 
-        Context finalCtx = ctx;
-        viewHolder.getRemovableAreaOfInterest().setOnLongClickListener(view -> {
-            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which){
-                        case DialogInterface.BUTTON_POSITIVE:
-                            if (editProfileActivity != null) {
-                                editProfileActivity.removeAreaOfInterest(text);
-                            }
-                            if (createProfileActivity != null) {
-                                createProfileActivity.removeAreaOfInterest(text);
-                            }
-                            break;
+        viewHolder.getCardAreaOfInterest().setOnLongClickListener(view -> {
 
-                        case DialogInterface.BUTTON_NEGATIVE:
-                            //No button clicked
-                            break;
-                    }
-                }
-            };
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(finalCtx);
             builder.setMessage("Are you sure you want to delete your area of interest " + text + "?").setPositiveButton("Yes", dialogClickListener)
                     .setNegativeButton("No", dialogClickListener).show();
 

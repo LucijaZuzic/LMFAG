@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
@@ -32,6 +33,7 @@ import com.example.lmfag.R;
 import com.example.lmfag.utility.SecureHash;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -51,12 +53,11 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class CreateProfileActivity extends MenuInterfaceActivity {
+public class CreateProfileActivity extends AppCompatActivity {
 
     private TextView myUsername;
     private TextView myLocation;
     private TextView myDescription;
-    private ImageView apply, discard;
     private EditText passwordEdit;
 
     private FirebaseFirestore db;
@@ -70,6 +71,10 @@ public class CreateProfileActivity extends MenuInterfaceActivity {
     private List<Double> points_array = new ArrayList<>();
     private Uri uri;
 
+    private ImageView apply, discard, closeCard;
+    private FloatingActionButton openCard;
+
+    private LinearLayout openableCard;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,16 +94,23 @@ public class CreateProfileActivity extends MenuInterfaceActivity {
         myLocation = findViewById(R.id.editTextMyLocation);
         myDescription = findViewById(R.id.editTextMyDescription);
         passwordEdit = findViewById(R.id.editTextPassword);
-        apply = findViewById(R.id.imageViewApply);
         discard = findViewById(R.id.imageViewDiscard);
-        DrawerHelper.fillNavbarData(this);
+        apply = findViewById(R.id.imageViewApply);
+        openCard = findViewById(R.id.floatingActionButtonAddAreaOfInterest);
+        closeCard = findViewById(R.id.closeCard);
+        openableCard = findViewById(R.id.openableCard);
+        openCard.setOnClickListener(view -> {
+            openableCard.setVisibility(View.VISIBLE);
+        });
+        closeCard.setOnClickListener(view -> {
+            openableCard.setVisibility(View.GONE);
+        });
         createProfile();
         getBack();
-        showAreasOfInterest();
         changeProfilePicture();
     }
 
-    void changeProfilePicture() {
+    private void changeProfilePicture() {
         CircleImageView circleImageView = findViewById(R.id.profile_image);
         ActivityResultLauncher<Intent> photoPicker = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -123,39 +135,15 @@ public class CreateProfileActivity extends MenuInterfaceActivity {
         });
     }
 
-    void showAreasOfInterest() {
-        LinearLayout ll_areas_show = findViewById(R.id.linearLayoutShowAreasOfInterest);
-        RecyclerView ll_areas = findViewById(R.id.recyclerViewAreasOfInterest);
-        ImageView iv_areas = findViewById(R.id.imageViewExpandAreasOfInterest);
-        ll_areas_show.setOnClickListener(view -> {
-            if (ll_areas.getVisibility() == View.GONE) {
-                ll_areas.setVisibility(View.VISIBLE);
-                iv_areas.setImageResource(R.drawable.ic_baseline_expand_less_24);
-            } else {
-                ll_areas.setVisibility(View.GONE);
-                iv_areas.setImageResource(R.drawable.ic_baseline_expand_more_24);
-            }
-        });
-
-        LinearLayout ll_areas_show_new = findViewById(R.id.linearLayoutShowAreasOfInterestNew);
-        RecyclerView ll_areas_new = findViewById(R.id.recyclerViewAreasOfInterestNew);
-        ImageView iv_areas_new = findViewById(R.id.imageViewExpandAreasOfInterestNew);
-        ll_areas_show_new.setOnClickListener(view -> {
-            if (ll_areas_new.getVisibility() == View.GONE) {
-                ll_areas_new.setVisibility(View.VISIBLE);
-                iv_areas_new.setImageResource(R.drawable.ic_baseline_expand_less_24);
-            } else {
-                ll_areas_new.setVisibility(View.GONE);
-                iv_areas_new.setImageResource(R.drawable.ic_baseline_expand_more_24);
-            }
-        });
-    }
-
     public void addAreaOfInterest(String text) {
         if (!areas_array.contains(text)) {
             areas_array.add(text);
             points_array.add(0.0);
-            areas_not_present_array.remove(text);
+
+            areas_not_present_array = new ArrayList(Arrays.asList(getResources().getStringArray(R.array.event_types)));
+            for (String newArea: areas_array) {
+                areas_not_present_array.remove(newArea);
+            }
             java.util.Collections.sort(areas_not_present_array);
 
             RecyclerView recyclerViewAreasOfInterest = findViewById(R.id.recyclerViewAreasOfInterest);
@@ -171,10 +159,14 @@ public class CreateProfileActivity extends MenuInterfaceActivity {
     }
 
     public void removeAreaOfInterest(String text) {
-        if (areas_array.contains(text) && areas_array.contains(text)) {
+        if (areas_array.contains(text)) {
             points_array.remove(areas_array.indexOf(text));
-            areas_array.remove(text);
-            areas_not_present_array.add(text);
+            areas_array.remove(areas_array.indexOf(text));
+
+            areas_not_present_array = new ArrayList(Arrays.asList(getResources().getStringArray(R.array.event_types)));
+            for (String newArea: areas_array) {
+                areas_not_present_array.remove(newArea);
+            }
             java.util.Collections.sort(areas_not_present_array);
 
             RecyclerView recyclerViewAreasOfInterest = findViewById(R.id.recyclerViewAreasOfInterest);
@@ -189,7 +181,7 @@ public class CreateProfileActivity extends MenuInterfaceActivity {
         }
     }
 
-    void getBack() {
+    private void getBack() {
         discard.setOnClickListener(view -> {
             if (blocked) {
                 Snackbar.make(discard, R.string.go_back_upload, Snackbar.LENGTH_SHORT).show();
@@ -277,5 +269,4 @@ public class CreateProfileActivity extends MenuInterfaceActivity {
             });
         });
     }
-
 }

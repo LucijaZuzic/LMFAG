@@ -2,6 +2,7 @@
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.RateEventActivity"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -33,15 +34,17 @@
             android:layout_height="5dp"
             android:layout_gravity="center"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="20dp"
             android:background="?android:attr/listDivider" />
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.75"
-            tools:context=".activities.RateEventActivity">
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_weight="0.75">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -72,13 +75,9 @@
 
                     <androidx.cardview.widget.CardView
                         app:cardElevation="10dp"
-                        app:cardBackgroundColor="@color/dark_teal_700"
                         app:cardCornerRadius="10dp"
                         app:contentPadding="10dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_margin="20dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <LinearLayout
@@ -92,6 +91,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_marginEnd="10dp"
                                 android:layout_weight="0.3"
+                                app:civ_circle_background_color="@color/teal_700"
                                 android:src="@drawable/ic_baseline_profile_picture_24" />
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -107,7 +107,7 @@
                                     android:fontFamily="sans-serif-condensed-light"
                                     android:layout_marginBottom="10dp"
                                     android:gravity="center"
-                                    android:text="@string/username"
+                                    android:hint="@string/username"
                                     android:padding="5dp"
                                     android:textSize="21sp"
                                     android:textStyle="bold" />
@@ -117,8 +117,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:contentDescription="@string/rating_bar"
-                                    android:progressBackgroundTint="#CFD8DC"
-                                    android:progressTint="@color/teal_200"
+                                    android:progressTint="@color/teal_700"
                                     android:rating="2" />
 
                             </LinearLayout>
@@ -131,8 +130,9 @@
                     android:id="@+id/textViewUsers"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginTop="30dp"
                     android:drawableTint="@color/teal_700"
                     android:fontFamily="sans-serif-condensed-light"
                     android:gravity="center"

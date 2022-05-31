@@ -13,12 +13,15 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.lmfag.R;
 import com.example.lmfag.utility.adapters.CustomAdapterEvent;
 import com.example.lmfag.utility.DrawerHelper;
 import com.example.lmfag.utility.EventTypeToDrawable;
+import com.example.lmfag.utility.adapters.CustomAdapterEventTypeAdd;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -27,6 +30,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class FindEventsActivity extends MenuInterfaceActivity {
@@ -35,9 +39,13 @@ public class FindEventsActivity extends MenuInterfaceActivity {
     private SharedPreferences preferences;
     private Spinner search_params;
     private Spinner sort_params;
-    private Spinner sp;
-    private CardView nameCard, organizerCard, typeCard;
+    //private Spinner sp;
+    TextView sp;
+    private LinearLayout nameCard, organizerCard, typeCard;
     private String selected_item;
+    List<String> all_areas;
+    private LinearLayout openableCard;
+    private ImageView closeCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +59,21 @@ public class FindEventsActivity extends MenuInterfaceActivity {
         organizerCard = findViewById(R.id.organizerCard);
         typeCard = findViewById(R.id.typeCard);
         sp = findViewById(R.id.sp);
+        all_areas = new ArrayList(Arrays.asList(getResources().getStringArray(R.array.event_types)));
+
+        RecyclerView recyclerViewAreasOfInterestNew = findViewById(R.id.recyclerViewAreasOfInterestNew);
+        CustomAdapterEventTypeAdd customAdapterEventTypeAdd = new CustomAdapterEventTypeAdd(all_areas, this);
+        recyclerViewAreasOfInterestNew.setAdapter(customAdapterEventTypeAdd);
+
+        closeCard = findViewById(R.id.closeCard);
+        openableCard = findViewById(R.id.openableCard);
+        sp.setOnClickListener(view -> {
+            openableCard.setVisibility(View.VISIBLE);
+        });
+        closeCard.setOnClickListener(view -> {
+            openableCard.setVisibility(View.GONE);
+        });
+        /*sp = findViewById(R.id.sp);
         fillSpinner();
         sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -66,7 +89,7 @@ public class FindEventsActivity extends MenuInterfaceActivity {
             public void onNothingSelected(AdapterView<?> parentView) {
 
             }
-        });
+        });*/
         ImageView ivEventName = findViewById(R.id.imageViewBeginSearchEventName);
         ivEventName.setOnClickListener(view -> {
             getAllEventsWithName();
@@ -77,6 +100,15 @@ public class FindEventsActivity extends MenuInterfaceActivity {
         });
     }
 
+    public void selectAreaOfInterest(String selected_item) {
+        this.selected_item = selected_item;
+        sp.setText(selected_item);
+        ImageView iv = findViewById(R.id.imageViewEventType);
+        iv.setImageDrawable(getDrawable(EventTypeToDrawable.getEventTypeToDrawable(selected_item)));
+
+        openableCard.setVisibility(View.GONE);
+        getAllEventsOfType();
+    }
     public void showName(View view) {
         nameCard.setVisibility(View.VISIBLE);
         organizerCard.setVisibility(View.GONE);
@@ -94,7 +126,7 @@ public class FindEventsActivity extends MenuInterfaceActivity {
         typeCard.setVisibility(View.VISIBLE);
     }
 
-    private void fillSpinner() {
+    /*private void fillSpinner() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.event_types, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -109,9 +141,9 @@ public class FindEventsActivity extends MenuInterfaceActivity {
                 R.array.friend_sort_params, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sort_params.setAdapter(adapter);
-    }
+    }*/
 
-    private void getAllEvents() {
+    private void getAllEventsOfType() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         List<String> events_array = new ArrayList<>();
         Query q = db.collection("events");

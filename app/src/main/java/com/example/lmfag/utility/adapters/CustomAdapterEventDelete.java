@@ -42,7 +42,6 @@ public class CustomAdapterEventDelete extends RecyclerView.Adapter<CustomAdapter
      * (custom ViewHolder).
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final ImageView deleteEvent;
         private final TextView eventNameText;
         private final CardView deleteCard;
 
@@ -50,14 +49,10 @@ public class CustomAdapterEventDelete extends RecyclerView.Adapter<CustomAdapter
             super(view);
             // Define click listener for the ViewHolder's View
 
-            deleteEvent = (ImageView) view.findViewById(R.id.imageViewDeleteEvent);
-            eventNameText = (TextView) view.findViewById(R.id.textViewEventDelete);
-            deleteCard = (CardView)  view.findViewById(R.id.event_remove_list_entry);
+            eventNameText = (TextView) view.findViewById(R.id.event_list_entry_text);
+            deleteCard = (CardView)  view.findViewById(R.id.event_list_entry);
           }
 
-        public ImageView getDeleteEvent() {
-            return deleteEvent;
-        }
         public TextView getEventNameText() {
             return eventNameText;
         }
@@ -83,7 +78,7 @@ public class CustomAdapterEventDelete extends RecyclerView.Adapter<CustomAdapter
     public CustomAdapterEventDelete.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.event_remove_list_item, viewGroup, false);
+                .inflate(R.layout.event_list_item, viewGroup, false);
 
         return new CustomAdapterEventDelete.ViewHolder(view);
     }
@@ -96,33 +91,13 @@ public class CustomAdapterEventDelete extends RecyclerView.Adapter<CustomAdapter
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("events").document(localEventNames.get(position));
         String docid = localEventNames.get(position);
-        /*viewHolder.getDeleteEvent().setOnClickListener(view -> {
-            List<String> events_array = new ArrayList<>();
-            db.collection("events").document(docid).delete();
-            db.collection("event_attending").whereEqualTo("event", docid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        if (task.getResult().size() > 0) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                db.collection("event_attending").document(document.getId()).delete();
-                            }
-                        }
-                    }
-                }
-            });
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putInt("selectedTab", 3);
-            editor.apply();
-            Intent myIntent = new Intent(context, MyProfileActivity.class);
-            context.startActivity(myIntent);
-        });*/
+
         /*viewHolder.getDeleteCard().setOnTouchListener(new MySwipe(context) {
             public void onSwipeTop() {
 
             }
             public void onSwipeRight() {
-                List<String> events_array = new ArrayList<>();
+
                 db.collection("events").document(docid).delete();
                 db.collection("event_attending").whereEqualTo("event", docid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -143,7 +118,7 @@ public class CustomAdapterEventDelete extends RecyclerView.Adapter<CustomAdapter
                 context.startActivity(myIntent);
             }
             public void onSwipeLeft() {
-                List<String> events_array = new ArrayList<>();
+
                 db.collection("events").document(docid).delete();
                 db.collection("event_attending").whereEqualTo("event", docid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -175,7 +150,7 @@ public class CustomAdapterEventDelete extends RecyclerView.Adapter<CustomAdapter
                     switch (which){
                         case DialogInterface.BUTTON_POSITIVE:
 
-                            List<String> events_array = new ArrayList<>();
+
                             db.collection("events").document(docid).delete();
                             db.collection("event_attending").whereEqualTo("event", docid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override

@@ -33,16 +33,21 @@ public class CustomAdapterEvent extends RecyclerView.Adapter<CustomAdapterEvent.
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final CardView cardViewEventItem;
+        private final TextView cardViewEventText;
 
         public ViewHolder(View view) {
             super(view);
             // Define click listener for the ViewHolder's View
 
             cardViewEventItem = (CardView) view.findViewById(R.id.event_list_entry);
+            cardViewEventText = (TextView) view.findViewById(R.id.event_list_entry_text);
         }
 
         public CardView getCardView() {
             return cardViewEventItem;
+        }
+        public TextView getTextView() {
+            return cardViewEventText;
         }
     }
 
@@ -88,7 +93,7 @@ public class CustomAdapterEvent extends RecyclerView.Adapter<CustomAdapterEvent.
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
-                    TextView et = (TextView) viewHolder.getCardView().getChildAt(0);
+                    TextView et = (TextView) viewHolder.getTextView();
                     et.setText(document.get("event_name").toString());
                     et.setCompoundDrawablesWithIntrinsicBounds(EventTypeToDrawable.getEventTypeToDrawable(document.get("event_type").toString()), 0, 0, 0);
                 }

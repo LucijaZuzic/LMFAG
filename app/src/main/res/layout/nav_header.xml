@@ -19,7 +19,7 @@
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="20dp"
         android:gravity="center"
-        app:cardBackgroundColor="@color/dark_teal_700"
+        app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="10dp"
         app:cardElevation="10dp"
         app:contentPadding="10dp">
@@ -30,12 +30,15 @@
             android:weightSum="1">
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image_nav"
+            app:civ_circle_background_color="@color/teal_700"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.3"
             android:src="@drawable/ic_baseline_profile_picture_24" />
 
             <TextView
+                android:textColor="@color/teal_700"
+                android:textColorHint="@color/teal_700"
                 android:id="@+id/textViewUsername_nav"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -43,7 +46,7 @@
                 android:fontFamily="sans-serif-condensed-light"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="@string/username"
+                android:hint="@string/username"
                 android:textSize="21sp"
                 android:textStyle="bold" />
         </LinearLayout>

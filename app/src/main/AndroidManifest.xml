@@ -16,7 +16,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LMFAG">
-
+        <activity
+            android:name=".activities.ChangePasswordActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.EventsNearbyActivity"
             android:exported="false" />

@@ -202,4 +202,20 @@
     <string name="events_view_player">Events that the user participated in</string>
     <string name="events_view_subscriber">Events that the user subscribed to</string>
     <string name="notifications_only">Notifications only</string>
+    <string name="change_username">Change username</string>
+    <string name="change_password">Change password</string>
+    <string name="repeat_new_password">Repeat new password</string>
+    <string name="password_match">Passwords do not  match</string>
+    <string name="change_username_or_password">Change username or password</string>
+    <string name="new_password">New password</string>
+    <string name="edit_account">Edit account</string>
+    <string name="display_map">Display map</string>
+    <string name="update_notify">Successfully updated notification preferences</string>
+    <string name="not_friend_organizer">You need to be friends with the organizer to participate in a private event.</string>
+    <string name="not_enough">Not enough participants.</string>
+    <string name="rate_twice">You can\'t rate an event twice.</string>
+    <string name="not_participate_rate">You can\'t rate an event if you don\'t participate or organize.</string>
+    <string name="rate_before_end">Event can\'t be rated before it ends</string>
+    <string name="password_success_change">Password successfully changed.</string>
+    <string name="username_success_change">Username successfully changed.</string>
 </resources>

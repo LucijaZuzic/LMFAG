@@ -18,7 +18,6 @@
             android:layout_height="100dp"
             android:layout_margin="10dp"
             android:layout_marginTop="10dp"
-            app:cardBackgroundColor="@color/dark_teal_700"
             app:cardCornerRadius="10dp"
             app:cardElevation="10dp"
             app:contentPadding="10dp">
@@ -31,6 +30,7 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profile_image"
+                    app:civ_circle_background_color="@color/teal_700"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"

@@ -1,6 +1,7 @@
 package com.example.lmfag.activities;
 
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,6 +34,8 @@ import com.example.lmfag.utility.adapters.CustomAdapterAreaOfInterestAdd;
 import com.example.lmfag.utility.adapters.CustomAdapterEventTypeAdd;
 import com.firebase.geofire.GeoFireUtils;
 import com.firebase.geofire.GeoLocation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.slider.RangeSlider;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
@@ -42,6 +45,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
@@ -478,13 +482,41 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         }
     }
 
+    void deleteEvent(String docid) {
+        db.collection("events").document(docid).delete();
+        db.collection("event_attending").whereEqualTo("event", docid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    if (task.getResult().size() > 0) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            db.collection("event_attending").document(document.getId()).delete();
+                        }
+                    }
+                }
+            }
+        });
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("selectedTab", 3);
+        editor.putString("eventID", "");
+        editor.apply();
+        Intent myIntent = new Intent(context, MyProfileActivity.class);
+        context.startActivity(myIntent);
+    }
+
     void fillData() {
 
 
         String eventID = preferences.getString("eventID", "");
+        ImageView imageViewDelete = findViewById(R.id.imageViewDelete);
+        LinearLayout imageViewDeleteLayout = findViewById(R.id.imageViewDeleteLayout);
         if (eventID.equals("")) {
 
         } else {
+            imageViewDeleteLayout.setVisibility(View.VISIBLE);
+            imageViewDelete.setOnClickListener(view -> {
+                deleteEvent(eventID);
+            });
             if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime())) {
                 Snackbar.make(sp, "Can't edit an event that finished.", Snackbar.LENGTH_SHORT).show();
                 onBackPressed();

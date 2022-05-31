@@ -15,7 +15,8 @@
         android:layout_marginTop="20dp"
         android:fontFamily="sans-serif-condensed-light"
         android:gravity="center"
-        android:textSize="20sp" />
+        android:textSize="21sp"
+        android:textStyle="bold"  />
 
     <View
         android:id="@+id/divider"
@@ -23,9 +24,9 @@
         android:layout_height="5dp"
         android:layout_gravity="center"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="20dp"
         android:background="?android:attr/listDivider" />
 
     <androidx.recyclerview.widget.RecyclerView

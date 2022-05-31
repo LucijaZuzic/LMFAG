@@ -173,12 +173,14 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
                             }
                         }
                     }
-                    //Collections.reverse(messages);
-                    //Collections.reverse(times);
-                    //Collections.reverse(sender);
-                    //Collections.reverse(ids);
+                    Collections.reverse(messages);
+                    Collections.reverse(times);
+                    Collections.reverse(sender);
+                    Collections.reverse(ids);
                     CustomAdapterMessages customAdapter = new CustomAdapterMessages(messages, times, sender, ids, me, context);
                     recyclerViewMessages.setAdapter(customAdapter);
+                    recyclerViewMessages.scrollToPosition(customAdapter.getItemCount() - 1);
+
                 } else {
                     Object ngs = task.getException();
                     String sd = ngs.toString();

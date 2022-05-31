@@ -5,11 +5,7 @@
     android:layout_height="wrap_content"
     android:id="@+id/list_entry"
     android:gravity="center"
-    android:layout_marginStart="10dp"
-    android:layout_marginEnd="10dp"
-    android:layout_marginTop="10dp"
-    app:cardBackgroundColor="@color/dark_teal_700"
-    android:layout_marginBottom="20dp"
+    android:layout_margin="20dp"
     app:cardCornerRadius="10dp"
     app:cardElevation="10dp"
     app:contentPadding="10dp">
@@ -27,6 +23,7 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image_friend"
             android:layout_width="96dp"
+            app:civ_circle_background_color="@color/teal_700"
             android:gravity="center"
             android:layout_height="96dp"
             android:layout_marginBottom="10dp"
@@ -37,7 +34,7 @@
             android:layout_width="wrap_content"
             android:fontFamily="sans-serif-condensed-light"
             android:layout_height="wrap_content"
-            android:text="@string/username"
+            android:hint="@string/username"
             android:padding="5dp"
             android:gravity="center"
             android:textSize="21sp"
@@ -54,9 +51,7 @@
         android:gravity="center"
         android:layout_marginStart="10dp"
         android:src="@drawable/ic_baseline_check_24"
-        android:textAllCaps="true"
-        android:textColor="@color/white"
-        android:textStyle="bold" />
+        app:tint="@color/teal_700" />
 
     <ImageView
         android:id="@+id/imageViewDiscard"
@@ -68,9 +63,7 @@
         android:focusable="true"
         android:gravity="center"
         android:src="@drawable/ic_baseline_close_24"
-        android:textAllCaps="true"
-        android:textColor="@color/white"
-        android:textStyle="bold" />
+        app:tint="@color/teal_700" />
 
 
     </LinearLayout>

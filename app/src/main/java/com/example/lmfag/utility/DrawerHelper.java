@@ -14,6 +14,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.lmfag.activities.ChangePasswordActivity;
 import com.example.lmfag.activities.EditProfileActivity;
 import com.example.lmfag.activities.EventsNearbyActivity;
 import com.example.lmfag.activities.FindEventsActivity;
@@ -51,6 +52,9 @@ public class DrawerHelper {
             context.startActivity(myIntent);
         } else if (id == R.id.edit_profile) {
             Intent myIntent = new Intent(context, EditProfileActivity.class);
+            context.startActivity(myIntent);
+        } else if (id == R.id.change_password) {
+            Intent myIntent = new Intent(context, ChangePasswordActivity.class);
             context.startActivity(myIntent);
         } else if (id == R.id.find_friends) {
             Intent myIntent = new Intent(context, FindFriendsActivity.class);

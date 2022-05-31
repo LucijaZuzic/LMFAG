@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.MainActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="1"
@@ -56,8 +57,7 @@
         android:layout_weight="1.0"
         android:gravity="center"
         android:orientation="vertical"
-        android:weightSum="1"
-        tools:context=".activities.MainActivity">
+        android:weightSum="1">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"

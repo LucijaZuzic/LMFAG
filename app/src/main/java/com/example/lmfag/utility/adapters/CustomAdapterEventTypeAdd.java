@@ -14,6 +14,7 @@ import com.example.lmfag.activities.CreateEventActivity;
 import com.example.lmfag.activities.EditProfileActivity;
 import com.example.lmfag.R;
 import com.example.lmfag.activities.CreateProfileActivity;
+import com.example.lmfag.activities.FindEventsActivity;
 import com.example.lmfag.utility.EventTypeToDrawable;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class CustomAdapterEventTypeAdd extends RecyclerView.Adapter<CustomAdapte
     private List<String> localAreasOfInterest;
 
     private CreateEventActivity createEventActivity = null;
-
+    private FindEventsActivity findEventsActivity = null;
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -52,6 +53,11 @@ public class CustomAdapterEventTypeAdd extends RecyclerView.Adapter<CustomAdapte
         this.createEventActivity = createEventActivity;
     }
 
+    public CustomAdapterEventTypeAdd(List<String> areasOfInterest,  FindEventsActivity findEventsActivity) {
+        localAreasOfInterest = areasOfInterest;
+        this.findEventsActivity = findEventsActivity;
+    }
+
     // Create new views (invoked by the layout manager)
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -76,6 +82,9 @@ public class CustomAdapterEventTypeAdd extends RecyclerView.Adapter<CustomAdapte
             public void onClick(View view) {
                 if (createEventActivity != null) {
                     createEventActivity.selectAreaOfInterest(text);
+                }
+                if (findEventsActivity != null) {
+                    findEventsActivity.selectAreaOfInterest(text);
                 }
             }
         });

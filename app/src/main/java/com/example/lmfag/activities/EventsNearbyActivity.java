@@ -3,6 +3,7 @@ package com.example.lmfag.activities;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,8 +15,10 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.example.lmfag.utility.EventTypeToDrawable;
@@ -30,7 +33,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -60,6 +62,7 @@ public class EventsNearbyActivity extends MenuInterfaceActivity {
     private SharedPreferences preferences;
     private EditText enterRadius;
     private ImageView updateButton;
+    private org.osmdroid.views.overlay.Polygon oPolygon = null;
 
     private EditText enterLongitude, enterLatitude;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -93,6 +96,16 @@ public class EventsNearbyActivity extends MenuInterfaceActivity {
             Float temp_longitude = Float.parseFloat(enterLongitude.getText().toString());
             if (enterRadius.getText().toString().length() != 0 && enterLatitude.getText().toString().length() != 0 && enterLongitude.getText().toString().length() != 0) {
                 getEventsThatAreInRadius(temp_latitude, temp_longitude, radius);
+                if (oPolygon != null) {
+                    map.getOverlays().remove(oPolygon);
+                }
+                oPolygon = new org.osmdroid.views.overlay.Polygon(map);
+                ArrayList<org.osmdroid.util.GeoPoint> circlePoints = new ArrayList<org.osmdroid.util.GeoPoint>();
+                for (float f = 0; f < 360; f += 1){
+                    circlePoints.add(new org.osmdroid.util.GeoPoint(temp_latitude , temp_longitude ).destinationPoint(radius * 1000, f));
+                }
+                oPolygon.setPoints(circlePoints);
+                map.getOverlays().add(oPolygon);
             }
         });
         updateButton.setOnClickListener(view -> {
@@ -108,8 +121,36 @@ public class EventsNearbyActivity extends MenuInterfaceActivity {
 
             }
         });
+        SwitchCompat switchMapOnOf = findViewById(R.id.switchMapOnOff);
+        ScrollView scrollViewEventsNearby = findViewById(R.id.scrollViewEventsNearby);
+        switchMapOnOf.setOnClickListener(view -> {
+            if (scrollViewEventsNearby.getVisibility() == View.GONE) {
+                scrollViewEventsNearby.setVisibility(View.VISIBLE);
+            } else {
+                scrollViewEventsNearby.setVisibility(View.GONE);
+            }
+        });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        //this will refresh the osmdroid configuration on resuming.
+        //if you make changes to the configuration, use
+        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        //Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
+        map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        //this will refresh the osmdroid configuration on resuming.
+        //if you make changes to the configuration, use
+        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        //Configuration.getInstance().save(this, prefs);
+        map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
+    }
     private void firstMapSetup() {
         //Request permission dialog
         ActivityResultLauncher<String[]> locationPermissionRequest =
@@ -251,7 +292,7 @@ public class EventsNearbyActivity extends MenuInterfaceActivity {
                             for (Task<QuerySnapshot> task : tasks) {
                                 QuerySnapshot snap = task.getResult();
                                 for (DocumentSnapshot doc : snap.getDocuments()) {
-                                    GeoPoint gp = doc.getGeoPoint("location");
+                                    com.google.firebase.firestore.GeoPoint gp = doc.getGeoPoint("location");
                                     double lat = gp.getLatitude();
                                     double lng = gp.getLongitude();
 
@@ -269,7 +310,7 @@ public class EventsNearbyActivity extends MenuInterfaceActivity {
                                         newMarker.setIcon(wrappedDrawable);
                                         newMarker.setTitle(doc.getString("event_name"));
                                         newMarker.setSnippet(doc.getString("event_type"));
-                                        GeoPoint location_point = (GeoPoint)(doc.get("location"));
+                                        com.google.firebase.firestore.GeoPoint location_point = (com.google.firebase.firestore.GeoPoint)(doc.get("location"));
                                         double tmp_latitude = location_point.getLatitude();
                                         double tmp_longitude = location_point.getLongitude();
                                         newMarker.setPosition(new org.osmdroid.util.GeoPoint(tmp_latitude, tmp_longitude));

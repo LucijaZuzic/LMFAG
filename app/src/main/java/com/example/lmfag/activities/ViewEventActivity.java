@@ -87,6 +87,10 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         apply.setOnClickListener(view -> {
             subscribe();
         });
+        SwitchCompat sw = findViewById(R.id.switchNotifications);
+        sw.setOnClickListener(view -> {
+            changeNotify();
+        });
         ImageView edit = findViewById(R.id.imageViewEdit);
         edit.setOnClickListener(view -> {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -113,19 +117,19 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                     String userID = preferences.getString("userID", "");
 
             if (Calendar.getInstance().getTime().before(cldr_end.getTime())) {
-                Snackbar.make(imageViewChooseStartTime, "Events can't be rated before it ends.", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(imageViewChooseStartTime, R.string.rate_before_end, Snackbar.LENGTH_SHORT).show();
             } else {
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     CollectionReference docRef = db.collection("event_attending");
                     docRef.whereEqualTo("event", eventID).whereEqualTo("user", userID).get().addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             if (task.getResult().size() == 0 && !userID.equals(organizer)) {
-                                Snackbar.make(imageViewChooseStartTime, "You can't rate an event if you don't participate or organize.", Snackbar.LENGTH_SHORT).show();
+                                Snackbar.make(imageViewChooseStartTime, R.string.not_participate_rate, Snackbar.LENGTH_SHORT).show();
                             } else {
                                 boolean found = false;
                                 for (QueryDocumentSnapshot doc: task.getResult()) {
                                     if (doc.getData().get("rated").toString().equals("true")) {
-                                        Snackbar.make(imageViewChooseStartTime, "You can't rate an event twice.", Snackbar.LENGTH_SHORT).show();
+                                        Snackbar.make(imageViewChooseStartTime, R.string.rate_twice, Snackbar.LENGTH_SHORT).show();
                                         found = true;
                                     }
                                 }
@@ -141,6 +145,36 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         firstMapSetup();
     }
 
+    private void changeNotify() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String eventID = preferences.getString("eventID", "");
+        String userID = preferences.getString("userID", "");
+        SwitchCompat switch_notify = findViewById(R.id.switchNotifications);
+
+        if (eventID.equals("")) {
+            return;
+        }
+        if (userID.equals("")) {
+            return;
+        }
+        CollectionReference docRef = db.collection("event_attending");
+        docRef.whereEqualTo("event", eventID).whereEqualTo("user", userID).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if(task.getResult().size() != 0) {
+                    for (QueryDocumentSnapshot doc: task.getResult()) {
+                        Map<String, Object> docData = doc.getData();
+                        docData.remove("notifications");
+                        docData.put("notifications", switch_notify.isChecked());
+                        db.collection("event_attending")
+                                .document(doc.getId())
+                                .set(docData);
+                        Snackbar.make(switch_notify, R.string.update_notify, Snackbar.LENGTH_SHORT);
+                    }
+                }
+            }
+        });
+    }
     private void firstMapSetup() {
         // Loading map
         Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
@@ -235,16 +269,16 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                     DocumentSnapshot document2 = task2.getResult();
                     if (document2.exists()) {
                         if (!document2.getData().get("friends").toString().contains(userID)) {
-                            Snackbar.make(apply, "You need to be friends with the organizer to participate in a private event.", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(apply, R.string.not_friend_organizer, Snackbar.LENGTH_SHORT).show();
                         } else {
                             docuRef.add(docData);
                             refresh();
                         }
                     } else {
-                        Snackbar.make(apply, "You need to be friends with the organizer to participate in a private event.", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(apply, R.string.not_friend_organizer, Snackbar.LENGTH_SHORT).show();
                     }
                 } else {
-                    Snackbar.make(apply, "You need to be friends with the organizer to participate in a private event.", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(apply, R.string.not_friend_organizer, Snackbar.LENGTH_SHORT).show();
                 }
             });
     }
@@ -367,7 +401,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                     db.collection("event_attending").document(docuRef.getId()).delete();
                     refresh();
                 } else {
-                    Snackbar.make(switch_notify, "Not enough participants.", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(switch_notify, R.string.not_enough, Snackbar.LENGTH_SHORT).show();
                 }
             }
         });

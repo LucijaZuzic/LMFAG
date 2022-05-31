@@ -123,7 +123,7 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
         });
         if (!sender.get(position).equals(me)) {
             viewHolder.getLayout().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-            viewHolder.getBackground().setCardBackgroundColor(ContextCompat.getColor(context, R.color.purple_200));
+            viewHolder.getBackground().setCardBackgroundColor(ContextCompat.getColor(context, R.color.dark_teal_700));
             viewHolder.getSenderTextView().setTextColor(context.getResources().getColor(R.color.white));
             viewHolder.getMessageTextView().setTextColor(context.getResources().getColor(R.color.white));
             //viewHolder.getTime().setTextColor(context.getResources().getColor(R.color.white));

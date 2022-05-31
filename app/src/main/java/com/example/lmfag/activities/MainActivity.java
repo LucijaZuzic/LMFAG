@@ -59,10 +59,10 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onStart(Bundle savedInstanceState) {
         Context context = this;
-        ImageView myBR = findViewById(R.id.imageViewRegister);
-        ImageView myB = findViewById(R.id.imageViewLogin);
-        EditText myET = findViewById(R.id.editTextPassword);
-        EditText myU = findViewById(R.id.editTextUsername);
+        ImageView imageViewRegister = findViewById(R.id.imageViewRegister);
+        ImageView imageViewLogin= findViewById(R.id.imageViewLogin);
+        EditText editTextPassword = findViewById(R.id.editTextPassword);
+        EditText editTextUsername = findViewById(R.id.editTextUsername);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String name = preferences.getString("userID", "");
 
@@ -70,32 +70,32 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
-                String text = myU.getText().toString();
+                String username = editTextUsername.getText().toString();
                 CollectionReference docRef = db.collection("users");
-                docRef.whereEqualTo("username", text).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                docRef.whereEqualTo("username", username).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             if (task.getResult().size() == 0) {
-                                Snackbar.make(myB, R.string.no_user_username, Snackbar.LENGTH_SHORT).show();
+                                Snackbar.make(editTextUsername, R.string.no_user_username, Snackbar.LENGTH_SHORT).show();
                             } else {
                                 if (task.getResult().size() > 1) {
-                                    Snackbar.make(myB, R.string.multiple_username, Snackbar.LENGTH_SHORT).show();
+                                    Snackbar.make(editTextUsername, R.string.multiple_username, Snackbar.LENGTH_SHORT).show();
                                 } else {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                         String pwd_hash = document.getData().get("password_hash").toString();
                                         try {
-                                            String my_hash = myET.getText().toString();
+                                            String my_value_to_hash = editTextPassword.getText().toString();
                                             boolean hack = true;
-                                            if (SecureHash.validatePassword(my_hash, pwd_hash) || hack) {
-                                                Snackbar.make(myB, R.string.logged_in, Snackbar.LENGTH_SHORT).show();
+                                            if (SecureHash.validatePassword(my_value_to_hash, pwd_hash) || hack) {
+                                                Snackbar.make(editTextUsername, R.string.logged_in, Snackbar.LENGTH_SHORT).show();
                                                 SharedPreferences.Editor editor = preferences.edit();
                                                 editor.putString("userID", document.getId());
                                                 editor.apply();
                                                 Intent myIntent = new Intent(context, MyProfileActivity.class);
                                                 startActivity(myIntent);
                                             } else {
-                                                Snackbar.make(myB, R.string.password_incorrect, Snackbar.LENGTH_SHORT).show();
+                                                Snackbar.make(editTextUsername, R.string.password_incorrect, Snackbar.LENGTH_SHORT).show();
                                             }
                                         } catch (NoSuchAlgorithmException e) {
                                             e.printStackTrace();
@@ -136,8 +136,8 @@ public class MainActivity extends AppCompatActivity {
             loginLayoutParams.weight = 1.f;
             loginLayout.setLayoutParams(loginLayoutParams);
 
-            myET.setOnClickListener(confirmLoginButtonListener);
-            myBR.setOnClickListener(view -> {
+            imageViewLogin.setOnClickListener(confirmLoginButtonListener);
+            imageViewRegister.setOnClickListener(view -> {
                 Intent myIntent = new Intent(context, CreateProfileActivity.class);
                 startActivity(myIntent);
                 finish();
@@ -158,8 +158,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             }
-
-            myB.setOnClickListener(confirmLoginButtonListener);
         }
     }
 }
