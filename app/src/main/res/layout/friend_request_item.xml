@@ -43,7 +43,7 @@
 
     <ImageView
         android:id="@+id/imageViewApply"
-        android:layout_width="96dp"
+        android:layout_width="48dp"
         android:layout_height="48dp"
         android:clickable="true"
         android:contentDescription="@string/apply"
@@ -55,7 +55,7 @@
 
     <ImageView
         android:id="@+id/imageViewDiscard"
-        android:layout_width="96dp"
+        android:layout_width="48dp"
         android:layout_marginStart="10dp"
         android:layout_height="48dp"
         android:clickable="true"

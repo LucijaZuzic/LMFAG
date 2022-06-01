@@ -101,8 +101,8 @@ public class ViewEventActivity extends MenuInterfaceActivity {
             if (me.equals(organizer)) {
                 if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime())) {
                     Snackbar.make(imageViewChooseEndTime, R.string.edit_finished, Snackbar.LENGTH_SHORT).show();
-                    Intent myIntent = new Intent(context, ViewEventActivity.class);
-                    startActivity(myIntent);
+                    //Intent myIntent = new Intent(context, ViewEventActivity.class);
+                    //startActivity(myIntent);
                 } else {
                     Intent myIntent = new Intent(context, CreateEventActivity.class);
                     context.startActivity(myIntent);
@@ -241,7 +241,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         latitude = preferences.getFloat("newEventLatitude", (float)latitude);
         longitude = preferences.getFloat("newEventLongitude", (float)longitude);
-        String formattedLocation = getString(R.string.location) + ": " + getString(R.string.latitude) + ": " + Double.toString(Math.round(latitude * 10000) / 10000.0) + " "
+        String formattedLocation = getString(R.string.location) + "\n" + getString(R.string.latitude) + ": " + Double.toString(Math.round(latitude * 10000) / 10000.0) + "\n"
                 + getString(R.string.longitude) + ": " + Double.toString(Math.round(longitude * 10000) / 10000.0);
         TextView location = findViewById(R.id.textViewChooseLocation);
         location.setText(formattedLocation);

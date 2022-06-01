@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.lmfag.R;
 import com.example.lmfag.receivers.ConnectionChangeReceiver;
@@ -31,6 +32,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -91,6 +93,62 @@ public class MainActivity extends AppCompatActivity {
                                                 Snackbar.make(editTextUsername, R.string.logged_in, Snackbar.LENGTH_SHORT).show();
                                                 SharedPreferences.Editor editor = preferences.edit();
                                                 editor.putString("userID", document.getId());
+
+                                                FirebaseMessaging.getInstance().subscribeToTopic(document.getId())
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                String msg = getString(R.string.msg_subscribed);
+                                                                if (!task.isSuccessful()) {
+                                                                    msg = getString(R.string.msg_subscribe_failed);
+                                                                }
+                                                                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
+                                                            }
+                                                        });
+                                                FirebaseMessaging.getInstance().subscribeToTopic("messages")
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                String msg = getString(R.string.msg_subscribed);
+                                                                if (!task.isSuccessful()) {
+                                                                    msg = getString(R.string.msg_subscribe_failed);
+                                                                }
+                                                                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
+                                                            }
+                                                        });
+                                                FirebaseMessaging.getInstance().subscribeToTopic("friend_requests")
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                String msg = getString(R.string.msg_subscribed);
+                                                                if (!task.isSuccessful()) {
+                                                                    msg = getString(R.string.msg_subscribe_failed);
+                                                                }
+                                                                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
+                                                            }
+                                                        });
+                                                FirebaseMessaging.getInstance().subscribeToTopic("event_update")
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                String msg = getString(R.string.msg_subscribed);
+                                                                if (!task.isSuccessful()) {
+                                                                    msg = getString(R.string.msg_subscribe_failed);
+                                                                }
+                                                                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
+                                                            }
+                                                        });
+                                                FirebaseMessaging.getInstance().subscribeToTopic("event_soon")
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                String msg = getString(R.string.msg_subscribed);
+                                                                if (!task.isSuccessful()) {
+                                                                    msg = getString(R.string.msg_subscribe_failed);
+                                                                }
+                                                                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT);
+                                                            }
+                                                        });
                                                 editor.apply();
                                                 Intent myIntent = new Intent(context, MyProfileActivity.class);
                                                 startActivity(myIntent);

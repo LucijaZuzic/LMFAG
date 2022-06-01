@@ -23,7 +23,9 @@ import com.example.lmfag.R;
 import com.example.lmfag.activities.MainActivity;
 import com.example.lmfag.activities.ViewMessagesActivity;
 import com.example.lmfag.activities.ViewProfileActivity;
+import com.example.lmfag.services.MyFirebaseMessagingService;
 import com.example.lmfag.utility.DrawerHelper;
+import com.example.lmfag.utility.MessageSender;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
@@ -146,6 +148,8 @@ public class ViewProfileInfoFragment extends Fragment {
                 .addOnSuccessListener(aVoid -> {
                     //Log.d(TAG, "DocumentSnapshot successfully written!");
                     Snackbar.make(friendRequest, R.string.friend_request_sent, Snackbar.LENGTH_SHORT).show();
+                    //MessageSender.sendMessage("friend_requests in topics && " + receiver + " in topics",
+                            //getResources().getString(R.string.friend_request_sent),  getResources().getString(R.string.friend_request_sent));
                 })
                 .addOnFailureListener(e -> {
                     Snackbar.make(friendRequest, R.string.write_failed, Snackbar.LENGTH_SHORT).show();

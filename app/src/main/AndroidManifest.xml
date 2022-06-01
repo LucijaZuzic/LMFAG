@@ -16,6 +16,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LMFAG">
+        <receiver android:name=".receivers.RebootReceiver"  android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
         <service
             android:name=".services.MyFirebaseMessagingService"
             android:exported="false">
@@ -36,10 +41,10 @@
             -->
             <meta-data
                 android:name="com.google.firebase.messaging.default_notification_color"
-                android:resource="@color/colorAccent" />
-            <meta-data
+                android:resource="@color/teal_700" />
+            <!--<meta-data
                 android:name="com.google.firebase.messaging.default_notification_channel_id"
-                android:value="@string/default_notification_channel_id" />
+                android:value="@string/default_notification_channel_id" />-->
         </service>
         <activity
             android:name=".activities.ChangePasswordActivity"
