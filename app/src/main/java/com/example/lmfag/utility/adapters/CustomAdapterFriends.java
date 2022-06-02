@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
@@ -40,11 +41,12 @@ public class CustomAdapterFriends extends RecyclerView.Adapter<CustomAdapterFrie
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView textViewUsername;
         private final CircleImageView profile_image;
+        private final CardView list_entry;
 
         public ViewHolder(View view) {
             super(view);
             // Define click listener for the ViewHolder's View
-
+            list_entry = (CardView) view.findViewById(R.id.list_entry);
             textViewUsername = (TextView) view.findViewById(R.id.textViewUsernameFriend);
             profile_image = (CircleImageView) view.findViewById(R.id.profile_image_friend);
         }
@@ -54,6 +56,9 @@ public class CustomAdapterFriends extends RecyclerView.Adapter<CustomAdapterFrie
         }
         public CircleImageView getProfileImage() {
             return profile_image;
+        }
+        public CardView getListEntry() {
+            return list_entry;
         }
     }
 
@@ -110,9 +115,11 @@ public class CustomAdapterFriends extends RecyclerView.Adapter<CustomAdapterFrie
                         CircleImageView circleImageView = viewHolder.getProfileImage();
                         Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                         circleImageView.setImageBitmap(bmp);
+                        //viewHolder.getListEntry().setVisibility(View.VISIBLE);
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
+                            //viewHolder.getListEntry().setVisibility(View.VISIBLE);
                             // Handle any errors
                         }
                     });

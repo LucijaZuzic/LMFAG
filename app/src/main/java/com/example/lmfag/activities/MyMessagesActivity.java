@@ -30,7 +30,7 @@ public class MyMessagesActivity extends MenuInterfaceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_messages);
-        DrawerHelper.fillNavbarData(this);
+         
         preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         recyclerViewMessages = findViewById(R.id.recyclerViewMessages);
         getAllFriends();

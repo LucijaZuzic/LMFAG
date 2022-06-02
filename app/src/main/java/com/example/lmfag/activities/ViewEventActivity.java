@@ -28,7 +28,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.messaging.FirebaseMessaging;
+
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -73,7 +73,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_event);
-        DrawerHelper.fillNavbarData(this);
+         
         imageViewChooseStartDate = findViewById(R.id.imageViewChooseStartDate);
         textViewChooseStartDate = findViewById(R.id.textViewChooseStartDate);
 
@@ -148,36 +148,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         firstMapSetup();
     }
 
-    private void manageChannels() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String eventID = preferences.getString("eventID", "");
-        SwitchCompat switch_notify = findViewById(R.id.switchNotifications);
-        if (switch_notify.isChecked()) {
-            FirebaseMessaging.getInstance().subscribeToTopic(eventID)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            String msg = getString(R.string.msg_subscribed);
-                            if (!task.isSuccessful()) {
-                                msg = getString(R.string.msg_subscribe_failed);
-                            }
-                            Snackbar.make(switch_notify, msg, Snackbar.LENGTH_SHORT);
-                        }
-                    });
-        } else {
-            FirebaseMessaging.getInstance().unsubscribeFromTopic(eventID)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            String msg = getString(R.string.msg_subscribed);
-                            if (!task.isSuccessful()) {
-                                msg = getString(R.string.msg_subscribe_failed);
-                            }
-                            Snackbar.make(switch_notify, msg, Snackbar.LENGTH_SHORT);
-                        }
-                    });
-        }
-    }
+
 
     private void changeNotify() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -203,7 +174,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                         db.collection("event_attending")
                                 .document(doc.getId())
                                 .set(docData);
-                        manageChannels();
+
                     }
                 }
             }
@@ -306,7 +277,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                             Snackbar.make(apply, R.string.not_friend_organizer, Snackbar.LENGTH_SHORT).show();
                         } else {
                             docuRef.add(docData);
-                            manageChannels();
+
                             refresh();
                         }
                     } else {
@@ -331,7 +302,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                             checkOtherDirection(docuRef, docData);
                         } else {
                             docuRef.add(docData);
-                            manageChannels();
+
                             refresh();
                         }
                     } else {
@@ -382,7 +353,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                                             } else {
                                                 if (public_event) {
                                                     docuRef.add(docData);
-                                                    manageChannels();
+
                                                 } else {
                                                     checkFriends(docuRef, docData);
                                                 }
@@ -391,7 +362,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                                         } else {
                                             if (public_event) {
                                                 docuRef.add(docData);
-                                                manageChannels();
+
                                             } else {
                                                 checkFriends(docuRef, docData);
                                             }
@@ -403,7 +374,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                                         } else {
                                             if (public_event) {
                                                 docuRef.add(docData);
-                                                manageChannels();
+
                                             } else {
                                                 checkFriends(docuRef, docData);
                                             }
@@ -438,7 +409,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
             if (task.isSuccessful()) {
                 if(task.getResult().size() > participate_minimum) {
                     db.collection("event_attending").document(docuRef.getId()).delete();
-                    manageChannels();
+
                     refresh();
                 } else {
                     Snackbar.make(switch_notify, R.string.not_enough, Snackbar.LENGTH_SHORT).show();

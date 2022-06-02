@@ -15,12 +15,7 @@ import androidx.annotation.Nullable;
 
 import com.example.lmfag.R;
 import com.example.lmfag.utility.DrawerHelper;
-import com.example.lmfag.utility.adapters.CustomAdapterEventDelete;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.example.lmfag.utility.adapters.CustomAdapterEvent; 
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,32 +45,21 @@ public class MyProfileEventsOrganizerFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         DrawerHelper.fillNavbarData(activity);
-        TextView title = view.findViewById(R.id.list_title);
-        title.setText("My organizing events");
-        getOrganizerEvents(view);
-    }
-
-    private void getOrganizerEvents(@NonNull View view) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         RecyclerView recyclerViewEventsOrganizer = view.findViewById(R.id.recyclerViewList);
         List<String> events_array = new ArrayList<>();
         String userID = preferences.getString("userID", "");
         if (!userID.equals("")) {
-            db.collection("events").whereEqualTo("organizer", userID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        if (task.getResult().size() > 0) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                events_array.add(document.getId());
-                            }
-                            CustomAdapterEventDelete customAdapterEvents = new CustomAdapterEventDelete(events_array, context, preferences);
-                            recyclerViewEventsOrganizer.setAdapter(customAdapterEvents);
-                        }
-                    }
-                }
-            });
+            String[] organizer_string = preferences.getString("userOrganizer", "").split("_");
+            for (String organizer_event: organizer_string) {
+                events_array.add(organizer_event);
+            }
+            if (!organizer_string[0].equals("")) {
+                CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(events_array, context, preferences);
+                recyclerViewEventsOrganizer.setAdapter(customAdapterEvents);
+            }
         }
+        TextView title = view.findViewById(R.id.list_title);
+        title.setText("Organizing events");
     }
 }

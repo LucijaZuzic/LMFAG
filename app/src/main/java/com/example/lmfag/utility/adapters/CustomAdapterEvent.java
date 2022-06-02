@@ -26,7 +26,6 @@ public class CustomAdapterEvent extends RecyclerView.Adapter<CustomAdapterEvent.
     private SharedPreferences preferences = null;
     private Context context = null;
 
-
     /**
      * Provide a reference to the type of views that you are using
      * (custom ViewHolder).
@@ -96,6 +95,7 @@ public class CustomAdapterEvent extends RecyclerView.Adapter<CustomAdapterEvent.
                     TextView et = (TextView) viewHolder.getTextView();
                     et.setText(document.get("event_name").toString());
                     et.setCompoundDrawablesWithIntrinsicBounds(EventTypeToDrawable.getEventTypeToDrawable(document.get("event_type").toString()), 0, 0, 0);
+                    //viewHolder.getCardView().setVisibility(View.VISIBLE);
                 }
             }
         });

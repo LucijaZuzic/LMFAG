@@ -17,12 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
 import com.example.lmfag.utility.DrawerHelper;
-import com.example.lmfag.utility.adapters.CustomAdapterEvent;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.example.lmfag.utility.adapters.CustomAdapterEvent; 
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,33 +44,21 @@ public class ViewProfileEventsOrganizerFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         DrawerHelper.fillNavbarData(activity);
-        getOrganizerEvents(view);
-
-        TextView title = view.findViewById(R.id.list_title);
-        title.setText("Organizing events");
-    }
-
-    private void getOrganizerEvents(@NonNull View view) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         RecyclerView recyclerViewEventsOrganizer = view.findViewById(R.id.recyclerViewList);
         List<String> events_array = new ArrayList<>();
         String friendID = preferences.getString("friendID", "");
         if (!friendID.equals("")) {
-            db.collection("events").whereEqualTo("organizer", friendID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        if (task.getResult().size() > 0) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                events_array.add(document.getId());
-                            }
-                            CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(events_array, context, preferences);
-                            recyclerViewEventsOrganizer.setAdapter(customAdapterEvents);
-                        }
-                    }
-                }
-            });
+            String[] organizer_string = preferences.getString("friendOrganizer", "").split("_");
+            for (String organizer_event: organizer_string) {
+                events_array.add(organizer_event);
+            }
+            if (!organizer_string[0].equals("")) {
+                CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(events_array, context, preferences);
+                recyclerViewEventsOrganizer.setAdapter(customAdapterEvents);
+            }
         }
+        TextView title = view.findViewById(R.id.list_title);
+        title.setText("Organizing events");
     }
 }

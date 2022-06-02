@@ -30,7 +30,7 @@ public class FriendRequestsActivity extends MenuInterfaceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_requests);
-        DrawerHelper.fillNavbarData(this);
+         
         recyclerViewFriendRequests = findViewById(R.id.recyclerViewFriendRequests);
     }
 

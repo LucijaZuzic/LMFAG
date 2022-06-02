@@ -42,13 +42,12 @@ public class ChangePasswordActivity extends MenuInterfaceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
-
         discard = findViewById(R.id.imageViewDiscard);
         apply = findViewById(R.id.imageViewApply);
         fillUserData();
         createProfile();
         getBack();
-        DrawerHelper.fillNavbarData(this);
+         
     }
 
     private void getBack() {
@@ -89,6 +88,10 @@ public class ChangePasswordActivity extends MenuInterfaceActivity {
                 }
             }
             if (checkBoxUsername.isChecked()) {
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("userUsername", username.getText().toString());
+                editor.apply();
+                DrawerHelper.fillNavbarData(this);
                 old_data.remove("username");
                 old_data.put("username", username.getText().toString());
                 db.collection("users")

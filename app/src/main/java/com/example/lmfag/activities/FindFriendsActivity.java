@@ -39,7 +39,7 @@ public class FindFriendsActivity extends MenuInterfaceActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_friends);
 
-        DrawerHelper.fillNavbarData(this);
+         
         preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         recyclerViewFindFriends = findViewById(R.id.recyclerViewFriends);
         imageViewBeginSearch = findViewById(R.id.imageViewBeginSearch);

@@ -198,6 +198,7 @@ public class CustomAdapterEventDelete extends RecyclerView.Adapter<CustomAdapter
                     TextView et = (TextView) viewHolder.getEventNameText();
                     et.setText(document.get("event_name").toString());
                     et.setCompoundDrawablesWithIntrinsicBounds(EventTypeToDrawable.getEventTypeToDrawable(document.get("event_type").toString()), 0, 0, 0);
+                    viewHolder.getDeleteCard().setVisibility(View.VISIBLE);
                 }
             }
         });

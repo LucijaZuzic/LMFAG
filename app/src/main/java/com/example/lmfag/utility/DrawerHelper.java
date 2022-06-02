@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
+import android.util.Base64;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -34,6 +35,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -89,15 +91,44 @@ public class DrawerHelper {
                         return true;
                     }
                 });
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        SharedPreferences.Editor editor = preferences.edit();
         String name = preferences.getString("userID", "");
-        if(name.equalsIgnoreCase(""))
+        String username = preferences.getString("userUsername", "");
+        String encoded = preferences.getString("userPicture", "");
+        byte[] imageAsBytes = Base64.decode(encoded.getBytes(), Base64.DEFAULT);
+
+        if (name.equals(""))
         {
             Intent myIntent = new Intent(context, MainActivity.class);
             context.startActivity(myIntent);
             return;
         }
+
+        TextView myUsername = context.findViewById(R.id.textViewUsername_nav);
+        CardView backProfile = context.findViewById(R.id.goBackToProfile);
+        CircleImageView circleImageView = context.findViewById(R.id.profile_image_nav);
+
+        if (backProfile != null) {
+            backProfile.setOnClickListener(view -> {
+                Intent myIntent = new Intent(context, MyProfileActivity.class);
+                context.startActivity(myIntent);
+            });
+        }
+
+        if (myUsername != null && !username.equals("")) {
+            myUsername.setText(username);
+        }
+
+        if (circleImageView != null && !encoded.equals("")) {
+            circleImageView.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
+        }
+
+        if (myUsername != null && !username.equals("") && circleImageView != null && !encoded.equals("")) {
+            return;
+        }
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users").document(name);
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -105,27 +136,30 @@ public class DrawerHelper {
                 if (document.exists()) {
                     Map<String, Object> data = document.getData();
 
-                    TextView myUsername = context.findViewById(R.id.textViewUsername_nav);
+                    if (username.equals("")) {
+                        editor.putString("userUsername", data.get("username").toString());
+                        editor.apply();
+                    }
+
                     if (myUsername != null) {
                         myUsername.setText(data.get("username").toString());
                     }
 
-                        CardView backProfile = context.findViewById(R.id.goBackToProfile);
-                    if (backProfile != null) {
-                        backProfile.setOnClickListener(view -> {
-                            Intent myIntent = new Intent(context, MyProfileActivity.class);
-                            context.startActivity(myIntent);
-                            return;
-                        });
-                    }
+                    if (encoded.equals("")) {
                         FirebaseStorage storage = FirebaseStorage.getInstance();
                         StorageReference storageRef = storage.getReference();
                         StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
                         final long ONE_MEGABYTE = 1024 * 1024;
                         imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
                             // Data for "images/island.jpg" is returns, use this as needed
-                            CircleImageView circleImageView = context.findViewById(R.id.profile_image_nav);
-                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            bmp.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
+                            byte[] b = baos.toByteArray();
+                            String new_encoded = Base64.encodeToString(b, Base64.DEFAULT);
+                            editor.putString("userPicture", new_encoded);
+                            editor.apply();
+
                             if (circleImageView != null) {
                                 circleImageView.setImageBitmap(bmp);
                             }
@@ -136,6 +170,7 @@ public class DrawerHelper {
                             }
                         });
                         //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    }
                     } else {
                         Intent myIntent = new Intent(context, MainActivity.class);
                         context.startActivity(myIntent);

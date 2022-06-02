@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MyProfileInfoFragment extends Fragment {
     private Context context;
     private Activity activity;
+    SharedPreferences preferences;
+    FirebaseFirestore db;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,13 +57,13 @@ public class MyProfileInfoFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+        db = FirebaseFirestore.getInstance();
         DrawerHelper.fillNavbarData(activity);
         fillUserData(view);
     }
 
     private void fillUserData(@NonNull View view) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         String name = preferences.getString("userID", "");
         if(name.equalsIgnoreCase(""))
         {
@@ -68,53 +71,29 @@ public class MyProfileInfoFragment extends Fragment {
             startActivity(myIntent);
             return;
         }
-        DocumentReference docRef = db.collection("users").document(name);
-        docRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    Map<String, Object> data = document.getData();
-
-                    TextView myUsername = view.findViewById(R.id.textViewUsername);
-                    TextView myLocation = view.findViewById(R.id.textViewMyLocation);
-                    TextView myDescription = view.findViewById(R.id.textViewMyDescription);
-                    TextView myOrganizerRank = view.findViewById(R.id.textViewMyOrganizerRank);
-                    TextView myOrganizerRankPoints = view.findViewById(R.id.textViewRankPoints);
-                    myUsername.setText(data.get("username").toString());
-                    myLocation.setText(data.get("location").toString());
-                    Double points_rank = Double.parseDouble(data.get("points_rank").toString());
-                    Integer rank = (int) (Math.floor(points_rank / 1000));
-                    String text_rank = Integer.toString(rank);
-                    Double upper_bound = Math.ceil(points_rank / 1000) * 1000;
-                    if (upper_bound.equals(0.0)) {
-                        upper_bound = 1000.0;
-                    }
-                    String text_rank_points = points_rank + "/" + upper_bound;
-                    ProgressBar progressBar = view.findViewById(R.id.determinateBar);
-                    progressBar.setProgress((int)((points_rank - (upper_bound - 1000)) / 10));
-                    myOrganizerRank.setText(text_rank);
-                    myOrganizerRankPoints.setText(text_rank_points);
-                    myDescription.setText(Objects.requireNonNull(data.get("description")).toString());
-                    FirebaseStorage storage = FirebaseStorage.getInstance();
-                    StorageReference storageRef = storage.getReference();
-                    StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
-                    final long ONE_MEGABYTE = 1024 * 1024;
-                    imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                        // Data for "images/island.jpg" is returns, use this as needed
-                        CircleImageView circleImageView = view.findViewById(R.id.profile_image);
-                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-                        circleImageView.setImageBitmap(bmp);
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Handle any errors
-                        }
-                    });
-                } else {
-                    Intent myIntent = new Intent(context, MainActivity.class);
-                    startActivity(myIntent);
-                }
-            }
-        });
+        TextView myUsername = view.findViewById(R.id.textViewUsername);
+        TextView myLocation = view.findViewById(R.id.textViewMyLocation);
+        TextView myDescription = view.findViewById(R.id.textViewMyDescription);
+        TextView myOrganizerRank = view.findViewById(R.id.textViewMyOrganizerRank);
+        TextView myOrganizerRankPoints = view.findViewById(R.id.textViewRankPoints);
+        myUsername.setText(preferences.getString("userUsername", ""));
+        myLocation.setText(preferences.getString("userLocation", ""));
+        Double points_rank = Double.parseDouble(preferences.getString("userRankPoints", ""));
+        Integer rank = (int) (Math.floor(points_rank / 1000));
+        String text_rank = Integer.toString(rank);
+        Double upper_bound = Math.ceil(points_rank / 1000) * 1000;
+        if (upper_bound.equals(0.0)) {
+            upper_bound = 1000.0;
+        }
+        String text_rank_points = points_rank + "/" + upper_bound;
+        ProgressBar progressBar = view.findViewById(R.id.determinateBar);
+        progressBar.setProgress((int)((points_rank - (upper_bound - 1000)) / 10));
+        myOrganizerRank.setText(text_rank);
+        myOrganizerRankPoints.setText(text_rank_points);
+        myDescription.setText(Objects.requireNonNull(preferences.getString("userDescription", "")));
+        String encoded = preferences.getString("userPicture", "");
+        byte[] imageAsBytes = Base64.decode(encoded.getBytes(), Base64.DEFAULT);
+        CircleImageView circleImageView = view.findViewById(R.id.profile_image);
+        circleImageView.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
     }
 }

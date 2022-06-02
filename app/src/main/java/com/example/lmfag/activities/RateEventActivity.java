@@ -49,7 +49,7 @@ public class RateEventActivity extends MenuInterfaceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rate_event);
-        DrawerHelper.fillNavbarData(this);
+         
         findViewById(R.id.imageViewApply).setOnClickListener(view -> {
             for (int i = 0; i < people.size(); i++) {
                 updatePlayer(people.get(i), ratings.get(i));

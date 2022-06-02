@@ -79,7 +79,7 @@ public class EventsNearbyActivity extends MenuInterfaceActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_events_nearby);
 
-        DrawerHelper.fillNavbarData(this);
+         
 
         enterLatitude = findViewById(R.id.inputLatitude);
         enterLongitude = findViewById(R.id.inputLongitude);

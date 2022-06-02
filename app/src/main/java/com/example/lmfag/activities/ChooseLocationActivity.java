@@ -62,7 +62,7 @@ public class ChooseLocationActivity extends MenuInterfaceActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_location);
 
-        DrawerHelper.fillNavbarData(this);
+         
         Context context = getApplicationContext();
         Configuration.getInstance().load(context, PreferenceManager.getDefaultSharedPreferences(context));
 

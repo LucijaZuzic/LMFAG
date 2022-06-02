@@ -118,7 +118,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         editor = preferences.edit();
         db = FirebaseFirestore.getInstance();
 
-        DrawerHelper.fillNavbarData(this);
+         
         eventName = findViewById(R.id.editTextEventName);
         description = findViewById(R.id.editTextEventDescription);
         minimum_level = findViewById(R.id.editTextMinimumLevel);

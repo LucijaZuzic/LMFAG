@@ -15,12 +15,7 @@ import androidx.annotation.Nullable;
 
 import com.example.lmfag.R;
 import com.example.lmfag.utility.DrawerHelper;
-import com.example.lmfag.utility.adapters.CustomAdapterEvent;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.example.lmfag.utility.adapters.CustomAdapterEventDelete;
 
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
@@ -32,7 +27,11 @@ import java.util.List;
 public class MyProfileEventsPlayerFragment extends Fragment {
     private Context context;
     private Activity activity;
+    private SharedPreferences preferences;
     private boolean only_notified = false;
+    List<String> events_player_array;
+    List<String> event_subscriber_array;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,76 +46,44 @@ public class MyProfileEventsPlayerFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_titled_list_events_subsribed, container, false);
     }
 
+    public void changeArray(RecyclerView recyclerViewEventsPlayer) {
+        if (only_notified) {
+            if (!event_subscriber_array.get(0).equals("")) {
+                recyclerViewEventsPlayer.setAdapter(new CustomAdapterEventDelete(event_subscriber_array, context, preferences));
+            }
+        } else {
+            if (!events_player_array.get(0).equals("")) {
+                recyclerViewEventsPlayer.setAdapter(new CustomAdapterEventDelete(events_player_array, context, preferences));
+            }
+        }
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         DrawerHelper.fillNavbarData(activity);
         TextView title = view.findViewById(R.id.list_title);
-        title.setText("My playing events");
-
+        title.setText("Playing events");
+        RecyclerView recyclerViewEventsPlayer = view.findViewById(R.id.recyclerViewList);
         SwitchCompat notificationsOnly = view.findViewById(R.id.onlyShowNotificationToggle);
-        if (only_notified) {
-            getSubscriberEvents(view);
-        } else {
-            getPlayerEvents(view);
+        preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+        String userID = preferences.getString("userID", "");
+        if (!userID.equals("")) {
+            String[] player_string = preferences.getString("userPlayer", "").split("_");
+            events_player_array = new ArrayList<>();
+            for (String event: player_string) {
+                events_player_array.add(event);
+            }
+            String[] subscriber_string = preferences.getString("userSubscriber", "").split("_");
+            event_subscriber_array = new ArrayList<>();
+            for (String event: subscriber_string) {
+                event_subscriber_array.add(event);
+            }
+            changeArray(recyclerViewEventsPlayer);
         }
         notificationsOnly.setOnClickListener(someView -> {
-            only_notified = !only_notified;
-            if (only_notified) {
-                getSubscriberEvents(view);
-            } else {
-                getPlayerEvents(view);
-            }
+            only_notified = notificationsOnly.isChecked();
+            changeArray(recyclerViewEventsPlayer);
         });
-    }
-
-    private void getPlayerEvents(@NonNull View view) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        List<String> events_array = new ArrayList<>();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-        RecyclerView recyclerViewEventsPlayer = view.findViewById(R.id.recyclerViewList);
-        String userID = preferences.getString("userID", "");
-        if (!userID.equals("")) {
-            db.collection("event_attending").whereEqualTo("user", userID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        if (task.getResult().size() > 0) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                events_array.add(document.getData().get("event").toString());
-                            }
-                            CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(events_array, context, preferences);
-                            recyclerViewEventsPlayer.setAdapter(customAdapterEvents);
-                        }
-                    }
-                }
-            });
-        }
-    }
-    private void getSubscriberEvents(@NonNull View view) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        List<String> events_array = new ArrayList<>();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
-        RecyclerView recyclerViewEventsPlayer = view.findViewById(R.id.recyclerViewList);
-        String userID = preferences.getString("userID", "");
-        if (!userID.equals("")) {
-            db.collection("event_attending").whereEqualTo("user", userID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        if (task.getResult().size() > 0) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                String isSubscribed = document.getData().get("notifications").toString();
-                                if (isSubscribed.equals("true")) {
-                                    events_array.add(document.getData().get("event").toString());
-                                }
-                            }
-                            CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(events_array, context, preferences);
-                            recyclerViewEventsPlayer.setAdapter(customAdapterEvents);
-                        }
-                    }
-                }
-            });
-        }
     }
 }

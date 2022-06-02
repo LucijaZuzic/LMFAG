@@ -21,6 +21,7 @@
             android:id="@+id/event_list_entry_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_baseline_interests_24"
             android:layout_gravity="center"
             android:drawablePadding="10dp"
             android:gravity="center"

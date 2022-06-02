@@ -92,7 +92,7 @@ public class EditProfileActivity extends MenuInterfaceActivity {
         createProfile();
         getBack();
         changeProfilePicture();
-        DrawerHelper.fillNavbarData(this);
+         
     }
 
     private void changeProfilePicture() {

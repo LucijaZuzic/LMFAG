@@ -51,7 +51,7 @@ public class FindEventsActivity extends MenuInterfaceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_events);
-        DrawerHelper.fillNavbarData(this);
+         
 
         preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         recyclerViewFindEvents = findViewById(R.id.recyclerViewEvents);

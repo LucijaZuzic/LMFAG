@@ -20,14 +20,10 @@ import com.example.lmfag.R;
 import com.example.lmfag.activities.MainActivity;
 import com.example.lmfag.utility.DrawerHelper;
 import com.example.lmfag.utility.adapters.CustomAdapterAreaOfInterest;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 public class ViewProfileAreasOfInterestFragment extends Fragment {
     private Context context;
@@ -57,8 +53,6 @@ public class ViewProfileAreasOfInterestFragment extends Fragment {
     private void fillUserData(@NonNull View view) {
         TextView title = view.findViewById(R.id.list_title);
         title.setText("Areas of interest");
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         String name = preferences.getString("friendID", "");
         if(name.equalsIgnoreCase(""))
@@ -67,35 +61,19 @@ public class ViewProfileAreasOfInterestFragment extends Fragment {
             startActivity(myIntent);
             return;
         }
-
-        DocumentReference docRef = db.collection("users").document(name);
-        docRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    Map<String, Object> data = document.getData();
-                    RecyclerView recyclerViewAreasOfInterest = view.findViewById(R.id.recyclerViewList);
-                    String area_string = data.get("areas_of_interest").toString();
-                    if (area_string.length() > 2) {
-                        String[] area_string_array = area_string.substring(1, area_string.length() - 1).split(", ");
-                        List<String> areas_array = new ArrayList<>(Arrays.asList(area_string_array));
-                        String points_string = data.get("points_levels").toString();
-                        String[] points_string_array = points_string.substring(1, points_string.length() - 1).split(", ");
-                        List<Double> points_array = new ArrayList<>();
-                        for (String s : points_string_array) {
-                            points_array.add(Double.parseDouble(s));
-                        }
-                        CustomAdapterAreaOfInterest customAdapterAreaOfInterest = new CustomAdapterAreaOfInterest(areas_array, points_array);
-                        recyclerViewAreasOfInterest.setAdapter(customAdapterAreaOfInterest);
-                    }
-                } else {
-                    Intent myIntent = new Intent(context, MainActivity.class);
-                    startActivity(myIntent);
-                    //Log.d(TAG, "No such document");
-                }
-            } else {
-                //Log.d(TAG, "get failed with ", task.getException());
+        RecyclerView recyclerViewAreasOfInterest = view.findViewById(R.id.recyclerViewList);
+        String area_string = preferences.getString("friend_areas_of_interest", "");
+        if (area_string.length() > 2) {
+            String[] area_string_array = area_string.substring(1, area_string.length() - 1).split(", ");
+            List<String> areas_array = new ArrayList<>(Arrays.asList(area_string_array));
+            String points_string = preferences.getString("friend_points_levels", "");
+            String[] points_string_array = points_string.substring(1, points_string.length() - 1).split(", ");
+            List<Double> points_array = new ArrayList<>();
+            for (String s : points_string_array) {
+                points_array.add(Double.parseDouble(s));
             }
-        });
+            CustomAdapterAreaOfInterest customAdapterAreaOfInterest = new CustomAdapterAreaOfInterest(areas_array, points_array);
+            recyclerViewAreasOfInterest.setAdapter(customAdapterAreaOfInterest);
+        }
     }
 }
