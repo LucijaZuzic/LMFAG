@@ -20,7 +20,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LMFAG">
-
+        <receiver android:name=".receivers.RateAlarmReceiver"  android:exported="true">
+        </receiver>
+        <receiver android:name=".receivers.EventAlarmReceiver"  android:exported="true">
+        </receiver>
+        <receiver android:name=".receivers.DeviceBootReceiver"  android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
         <activity
             android:name=".activities.ChangePasswordActivity"
             android:exported="false" />

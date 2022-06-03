@@ -15,10 +15,10 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.example.lmfag.R;
-import com.example.lmfag.activities.ViewEventActivity;
+import com.example.lmfag.activities.RateEventActivity;
 import com.example.lmfag.utility.EventTypeToDrawable;
 
-public class EventAlarmReceiver extends BroadcastReceiver {
+public class RateAlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -26,11 +26,11 @@ public class EventAlarmReceiver extends BroadcastReceiver {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         SharedPreferences.Editor editor = preferences.edit();
 
-        Intent getToEventIntent = new Intent(context, ViewEventActivity.class);
+        Intent getToEventIntent = new Intent(context, RateEventActivity.class);
         getToEventIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, getToEventIntent, PendingIntent.FLAG_IMMUTABLE);
         int icon = R.drawable.ic_baseline_interests_24;
-        String title = context.getApplicationContext().getResources().getString(R.string.event_start) + " ";
+        String title = context.getApplicationContext().getResources().getString(R.string.rate_event) + ": ";
         String description = "";
         vibrator.vibrate(200);
         Bundle extras = intent.getExtras();

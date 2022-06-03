@@ -7,11 +7,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.example.lmfag.receivers.EventAlarmReceiver;
+import com.example.lmfag.receivers.RateAlarmReceiver;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
@@ -27,18 +27,32 @@ import java.util.Map;
 
 public class AlarmScheduler {
 
-    public static void scheduleAlarm(Context applicationContext, long timeInMillis, String icon, String name, String description, String eventID) {
+    public static void scheduleAlarmStart(Context applicationContext, long timeInMillis, String icon, String name, String description, String eventID) {
         AlarmManager alarmManager = (AlarmManager) applicationContext.getSystemService(Context.ALARM_SERVICE);
         Intent alarmReceiverIntent = new Intent(applicationContext, EventAlarmReceiver.class);
         alarmReceiverIntent.putExtra("icon",icon);
         alarmReceiverIntent.putExtra("name",name);
         alarmReceiverIntent.putExtra("description",description);
         alarmReceiverIntent.putExtra("eventID",eventID);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(applicationContext, 0, alarmReceiverIntent, PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(applicationContext, 0, alarmReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + timeInMillis, pendingIntent);
         } else {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + timeInMillis, pendingIntent);
+        }
+    }
+    public static void scheduleAlarmEnd(Context applicationContext, String icon, String name, String description, String eventID) {
+        AlarmManager alarmManager = (AlarmManager) applicationContext.getSystemService(Context.ALARM_SERVICE);
+        Intent alarmReceiverIntent = new Intent(applicationContext, RateAlarmReceiver.class);
+        alarmReceiverIntent.putExtra("icon",icon);
+        alarmReceiverIntent.putExtra("name",name);
+        alarmReceiverIntent.putExtra("description",description);
+        alarmReceiverIntent.putExtra("eventID",eventID);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(applicationContext, 0, alarmReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
+        } else {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
         }
     }
     public static void cancelAllAlarms(Context applicationContext) {
@@ -46,7 +60,6 @@ public class AlarmScheduler {
         Intent alarmReceiverIntent = new Intent(applicationContext, EventAlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(applicationContext, 0, alarmReceiverIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_CANCEL_CURRENT);
         alarmManager.cancel(pendingIntent);
-        Toast.makeText(applicationContext, "Cancelled all alarms.", Toast.LENGTH_SHORT).show();
     }
     public static void getAllSubscriberEvents(Context applicationContext) {
         cancelAllAlarms(applicationContext);
@@ -78,13 +91,17 @@ public class AlarmScheduler {
                                                 cldr_end.setTime(end_date);
                                                 Calendar current = Calendar.getInstance();
                                                 if (current.getTimeInMillis() < cldr_start.getTimeInMillis()) {
-                                                    scheduleAlarm(applicationContext, cldr_start.getTimeInMillis() - current.getTimeInMillis(), docData.get("event_type").toString(), docData.get("event_name").toString(), docData.get("event_description").toString(), documentTime.getId());
-                                                    Toast.makeText(applicationContext, "Scheduled an alarm for event " + docData.get("event_name").toString() + " in " + (cldr_start.getTimeInMillis() - current.getTimeInMillis())  / 1000 + " seconds", Toast.LENGTH_SHORT).show();
+                                                    scheduleAlarmStart(applicationContext, cldr_start.getTimeInMillis() - current.getTimeInMillis(), docData.get("event_type").toString(), docData.get("event_name").toString(), docData.get("event_description").toString(), documentTime.getId());
+                                                }
+                                                if (current.getTimeInMillis() > cldr_end.getTimeInMillis() && !document.getData().get("rated").toString().equals("true")) {
+                                                    scheduleAlarmEnd(applicationContext, docData.get("event_type").toString(), docData.get("event_name").toString(), docData.get("event_description").toString(), documentTime.getId());
                                                 }
                                             } else {
                                             }
                                         }
                                     });
+                                } else {
+
                                 }
                             }
                         } else {
