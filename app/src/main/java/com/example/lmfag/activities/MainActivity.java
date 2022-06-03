@@ -187,13 +187,14 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             });
 
-            if(!name.equalsIgnoreCase("")) {
+            if(!name.equals("")) {
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 DocumentReference docRef = db.collection("users").document(name);
                 docRef.get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
+                            AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                             Intent myIntent = new Intent(context, MyProfileActivity.class);
                             startActivity(myIntent);
                             finish();
