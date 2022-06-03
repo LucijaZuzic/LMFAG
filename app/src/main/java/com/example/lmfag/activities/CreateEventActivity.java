@@ -1,6 +1,12 @@
 package com.example.lmfag.activities;
 
 
+import static java.util.Calendar.DAY_OF_MONTH;
+import static java.util.Calendar.HOUR;
+import static java.util.Calendar.MINUTE;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.YEAR;
+
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -59,45 +65,34 @@ import java.util.List;
 import java.util.Map;
 
 public class CreateEventActivity extends MenuInterfaceActivity {
-
     private MapView map;
     private IMapController mapController;
     private MyLocationNewOverlay myLocationOverlay;
-    SharedPreferences preferences;
-    SharedPreferences.Editor editor;
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
 
-    FirebaseFirestore db;
-    TextView eventName;
-    TextView description;
-    NumberPicker minimum_level;
-    SwitchCompat switch_public;
-    SwitchCompat switch_out;
-    SwitchCompat switch_organizer;
-    SwitchCompat switch_notify;
-    RangeSlider slider;
-    TextView location;
+    private FirebaseFirestore db;
+    private TextView eventName;
+    private TextView description;
+    private NumberPicker minimum_level;
+    private SwitchCompat switch_public;
+    private SwitchCompat switch_out;
+    private SwitchCompat switch_organizer;
+    private SwitchCompat switch_notify;
+    private RangeSlider slider;
+    private TextView location;
     private Marker chosenLocationMarker;
-    final Calendar cldr_start = Calendar.getInstance();
-    int hours_start = cldr_start.get(Calendar.HOUR_OF_DAY);
-    int minutes_start = cldr_start.get(Calendar.MINUTE);
-    int year_start = cldr_start.get(Calendar.YEAR);
-    int month_start = cldr_start.get(Calendar.MONTH);
-    int day_start = cldr_start.get(Calendar.DAY_OF_MONTH);
-    final Calendar cldr_end = Calendar.getInstance();
-    int hours_end = cldr_end.get(Calendar.HOUR_OF_DAY);
-    int minutes_end = cldr_end.get(Calendar.MINUTE);
-    int year_end = cldr_end.get(Calendar.YEAR);
-    int month_end = cldr_end.get(Calendar.MONTH);
-    int day_end = cldr_end.get(Calendar.DAY_OF_MONTH);
-    double longitude = 45.23;
-    double latitude = 45.36;
-    Context context = this;
+    private final Calendar cldr_start = Calendar.getInstance();
+    private final Calendar cldr_end = Calendar.getInstance();
+    private double longitude = 45.23;
+    private double latitude = 45.36;
+    private Context context = this;
     private String selected_item;
-    ImageView imageViewChooseStartDate, imageViewChooseStartTime, imageViewChooseEndDate, imageViewChooseEndTime, apply;
-    TextView textViewChooseStartDate, textViewChooseStartTime, textViewChooseEndDate, textViewChooseEndTime;
+    private ImageView imageViewChooseStartDate, imageViewChooseStartTime, imageViewChooseEndDate, imageViewChooseEndTime, apply;
+    private TextView textViewChooseStartDate, textViewChooseStartTime, textViewChooseEndDate, textViewChooseEndTime;
     //Spinner sp;
-    TextView sp;
-    List<String> all_areas;
+    private TextView sp;
+    private List<String> all_areas;
     private LinearLayout openableCard;
     private ImageView closeCard;
 
@@ -246,10 +241,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
             // time picker dialog
             DatePickerDialog picker = new DatePickerDialog(context,
                     (dp, sYear, sMonth, sDay) -> {
-                        day_start = sDay;
-                        month_start = sMonth;
-                        year_start = sYear;
-                        cldr_start.set(year_start, month_start, day_start, hours_start, minutes_start);
+                        cldr_start.set(sYear, sMonth, sDay, cldr_start.get(HOUR), cldr_start.get(MINUTE));
                         textViewChooseStartDate.setText(DateFormat.getDateInstance().format(cldr_start.getTime()));
                         if (cldr_start.getTime().before(Calendar.getInstance().getTime())) {
                              Toast.makeText(getApplicationContext(), R.string.begin_past, Toast.LENGTH_SHORT).show();
@@ -257,17 +249,14 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                         if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
                              Toast.makeText(getApplicationContext(), R.string.end_before_beginning, Toast.LENGTH_SHORT).show();
                         }
-                    }, year_start, month_start, day_start);
+                    }, cldr_start.get(YEAR), cldr_start.get(MONTH), cldr_start.get(DAY_OF_MONTH));
             picker.show();
         });
         imageViewChooseEndDate.setOnClickListener(v -> {
             // time picker dialog
             DatePickerDialog picker = new DatePickerDialog(context,
                     (dp, sYear, sMonth, sDay) -> {
-                        day_end = sDay;
-                        month_end = sMonth;
-                        year_end = sYear;
-                        cldr_end.set(year_end, month_end, day_end, hours_end, minutes_end);
+                        cldr_end.set(sYear, sMonth, sDay, cldr_end.get(HOUR), cldr_end.get(MINUTE));
                         textViewChooseEndDate.setText(DateFormat.getDateInstance().format(cldr_end.getTime()));
                         if (cldr_end.getTime().before(Calendar.getInstance().getTime())) {
                              Toast.makeText(getApplicationContext(), R.string.end_past, Toast.LENGTH_SHORT).show();
@@ -275,7 +264,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                         if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
                              Toast.makeText(getApplicationContext(), R.string.end_before_beginning, Toast.LENGTH_SHORT).show();
                         }
-                    }, year_end, month_end, day_end);
+                    }, cldr_end.get(YEAR), cldr_end.get(MONTH), cldr_end.get(DAY_OF_MONTH));
             picker.show();
         });
     }
@@ -285,9 +274,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
             // time picker dialog
             TimePickerDialog picker = new TimePickerDialog(context,
                     (tp, sHour, sMinute) -> {
-                        hours_start = sHour;
-                        minutes_start = sMinute;
-                        cldr_start.set(year_start, month_start, day_start, hours_start, minutes_start);
+                        cldr_start.set(cldr_start.get(YEAR), cldr_start.get(MONTH), cldr_start.get(DAY_OF_MONTH), sHour, sMinute);
                         textViewChooseStartTime.setText(DateFormat.getTimeInstance().format(cldr_start.getTime()));
                         if (cldr_start.getTime().before(Calendar.getInstance().getTime())) {
                              Toast.makeText(getApplicationContext(), R.string.begin_past, Toast.LENGTH_SHORT).show();
@@ -295,16 +282,14 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                         if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
                              Toast.makeText(getApplicationContext(), R.string.end_before_beginning, Toast.LENGTH_SHORT).show();
                         }
-                    }, hours_start, minutes_start, true);
+                    }, cldr_start.get(HOUR), cldr_start.get(MINUTE), true);
             picker.show();
         });
         imageViewChooseEndTime.setOnClickListener(v -> {
             // time picker dialog
             TimePickerDialog picker = new TimePickerDialog(context,
                     (tp, sHour, sMinute) -> {
-                        hours_end = sHour;
-                        minutes_end = sMinute;
-                        cldr_end.set(year_end, month_end, day_end, hours_end, minutes_end);
+                        cldr_end.set(cldr_start.get(YEAR), cldr_start.get(MONTH), cldr_start.get(DAY_OF_MONTH), sHour, sMinute);
                         textViewChooseEndTime.setText(DateFormat.getTimeInstance().format(cldr_end.getTime()));
                         if (cldr_end.getTime().before(Calendar.getInstance().getTime())) {
                              Toast.makeText(getApplicationContext(), R.string.end_in_past, Toast.LENGTH_SHORT).show();
@@ -312,7 +297,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                         if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
                              Toast.makeText(getApplicationContext(), R.string.end_before_begin, Toast.LENGTH_SHORT).show();
                         }
-                    }, hours_end, minutes_end, true);
+                    }, cldr_end.get(HOUR), cldr_end.get(MINUTE), true);
             picker.show();
         });
     }
