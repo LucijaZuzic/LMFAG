@@ -5,7 +5,10 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
@@ -13,6 +16,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.example.lmfag.R;
 import com.example.lmfag.activities.ViewEventActivity;
+import com.example.lmfag.utility.EventTypeToDrawable;
 
 public class EventAlarmReceiver extends BroadcastReceiver {
 
@@ -20,21 +24,42 @@ public class EventAlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Toast.makeText(context, "Alarm triggered successfully!", Toast.LENGTH_LONG).show();
         Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        vibrator.vibrate(200);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+        SharedPreferences.Editor editor = preferences.edit();
 
         Intent getToEventIntent = new Intent(context, ViewEventActivity.class);
         getToEventIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, getToEventIntent, PendingIntent.FLAG_IMMUTABLE);
-
-        Notification notification = new NotificationCompat.Builder(context, "0")
-                .setSmallIcon(R.drawable.ic_baseline_event_24)
-                .setContentTitle("Event ahead!")
-                .setContentText("Check out new event coming...")
+        int icon = R.drawable.ic_baseline_event_24;
+        String title = "Event ahead!";
+        String description = "Check out new event coming...";
+        vibrator.vibrate(200);
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            if (extras.getString("icon") != null) {
+                icon = EventTypeToDrawable.getEventTypeToDrawable(extras.getString("icon"));
+            }
+            if (extras.getString("title") != null) {
+                title = extras.getString("title");
+            }
+            if (extras.getString("description") != null) {
+                description = extras.getString("description");
+            }
+            if (extras.getString("eventID")!= null) {
+                editor.putString("eventID", extras.getString("eventID"));
+                editor.apply();
+            }
+        }
+        Notification notification = new NotificationCompat.Builder(context.getApplicationContext(), context.getApplicationContext().getResources().getString(R.string.channel_id))
+                .setSmallIcon(icon)
+                .setContentTitle(title)
+                .setContentText(description)
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText("Check out new event coming..."))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .bigText(description))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
+                .setFullScreenIntent(pendingIntent, true)
                 .build();
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);

@@ -3,8 +3,6 @@ package com.example.lmfag.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.widget.ImageView;
@@ -17,6 +15,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import com.bumptech.glide.Glide;
 import com.example.lmfag.BuildConfig;
 import com.example.lmfag.R;
+import com.example.lmfag.utility.AlarmScheduler;
 import com.example.lmfag.utility.EventTypeToDrawable;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.Timestamp;
@@ -153,8 +152,6 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         firstMapSetup();
     }
 
-
-
     private void changeNotify() {
         String eventID = preferences.getString("eventID", "");
         String userID = preferences.getString("userID", "");
@@ -176,7 +173,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                         db.collection("event_attending")
                                 .document(doc.getId())
                                 .set(docData);
-
+                        AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                     }
                 }
             }
@@ -272,7 +269,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                              Toast.makeText(getApplicationContext(), R.string.not_friend_organizer, Toast.LENGTH_SHORT).show();
                         } else {
                             docuRef.add(docData);
-
+                            AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                             refresh();
                         }
                     } else {
@@ -297,7 +294,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                             checkOtherDirection(docuRef, docData);
                         } else {
                             docuRef.add(docData);
-
+                            AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                             refresh();
                         }
                     } else {
@@ -345,7 +342,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                                             } else {
                                                 if (public_event) {
                                                     docuRef.add(docData);
-
+                                                    AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                                                 } else {
                                                     checkFriends(docuRef, docData);
                                                 }
@@ -354,7 +351,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                                         } else {
                                             if (public_event) {
                                                 docuRef.add(docData);
-
+                                                AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                                             } else {
                                                 checkFriends(docuRef, docData);
                                             }
@@ -366,7 +363,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                                         } else {
                                             if (public_event) {
                                                 docuRef.add(docData);
-
+                                                AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                                             } else {
                                                 checkFriends(docuRef, docData);
                                             }
@@ -398,7 +395,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
             if (task.isSuccessful()) {
                 if(task.getResult().size() > participate_minimum) {
                     db.collection("event_attending").document(docuRef.getId()).delete();
-
+                    AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                     refresh();
                 } else {
                      Toast.makeText(getApplicationContext(), R.string.not_enough, Toast.LENGTH_SHORT).show();

@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.BuildConfig;
 import com.example.lmfag.R;
+import com.example.lmfag.utility.AlarmScheduler;
 import com.example.lmfag.utility.EventTypeToDrawable;
 import com.example.lmfag.utility.adapters.CustomAdapterEventTypeAdd;
 import com.firebase.geofire.GeoFireUtils;
@@ -356,8 +357,6 @@ public class CreateEventActivity extends MenuInterfaceActivity {
     }
 
     void writeAttendingToDB() {
-
-
         String eventID = preferences.getString("eventID", "");
         String userID = preferences.getString("userID", "");
         Map<String, Object> docData = new HashMap<>();
@@ -376,9 +375,11 @@ public class CreateEventActivity extends MenuInterfaceActivity {
             if (task.isSuccessful()) {
                 if (task.getResult().size() == 0) {
                     docRef.add(docData);
+                    AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                 } else {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         docRef.document(doc.getId()).set(docData);
+                        AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                     }
                 }
             }
@@ -391,8 +392,6 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                 .addOnSuccessListener(aVoid -> {
                     //Log.d(TAG, "DocumentSnapshot successfully written!");
                      Toast.makeText(getApplicationContext(), R.string.created_event, Toast.LENGTH_SHORT).show();
-
-
                     editor.putString("eventID", aVoid.getId());
                     editor.apply();
                     if (attending) {

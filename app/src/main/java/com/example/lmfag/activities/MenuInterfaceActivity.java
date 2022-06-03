@@ -13,6 +13,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.lmfag.R;
+import com.example.lmfag.utility.AlarmScheduler;
 import com.example.lmfag.utility.DrawerHelper;
 
 public class MenuInterfaceActivity extends AppCompatActivity {
@@ -20,10 +21,10 @@ public class MenuInterfaceActivity extends AppCompatActivity {
 
     public void logout() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("userID", "");
         editor.apply();
+        AlarmScheduler.cancelAllAlarms(this.getApplicationContext());
         Intent myIntent = new Intent(this, MainActivity.class);
         startActivity(myIntent);
     }

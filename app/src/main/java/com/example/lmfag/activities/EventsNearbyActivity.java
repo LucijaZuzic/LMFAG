@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
 import com.example.lmfag.utility.EventTypeToDrawable;
+import com.example.lmfag.utility.GetOrDefault;
 import com.example.lmfag.utility.adapters.CustomAdapterEvent;
 import com.firebase.geofire.GeoFireUtils;
 import com.firebase.geofire.GeoLocation;
@@ -65,13 +66,6 @@ public class EventsNearbyActivity extends MenuInterfaceActivity {
 
     private EditText enterLongitude, enterLatitude;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-    public static <K, V> V getOrDefault(@NonNull Map<K, V> map, K key, V defaultValue) {
-        V v;
-        return (((v = map.get(key)) != null) || map.containsKey(key))
-                ? v
-                : defaultValue;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,8 +148,8 @@ public class EventsNearbyActivity extends MenuInterfaceActivity {
         ActivityResultLauncher<String[]> locationPermissionRequest =
                 registerForActivityResult(new ActivityResultContracts
                                 .RequestMultiplePermissions(), result -> {
-                            Boolean fineLocationGranted = getOrDefault(result, Manifest.permission.ACCESS_FINE_LOCATION, false);
-                            Boolean coarseLocationGranted = getOrDefault(result, Manifest.permission.ACCESS_COARSE_LOCATION,false);
+                            Boolean fineLocationGranted = GetOrDefault.getOrDefault(result, Manifest.permission.ACCESS_FINE_LOCATION, false);
+                            Boolean coarseLocationGranted = GetOrDefault.getOrDefault(result, Manifest.permission.ACCESS_COARSE_LOCATION,false);
                             if (fineLocationGranted != null && fineLocationGranted) {
                                 // Precise location access granted.
                             } else if (coarseLocationGranted != null && coarseLocationGranted) {

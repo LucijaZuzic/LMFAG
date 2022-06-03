@@ -16,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 
 import com.example.lmfag.R;
+import com.example.lmfag.utility.GetOrDefault;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
@@ -41,12 +42,6 @@ public class ChooseLocationActivity extends MenuInterfaceActivity {
     private ImageView confirmButton, updateButton;
     private EditText enterLongitude, enterLatitude;
 
-    public static <K, V> V getOrDefault(@NonNull Map<K, V> map, K key, V defaultValue) {
-        V v;
-        return (((v = map.get(key)) != null) || map.containsKey(key))
-                ? v
-                : defaultValue;
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,8 +60,8 @@ public class ChooseLocationActivity extends MenuInterfaceActivity {
         ActivityResultLauncher<String[]> locationPermissionRequest =
                 registerForActivityResult(new ActivityResultContracts
                                 .RequestMultiplePermissions(), result -> {
-                            Boolean fineLocationGranted = getOrDefault(result, Manifest.permission.ACCESS_FINE_LOCATION, false);
-                            Boolean coarseLocationGranted = getOrDefault(result, Manifest.permission.ACCESS_COARSE_LOCATION,false);
+                            Boolean fineLocationGranted = GetOrDefault.getOrDefault(result, Manifest.permission.ACCESS_FINE_LOCATION, false);
+                            Boolean coarseLocationGranted = GetOrDefault.getOrDefault(result, Manifest.permission.ACCESS_COARSE_LOCATION,false);
                             if (fineLocationGranted != null && fineLocationGranted) {
                                 // Precise location access granted.
                             } else if (coarseLocationGranted != null && coarseLocationGranted) {

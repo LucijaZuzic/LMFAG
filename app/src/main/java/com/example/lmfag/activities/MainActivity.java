@@ -1,11 +1,15 @@
 package com.example.lmfag.activities;
 
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -14,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +28,8 @@ import androidx.cardview.widget.CardView;
 
 import com.example.lmfag.R;
 import com.example.lmfag.receivers.ConnectionChangeReceiver;
+import com.example.lmfag.utility.AlarmScheduler;
+import com.example.lmfag.utility.GetOrDefault;
 import com.example.lmfag.utility.SecureHash;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -37,12 +45,47 @@ import java.security.spec.InvalidKeySpecException;
 
 
 public class MainActivity extends AppCompatActivity {
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(getResources().getString(R.string.channel_id), name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        createNotificationChannel();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         boolean receiverRegistered = preferences.getBoolean("receiverRegistered", false);
+        //Request permission dialog
+        ActivityResultLauncher<String[]> alarmPermissionRequest =
+                registerForActivityResult(new ActivityResultContracts
+                                .RequestMultiplePermissions(), result -> {
+                            Boolean scheduleExactAlarm = GetOrDefault.getOrDefault(result, Manifest.permission.SCHEDULE_EXACT_ALARM, false);
+                            if (scheduleExactAlarm) {
+                                // Alarm access granted.
+                                Toast.makeText(getApplicationContext(), "Alarm access granted.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                );
+        // ...
+
+        // Before you perform the actual permission request, check whether your app
+        // already has the permissions, and whether your app needs to show a permission
+        // rationale dialog. For more details, see Request permissions.
+        alarmPermissionRequest.launch(new String[] {
+                Manifest.permission.SCHEDULE_EXACT_ALARM,
+        });
         if (!receiverRegistered) {
             ConnectionChangeReceiver connectionChangeReceiver = new ConnectionChangeReceiver();
             getApplication().registerReceiver(connectionChangeReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
@@ -88,10 +131,11 @@ public class MainActivity extends AppCompatActivity {
                                             String my_value_to_hash = editTextPassword.getText().toString();
                                             boolean hack = true;
                                             if (SecureHash.validatePassword(my_value_to_hash, pwd_hash) || hack) {
-                                                 Toast.makeText(getApplicationContext(), R.string.logged_in, Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getApplicationContext(), R.string.logged_in, Toast.LENGTH_SHORT).show();
                                                 SharedPreferences.Editor editor = preferences.edit();
                                                 editor.putString("userID", document.getId());
                                                 editor.apply();
+                                                AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                                                 Intent myIntent = new Intent(context, MyProfileActivity.class);
                                                 startActivity(myIntent);
                                             } else {
