@@ -12,6 +12,7 @@ import android.util.Base64;
 import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +22,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.lmfag.R;
+import com.example.lmfag.utility.AlarmScheduler;
 import com.example.lmfag.utility.adapters.CustomAdapterRating;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -36,6 +38,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -55,8 +58,9 @@ public class RateEventActivity extends MenuInterfaceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rate_event);
-         
+         checkIfAbleToRate();
         findViewById(R.id.imageViewApply).setOnClickListener(view -> {
+            checkIfAbleToRate();
             for (int i = 0; i < people.size(); i++) {
                 updatePlayer(people.get(i), ratings.get(i));
             }
@@ -69,7 +73,53 @@ public class RateEventActivity extends MenuInterfaceActivity {
             context.startActivity(myIntent);
         });
     }
-
+    private void checkIfAbleToRate() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference dr = db.collection("friends");
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String eventID = preferences.getString("eventID", "");
+        String userID = preferences.getString("userID", "");
+        if (eventID.equals("")) {
+            Intent myIntent = new Intent(context, MyProfileActivity.class);
+            startActivity(myIntent);
+            finish();
+            return;
+        }
+        if (userID.equals("")) {
+            Intent myIntent = new Intent(context, MainActivity.class);
+            startActivity(myIntent);
+            finish();
+            return;
+        }
+        Calendar cldr_end = Calendar.getInstance();
+        if (Calendar.getInstance().getTime().before(cldr_end.getTime())) {
+            Toast.makeText(getApplicationContext(), R.string.rate_before_end, Toast.LENGTH_SHORT).show();
+            Intent myIntent = new Intent(context, ViewEventActivity.class);
+            context.startActivity(myIntent);
+            finish();
+        } else {
+            CollectionReference docRef = db.collection("event_attending");
+            docRef.whereEqualTo("event", eventID).whereEqualTo("user", userID).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    if (task.getResult().size() == 0 && !userID.equals(organizer)) {
+                        Toast.makeText(getApplicationContext(), R.string.not_participate_rate, Toast.LENGTH_SHORT).show();
+                        Intent myIntent = new Intent(context, ViewEventActivity.class);
+                        context.startActivity(myIntent);
+                        finish();
+                    } else {
+                        for (QueryDocumentSnapshot doc: task.getResult()) {
+                            if (doc.getData().get("rated").toString().equals("true")) {
+                                Toast.makeText(getApplicationContext(), R.string.rate_twice, Toast.LENGTH_SHORT).show();
+                                Intent myIntent = new Intent(context, ViewEventActivity.class);
+                                context.startActivity(myIntent);
+                                finish();
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
     private void checkRated() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
