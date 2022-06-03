@@ -35,6 +35,12 @@ public class MenuInterfaceActivity extends AppCompatActivity {
         inflater.inflate(R.menu.menu, menu);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String user = preferences.getString("userID", "");
+        if (user.equals("")) {
+            Intent myIntent = new Intent(this, MainActivity.class);
+            startActivity(myIntent);
+        }
+
         String theme = preferences.getString("theme", "");
 
         if (!theme.equals("night"))
