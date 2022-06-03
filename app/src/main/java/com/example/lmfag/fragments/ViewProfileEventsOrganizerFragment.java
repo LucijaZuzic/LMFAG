@@ -17,9 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
 import com.example.lmfag.utility.DrawerHelper;
-import com.example.lmfag.utility.adapters.CustomAdapterEvent; 
+import com.example.lmfag.utility.adapters.CustomAdapterEvent;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ViewProfileEventsOrganizerFragment extends Fragment {
@@ -50,9 +51,7 @@ public class ViewProfileEventsOrganizerFragment extends Fragment {
         String friendID = preferences.getString("friendID", "");
         if (!friendID.equals("")) {
             String[] organizer_string = preferences.getString("friendOrganizer", "").split("_");
-            for (String organizer_event: organizer_string) {
-                events_array.add(organizer_event);
-            }
+            Collections.addAll(events_array, organizer_string);
             if (!organizer_string[0].equals("")) {
                 CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(events_array, context, preferences);
                 recyclerViewEventsOrganizer.setAdapter(customAdapterEvents);

@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,7 +18,6 @@ import com.example.lmfag.R;
 import com.example.lmfag.activities.MyProfileActivity;
 import com.example.lmfag.activities.ViewEventActivity;
 import com.example.lmfag.utility.EventTypeToDrawable;
-import com.example.lmfag.utility.MySwipe;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -28,7 +26,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CustomAdapterEventDelete extends RecyclerView.Adapter<CustomAdapterEventDelete.ViewHolder> {

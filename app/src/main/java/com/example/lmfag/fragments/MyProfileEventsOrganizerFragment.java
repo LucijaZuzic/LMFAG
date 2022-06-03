@@ -12,15 +12,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.example.lmfag.R;
-import com.example.lmfag.utility.DrawerHelper;
-import com.example.lmfag.utility.adapters.CustomAdapterEvent; 
-
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.lmfag.R;
+import com.example.lmfag.utility.DrawerHelper;
+import com.example.lmfag.utility.adapters.CustomAdapterEventDelete;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MyProfileEventsOrganizerFragment extends Fragment {
@@ -51,15 +51,13 @@ public class MyProfileEventsOrganizerFragment extends Fragment {
         String userID = preferences.getString("userID", "");
         if (!userID.equals("")) {
             String[] organizer_string = preferences.getString("userOrganizer", "").split("_");
-            for (String organizer_event: organizer_string) {
-                events_array.add(organizer_event);
-            }
+            events_array.addAll(Arrays.asList(organizer_string));
             if (!organizer_string[0].equals("")) {
-                CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(events_array, context, preferences);
+                CustomAdapterEventDelete customAdapterEvents = new CustomAdapterEventDelete(events_array, context, preferences);
                 recyclerViewEventsOrganizer.setAdapter(customAdapterEvents);
             }
         }
         TextView title = view.findViewById(R.id.list_title);
-        title.setText("Organizing events");
+        title.setText(R.string.organizing_events);
     }
 }

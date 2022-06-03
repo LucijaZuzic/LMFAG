@@ -15,7 +15,9 @@ import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.lmfag.R;
 import com.example.lmfag.activities.ChangePasswordActivity;
+import com.example.lmfag.activities.CreateEventActivity;
 import com.example.lmfag.activities.EditProfileActivity;
 import com.example.lmfag.activities.EventsNearbyActivity;
 import com.example.lmfag.activities.FindEventsActivity;
@@ -25,8 +27,6 @@ import com.example.lmfag.activities.MainActivity;
 import com.example.lmfag.activities.MyEventsActivity;
 import com.example.lmfag.activities.MyMessagesActivity;
 import com.example.lmfag.activities.MyProfileActivity;
-import com.example.lmfag.R;
-import com.example.lmfag.activities.CreateEventActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.DocumentReference;

@@ -51,7 +51,7 @@ public class ViewProfileFriendsFragment extends Fragment {
         fillUserData(view);
 
         TextView title = view.findViewById(R.id.list_title);
-        title.setText("Friends");
+        title.setText(R.string.friends);
     }
 
     private void fillUserData(@NonNull View view) {

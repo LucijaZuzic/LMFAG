@@ -37,16 +37,13 @@
                         android:layout_width="wrap_content"
                         android:clickable="true"
                         android:focusable="true"
-                        android:minWidth="48px"
-                        android:minHeight="48px"
+                        android:minWidth="48dp"
+                        android:minHeight="48dp"
                         android:id="@+id/closeCard"
                         android:src="@drawable/ic_baseline_close_24"
                         android:layout_height="wrap_content">
 
                     </ImageView>
-                    <ScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recyclerViewAreasOfInterestNew"
@@ -56,7 +53,7 @@
                             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
                         </androidx.recyclerview.widget.RecyclerView>
-                    </ScrollView></LinearLayout>
+                </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>
         <TextView
@@ -65,7 +62,7 @@
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:drawableStart="@drawable/ic_baseline_edit_calendar_24"
-            android:drawableTint="@color/teal_700"
+            app:drawableTint="@color/teal_700"
             android:fontFamily="sans-serif-condensed-light"
             android:gravity="center"
             android:minWidth="48dp"
@@ -128,8 +125,9 @@
                         android:id="@+id/editTextEventName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-condensed-light"
                         android:drawableStart="@drawable/ic_baseline_calendar_today_24"
-                        android:drawableTint="@color/teal_700"
+                        app:drawableTint="@color/teal_700"
                         android:hint="@string/event_name"
                         android:inputType="textPersonName"
                         android:minHeight="48dp" />
@@ -213,9 +211,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
                     android:layout_marginTop="10dp"
+                    android:fontFamily="sans-serif-condensed-light"
                     android:layout_marginEnd="30dp"
                     android:drawableStart="@drawable/ic_baseline_description_24"
-                    android:drawableTint="@color/teal_700"
+                    app:drawableTint="@color/teal_700"
                     android:hint="@string/event_description"
                     android:inputType="textMultiLine"
                     android:minHeight="48dp" />
@@ -324,7 +323,7 @@
                     android:layout_weight="1"
                     android:checked="true"
                     android:drawableStart="@drawable/ic_baseline_lock_open_24"
-                    android:drawableTint="@color/teal_700"
+                    app:drawableTint="@color/teal_700"
                     android:fontFamily="sans-serif-condensed-light"
                     android:gravity="center"
                     android:padding="5dp"
@@ -344,7 +343,7 @@
                     android:checked="true"
 
                     android:drawableStart="@drawable/ic_baseline_nature_people_24"
-                    android:drawableTint="@color/teal_700"
+                    app:drawableTint="@color/teal_700"
                     android:fontFamily="sans-serif-condensed-light"
                     android:gravity="center"
                     android:padding="5dp"
@@ -364,7 +363,7 @@
                     android:checked="true"
 
                     android:drawableStart="@drawable/ic_baseline_plus_one_24"
-                    android:drawableTint="@color/teal_700"
+                    app:drawableTint="@color/teal_700"
 
                     android:fontFamily="sans-serif-condensed-light"
 
@@ -385,7 +384,7 @@
                     android:checked="true"
 
                     android:drawableStart="@drawable/ic_baseline_notifications_24"
-                    android:drawableTint="@color/teal_700"
+                    app:drawableTint="@color/teal_700"
                     android:fontFamily="sans-serif-condensed-light"
                     android:gravity="center"
                     android:padding="5dp"
@@ -593,8 +592,9 @@
                     <TextView
                         android:id="@+id/textViewChooseLocation"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
+                        android:textStyle="bold"
                         android:fontFamily="sans-serif-condensed-light"
                         android:gravity="center"
                         android:hint="@string/choose_location" />

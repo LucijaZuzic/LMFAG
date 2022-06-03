@@ -1,25 +1,20 @@
 package com.example.lmfag.activities;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-
 import android.Manifest;
-
 import android.content.Context;
 import android.content.SharedPreferences;
-
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
-
 import android.widget.EditText;
-
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.lmfag.utility.DrawerHelper;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+
 import com.example.lmfag.R;
 
 import org.osmdroid.api.IMapController;
@@ -27,16 +22,11 @@ import org.osmdroid.config.Configuration;
 import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
-
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
-
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
-
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
-
-
 
 import java.util.Map;
 
@@ -139,7 +129,7 @@ public class ChooseLocationActivity extends MenuInterfaceActivity {
 
             @Override
             public boolean longPressHelper(GeoPoint p) {
-                Toast.makeText(ChooseLocationActivity.this, getString(R.string.setting_location), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.setting_location), Toast.LENGTH_SHORT).show();
                 chosenLocationMarker.setPosition(p);
                 enterLatitude.setText(Double.toString(p.getLatitude()));
                 enterLongitude.setText(Double.toString(p.getLongitude()));
@@ -177,7 +167,7 @@ public class ChooseLocationActivity extends MenuInterfaceActivity {
 
             @Override
             public void onMarkerDragStart(Marker marker) {
-                Toast.makeText(ChooseLocationActivity.this, getString(R.string.waiting_location), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.waiting_location), Toast.LENGTH_SHORT).show();
             }
         });
         map.getOverlays().add(chosenLocationMarker);

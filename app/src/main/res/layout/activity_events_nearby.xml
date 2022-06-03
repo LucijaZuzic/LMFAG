@@ -19,7 +19,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:drawableTint="@color/teal_700"
+                    app:drawableTint="@color/teal_700"
                     android:drawableStart="@drawable/ic_baseline_location_searching_24"
                     android:gravity="center"
                     android:minWidth="48dp"
@@ -28,6 +28,22 @@
                     android:text="@string/events_nearby"
                     android:textSize="21sp"
                     android:textStyle="bold" />
+                <View
+                    android:id="@+id/divider_top"
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="?android:attr/listDivider" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -123,7 +139,7 @@
                         <EditText
                             android:fontFamily="sans-serif-condensed-light"
                             android:id="@+id/editTextRadius"
-                            android:drawableTint="@color/teal_700"
+                            app:drawableTint="@color/teal_700"
                             android:inputType="numberDecimal"
                             android:drawableStart="@drawable/ic_baseline_radar_24"
                             android:layout_width="wrap_content"
@@ -154,7 +170,7 @@
                     android:textSize="21sp"
                     android:drawableStart="@drawable/ic_baseline_map_24"
                     android:checked="true"
-                    android:drawableTint="@color/teal_700"
+                    app:drawableTint="@color/teal_700"
                     android:padding="5dp"
                     android:textStyle="bold"
                     android:text="@string/display_map">
@@ -171,30 +187,27 @@
                     android:background="?android:attr/listDivider" />
 
 
-                <ScrollView
-                    android:id="@+id/scrollViewEventsNearby"
-                    android:layout_width="match_parent"
-                    android:visibility="gone"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp">
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewEventsNearby"
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
+                android:layout_margin="10dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
             </androidx.recyclerview.widget.RecyclerView>
 
-    </ScrollView>
 
                 <org.osmdroid.views.MapView
                     android:id="@+id/map"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="300dp"
                     android:layout_margin="10dp" >
 
                 </org.osmdroid.views.MapView>
+    </LinearLayout>
+    </ScrollView>
 </LinearLayout>
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"

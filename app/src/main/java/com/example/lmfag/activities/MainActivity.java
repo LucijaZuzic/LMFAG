@@ -1,11 +1,5 @@
 package com.example.lmfag.activities;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.cardview.widget.CardView;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -20,12 +14,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.cardview.widget.CardView;
+
 import com.example.lmfag.R;
 import com.example.lmfag.receivers.ConnectionChangeReceiver;
 import com.example.lmfag.utility.SecureHash;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -78,10 +77,10 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             if (task.getResult().size() == 0) {
-                                Snackbar.make(editTextUsername, R.string.no_user_username, Snackbar.LENGTH_SHORT).show();
+                                 Toast.makeText(getApplicationContext(), R.string.no_user_username, Toast.LENGTH_SHORT).show();
                             } else {
                                 if (task.getResult().size() > 1) {
-                                    Snackbar.make(editTextUsername, R.string.multiple_username, Snackbar.LENGTH_SHORT).show();
+                                     Toast.makeText(getApplicationContext(), R.string.multiple_username, Toast.LENGTH_SHORT).show();
                                 } else {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                         String pwd_hash = document.getData().get("password_hash").toString();
@@ -89,14 +88,14 @@ public class MainActivity extends AppCompatActivity {
                                             String my_value_to_hash = editTextPassword.getText().toString();
                                             boolean hack = true;
                                             if (SecureHash.validatePassword(my_value_to_hash, pwd_hash) || hack) {
-                                                Snackbar.make(editTextUsername, R.string.logged_in, Snackbar.LENGTH_SHORT).show();
+                                                 Toast.makeText(getApplicationContext(), R.string.logged_in, Toast.LENGTH_SHORT).show();
                                                 SharedPreferences.Editor editor = preferences.edit();
                                                 editor.putString("userID", document.getId());
                                                 editor.apply();
                                                 Intent myIntent = new Intent(context, MyProfileActivity.class);
                                                 startActivity(myIntent);
                                             } else {
-                                                Snackbar.make(editTextUsername, R.string.password_incorrect, Snackbar.LENGTH_SHORT).show();
+                                                 Toast.makeText(getApplicationContext(), R.string.password_incorrect, Toast.LENGTH_SHORT).show();
                                             }
                                         } catch (NoSuchAlgorithmException e) {
                                             e.printStackTrace();

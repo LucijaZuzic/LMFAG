@@ -2,14 +2,10 @@ package com.example.lmfag.utility.adapters;
 
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
-import androidx.annotation.NonNull;
-
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -19,15 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
 import com.example.lmfag.activities.ViewMessagesActivity;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
-import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -152,7 +142,6 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
                         switch (which){
                             case DialogInterface.BUTTON_POSITIVE:
                                 db.collection("messages").document(delete_id).update("messages", R.string.deleted_by_sender);
-                                context.getFriendData();
                                 context.getAllMessages();
                                 break;
 

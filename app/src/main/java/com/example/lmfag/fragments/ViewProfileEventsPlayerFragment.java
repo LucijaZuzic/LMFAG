@@ -21,6 +21,8 @@ import com.example.lmfag.utility.DrawerHelper;
 import com.example.lmfag.utility.adapters.CustomAdapterEvent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ViewProfileEventsPlayerFragment extends Fragment {
@@ -70,14 +72,10 @@ public class ViewProfileEventsPlayerFragment extends Fragment {
         if (!friendID.equals("")) {
             String[] player_string = preferences.getString("friendPlayer", "").split("_");
             events_player_array = new ArrayList<>();
-            for (String event: player_string) {
-                events_player_array.add(event);
-            }
+            Collections.addAll(events_player_array, player_string);
             String[] subscriber_string = preferences.getString("friendSubscriber", "").split("_");
             event_subscriber_array = new ArrayList<>();
-            for (String event: subscriber_string) {
-                event_subscriber_array.add(event);
-            }
+            event_subscriber_array.addAll(Arrays.asList(subscriber_string));
             changeArray(recyclerViewEventsPlayer);
         }
         notificationsOnly.setOnClickListener(someView -> {

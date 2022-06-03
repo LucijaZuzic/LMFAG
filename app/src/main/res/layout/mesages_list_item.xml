@@ -54,6 +54,8 @@
                         android:id="@+id/textViewSender"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColorHint="@color/white"
+                        android:textColor="@color/white"
                         android:hint="@string/latest_message"
                         android:fontFamily="sans-serif-condensed-light"
                         android:textStyle="bold" />
@@ -61,6 +63,8 @@
                     <TextView
                         android:id="@+id/textViewLatestMessage"
                         android:layout_width="wrap_content"
+                        android:textColorHint="@color/white"
+                        android:textColor="@color/white"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-condensed-light"
                         android:hint="@string/latest_message" />

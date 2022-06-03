@@ -5,12 +5,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.lmfag.fragments.ViewProfileAreasOfInterestFragment;
-import com.example.lmfag.fragments.ViewProfileEventsOrganizerFragment;
-import com.example.lmfag.fragments.ViewProfileEventsPlayerFragment;
-import com.example.lmfag.fragments.ViewProfileFriendsFragment;
-import com.example.lmfag.fragments.ViewProfileInfoFragment;
-
 public class TabPagerAdapter extends FragmentStateAdapter {
     private Fragment[] fragmentsList;
 

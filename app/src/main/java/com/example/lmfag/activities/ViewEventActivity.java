@@ -1,8 +1,5 @@
 package com.example.lmfag.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.SwitchCompat;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,15 +9,15 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SwitchCompat;
 
 import com.example.lmfag.BuildConfig;
 import com.example.lmfag.R;
-import com.example.lmfag.utility.DrawerHelper;
 import com.example.lmfag.utility.EventTypeToDrawable;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -28,7 +25,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -58,49 +54,59 @@ public class ViewEventActivity extends MenuInterfaceActivity {
     private IMapController mapController;
     private MyLocationNewOverlay myLocationOverlay;
     private Marker chosenLocationMarker;
+    private SwitchCompat switch_notify;
     final Calendar cldr_end = Calendar.getInstance();
     private String event_type;
-    private ImageView imageViewChooseStartDate, imageViewChooseStartTime, imageViewChooseEndDate, imageViewChooseEndTime, apply;
-    private TextView textViewChooseStartDate, textViewChooseStartTime, textViewChooseEndDate, textViewChooseEndTime;
+    private ImageView apply, edit, rate;
+    private TextView textViewChooseStartDate, textViewChooseStartTime, myUsername, textViewChooseEndDate, textViewChooseEndTime, eventName, eventType, location, description, minimumlevel, switchpublic, switchout, slider;
     private double longitude = 45.23;
     private double latitude = 45.36;
     private String organizer;
     private boolean public_event;
     private Float participate_minimum, participate_maximum;
     private Float minimum_level;
-
+    private CircleImageView circleImageView;
+    private SharedPreferences preferences;
+    private FirebaseFirestore db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_event);
-         
-        imageViewChooseStartDate = findViewById(R.id.imageViewChooseStartDate);
+        map = findViewById(R.id.map);
+        preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        db = FirebaseFirestore.getInstance();
         textViewChooseStartDate = findViewById(R.id.textViewChooseStartDate);
-
-        imageViewChooseStartTime = findViewById(R.id.imageViewChooseStartTime);
         textViewChooseStartTime = findViewById(R.id.textViewChooseStartTime);
-
-        imageViewChooseEndDate = findViewById(R.id.imageViewChooseEndDate);
         textViewChooseEndDate = findViewById(R.id.textViewChooseEndDate);
-
-        imageViewChooseEndTime = findViewById(R.id.imageViewChooseEndTime);
         textViewChooseEndTime = findViewById(R.id.textViewChooseEndTime);
+        circleImageView = findViewById(R.id.profile_image);
+        switch_notify = findViewById(R.id.switchNotifications);
 
-        ImageView apply = findViewById(R.id.imageViewApply);
+         eventName = findViewById(R.id.textViewEventName);
+         eventType = findViewById(R.id.textViewEventType);
+         description = findViewById(R.id.textViewEvenDescription);
+         minimumlevel = findViewById(R.id.textViewMinimumLevel);
+         switchpublic = findViewById(R.id.textViewPublic);
+         switchout = findViewById(R.id.textViewOutdoor);
+         location = findViewById(R.id.textViewChooseLocation);
+         slider = findViewById(R.id.textViewNumberOfPlayers);
+         myUsername = findViewById(R.id.textViewOrganizer);
+        apply = findViewById(R.id.imageViewApply);
         apply.setOnClickListener(view -> {
             subscribe();
         });
-        SwitchCompat sw = findViewById(R.id.switchNotifications);
-        sw.setOnClickListener(view -> {
+
+        switch_notify.setOnClickListener(view -> {
             changeNotify();
         });
-        ImageView edit = findViewById(R.id.imageViewEdit);
+
+        edit = findViewById(R.id.imageViewEdit);
         edit.setOnClickListener(view -> {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             String me = preferences.getString("userID", "");
             if (me.equals(organizer)) {
                 if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime())) {
-                    Snackbar.make(imageViewChooseEndTime, R.string.edit_finished, Snackbar.LENGTH_SHORT).show();
+                     Toast.makeText(getApplicationContext(), R.string.edit_finished, Toast.LENGTH_SHORT).show();
                     //Intent myIntent = new Intent(context, ViewEventActivity.class);
                     //startActivity(myIntent);
                 } else {
@@ -108,32 +114,30 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                     context.startActivity(myIntent);
                 }
             } else {
-                Snackbar.make(edit, R.string.organizer_edit, Snackbar.LENGTH_SHORT).show();
+                 Toast.makeText(getApplicationContext(), R.string.organizer_edit, Toast.LENGTH_SHORT).show();
             }
         });
 
-
-        ImageView imageViewRate = findViewById(R.id.imageViewRate);
-        imageViewRate.setOnClickListener(view -> {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    String eventID = preferences.getString("eventID", "");
-                    String userID = preferences.getString("userID", "");
+        rate = findViewById(R.id.imageViewRate);
+        rate.setOnClickListener(view -> {
+            String eventID = preferences.getString("eventID", "");
+            String userID = preferences.getString("userID", "");
 
             if (Calendar.getInstance().getTime().before(cldr_end.getTime())) {
-                Snackbar.make(imageViewChooseStartTime, R.string.rate_before_end, Snackbar.LENGTH_SHORT).show();
+                 Toast.makeText(getApplicationContext(), R.string.rate_before_end, Toast.LENGTH_SHORT).show();
             } else {
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
                     CollectionReference docRef = db.collection("event_attending");
                     docRef.whereEqualTo("event", eventID).whereEqualTo("user", userID).get().addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             if (task.getResult().size() == 0 && !userID.equals(organizer)) {
-                                Snackbar.make(imageViewChooseStartTime, R.string.not_participate_rate, Snackbar.LENGTH_SHORT).show();
+                                 Toast.makeText(getApplicationContext(), R.string.not_participate_rate, Toast.LENGTH_SHORT).show();
                             } else {
                                 boolean found = false;
                                 for (QueryDocumentSnapshot doc: task.getResult()) {
                                     if (doc.getData().get("rated").toString().equals("true")) {
-                                        Snackbar.make(imageViewChooseStartTime, R.string.rate_twice, Snackbar.LENGTH_SHORT).show();
+                                        Toast.makeText(getApplicationContext(), R.string.rate_twice, Toast.LENGTH_SHORT).show();
                                         found = true;
+                                        break;
                                     }
                                 }
                                 if (!found) {
@@ -151,11 +155,8 @@ public class ViewEventActivity extends MenuInterfaceActivity {
 
 
     private void changeNotify() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String eventID = preferences.getString("eventID", "");
         String userID = preferences.getString("userID", "");
-        SwitchCompat switch_notify = findViewById(R.id.switchNotifications);
 
         if (eventID.equals("")) {
             return;
@@ -184,7 +185,6 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         // Loading map
         Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
 
-        map = findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setMultiTouchControls(true);
         mapController = map.getController();
@@ -209,12 +209,10 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         super.onResume();
         fillData();
         checkSubscribed();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         latitude = preferences.getFloat("newEventLatitude", (float)latitude);
         longitude = preferences.getFloat("newEventLongitude", (float)longitude);
         String formattedLocation = getString(R.string.location) + "\n" + getString(R.string.latitude) + ": " + Double.toString(Math.round(latitude * 10000) / 10000.0) + "\n"
                 + getString(R.string.longitude) + ": " + Double.toString(Math.round(longitude * 10000) / 10000.0);
-        TextView location = findViewById(R.id.textViewChooseLocation);
         location.setText(formattedLocation);
         chosenLocationMarker.setPosition(new org.osmdroid.util.GeoPoint(latitude, longitude));
         mapController.setCenter(new org.osmdroid.util.GeoPoint(latitude, longitude));
@@ -226,7 +224,6 @@ public class ViewEventActivity extends MenuInterfaceActivity {
     }
 
     private void checkSubscribed() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String eventID = preferences.getString("eventID", "");
         String userID = preferences.getString("userID", "");
@@ -243,9 +240,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         CollectionReference docRef = db.collection("event_attending");
         docRef.whereEqualTo("event", eventID).whereEqualTo("user", userID).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                ImageView rate = findViewById(R.id.imageViewRate);
                 if (task.getResult().size() == 0) {
-                    ImageView apply = findViewById(R.id.imageViewApply);
                     apply.setImageDrawable(getDrawable(R.drawable.ic_baseline_person_add_24));
                     for (QueryDocumentSnapshot doc: task.getResult()) {
                         Map<String, Object> map = doc.getData();
@@ -256,7 +251,6 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                         }
                     }
                 } else {
-                    ImageView apply = findViewById(R.id.imageViewApply);
                     apply.setImageDrawable(getDrawable(R.drawable.ic_baseline_person_remove_24));
                     rate.setImageDrawable(getDrawable(R.drawable.ic_baseline_star_outline_24));
                 }
@@ -274,17 +268,17 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                     DocumentSnapshot document2 = task2.getResult();
                     if (document2.exists()) {
                         if (!document2.getData().get("friends").toString().contains(userID)) {
-                            Snackbar.make(apply, R.string.not_friend_organizer, Snackbar.LENGTH_SHORT).show();
+                             Toast.makeText(getApplicationContext(), R.string.not_friend_organizer, Toast.LENGTH_SHORT).show();
                         } else {
                             docuRef.add(docData);
 
                             refresh();
                         }
                     } else {
-                        Snackbar.make(apply, R.string.not_friend_organizer, Snackbar.LENGTH_SHORT).show();
+                         Toast.makeText(getApplicationContext(), R.string.not_friend_organizer, Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Snackbar.make(apply, R.string.not_friend_organizer, Snackbar.LENGTH_SHORT).show();
+                     Toast.makeText(getApplicationContext(), R.string.not_friend_organizer, Toast.LENGTH_SHORT).show();
                 }
             });
     }
@@ -315,11 +309,8 @@ public class ViewEventActivity extends MenuInterfaceActivity {
     }
 
     private void checkNumberOfParticipantsAdd(CollectionReference docuRef, Map<String, Object> docData) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String eventID = preferences.getString("eventID", "");
         String userID = preferences.getString("userID", "");
-        SwitchCompat switch_notify = findViewById(R.id.switchNotifications);
         if (eventID.equals("")) {
             return;
         }
@@ -349,7 +340,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                                     if (areas_array.contains(event_type)) {
                                         if (minimum_level > 0) {
                                             if (points_array.get(areas_array.indexOf(event_type)) < minimum_level * 1000) {
-                                                Snackbar.make(switch_notify, R.string.level_low, Snackbar.LENGTH_SHORT).show();
+                                                 Toast.makeText(getApplicationContext(), R.string.level_low, Toast.LENGTH_SHORT).show();
                                             } else {
                                                 if (public_event) {
                                                     docuRef.add(docData);
@@ -370,7 +361,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                                         }
                                     } else {
                                         if (minimum_level > 0) {
-                                            Snackbar.make(switch_notify, R.string.level_low, Snackbar.LENGTH_SHORT).show();
+                                             Toast.makeText(getApplicationContext(), R.string.level_low, Toast.LENGTH_SHORT).show();
                                         } else {
                                             if (public_event) {
                                                 docuRef.add(docData);
@@ -386,18 +377,15 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                         }
                     });
                 } else {
-                    Snackbar.make(switch_notify, R.string.too_many, Snackbar.LENGTH_SHORT).show();
+                     Toast.makeText(getApplicationContext(), R.string.too_many, Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
     private void checkNumberOfParticipantsRemove(QueryDocumentSnapshot docuRef) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String eventID = preferences.getString("eventID", "");
         String userID = preferences.getString("userID", "");
-        SwitchCompat switch_notify = findViewById(R.id.switchNotifications);
         if (eventID.equals("")) {
             return;
         }
@@ -412,18 +400,15 @@ public class ViewEventActivity extends MenuInterfaceActivity {
 
                     refresh();
                 } else {
-                    Snackbar.make(switch_notify, R.string.not_enough, Snackbar.LENGTH_SHORT).show();
+                     Toast.makeText(getApplicationContext(), R.string.not_enough, Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
     private void subscribe() {
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             String eventID = preferences.getString("eventID", "");
             String userID = preferences.getString("userID", "");
-            SwitchCompat switch_notify = findViewById(R.id.switchNotifications);
             Map<String, Object> docData = new HashMap<>();
             docData.put("event", eventID);
             docData.put("user", userID);
@@ -451,8 +436,6 @@ public class ViewEventActivity extends MenuInterfaceActivity {
 
 
     private void getOrganizerData(String name) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users").document(name);
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -460,7 +443,6 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                 if (document.exists()) {
                     Map<String, Object> data = document.getData();
 
-                    TextView myUsername = findViewById(R.id.textViewOrganizer);
                     myUsername.setText(data.get("username").toString());
 
                     FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -469,10 +451,9 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                     final long ONE_MEGABYTE = 1024 * 1024;
                     imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
                         // Data for "images/island.jpg" is returns, use this as needed
-                        CircleImageView circleImageView = findViewById(R.id.profile_image);
                         Bitmap bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
                         circleImageView.setImageBitmap(bmp);
-                        findViewById(R.id.profile_image).setOnClickListener(view -> {
+                        circleImageView.setOnClickListener(view -> {
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.putString("friendID", name);
                             editor.apply();
@@ -498,8 +479,6 @@ public class ViewEventActivity extends MenuInterfaceActivity {
     }
 
     private void fillData() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String eventID = preferences.getString("eventID", "");
         String userID = preferences.getString("userID", "");
         if (eventID.equals("")) {
@@ -514,14 +493,6 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     Map<String, Object> docData = document.getData();
-                    TextView eventName = findViewById(R.id.textViewEventName);
-                    TextView eventType = findViewById(R.id.textViewEventType);
-                    TextView description = findViewById(R.id.textViewEvenDescription);
-                    TextView minimumlevel = findViewById(R.id.textViewMinimumLevel);
-                    TextView switchpublic = findViewById(R.id.textViewPublic);
-                    TextView switcout = findViewById(R.id.textViewOutdoor);
-                    TextView slider = findViewById(R.id.textViewNumberOfPlayers);
-                    SwitchCompat switch_notify = findViewById(R.id.switchNotifications);
                     eventName.setText(docData.get("event_name").toString());
                     eventType.setText(docData.get("event_type").toString());
                     eventType.setCompoundDrawablesRelativeWithIntrinsicBounds(EventTypeToDrawable.getEventTypeToDrawable(docData.get("event_type").toString()), 0, 0 ,0);
@@ -535,11 +506,11 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                         switchpublic.setText(R.string.private_event);
                     }
                     if (docData.get("outdoors").toString().equals("true")) {
-                        switcout.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_baseline_nature_people_24,0,0,0);
-                        switcout.setText(R.string.outdoor);
+                        switchout.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_baseline_nature_people_24,0,0,0);
+                        switchout.setText(R.string.outdoor);
                     } else {
-                        switcout.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_baseline_attribution_24,0,0,0);
-                        switcout.setText(R.string.indoor);
+                        switchout.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_baseline_attribution_24,0,0,0);
+                        switchout.setText(R.string.indoor);
                     }
                     Float val1 = Float.parseFloat(docData.get("minimum_players").toString());
                     Float val2 = Float.parseFloat(docData.get("maximum_players").toString());
@@ -561,7 +532,6 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                     textViewChooseEndTime.setText(DateFormat.getTimeInstance().format(cldr_end.getTime()));
                     public_event = docData.get("public").toString().equals("true");
                     GeoPoint location_point = (GeoPoint)(docData.get("location"));
-                    TextView location = findViewById(R.id.textViewChooseLocation);
                     latitude = location_point.getLatitude();
                     longitude = location_point.getLongitude();
 

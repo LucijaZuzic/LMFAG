@@ -1,13 +1,5 @@
 package com.example.lmfag.activities;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.SwitchCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -21,10 +13,17 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
-import com.example.lmfag.utility.EventTypeToDrawable;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.lmfag.R;
+import com.example.lmfag.utility.EventTypeToDrawable;
 import com.example.lmfag.utility.adapters.CustomAdapterEvent;
-import com.example.lmfag.utility.DrawerHelper;
 import com.firebase.geofire.GeoFireUtils;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQueryBounds;
@@ -79,8 +78,6 @@ public class EventsNearbyActivity extends MenuInterfaceActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_events_nearby);
 
-         
-
         enterLatitude = findViewById(R.id.inputLatitude);
         enterLongitude = findViewById(R.id.inputLongitude);
         updateButton = findViewById(R.id.updateLocation);
@@ -122,12 +119,13 @@ public class EventsNearbyActivity extends MenuInterfaceActivity {
             }
         });
         SwitchCompat switchMapOnOf = findViewById(R.id.switchMapOnOff);
-        ScrollView scrollViewEventsNearby = findViewById(R.id.scrollViewEventsNearby);
         switchMapOnOf.setOnClickListener(view -> {
-            if (scrollViewEventsNearby.getVisibility() == View.GONE) {
-                scrollViewEventsNearby.setVisibility(View.VISIBLE);
+            if (eventNearbyRecycler.getVisibility() == View.GONE) {
+                map.setVisibility(View.GONE);
+                eventNearbyRecycler.setVisibility(View.VISIBLE);
             } else {
-                scrollViewEventsNearby.setVisibility(View.GONE);
+                map.setVisibility(View.VISIBLE);
+                eventNearbyRecycler.setVisibility(View.GONE);
             }
         });
     }
@@ -217,7 +215,7 @@ public class EventsNearbyActivity extends MenuInterfaceActivity {
 
             @Override
             public boolean longPressHelper(org.osmdroid.util.GeoPoint p) {
-                Toast.makeText(EventsNearbyActivity.this, getString(R.string.setting_location), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.setting_location), Toast.LENGTH_SHORT).show();
                 chosenLocationMarker.setPosition(p);
                 enterLatitude.setText(Double.toString(p.getLatitude()));
                 enterLongitude.setText(Double.toString(p.getLongitude()));
@@ -253,7 +251,7 @@ public class EventsNearbyActivity extends MenuInterfaceActivity {
 
             @Override
             public void onMarkerDragStart(Marker marker) {
-                Toast.makeText(EventsNearbyActivity.this, getString(R.string.waiting_location), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.waiting_location), Toast.LENGTH_SHORT).show();
             }
         });
         map.getOverlays().add(chosenLocationMarker);

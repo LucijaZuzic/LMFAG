@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +25,6 @@ import com.example.lmfag.R;
 import com.example.lmfag.activities.MainActivity;
 import com.example.lmfag.activities.ViewMessagesActivity;
 import com.example.lmfag.utility.DrawerHelper;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -79,7 +79,7 @@ public class   ViewProfileInfoFragment extends Fragment {
             if (areFriends) {
                 db.collection("friends").document(receiver).update("friends", FieldValue.arrayRemove(sender));
                 db.collection("friends").document(sender).update("friends", FieldValue.arrayRemove(receiver));
-                Snackbar.make(friendRequest, R.string.no_longer_friends, Snackbar.LENGTH_SHORT);
+                 Toast.makeText(context.getApplicationContext(), R.string.no_longer_friends, Toast.LENGTH_SHORT).show();
                 areFriends = false;
             } else {
                 writeToDb(sender, receiver);
@@ -131,12 +131,12 @@ public class   ViewProfileInfoFragment extends Fragment {
         .add(docData)
         .addOnSuccessListener(aVoid -> {
             //Log.d(TAG, "DocumentSnapshot successfully written!");
-            Snackbar.make(friendRequest, R.string.friend_request_sent, Snackbar.LENGTH_SHORT).show();
+             Toast.makeText(context.getApplicationContext(), R.string.friend_request_sent, Toast.LENGTH_SHORT).show();
             //MessageSender.sendMessage("friend_requests in topics && " + receiver + " in topics",
                     //getResources().getString(R.string.friend_request_sent),  getResources().getString(R.string.friend_request_sent));
         })
         .addOnFailureListener(e -> {
-            Snackbar.make(friendRequest, R.string.write_failed, Snackbar.LENGTH_SHORT).show();
+             Toast.makeText(context.getApplicationContext(), R.string.write_failed, Toast.LENGTH_SHORT).show();
             //Log.w(TAG, "Error writing document", e);
         });
     }

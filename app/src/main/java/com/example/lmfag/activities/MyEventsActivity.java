@@ -8,7 +8,6 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.lmfag.R;
 import com.example.lmfag.fragments.MyProfileEventsOrganizerFragment;
 import com.example.lmfag.fragments.MyProfileEventsPlayerFragment;
-import com.example.lmfag.utility.DrawerHelper;
 import com.example.lmfag.utility.adapters.TabPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;

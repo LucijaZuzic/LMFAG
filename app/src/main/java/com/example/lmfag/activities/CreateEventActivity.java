@@ -1,45 +1,36 @@
 package com.example.lmfag.activities;
 
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.SwitchCompat;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-
 import android.widget.CompoundButton;
-
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
-import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.BuildConfig;
-import com.example.lmfag.utility.DrawerHelper;
-import com.example.lmfag.utility.EventTypeToDrawable;
 import com.example.lmfag.R;
-import com.example.lmfag.utility.adapters.CustomAdapterAreaOfInterestAdd;
+import com.example.lmfag.utility.EventTypeToDrawable;
 import com.example.lmfag.utility.adapters.CustomAdapterEventTypeAdd;
 import com.firebase.geofire.GeoFireUtils;
 import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.slider.RangeSlider;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -123,7 +114,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         description = findViewById(R.id.editTextEventDescription);
         minimum_level = findViewById(R.id.editTextMinimumLevel);
         minimum_level.setMinValue(0);
-        minimum_level.setMaxValue(20);
+        minimum_level.setMaxValue(100000);
         minimum_level.setWrapSelectorWheel(true);
         switch_public = findViewById(R.id.switchPublic);
         switch_out = findViewById(R.id.switchOutdoor);
@@ -261,10 +252,10 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                         cldr_start.set(year_start, month_start, day_start, hours_start, minutes_start);
                         textViewChooseStartDate.setText(DateFormat.getDateInstance().format(cldr_start.getTime()));
                         if (cldr_start.getTime().before(Calendar.getInstance().getTime())) {
-                            Snackbar.make(imageViewChooseStartDate, R.string.begin_past, Snackbar.LENGTH_SHORT).show();
+                             Toast.makeText(getApplicationContext(), R.string.begin_past, Toast.LENGTH_SHORT).show();
                         }
                         if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
-                            Snackbar.make(imageViewChooseStartDate, R.string.end_before_beginning, Snackbar.LENGTH_SHORT).show();
+                             Toast.makeText(getApplicationContext(), R.string.end_before_beginning, Toast.LENGTH_SHORT).show();
                         }
                     }, year_start, month_start, day_start);
             picker.show();
@@ -279,10 +270,10 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                         cldr_end.set(year_end, month_end, day_end, hours_end, minutes_end);
                         textViewChooseEndDate.setText(DateFormat.getDateInstance().format(cldr_end.getTime()));
                         if (cldr_end.getTime().before(Calendar.getInstance().getTime())) {
-                            Snackbar.make(imageViewChooseStartDate, R.string.end_past, Snackbar.LENGTH_SHORT).show();
+                             Toast.makeText(getApplicationContext(), R.string.end_past, Toast.LENGTH_SHORT).show();
                         }
                         if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
-                            Snackbar.make(imageViewChooseEndDate, R.string.end_before_beginning, Snackbar.LENGTH_SHORT).show();
+                             Toast.makeText(getApplicationContext(), R.string.end_before_beginning, Toast.LENGTH_SHORT).show();
                         }
                     }, year_end, month_end, day_end);
             picker.show();
@@ -299,10 +290,10 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                         cldr_start.set(year_start, month_start, day_start, hours_start, minutes_start);
                         textViewChooseStartTime.setText(DateFormat.getTimeInstance().format(cldr_start.getTime()));
                         if (cldr_start.getTime().before(Calendar.getInstance().getTime())) {
-                            Snackbar.make(imageViewChooseStartDate, R.string.begin_past, Snackbar.LENGTH_SHORT).show();
+                             Toast.makeText(getApplicationContext(), R.string.begin_past, Toast.LENGTH_SHORT).show();
                         }
                         if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
-                            Snackbar.make(imageViewChooseStartTime, R.string.end_before_beginning, Snackbar.LENGTH_SHORT).show();
+                             Toast.makeText(getApplicationContext(), R.string.end_before_beginning, Toast.LENGTH_SHORT).show();
                         }
                     }, hours_start, minutes_start, true);
             picker.show();
@@ -316,10 +307,10 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                         cldr_end.set(year_end, month_end, day_end, hours_end, minutes_end);
                         textViewChooseEndTime.setText(DateFormat.getTimeInstance().format(cldr_end.getTime()));
                         if (cldr_end.getTime().before(Calendar.getInstance().getTime())) {
-                            Snackbar.make(imageViewChooseEndDate, R.string.end_in_past, Snackbar.LENGTH_SHORT).show();
+                             Toast.makeText(getApplicationContext(), R.string.end_in_past, Toast.LENGTH_SHORT).show();
                         }
                         if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
-                            Snackbar.make(imageViewChooseStartTime, R.string.end_before_begin, Snackbar.LENGTH_SHORT).show();
+                             Toast.makeText(getApplicationContext(), R.string.end_before_begin, Toast.LENGTH_SHORT).show();
                         }
                     }, hours_end, minutes_end, true);
             picker.show();
@@ -358,7 +349,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                         if (areas_array.contains(selected_item)) {
                             if (minimum_level_val > 0) {
                                 if (points_array.get(areas_array.indexOf(selected_item)) < minimum_level_val * 1000) {
-                                    Snackbar.make(apply, R.string.level_low, Snackbar.LENGTH_SHORT).show();
+                                     Toast.makeText(getApplicationContext(), R.string.level_low, Toast.LENGTH_SHORT).show();
                                 } else {
                                     writeAttendingToDB();
                                 }
@@ -367,7 +358,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                             }
                         } else {
                             if (minimum_level_val > 0) {
-                                Snackbar.make(apply, R.string.level_low, Snackbar.LENGTH_SHORT).show();
+                                 Toast.makeText(getApplicationContext(), R.string.level_low, Toast.LENGTH_SHORT).show();
                             } else {
                                 writeAttendingToDB();
                             }
@@ -414,7 +405,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                 .add(docData)
                 .addOnSuccessListener(aVoid -> {
                     //Log.d(TAG, "DocumentSnapshot successfully written!");
-                    Snackbar.make(apply, R.string.created_event, Snackbar.LENGTH_SHORT).show();
+                     Toast.makeText(getApplicationContext(), R.string.created_event, Toast.LENGTH_SHORT).show();
 
 
                     editor.putString("eventID", aVoid.getId());
@@ -427,7 +418,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                     startActivity(myIntent);
                 })
                 .addOnFailureListener(e -> {
-                    Snackbar.make(apply, R.string.write_failed, Snackbar.LENGTH_SHORT).show();
+                     Toast.makeText(getApplicationContext(), R.string.write_failed, Toast.LENGTH_SHORT).show();
                     //Log.w(TAG, "Error writing document", e);
                 });
     }
@@ -444,13 +435,13 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                     .set(docData)
                     .addOnSuccessListener(aVoid -> {
                         //Log.d(TAG, "DocumentSnapshot successfully written!");
-                        Snackbar.make(apply, R.string.updated_event, Snackbar.LENGTH_SHORT).show();
+                         Toast.makeText(getApplicationContext(), R.string.updated_event, Toast.LENGTH_SHORT).show();
                         if (attending) {
                             writeAttending();
                         }
                     })
                     .addOnFailureListener(e -> {
-                        Snackbar.make(apply, R.string.write_failed, Snackbar.LENGTH_SHORT).show();
+                         Toast.makeText(getApplicationContext(), R.string.write_failed, Toast.LENGTH_SHORT).show();
                         //Log.w(TAG, "Error writing document", e);
                     });
         }
@@ -476,7 +467,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         docData.put("location", new GeoPoint(latitude, longitude));
         docData.put("geo_hash", GeoFireUtils.getGeoHashForLocation(new GeoLocation(latitude, longitude)));
         if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
-            Snackbar.make(imageViewChooseStartTime, "Event can't end before beginning.", Snackbar.LENGTH_SHORT).show();
+             Toast.makeText(getApplicationContext(), R.string.end_before_beginning, Toast.LENGTH_SHORT).show();
         } else {
             setDB(docData, switch_organizer.isChecked());
         }
@@ -587,7 +578,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                             textViewChooseEndTime.setText(DateFormat.getTimeInstance().format(cldr_end.getTime()));
 
                             if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime())) {
-                                Snackbar.make(sp, R.string.cant_edit_finished, Snackbar.LENGTH_SHORT).show();
+                                 Toast.makeText(getApplicationContext(), R.string.cant_edit_finished, Toast.LENGTH_SHORT).show();
                                 onBackPressed();
                             }
 

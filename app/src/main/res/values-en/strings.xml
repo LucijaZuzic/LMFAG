@@ -71,7 +71,7 @@
     <string name="friend_request_sent">Friend request sent.</string>
     <string name="no_longer_friends">You are no longer friends.</string>
     <string name="friend_request_declined">Friend request declined.</string>
-    <string name="friend_request_accepted">Friend request declined.</string>
+    <string name="friend_request_accepted">Friend request accepted.</string>
     <string name="notifications">Notifications</string>
     <string name="date">Date</string>
     <string name="time">Time</string>

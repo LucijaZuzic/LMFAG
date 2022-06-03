@@ -20,7 +20,7 @@
             android:layout_margin="10dp"
             android:contentDescription="Choose event header"
             android:drawableStart="@drawable/ic_baseline_star_24"
-            android:drawableTint="@color/teal_700"
+            app:drawableTint="@color/teal_700"
             android:fontFamily="sans-serif-condensed-light"
             android:gravity="center"
             android:padding="5dp"
@@ -38,6 +38,7 @@
             android:background="?android:attr/listDivider" />
         <ScrollView
             android:layout_width="match_parent"
+            android:orientation="vertical"
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
@@ -63,7 +64,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginRight="10dp"
-                        android:drawableTint="@color/teal_700"
+                        app:drawableTint="@color/teal_700"
                         android:fontFamily="sans-serif-condensed-light"
                         android:gravity="center"
                         android:padding="5dp"
@@ -76,52 +77,53 @@
                         app:cardElevation="10dp"
                         app:cardCornerRadius="10dp"
                         app:contentPadding="10dp"
-                        android:layout_margin="20dp"
+                        android:layout_margin="10dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="horizontal">
+                            android:gravity="center"
+                            android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_marginBottom="10dp"
+                        android:orientation="horizontal">
 
-                            <de.hdodenhof.circleimageview.CircleImageView
-                                android:id="@+id/profile_image_organizer"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginEnd="10dp"
-                                android:layout_weight="0.3"
-                                app:civ_circle_background_color="@color/teal_700"
-                                android:src="@drawable/ic_baseline_profile_picture_24" />
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="0.7"
-                                android:gravity="center"
-                                android:orientation="vertical">
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            app:civ_circle_background_color="@color/teal_700"
+                            android:id="@+id/profile_image_organizer"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_marginEnd="10dp"
+                            android:src="@drawable/ic_baseline_profile_picture_24" />
+                        <TextView
+                            android:id="@+id/textViewOrganizer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-condensed-light"
+                            android:hint="@string/username"
+                            android:padding="5dp"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
 
-                                <TextView
-                                    android:id="@+id/textViewOrganizer"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:fontFamily="sans-serif-condensed-light"
-                                    android:layout_marginBottom="10dp"
-                                    android:gravity="center"
-                                    android:hint="@string/username"
-                                    android:padding="5dp"
-                                    android:textSize="21sp"
-                                    android:textStyle="bold" />
+                    </LinearLayout>
+                    <RatingBar
+                        android:id="@+id/simpleRatingBarOrganizer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/rating_bar"
+                        android:progressTint="@color/teal_700"
+                        android:rating="2" />
 
-                                <RatingBar
-                                    android:id="@+id/simpleRatingBarOrganizer"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:contentDescription="@string/rating_bar"
-                                    android:progressTint="@color/teal_700"
-                                    android:rating="2" />
-
-                            </LinearLayout>
-                        </LinearLayout>
+                </LinearLayout>
                     </androidx.cardview.widget.CardView>
+
+
                 </LinearLayout>
 
                 <TextView
@@ -132,7 +134,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginTop="10dp"
-                    android:drawableTint="@color/teal_700"
+                    app:drawableTint="@color/teal_700"
                     android:fontFamily="sans-serif-condensed-light"
                     android:gravity="center"
                     android:padding="5dp"
@@ -144,7 +146,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewPlayers"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 

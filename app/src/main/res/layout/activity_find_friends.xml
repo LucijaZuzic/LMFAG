@@ -20,7 +20,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
-            android:drawableTint="@color/teal_700"
+            app:drawableTint="@color/teal_700"
             android:fontFamily="sans-serif-condensed-light"
             android:gravity="center"
             android:padding="5dp"
@@ -79,7 +79,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             android:drawableStart="@drawable/ic_baseline_filter_alt_24"
-            android:drawableTint="@color/teal_700"
+            app:drawableTint="@color/teal_700"
             android:fontFamily="sans-serif-condensed-light"
             android:gravity="center"
             android:padding="5dp"
@@ -95,20 +95,16 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:background="?android:attr/listDivider" />
-            <ScrollView
-                android:layout_margin="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewFriends"
                     android:layout_width="match_parent"
+                    android:layout_margin="10dp"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
                 </androidx.recyclerview.widget.RecyclerView>
-            </ScrollView>
 
 
         </LinearLayout>

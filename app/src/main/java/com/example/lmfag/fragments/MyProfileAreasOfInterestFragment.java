@@ -52,7 +52,7 @@ public class MyProfileAreasOfInterestFragment extends Fragment {
 
     private void fillUserData(@NonNull View view) {
         TextView title = view.findViewById(R.id.list_title);
-        title.setText("Areas of interest");
+        title.setText(R.string.areas_of_interest);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         String name = preferences.getString("userID", "");
         if(name.equalsIgnoreCase(""))

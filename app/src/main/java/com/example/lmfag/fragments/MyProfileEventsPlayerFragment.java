@@ -12,16 +12,16 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.example.lmfag.R;
-import com.example.lmfag.utility.DrawerHelper;
-import com.example.lmfag.utility.adapters.CustomAdapterEventDelete;
-
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.lmfag.R;
+import com.example.lmfag.utility.DrawerHelper;
+import com.example.lmfag.utility.adapters.CustomAdapterEvent;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MyProfileEventsPlayerFragment extends Fragment {
@@ -49,11 +49,11 @@ public class MyProfileEventsPlayerFragment extends Fragment {
     public void changeArray(RecyclerView recyclerViewEventsPlayer) {
         if (only_notified) {
             if (!event_subscriber_array.get(0).equals("")) {
-                recyclerViewEventsPlayer.setAdapter(new CustomAdapterEventDelete(event_subscriber_array, context, preferences));
+                recyclerViewEventsPlayer.setAdapter(new CustomAdapterEvent(event_subscriber_array, context, preferences));
             }
         } else {
             if (!events_player_array.get(0).equals("")) {
-                recyclerViewEventsPlayer.setAdapter(new CustomAdapterEventDelete(events_player_array, context, preferences));
+                recyclerViewEventsPlayer.setAdapter(new CustomAdapterEvent(events_player_array, context, preferences));
             }
         }
     }
@@ -63,7 +63,7 @@ public class MyProfileEventsPlayerFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         DrawerHelper.fillNavbarData(activity);
         TextView title = view.findViewById(R.id.list_title);
-        title.setText("Playing events");
+        title.setText(R.string.playing_events);
         RecyclerView recyclerViewEventsPlayer = view.findViewById(R.id.recyclerViewList);
         SwitchCompat notificationsOnly = view.findViewById(R.id.onlyShowNotificationToggle);
         preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
@@ -71,14 +71,10 @@ public class MyProfileEventsPlayerFragment extends Fragment {
         if (!userID.equals("")) {
             String[] player_string = preferences.getString("userPlayer", "").split("_");
             events_player_array = new ArrayList<>();
-            for (String event: player_string) {
-                events_player_array.add(event);
-            }
+            events_player_array.addAll(Arrays.asList(player_string));
             String[] subscriber_string = preferences.getString("userSubscriber", "").split("_");
             event_subscriber_array = new ArrayList<>();
-            for (String event: subscriber_string) {
-                event_subscriber_array.add(event);
-            }
+            event_subscriber_array.addAll(Arrays.asList(subscriber_string));
             changeArray(recyclerViewEventsPlayer);
         }
         notificationsOnly.setOnClickListener(someView -> {

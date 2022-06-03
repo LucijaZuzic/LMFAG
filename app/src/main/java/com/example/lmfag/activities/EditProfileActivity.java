@@ -16,19 +16,18 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
-import com.example.lmfag.utility.DrawerHelper;
 import com.example.lmfag.utility.SecureHash;
+import com.example.lmfag.utility.TransformBitmap;
 import com.example.lmfag.utility.adapters.CustomAdapterAreaOfInterestAdd;
 import com.example.lmfag.utility.adapters.CustomAdapterAreaOfInterestRemove;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -36,6 +35,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -52,9 +52,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class EditProfileActivity extends MenuInterfaceActivity {
     private boolean blocked = false;
     private Context context = this;
-    private ImageView apply, discard, closeCard;
+    private ImageView apply, discard, closeCard, profileRotate, rotateLeft, flipHorizontal, flipVertical;
     private FloatingActionButton openCard;
-
+    private CircleImageView circleImageView;
     private LinearLayout openableCard;
     private List<String> areas_array = new ArrayList<>();
     private List<String> areas_not_present_array;
@@ -62,6 +62,8 @@ public class EditProfileActivity extends MenuInterfaceActivity {
     private List<Double> points_array = new ArrayList<>();
     private String old_password = "";
     private Uri uri;
+    private Bitmap bitmap;
+    private boolean rotated = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +90,31 @@ public class EditProfileActivity extends MenuInterfaceActivity {
         closeCard.setOnClickListener(view -> {
             openableCard.setVisibility(View.GONE);
         });
+        circleImageView = findViewById(R.id.profile_image);
+        rotateLeft = findViewById(R.id.profile_image_rotate_left);
+        rotateLeft.setOnClickListener(view -> {
+            bitmap = TransformBitmap.RotateNegative90(bitmap);
+            circleImageView.setImageBitmap(bitmap);
+            rotated = true;
+        });
+        profileRotate = findViewById(R.id.profile_image_rotate);
+        profileRotate.setOnClickListener(view -> {
+            bitmap = TransformBitmap.RotateBy90(bitmap);
+            circleImageView.setImageBitmap(bitmap);
+            rotated = true;
+        });
+        flipHorizontal = findViewById(R.id.profile_image_flip_horizontal);
+        flipHorizontal.setOnClickListener(view -> {
+            bitmap = TransformBitmap.flipHorizontal(bitmap);
+            circleImageView.setImageBitmap(bitmap);
+            rotated = true;
+        });
+        flipVertical = findViewById(R.id.profile_image_flip_vertical);
+        flipVertical.setOnClickListener(view -> {
+            bitmap = TransformBitmap.flipVertical(bitmap);
+            circleImageView.setImageBitmap(bitmap);
+            rotated = true;
+        });
         fillUserData();
         createProfile();
         getBack();
@@ -96,7 +123,6 @@ public class EditProfileActivity extends MenuInterfaceActivity {
     }
 
     private void changeProfilePicture() {
-        CircleImageView circleImageView = findViewById(R.id.profile_image);
         ActivityResultLauncher<Intent> photoPicker = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -104,7 +130,8 @@ public class EditProfileActivity extends MenuInterfaceActivity {
                         Intent data = result.getData();
                         uri = data.getData();
                         try {
-                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                            bitmap = TransformBitmap.fixRotation(bitmap);
                             circleImageView.setImageBitmap(bitmap);
 
                         } catch (IOException e) {
@@ -139,7 +166,7 @@ public class EditProfileActivity extends MenuInterfaceActivity {
             CustomAdapterAreaOfInterestAdd customAdapterAreaOfInterestAdd = new CustomAdapterAreaOfInterestAdd(areas_not_present_array, this);
             recyclerViewAreasOfInterestNew.setAdapter(customAdapterAreaOfInterestAdd);
         } else {
-            Snackbar.make(discard, R.string.area_of_interest_already_added, Snackbar.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.area_of_interest_already_added, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -162,14 +189,14 @@ public class EditProfileActivity extends MenuInterfaceActivity {
             CustomAdapterAreaOfInterestAdd customAdapterAreaOfInterestAdd = new CustomAdapterAreaOfInterestAdd(areas_not_present_array, this);
             recyclerViewAreasOfInterestNew.setAdapter(customAdapterAreaOfInterestAdd);
         } else {
-            Snackbar.make(discard, R.string.area_of_interest_not_present, Snackbar.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.area_of_interest_not_present, Toast.LENGTH_SHORT).show();
         }
     }
 
     private void getBack() {
         discard.setOnClickListener(view -> {
             if (blocked) {
-                Snackbar.make(discard, R.string.go_back_upload, Snackbar.LENGTH_SHORT).show();
+                 Toast.makeText(getApplicationContext(), R.string.go_back_upload, Toast.LENGTH_SHORT).show();
                 return;
             }
             Intent myIntent = new Intent(context, MyProfileActivity.class);
@@ -193,13 +220,13 @@ public class EditProfileActivity extends MenuInterfaceActivity {
                 .set(docData)
                 .addOnSuccessListener(aVoid -> {
                     //Log.d(TAG, "DocumentSnapshot successfully written!");
-                    Snackbar.make(apply, R.string.write_success, Snackbar.LENGTH_SHORT).show();
-                    Snackbar.make(apply, R.string.logged_in, Snackbar.LENGTH_SHORT).show();
+                     Toast.makeText(getApplicationContext(), R.string.write_success, Toast.LENGTH_SHORT).show();
+                     Toast.makeText(getApplicationContext(), R.string.logged_in, Toast.LENGTH_SHORT).show();
                     Intent myIntent = new Intent(context, MyProfileActivity.class);
                     startActivity(myIntent);
                 })
                 .addOnFailureListener(e -> {
-                    Snackbar.make(apply, R.string.write_failed, Snackbar.LENGTH_SHORT).show();
+                     Toast.makeText(getApplicationContext(), R.string.write_failed, Toast.LENGTH_SHORT).show();
                     //Log.w(TAG, "Error writing document", e);
                 });
     }
@@ -243,15 +270,18 @@ public class EditProfileActivity extends MenuInterfaceActivity {
             }
             StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
 
-            if (uri != null) {
-                UploadTask uploadTask = imagesRef.putFile(uri);
+            if (uri != null || rotated) {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
+                byte[] imageDataTransformed = baos.toByteArray();
+                UploadTask uploadTask = imagesRef.putBytes(imageDataTransformed);
                 blocked = true;
-                Snackbar.make(myDescription, R.string.image_upload_started, Snackbar.LENGTH_SHORT).show();
+                 Toast.makeText(getApplicationContext(), R.string.image_upload_started, Toast.LENGTH_SHORT).show();
                 uploadTask.addOnFailureListener(exception -> {
                     // Handle unsuccessful uploads
                 }).addOnSuccessListener(taskSnapshot -> {
                     blocked = false;
-                    Snackbar.make(myDescription, R.string.image_upload_finished, Snackbar.LENGTH_SHORT).show();
+                     Toast.makeText(getApplicationContext(), R.string.image_upload_finished, Toast.LENGTH_SHORT).show();
                     writeDB(docData);
                     // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                     // ...
@@ -311,11 +341,10 @@ public class EditProfileActivity extends MenuInterfaceActivity {
                         StorageReference storageRef = storage.getReference();
                         StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
                         final long ONE_MEGABYTE = 1024 * 1024;
-                        CircleImageView circleImageView = findViewById(R.id.profile_image);
                         imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
                             // Data for "images/island.jpg" is returns, use this as needed
-                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                            circleImageView.setImageBitmap(bmp);
+                            bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            circleImageView.setImageBitmap(bitmap);
                         }).addOnFailureListener(exception -> {
                             // Handle any errors
                         });

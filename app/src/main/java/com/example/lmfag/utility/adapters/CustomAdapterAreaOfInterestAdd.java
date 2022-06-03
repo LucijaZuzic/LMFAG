@@ -3,16 +3,14 @@ package com.example.lmfag.utility.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.lmfag.activities.EditProfileActivity;
 import com.example.lmfag.R;
 import com.example.lmfag.activities.CreateProfileActivity;
+import com.example.lmfag.activities.EditProfileActivity;
 import com.example.lmfag.utility.EventTypeToDrawable;
 
 import java.util.List;

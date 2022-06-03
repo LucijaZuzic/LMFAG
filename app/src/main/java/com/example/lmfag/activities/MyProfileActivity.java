@@ -19,7 +19,6 @@ import com.example.lmfag.fragments.MyProfileEventsOrganizerFragment;
 import com.example.lmfag.fragments.MyProfileEventsPlayerFragment;
 import com.example.lmfag.fragments.MyProfileFriendsFragment;
 import com.example.lmfag.fragments.MyProfileInfoFragment;
-import com.example.lmfag.utility.DrawerHelper;
 import com.example.lmfag.utility.adapters.TabPagerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;

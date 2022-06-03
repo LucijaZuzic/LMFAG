@@ -1,8 +1,5 @@
 package com.example.lmfag.activities;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -13,14 +10,16 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
 import com.example.lmfag.utility.adapters.CustomAdapterMessages;
-import com.example.lmfag.utility.DrawerHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -46,107 +45,175 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ViewMessagesActivity extends MenuInterfaceActivity {
     private ViewMessagesActivity context = this;
     private RecyclerView recyclerViewMessages;
+    private FirebaseFirestore db;
+    private List<String> messages = new ArrayList<>();
+    private List<String> times = new ArrayList<>();
+    private List<String> sender = new ArrayList<>();
+    private List<String> ids = new ArrayList<>();
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
+    private String me, other, myUsername, otherUsername;
+    private Bitmap myImage, otherImage;
+    private ImageView imageViewSend;
+    private CircleImageView circleImageView;
+    private TextView usernameFriend;
+    private FirebaseStorage storage;
+    private StorageReference storageRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_messages);
-         
+        preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        editor = preferences.edit();
+        me = preferences.getString("userID", "");
+        other = preferences.getString("friendID", "");
+        db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
+        circleImageView = findViewById(R.id.profile_image);
+        circleImageView.setOnClickListener(view -> {
+            editor.putString("friendID", other);
+            editor.apply();
+            Intent myIntent = new Intent(context, ViewProfileActivity.class);
+            startActivity(myIntent);
+            return;
+        });
+        usernameFriend = findViewById(R.id.textViewUsernameFriend);
         recyclerViewMessages = findViewById(R.id.recyclerViewMessages);
-        getFriendData();
-        getAllMessages();
-        ImageView iv = findViewById(R.id.imageViewSend);
-        iv.setOnClickListener(view -> {
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
+        imageViewSend = findViewById(R.id.imageViewSend);
+        imageViewSend.setOnClickListener(view -> {
             Map<String, Object> docData = new HashMap<>();
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            String sender = preferences.getString("userID", "");
-            String receiver = preferences.getString("friendID", "");
             EditText editTextMessage = findViewById(R.id.editTextMessage);
-            docData.put("sender", sender);
-            docData.put("receiver", receiver);
+            docData.put("sender", me);
+            docData.put("receiver", other);
             docData.put("messages", editTextMessage.getText().toString());
             docData.put("timestamp", Timestamp.now());
             db.collection("messages").add(docData);
-            getFriendData();
-            getAllMessages();
+            getMyData();
         });
+        getMyData();
     }
     @Override
     protected void onResume() {
         super.onResume();
-        getFriendData();
-        getAllMessages();
     }
 
-    public void getFriendData( ) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String name = preferences.getString("friendID", "");
-        DocumentReference docRef = db.collection("users").document(name);
-        docRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    Map<String, Object> data = document.getData();
-
-                    TextView myUsername = findViewById(R.id.textViewUsernameFriend);
-                    myUsername.setText(data.get("username").toString());
-
-                    FirebaseStorage storage = FirebaseStorage.getInstance();
-                    StorageReference storageRef = storage.getReference();
-                    StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
-                    final long ONE_MEGABYTE = 1024 * 1024;
-                    imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                        // Data for "images/island.jpg" is returns, use this as needed
-                        CircleImageView circleImageView = findViewById(R.id.profile_image);
-                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-                        circleImageView.setImageBitmap(bmp);
-                        findViewById(R.id.profile_image).setOnClickListener(view -> {
-                            SharedPreferences.Editor editor = preferences.edit();
-                            editor.putString("friendID", name);
-                            editor.apply();
-                            Intent myIntent = new Intent(context, ViewProfileActivity.class);
-                            startActivity(myIntent);
-                        });
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Handle any errors
-                        }
-                    });
-                    //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                } else {
-                    Intent myIntent = new Intent(context, MainActivity.class);
-                    startActivity(myIntent);
-                    //Log.d(TAG, "No such document");
-                }
-            } else {
-                //Log.d(TAG, "get failed with ", task.getException());
-            }
-        });
-    }
-
-    public void getAllMessages() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        List<String> messages = new ArrayList<>();
-        List<String> times = new ArrayList<>();
-        List<String> sender = new ArrayList<>();
-        List<String> ids = new ArrayList<>();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String me = preferences.getString("userID", "");
-        String other = preferences.getString("friendID", "");
+    public void getMyData() {
         if (me.equals("")) {
             Intent myIntent = new Intent(context, MainActivity.class);
             startActivity(myIntent);
             return;
         }
         if (other.equals(me)) {
-            Snackbar.make(recyclerViewMessages, R.string.visiting_myself, Snackbar.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.visiting_myself, Toast.LENGTH_SHORT).show();
             Intent myIntent = new Intent(context, MyProfileActivity.class);
             startActivity(myIntent);
             return;
         }
+        if (myImage != null && myUsername != null) {
+            getFriendData();
+            return;
+        }
+        DocumentReference docRef = db.collection("users").document(me);
+        docRef.get().addOnCompleteListener(taskUser -> {
+            if (taskUser.isSuccessful()) {
+                DocumentSnapshot document = taskUser.getResult();
+                if (document.exists()) {
+                    Map<String, Object> data = document.getData();
+                    myUsername = data.get("username").toString();
+                    StorageReference imagesRef = storageRef.child("profile_pictures/" + document.getId());
+                    final long ONE_MEGABYTE = 1024 * 1024;
+                    if (myImage == null) {
+                        imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+                            // Data for "images/island.jpg" is returns, use this as needed
+                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            myImage = bmp;
+                            getFriendData();
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle any errors
+                                getFriendData();
+                            }
+                        });
+                    } else {
+                        getFriendData();
+                    }
+                } else {
+                    getFriendData();
+                }
+            } else {
+                getFriendData();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                getFriendData();
+            }
+        });
+    }
+
+    public void getFriendData() {
+        if (otherUsername != null && otherImage != null) {
+            getAllMessages();
+            usernameFriend.setText(otherUsername);
+            circleImageView.setImageBitmap(otherImage);
+            return;
+        }
+        DocumentReference docRef = db.collection("users").document(other);
+        docRef.get().addOnCompleteListener(taskUser -> {
+            if (taskUser.isSuccessful()) {
+                DocumentSnapshot document = taskUser.getResult();
+                if (document.exists()) {
+                    Map<String, Object> data = document.getData();
+                    otherUsername = data.get("username").toString();
+                    usernameFriend.setText(otherUsername);
+                    StorageReference imagesRef = storageRef.child("profile_pictures/" + document.getId());
+                    final long ONE_MEGABYTE = 1024 * 1024;
+                    if (otherImage == null) {
+                        imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+                            // Data for "images/island.jpg" is returns, use this as needed
+                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            otherImage = bmp;
+                            circleImageView.setImageBitmap(otherImage);
+                            getAllMessages();
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle any errors
+                                circleImageView.setImageBitmap(otherImage);
+                                getAllMessages();
+                            }
+                        });
+                    } else {
+                        circleImageView.setImageBitmap(otherImage);
+                        getAllMessages();
+                    }
+                } else {
+                    circleImageView.setImageBitmap(otherImage);
+                    getAllMessages();
+                }
+            } else {
+                circleImageView.setImageBitmap(otherImage);
+                getAllMessages();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                circleImageView.setImageBitmap(otherImage);
+                getAllMessages();
+            }
+        });
+    }
+
+    public void getAllMessages() {
+        messages = new ArrayList<>();
+        times = new ArrayList<>();
+        sender = new ArrayList<>();
+        ids = new ArrayList<>();
         db.collection("messages")
                 .whereIn("receiver", Arrays.asList(me, other))
                 .orderBy("timestamp", Query.Direction.DESCENDING)
@@ -174,120 +241,12 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
                     Collections.reverse(times);
                     Collections.reverse(sender);
                     Collections.reverse(ids);
-                    final Bitmap[] myImage = new Bitmap[1];
-                    final Bitmap[] otherImage = new Bitmap[1];
-                    final String[] myUsername = new String[1];
-                    final String[] otherUsername = new String[1];
-                    String otherUser = "";
-                    for (String senderOther: sender) {
-                        if (!senderOther.equals(me)) {
-                            otherUser = senderOther;
-                            break;
-                        }
-                    }
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    DocumentReference docRef = db.collection("users").document(me);
-                    String finalOtherUser = otherUser;
-                    docRef.get().addOnCompleteListener(taskUser -> {
-                        if (taskUser.isSuccessful()) {
-                            DocumentSnapshot document = taskUser.getResult();
-                            if (document.exists()) {
-                                Map<String, Object> data = document.getData();
-                                myUsername[0] = data.get("username").toString();
-                                FirebaseStorage storage = FirebaseStorage.getInstance();
-                                StorageReference storageRef = storage.getReference();
-                                StorageReference imagesRef = storageRef.child("profile_pictures/" + document.getId());
-                                final long ONE_MEGABYTE = 1024 * 1024;
-                                imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                                    // Data for "images/island.jpg" is returns, use this as needed
-                                    Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                    myImage[0] = bmp;
-                                    DocumentReference docRefOther = db.collection("users").document(finalOtherUser);
-                                    docRefOther.get().addOnCompleteListener(taskNew -> {
-                                        if (taskNew.isSuccessful()) {
-                                            DocumentSnapshot documentNew = taskNew.getResult();
-                                            if (documentNew.exists()) {
-                                                Map<String, Object> dataNew = documentNew.getData();
-                                                otherUsername[0] = dataNew.get("username").toString();
-                                                StorageReference imagesRefNew = storageRef.child("profile_pictures/" + documentNew.getId());
-                                                imagesRefNew.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytesNew -> {
-                                                    // Data for "images/island.jpg" is returns, use this as needed
-                                                    Bitmap bmpNew = BitmapFactory.decodeByteArray(bytesNew, 0, bytesNew.length);
-                                                    otherImage[0] = bmpNew;
-                                                    CustomAdapterMessages customAdapter = new CustomAdapterMessages(messages, times, sender, ids, me, context, myUsername[0], otherUsername[0], myImage[0], otherImage[0]);
-                                                    recyclerViewMessages.setAdapter(customAdapter);
-                                                    recyclerViewMessages.scrollToPosition(customAdapter.getItemCount() - 1);
-                                                }).addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception exception) {
-                                                        // Handle any errors
-                                                        CustomAdapterMessages customAdapter = new CustomAdapterMessages(messages, times, sender, ids, me, context, myUsername[0], otherUsername[0], myImage[0], otherImage[0]);
-                                                        recyclerViewMessages.setAdapter(customAdapter);
-                                                        recyclerViewMessages.scrollToPosition(customAdapter.getItemCount() - 1);
-                                                    }
-                                                });
-                                                //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                                            } else {
-
-                                            }
-                                        } else {
-                                            //Log.d(TAG, "get failed with ", task.getException());
-                                        }
-                                    });
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception exception) {
-                                        // Data for "images/island.jpg" is returns, use this as needed
-                                        DocumentReference docRefOther = db.collection("users").document(finalOtherUser);
-                                        docRefOther.get().addOnCompleteListener(taskNew -> {
-                                            if (taskNew.isSuccessful()) {
-                                                DocumentSnapshot documentNew = taskNew.getResult();
-                                                if (documentNew.exists()) {
-                                                    Map<String, Object> dataNew = documentNew.getData();
-                                                    otherUsername[0] = dataNew.get("username").toString();
-                                                    StorageReference imagesRefNew = storageRef.child("profile_pictures/" + documentNew.getId());
-                                                    imagesRefNew.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytesNew -> {
-                                                        // Data for "images/island.jpg" is returns, use this as needed
-                                                        Bitmap bmpNew = BitmapFactory.decodeByteArray(bytesNew, 0, bytesNew.length);
-                                                        otherImage[0] = bmpNew;
-                                                        CustomAdapterMessages customAdapter = new CustomAdapterMessages(messages, times, sender, ids, me, context, myUsername[0], otherUsername[0], myImage[0], otherImage[0]);
-                                                        recyclerViewMessages.setAdapter(customAdapter);
-                                                        recyclerViewMessages.scrollToPosition(customAdapter.getItemCount() - 1);
-                                                    }).addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull Exception exception) {
-                                                            // Handle any errors
-                                                            CustomAdapterMessages customAdapter = new CustomAdapterMessages(messages, times, sender, ids, me, context, myUsername[0], otherUsername[0], myImage[0], otherImage[0]);
-                                                            recyclerViewMessages.setAdapter(customAdapter);
-                                                            recyclerViewMessages.scrollToPosition(customAdapter.getItemCount() - 1);
-                                                        }
-                                                    });
-                                                    //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                                                } else {
-
-                                                }
-                                            } else {
-                                                //Log.d(TAG, "get failed with ", task.getException());
-                                            }
-                                        });
-                                    }
-                                });
-                                //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                            } else {
-
-                            }
-                        } else {
-                            //Log.d(TAG, "get failed with ", task.getException());
-                        }
-                    });
-
-                } else {
-                    Object ngs = task.getException();
-                    String sd = ngs.toString();
-                    Log.d("ERROR", "get failed with ", task.getException());
-
+                    CustomAdapterMessages customAdapter = new CustomAdapterMessages(messages, times, sender, ids, me, context, myUsername, otherUsername, myImage, otherImage);
+                    recyclerViewMessages.setAdapter(customAdapter);
+                    recyclerViewMessages.scrollToPosition(customAdapter.getItemCount() - 1);
                 }
             }
-        });
+                });
     }
+
 }

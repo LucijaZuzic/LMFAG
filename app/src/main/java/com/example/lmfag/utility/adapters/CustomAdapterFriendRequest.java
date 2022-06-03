@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -160,7 +161,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                             Map<String, Object> docuDataNew2 = document2.getData();
                                                             docuDataNew2.put("friends", friends_array2);
                                                             db1.collection("friends").document(replace_string).set(docuDataNew2);
-                                                            Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
+                                                             Toast.makeText(viewHolder.getDecline().getContext().getApplicationContext(), R.string.friend_request_accepted, Toast.LENGTH_SHORT).show();
                                                             ca.friendRequestsActivity.refresh();
                                                         } else {
                                                             List<String> friends_array2 = new ArrayList<>();
@@ -168,7 +169,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                             Map<String, Object> docuDataNew2 = new HashMap<>();
                                                             docuDataNew2.put("friends", friends_array2);
                                                             db1.collection("friends").document(replace_string).set(docuDataNew2);
-                                                            Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
+                                                             Toast.makeText(viewHolder.getDecline().getContext().getApplicationContext(), R.string.friend_request_accepted, Toast.LENGTH_SHORT).show();
                                                             ca.friendRequestsActivity.refresh();
                                                         }
                                                     } else {
@@ -177,7 +178,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                         Map<String, Object> docuDataNew2 = new HashMap<>();
                                                         docuDataNew2.put("friends", friends_array2);
                                                         db1.collection("friends").document(replace_string).set(docuDataNew2);
-                                                        Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
+                                                         Toast.makeText(viewHolder.getDecline().getContext().getApplicationContext(), R.string.friend_request_accepted, Toast.LENGTH_SHORT).show();
                                                         ca.friendRequestsActivity.refresh();
                                                     }
                                                 }
@@ -203,7 +204,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                             Map<String, Object> docuDataNew2 = document2.getData();
                                                             docuDataNew2.put("friends", friends_array2);
                                                             db1.collection("friends").document(replace_string).set(docuDataNew2);
-                                                            Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
+                                                             Toast.makeText(viewHolder.getDecline().getContext().getApplicationContext(), R.string.friend_request_accepted, Toast.LENGTH_SHORT).show();
                                                             ca.friendRequestsActivity.refresh();
                                                         } else {
                                                             List<String> friends_array2 = new ArrayList<>();
@@ -211,7 +212,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                             Map<String, Object> docuDataNew2 = new HashMap<>();
                                                             docuDataNew2.put("friends", friends_array2);
                                                             db1.collection("friends").document(replace_string).set(docuDataNew2);
-                                                            Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
+                                                             Toast.makeText(viewHolder.getDecline().getContext().getApplicationContext(), R.string.friend_request_accepted, Toast.LENGTH_SHORT).show();
                                                             ca.friendRequestsActivity.refresh();
                                                         }
                                                     } else {
@@ -220,7 +221,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                         Map<String, Object> docuDataNew2 = new HashMap<>();
                                                         docuDataNew2.put("friends", friends_array2);
                                                         db1.collection("friends").document(replace_string).set(docuDataNew2);
-                                                        Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
+                                                         Toast.makeText(viewHolder.getDecline().getContext().getApplicationContext(), R.string.friend_request_accepted, Toast.LENGTH_SHORT).show();
                                                         ca.friendRequestsActivity.refresh();
                                                     }
                                                 }
@@ -247,7 +248,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                         Map<String, Object> docuDataNew2 = document2.getData();
                                                         docuDataNew2.put("friends", friends_array2);
                                                         db1.collection("friends").document(replace_string).set(docuDataNew2);
-                                                        Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
+                                                         Toast.makeText(viewHolder.getDecline().getContext().getApplicationContext(), R.string.friend_request_accepted, Toast.LENGTH_SHORT).show();
                                                         ca.friendRequestsActivity.refresh();
                                                     } else {
                                                         List<String> friends_array2 = new ArrayList<>();
@@ -255,7 +256,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                         Map<String, Object> docuDataNew2 = new HashMap<>();
                                                         docuDataNew2.put("friends", friends_array2);
                                                         db1.collection("friends").document(replace_string).set(docuDataNew2);
-                                                        Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
+                                                         Toast.makeText(viewHolder.getDecline().getContext().getApplicationContext(), R.string.friend_request_accepted, Toast.LENGTH_SHORT).show();
                                                         ca.friendRequestsActivity.refresh();
                                                     }
                                                 } else {
@@ -264,7 +265,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                     Map<String, Object> docuDataNew2 = new HashMap<>();
                                                     docuDataNew2.put("friends", friends_array2);
                                                     db1.collection("friends").document(replace_string).set(docuDataNew2);
-                                                    Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
+                                                     Toast.makeText(viewHolder.getDecline().getContext().getApplicationContext(), R.string.friend_request_accepted, Toast.LENGTH_SHORT).show();
                                                     ca.friendRequestsActivity.refresh();
                                                 }
                                             }
@@ -284,7 +285,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             db.collection("friend_requests").document(document.getId()).delete();
                         }
-                        Snackbar.make(viewHolder.getDecline(), R.string.friend_request_declined, Snackbar.LENGTH_SHORT).show();
+                         Toast.makeText(viewHolder.getDecline().getContext().getApplicationContext(), R.string.friend_request_declined, Toast.LENGTH_SHORT).show();
                         ca.friendRequestsActivity.refresh();
                     }
                 }

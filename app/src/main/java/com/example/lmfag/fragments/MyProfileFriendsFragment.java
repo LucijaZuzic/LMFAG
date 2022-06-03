@@ -49,7 +49,7 @@ public class MyProfileFriendsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         DrawerHelper.fillNavbarData(activity);
         TextView title = view.findViewById(R.id.list_title);
-        title.setText("My friends");
+        title.setText(R.string.my_friends);
 
         fillUserData(view);
     }

@@ -5,33 +5,21 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-
-import androidx.recyclerview.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.example.lmfag.R;
 import com.example.lmfag.utility.DrawerHelper;
 import com.example.lmfag.utility.SecureHash;
-import com.example.lmfag.utility.adapters.CustomAdapterAreaOfInterestAdd;
-import com.example.lmfag.utility.adapters.CustomAdapterAreaOfInterestRemove;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class ChangePasswordActivity extends MenuInterfaceActivity {
@@ -47,7 +35,7 @@ public class ChangePasswordActivity extends MenuInterfaceActivity {
         fillUserData();
         createProfile();
         getBack();
-         
+
     }
 
     private void getBack() {
@@ -82,9 +70,9 @@ public class ChangePasswordActivity extends MenuInterfaceActivity {
                     } catch (InvalidKeySpecException e) {
                         e.printStackTrace();
                     }
-                    Snackbar.make(checkBoxPassword, R.string.password_success_change, Snackbar.LENGTH_SHORT);
+                     Toast.makeText(getApplicationContext(), R.string.password_success_change, Toast.LENGTH_SHORT).show();
                 } else {
-                    Snackbar.make(passwordEditRepeat, R.string.password_match, Snackbar.LENGTH_SHORT);
+                     Toast.makeText(getApplicationContext(), R.string.password_match, Toast.LENGTH_SHORT).show();
                 }
             }
             if (checkBoxUsername.isChecked()) {
@@ -97,7 +85,7 @@ public class ChangePasswordActivity extends MenuInterfaceActivity {
                 db.collection("users")
                         .document(name)
                         .set(old_data);
-                Snackbar.make(checkBoxPassword, R.string.username_success_change, Snackbar.LENGTH_SHORT);
+                 Toast.makeText(getApplicationContext(), R.string.username_success_change, Toast.LENGTH_SHORT).show();
             }
         });
     }

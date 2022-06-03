@@ -12,9 +12,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.lmfag.activities.EditProfileActivity;
 import com.example.lmfag.R;
 import com.example.lmfag.activities.CreateProfileActivity;
+import com.example.lmfag.activities.EditProfileActivity;
 import com.example.lmfag.utility.EventTypeToDrawable;
 import com.example.lmfag.utility.MySwipe;
 
