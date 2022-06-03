@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                             Boolean scheduleExactAlarm = GetOrDefault.getOrDefault(result, Manifest.permission.SCHEDULE_EXACT_ALARM, false);
                             if (scheduleExactAlarm) {
                                 // Alarm access granted.
-                                Toast.makeText(getApplicationContext(), "Alarm access granted.", Toast.LENGTH_SHORT).show();
+
                             }
                         }
                 );
