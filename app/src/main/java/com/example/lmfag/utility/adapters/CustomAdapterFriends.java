@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.lmfag.R;
 import com.example.lmfag.activities.ViewProfileActivity;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -113,8 +114,7 @@ public class CustomAdapterFriends extends RecyclerView.Adapter<CustomAdapterFrie
                     imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
                         // Data for "images/island.jpg" is returns, use this as needed
                         CircleImageView circleImageView = viewHolder.getProfileImage();
-                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        circleImageView.setImageBitmap(bmp);
+                        Glide.with(context.getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
                         //viewHolder.getListEntry().setVisibility(View.VISIBLE);
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override

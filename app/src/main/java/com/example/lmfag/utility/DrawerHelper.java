@@ -5,16 +5,21 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.lmfag.R;
 import com.example.lmfag.activities.ChangePasswordActivity;
 import com.example.lmfag.activities.CreateEventActivity;
@@ -121,7 +126,7 @@ public class DrawerHelper {
         }
 
         if (circleImageView != null && !encoded.equals("")) {
-            circleImageView.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
+            Glide.with(context.getApplicationContext()).asBitmap().load(imageAsBytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
         }
 
         if (myUsername != null && !username.equals("") && circleImageView != null && !encoded.equals("")) {
@@ -152,17 +157,29 @@ public class DrawerHelper {
                         final long ONE_MEGABYTE = 1024 * 1024;
                         imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
                             // Data for "images/island.jpg" is returns, use this as needed
-                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                            bmp.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
-                            byte[] b = baos.toByteArray();
-                            String new_encoded = Base64.encodeToString(b, Base64.DEFAULT);
-                            editor.putString("userPicture", new_encoded);
-                            editor.apply();
+                            Glide.with(circleImageView.getContext().getApplicationContext())
+                                    .asBitmap()
+                                    .load(bytes)
+                                    .into((new CustomTarget<Bitmap>() {
 
-                            if (circleImageView != null) {
-                                circleImageView.setImageBitmap(bmp);
-                            }
+                                        @Override
+                                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                            resource.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
+                                            byte[] b = baos.toByteArray();
+                                            String encoded = Base64.encodeToString(b, Base64.DEFAULT);
+                                            editor.putString("userPicture", encoded);
+                                            editor.apply();
+                                            if (circleImageView != null) {
+                                                circleImageView.setImageBitmap(resource);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                                        }
+                                    }));
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception exception) {

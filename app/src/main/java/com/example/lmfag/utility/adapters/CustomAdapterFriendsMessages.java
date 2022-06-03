@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.lmfag.R;
 import com.example.lmfag.activities.ViewMessagesActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -149,8 +150,7 @@ public class CustomAdapterFriendsMessages extends RecyclerView.Adapter<CustomAda
                     imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
                         // Data for "images/island.jpg" is returns, use this as needed
                         CircleImageView circleImageView = viewHolder.getProfileImage();
-                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        circleImageView.setImageBitmap(bmp);
+                        Glide.with(context.getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
@@ -203,8 +203,7 @@ public class CustomAdapterFriendsMessages extends RecyclerView.Adapter<CustomAda
                                             imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
                                                 // Data for "images/island.jpg" is returns, use this as needed
                                                 CircleImageView circleImageView = viewHolder.getProfileImageTwo();
-                                                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                                circleImageView.setImageBitmap(bmp);
+                                                Glide.with(context.getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
                                             }).addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception exception) {

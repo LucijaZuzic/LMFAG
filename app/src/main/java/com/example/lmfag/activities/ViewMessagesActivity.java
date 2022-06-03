@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -13,8 +15,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.lmfag.R;
 import com.example.lmfag.utility.adapters.CustomAdapterMessages;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,6 +36,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -127,9 +134,23 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
                     if (myImage == null) {
                         imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
                             // Data for "images/island.jpg" is returns, use this as needed
-                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                            myImage = bmp;
-                            getFriendData();
+
+                            Glide.with(circleImageView.getContext().getApplicationContext())
+                                    .asBitmap()
+                                    .load(bytes)
+                                    .into((new CustomTarget<Bitmap>() {
+
+                                        @Override
+                                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                            myImage = resource;
+                                            getFriendData();
+                                        }
+
+                                        @Override
+                                        public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                                        }
+                                    }));
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception exception) {
@@ -175,10 +196,21 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
                     if (otherImage == null) {
                         imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
                             // Data for "images/island.jpg" is returns, use this as needed
-                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                            otherImage = bmp;
-                            circleImageView.setImageBitmap(otherImage);
-                            getAllMessages();
+                            Glide.with(getApplicationContext())
+                                    .asBitmap()
+                                    .load(bytes)
+                                    .into((new CustomTarget<Bitmap>() {
+                                        @Override
+                                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                            otherImage = resource;
+                                            circleImageView.setImageBitmap(otherImage);
+                                            getAllMessages();
+                                        }
+                                        @Override
+                                        public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                                        }
+                                    }));
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception exception) {

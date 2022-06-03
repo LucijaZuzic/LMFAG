@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.lmfag.activities.FriendRequestsActivity;
 import com.example.lmfag.R;
 import com.google.android.material.snackbar.Snackbar;
@@ -115,8 +116,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                     imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
                         // Data for "images/island.jpg" is returns, use this as needed
                         CircleImageView circleImageView = viewHolder.getProfileImage();
-                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        circleImageView.setImageBitmap(bmp);
+                        Glide.with(viewHolder.getTextView().getContext().getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
                     }).addOnFailureListener(exception -> {
                         // Handle any errors
                     });

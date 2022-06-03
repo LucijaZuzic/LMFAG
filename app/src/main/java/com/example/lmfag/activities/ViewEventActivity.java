@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.lmfag.BuildConfig;
 import com.example.lmfag.R;
 import com.example.lmfag.utility.EventTypeToDrawable;
@@ -451,8 +452,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                     final long ONE_MEGABYTE = 1024 * 1024;
                     imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
                         // Data for "images/island.jpg" is returns, use this as needed
-                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-                        circleImageView.setImageBitmap(bmp);
+                        Glide.with(context.getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
                         circleImageView.setOnClickListener(view -> {
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.putString("friendID", name);

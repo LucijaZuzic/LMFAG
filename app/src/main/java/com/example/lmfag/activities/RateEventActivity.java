@@ -5,15 +5,21 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Base64;
 import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.lmfag.R;
 import com.example.lmfag.utility.adapters.CustomAdapterRating;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,6 +34,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -183,9 +190,11 @@ public class RateEventActivity extends MenuInterfaceActivity {
                     imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
                         // Data for "images/island.jpg" is returns, use this as needed
                         CircleImageView circleImageView = findViewById(R.id.profile_image_organizer);
-                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-                        circleImageView.setImageBitmap(bmp);
-                        findViewById(R.id.profile_image_organizer).setOnClickListener(view -> {
+                        Glide.with(circleImageView.getContext().getApplicationContext())
+                                .asBitmap()
+                                .load(bytes)
+                                .into(circleImageView);
+                        circleImageView.setOnClickListener(view -> {
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.putString("friendID", name);
                             editor.apply();

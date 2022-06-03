@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Base64;
@@ -11,8 +12,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.lmfag.R;
 import com.example.lmfag.fragments.MyProfileAreasOfInterestFragment;
 import com.example.lmfag.fragments.MyProfileEventsOrganizerFragment;
@@ -176,14 +181,26 @@ public class MyProfileActivity extends MenuInterfaceActivity {
                     StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
                     final long ONE_MEGABYTE = 1024 * 1024;
                     imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        bmp.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
-                        byte[] b = baos.toByteArray();
-                        String encoded = Base64.encodeToString(b, Base64.DEFAULT);
-                        editor.putString("userPicture", encoded);
-                        editor.apply();
-                        getSubscriberEvents();
+                        Glide.with(getApplicationContext())
+                                .asBitmap()
+                                .load(bytes)
+                                .into((new CustomTarget<Bitmap>() {
+                                    @Override
+                                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                        resource.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
+                                        byte[] b = baos.toByteArray();
+                                        String encoded = Base64.encodeToString(b, Base64.DEFAULT);
+                                        editor.putString("userPicture", encoded);
+                                        editor.apply();
+                                        getSubscriberEvents();
+                                    }
+
+                                    @Override
+                                    public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                                    }
+                                }));
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {

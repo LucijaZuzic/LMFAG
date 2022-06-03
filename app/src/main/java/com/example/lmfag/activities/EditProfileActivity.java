@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -20,8 +22,13 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.lmfag.R;
 import com.example.lmfag.utility.SecureHash;
 import com.example.lmfag.utility.TransformBitmap;
@@ -61,7 +68,6 @@ public class EditProfileActivity extends MenuInterfaceActivity {
 
     private List<Double> points_array = new ArrayList<>();
     private String old_password = "";
-    private Uri uri;
     private Bitmap bitmap;
     private boolean rotated = false;
 
@@ -128,7 +134,7 @@ public class EditProfileActivity extends MenuInterfaceActivity {
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
-                        uri = data.getData();
+                        Uri uri = data.getData();
                         try {
                             bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                             bitmap = TransformBitmap.fixRotation(bitmap);
@@ -270,7 +276,7 @@ public class EditProfileActivity extends MenuInterfaceActivity {
             }
             StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
 
-            if (uri != null || rotated) {
+            if (bitmap != null || rotated) {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
                 byte[] imageDataTransformed = baos.toByteArray();
@@ -336,15 +342,31 @@ public class EditProfileActivity extends MenuInterfaceActivity {
                         recyclerViewAreasOfInterest.setAdapter(customAdapterAreaOfInterestRemove);
                     }
                     myDescription.setText(data.get("description").toString());
-                    if (uri == null) {
+                    if (bitmap == null) {
                         FirebaseStorage storage = FirebaseStorage.getInstance();
                         StorageReference storageRef = storage.getReference();
                         StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
                         final long ONE_MEGABYTE = 1024 * 1024;
                         imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
                             // Data for "images/island.jpg" is returns, use this as needed
-                            bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                            circleImageView.setImageBitmap(bitmap);
+                            Glide.with(circleImageView.getContext().getApplicationContext())
+                                    .asBitmap()
+                                    .load(bytes)
+                                    .into((new CustomTarget<Bitmap>() {
+
+                                        @Override
+                                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                            bitmap = resource;
+                                            if (circleImageView != null) {
+                                                circleImageView.setImageBitmap(resource);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                                        }
+                                    }));
                         }).addOnFailureListener(exception -> {
                             // Handle any errors
                         });

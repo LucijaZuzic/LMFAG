@@ -21,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.lmfag.R;
 import com.example.lmfag.activities.MainActivity;
 import com.example.lmfag.activities.ViewMessagesActivity;
@@ -120,7 +121,7 @@ public class   ViewProfileInfoFragment extends Fragment {
         String encoded = preferences.getString("friendPicture", "");
         byte[] imageAsBytes = Base64.decode(encoded.getBytes(), Base64.DEFAULT);
         CircleImageView circleImageView = view.findViewById(R.id.profile_image);
-        circleImageView.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
+        Glide.with(context.getApplicationContext()).asBitmap().load(imageAsBytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
     }
 
     private void writeToDb(String sender, String receiver) {
