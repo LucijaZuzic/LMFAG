@@ -516,7 +516,22 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         Intent myIntent = new Intent(context, MyProfileActivity.class);
         context.startActivity(myIntent);*/
     }
-
+    public void checkIfAbleToEdit(String organizer) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String me = preferences.getString("userID", "");
+        if (me.equals(organizer)) {
+            if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime())) {
+                Toast.makeText(getApplicationContext(), R.string.edit_finished, Toast.LENGTH_SHORT).show();
+                //Intent myIntent = new Intent(context, ViewEventActivity.class);
+                //startActivity(myIntent);
+            } else {
+                Intent myIntent = new Intent(context, CreateEventActivity.class);
+                context.startActivity(myIntent);
+            }
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.organizer_edit, Toast.LENGTH_SHORT).show();
+        }
+    }
     void fillData() {
 
         String eventID = preferences.getString("eventID", "");
@@ -535,6 +550,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
                             Map<String, Object> docData = document.getData();
+                            checkIfAbleToEdit(docData.get("organizer").toString());
                             eventName.setText(docData.get("event_name").toString());
                             //sp.setSelection(((ArrayAdapter) sp.getAdapter()).getPosition(docData.get("event_type").toString()));
 

@@ -3,26 +3,20 @@ package com.example.lmfag.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Base64;
 import android.view.View;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.example.lmfag.R;
-import com.example.lmfag.utility.AlarmScheduler;
+import com.example.lmfag.utility.EventTypeToDrawable;
 import com.example.lmfag.utility.adapters.CustomAdapterRating;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -36,7 +30,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -285,6 +278,15 @@ public class RateEventActivity extends MenuInterfaceActivity {
                 if (document.exists()) {
                     Map<String, Object> docData = document.getData();
                     event_type = docData.get("event_type").toString();
+                    TextView rate_event_list_entry_banner_text = findViewById(R.id.rate_event_list_entry_banner_text);
+                    rate_event_list_entry_banner_text.setText(docData.get("event_name").toString());
+                    rate_event_list_entry_banner_text.setCompoundDrawablesWithIntrinsicBounds(EventTypeToDrawable.getEventTypeToDrawable(document.get("event_type").toString()), 0, 0, 0);
+                    CardView rate_event_list_entry_banner_card = findViewById(R.id.rate_event_list_entry_banner_card);
+                    rate_event_list_entry_banner_card.setOnClickListener(view -> {
+                        Intent myIntent = new Intent(context, ViewEventActivity.class);
+                        context.startActivity(myIntent);
+                        finish();
+                    });
                 }
             }
         });

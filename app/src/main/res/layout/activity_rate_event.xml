@@ -27,7 +27,31 @@
             android:text="@string/rate_event"
             android:textSize="21sp"
             android:textStyle="bold" />
-
+        <androidx.cardview.widget.CardView
+            android:id="@+id/rate_event_list_entry_banner_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:cardCornerRadius="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            app:cardElevation="10dp"
+            app:contentPadding="10dp">
+            <TextView
+                android:id="@+id/rate_event_list_entry_banner_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_baseline_interests_24"
+                android:layout_gravity="center"
+                android:drawablePadding="10dp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-condensed-light"
+                android:hint="@string/area_of_interest"
+                android:textSize="20sp"
+                app:drawableTint="@color/teal_700"  />
+        </androidx.cardview.widget.CardView>
         <View
             android:id="@+id/divider"
             android:layout_width="match_parent"
@@ -45,12 +69,10 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_weight="0.75">
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
 
                 <LinearLayout
                     android:id="@+id/organizerBanner"
