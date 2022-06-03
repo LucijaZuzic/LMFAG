@@ -82,8 +82,13 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                             for (String event: organizer_events_array) {
                                 events_organizer_string += event + "_";
                             }
-                            editor.putString("friendOrganizer", events_organizer_string.substring(0, events_organizer_string.length() - 1));
-                            editor.apply();
+                            if (events_organizer_string.length() > 0) {
+                                editor.putString("friendOrganizer", events_organizer_string.substring(0, events_organizer_string.length() - 1));
+                                editor.apply();
+                            } else {
+                                editor.putString("friendOrganizer", "");
+                                editor.apply();
+                            }
                             fillPager();
                         } else {
                             editor.putString("friendOrganizer", "");
@@ -127,10 +132,20 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                             for (String event: subscriber_events_array) {
                                 events_subscriber_string += event + "_";
                             }
-                            editor.putString("friendPlayer", events_player_string.substring(0, events_player_string.length() - 1));
-                            editor.apply();
-                            editor.putString("friendSubscriber", events_subscriber_string.substring(0, events_subscriber_string.length() - 1));
-                            editor.apply();
+                            if (events_player_string.length() > 0) {
+                                editor.putString("friendPlayer", events_player_string.substring(0, events_player_string.length() - 1));
+                                editor.apply();
+                            } else {
+                                editor.putString("friendPlayer", "");
+                                editor.apply();
+                            }
+                            if (events_subscriber_string.length() > 0) {
+                                editor.putString("friendSubscriber", events_subscriber_string.substring(0, events_subscriber_string.length() - 1));
+                                editor.apply();
+                            } else {
+                                editor.putString("friendSubscriber", "");
+                                editor.apply();
+                            }
                             getOrganizerEvents();
                         } else {
                             editor.putString("friendPlayer", "");

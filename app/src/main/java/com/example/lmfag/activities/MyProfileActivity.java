@@ -81,8 +81,13 @@ public class MyProfileActivity extends MenuInterfaceActivity {
                             for (String event: organizer_events_array) {
                                 events_organizer_string += event + "_";
                             }
-                            editor.putString("userOrganizer", events_organizer_string.substring(0, events_organizer_string.length() - 1));
-                            editor.apply();
+                            if (events_organizer_string.length() > 0) {
+                                editor.putString("userOrganizer", events_organizer_string.substring(0, events_organizer_string.length() - 1));
+                                editor.apply();
+                            } else {
+                                editor.putString("userOrganizer", "");
+                                editor.apply();
+                            }
                             fillPager(0);
                         } else {
                             editor.putString("userOrganizer", "");
@@ -126,10 +131,20 @@ public class MyProfileActivity extends MenuInterfaceActivity {
                             for (String event: subscriber_events_array) {
                                 events_subscriber_string += event + "_";
                             }
-                            editor.putString("userPlayer", events_player_string.substring(0, events_player_string.length() - 1));
-                            editor.apply();
-                            editor.putString("userSubscriber", events_subscriber_string.substring(0, events_subscriber_string.length() - 1));
-                            editor.apply();
+                            if (events_player_string.length() > 0) {
+                                editor.putString("userPlayer", events_player_string.substring(0, events_player_string.length() - 1));
+                                editor.apply();
+                            } else {
+                                editor.putString("userPlayer", "");
+                                editor.apply();
+                            }
+                            if (events_subscriber_string.length() > 0) {
+                                editor.putString("userSubscriber", events_subscriber_string.substring(0, events_subscriber_string.length() - 1));
+                                editor.apply();
+                            } else {
+                                editor.putString("userSubscriber", "");
+                                editor.apply();
+                            }
                             getOrganizerEvents();
                         } else {
                             editor.putString("userPlayer", "");
