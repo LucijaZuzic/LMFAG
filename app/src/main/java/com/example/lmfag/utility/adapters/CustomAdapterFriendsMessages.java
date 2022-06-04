@@ -3,8 +3,6 @@ package com.example.lmfag.utility.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,16 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.lmfag.R;
 import com.example.lmfag.activities.ViewMessagesActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -36,71 +30,22 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CustomAdapterFriendsMessages extends RecyclerView.Adapter<CustomAdapterFriendsMessages.ViewHolder> {
 
-    private List<String> localFriendUsernames;
-    private SharedPreferences preferences = null;
-    private Context context = null;
+    private final List<String> localFriendUsernames;
+    private final SharedPreferences preferences;
+    private final Context context;
 
-
-    /**
-     * Provide a reference to the type of views that you are using
-     * (custom ViewHolder).
-     */
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textViewUsername;
-        private final CircleImageView profile_image;
-        private final CircleImageView profile_image_two;
-        private TextView latestMessage;
-        private TextView sender;
-        private TextView time;
-        private LinearLayout nested;
-
-
-        public ViewHolder(View view) {
-            super(view);
-            // Define click listener for the ViewHolder's View
-
-            textViewUsername = (TextView) view.findViewById(R.id.textViewUsernameFriend);
-            profile_image = (CircleImageView) view.findViewById(R.id.profile_image_friend);
-            profile_image_two = (CircleImageView) view.findViewById(R.id.profile_image_bubble);
-            latestMessage = (TextView) view.findViewById(R.id.textViewLatestMessage);
-            sender = (TextView) view.findViewById(R.id.textViewSender);
-            nested = (LinearLayout) view.findViewById(R.id.list_entry_nested);
-            time = (TextView) view.findViewById(R.id.textViewTime);
-        }
-
-        public TextView getTextView() {
-            return textViewUsername;
-        }
-        public CircleImageView getProfileImage() {
-            return profile_image;
-        }
-        public CircleImageView getProfileImageTwo() {
-            return profile_image_two;
-        }
-        public TextView getLatest() {
-            return latestMessage;
-        }
-        public TextView getTime() {
-            return time;
-        }
-        public TextView getSender() {
-            return sender;
-        }
-        public LinearLayout getNested() {
-            return nested;
-        }
-    }
 
     /**
      * Initialize the dataset of the Adapter.
      *
      * @param dataSet String[] containing the data to populate views to be used
-     * by RecyclerView.
+     *                by RecyclerView.
      */
     public CustomAdapterFriendsMessages(List<String> dataSet, Context context, SharedPreferences preferences) {
         localFriendUsernames = dataSet;
@@ -109,6 +54,7 @@ public class CustomAdapterFriendsMessages extends RecyclerView.Adapter<CustomAda
     }
 
     // Create new views (invoked by the layout manager)
+    @NonNull
     @Override
     public CustomAdapterFriendsMessages.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
@@ -117,20 +63,17 @@ public class CustomAdapterFriendsMessages extends RecyclerView.Adapter<CustomAda
 
         return new CustomAdapterFriendsMessages.ViewHolder(view);
     }
-    // Replace the contents of a view (invoked by the layout manager)
-
-    private void getOrganizerData(String name) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-    }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
+        TextView time = viewHolder.getTime();
+        CircleImageView profileImage = viewHolder.getProfileImage();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users").document(localFriendUsernames.get(position));
-        viewHolder.getProfileImage().setOnClickListener(view -> {
+        profileImage.setOnClickListener(view -> {
             SharedPreferences.Editor editor = preferences.edit();
             String name = localFriendUsernames.get(position);
             editor.putString("friendID", name);
@@ -142,88 +85,135 @@ public class CustomAdapterFriendsMessages extends RecyclerView.Adapter<CustomAda
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
-                    viewHolder.getTextView().setText(document.get("username").toString());
+                    viewHolder.getTextView().setText(Objects.requireNonNull(document.get("username")).toString());
                     FirebaseStorage storage = FirebaseStorage.getInstance();
                     StorageReference storageRef = storage.getReference();
                     StorageReference imagesRef = storageRef.child("profile_pictures/" + localFriendUsernames.get(position));
                     final long ONE_MEGABYTE = 1024 * 1024;
                     imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                        // Data for "images/island.jpg" is returns, use this as needed
-                        CircleImageView circleImageView = viewHolder.getProfileImage();
+                        CircleImageView circleImageView = profileImage;
                         Glide.with(context.getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Handle any errors
-                        }
+                    }).addOnFailureListener(exception -> {
+                        // Handle any errors
                     });
                 }
             }
         });
         final String other = localFriendUsernames.get(position);
         viewHolder.getNested().setOnClickListener(view -> {
-            if (viewHolder.getTime().getVisibility() == View.GONE) {
-                viewHolder.getTime().setVisibility(View.VISIBLE);
+            if (time.getVisibility() == View.GONE) {
+                time.setVisibility(View.VISIBLE);
             } else {
-                viewHolder.getTime().setVisibility(View.GONE);
+                time.setVisibility(View.GONE);
             }
         });
         db.collection("messages")
-                .whereIn("receiver", Arrays.asList(preferences.getString("userID",""),other))
+                .whereIn("receiver", Arrays.asList(preferences.getString("userID", ""), other))
                 .orderBy("timestamp", Query.Direction.DESCENDING)
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                int number_entry = 0;
-                if (task.isSuccessful()) {
-                    if (task.getResult().size() > 0) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            if (number_entry > 0) {
-                                continue;
-                            }
-                            if (document.get("sender").toString().equals(preferences.getString("userID", "")) || document.get("sender").toString().equals(other)) {
-                                number_entry = 1;
-                                viewHolder.getLatest().setText(document.getData().get("messages").toString());
-                                Timestamp start_timestamp = (Timestamp) (document.getData().get("timestamp"));
-                                Date start_date = start_timestamp.toDate();
-                                Calendar cldr_start = Calendar.getInstance();
-                                cldr_start.setTime(start_date);
-                                viewHolder.getTime().setText(DateFormat.getDateTimeInstance().format(cldr_start.getTime()));
-                                DocumentReference docRef = db.collection("users").document(document.getData().get("sender").toString());
-                                docRef.get().addOnCompleteListener(task2 -> {
-                                    if (task2.isSuccessful()) {
-                                        DocumentSnapshot document2 = task2.getResult();
-                                        if (document2.exists()) {
-                                            Map<String, Object> data = document2.getData();
-                                            viewHolder.getSender().setText(data.get("username").toString());
-                                            FirebaseStorage storage = FirebaseStorage.getInstance();
-                                            StorageReference storageRef = storage.getReference();
-                                            StorageReference imagesRef = storageRef.child("profile_pictures/" + document2.getId());
-                                            final long ONE_MEGABYTE = 1024 * 1024;
-                                            imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                                                // Data for "images/island.jpg" is returns, use this as needed
-                                                CircleImageView circleImageView = viewHolder.getProfileImageTwo();
-                                                Glide.with(context.getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception exception) {
+                .get().addOnCompleteListener(task -> {
+                    int number_entry = 0;
+                    if (task.isSuccessful()) {
+                        if (task.getResult().size() > 0) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                if (number_entry > 0) {
+                                    continue;
+                                }
+                                if (Objects.requireNonNull(document.get("sender")).toString().equals(preferences.getString("userID", "")) || Objects.requireNonNull(document.get("sender")).toString().equals(other)) {
+                                    number_entry = 1;
+                                    viewHolder.getLatest().setText(Objects.requireNonNull(document.getData().get("messages")).toString());
+                                    Timestamp start_timestamp = (Timestamp) (document.getData().get("timestamp"));
+                                    assert start_timestamp != null;
+                                    Date start_date = start_timestamp.toDate();
+                                    Calendar cldr_start = Calendar.getInstance();
+                                    cldr_start.setTime(start_date);
+                                    time.setText(DateFormat.getDateTimeInstance().format(cldr_start.getTime()));
+                                    DocumentReference docRef1 = db.collection("users").document(Objects.requireNonNull(document.getData().get("sender")).toString());
+                                    docRef1.get().addOnCompleteListener(task2 -> {
+                                        if (task2.isSuccessful()) {
+                                            DocumentSnapshot document2 = task2.getResult();
+                                            if (document2.exists()) {
+                                                Map<String, Object> data = document2.getData();
+                                                viewHolder.getSender().setText(Objects.requireNonNull(Objects.requireNonNull(data).get("username")).toString());
+                                                FirebaseStorage storage = FirebaseStorage.getInstance();
+                                                StorageReference storageRef = storage.getReference();
+                                                StorageReference imagesRef = storageRef.child("profile_pictures/" + document2.getId());
+                                                final long ONE_MEGABYTE = 1024 * 1024;
+                                                imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+                                                    CircleImageView circleImageView = viewHolder.getProfileImageTwo();
+                                                    Glide.with(context.getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
+                                                }).addOnFailureListener(exception -> {
                                                     // Handle any errors
-                                                }
-                                            });
+                                                });
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                                }
                             }
                         }
                     }
-                }
-            }
-        });
+                });
     }
+    // Replace the contents of a view (invoked by the layout manager)
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return localFriendUsernames.size();
+    }
+
+    /**
+     * Provide a reference to the type of views that you are using
+     * (custom ViewHolder).
+     */
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final TextView textViewUsername;
+        private final CircleImageView profile_image;
+        private final CircleImageView profile_image_two;
+        private final TextView latestMessage;
+        private final TextView sender;
+        private final TextView time;
+        private final LinearLayout nested;
+
+
+        public ViewHolder(View view) {
+            super(view);
+            // Define click listener for the ViewHolder's View
+
+            textViewUsername = view.findViewById(R.id.textViewUsernameFriend);
+            profile_image = view.findViewById(R.id.profile_image_friend);
+            profile_image_two = view.findViewById(R.id.profile_image_bubble);
+            latestMessage = view.findViewById(R.id.textViewLatestMessage);
+            sender = view.findViewById(R.id.textViewSender);
+            nested = view.findViewById(R.id.list_entry_nested);
+            time = view.findViewById(R.id.textViewTime);
+        }
+
+        public TextView getTextView() {
+            return textViewUsername;
+        }
+
+        public CircleImageView getProfileImage() {
+            return profile_image;
+        }
+
+        public CircleImageView getProfileImageTwo() {
+            return profile_image_two;
+        }
+
+        public TextView getLatest() {
+            return latestMessage;
+        }
+
+        public TextView getTime() {
+            return time;
+        }
+
+        public TextView getSender() {
+            return sender;
+        }
+
+        public LinearLayout getNested() {
+            return nested;
+        }
     }
 }

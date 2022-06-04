@@ -1,128 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/list_entry"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/list_entry"
+    android:layout_margin="20dp"
     android:gravity="center_vertical"
-    app:cardElevation="10dp"
     app:cardCornerRadius="10dp"
-    app:contentPadding="10dp"
-    android:layout_margin="20dp">
+    app:cardElevation="10dp"
+    app:contentPadding="10dp">
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:layout_height="wrap_content">
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_image_friend"
-            android:layout_height="96dp"
-            app:civ_circle_background_color="@color/teal_700"
-            android:layout_width="96dp"
-            android:gravity="center"
-            android:layout_marginBottom="10dp"
-            android:src="@drawable/ic_baseline_profile_picture_24" />
-
-        <TextView
-            android:id="@+id/textViewUsernameFriend"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:textSize="21sp"
-            android:gravity="center"
-            android:fontFamily="sans-serif-condensed-light"
-            android:textStyle="bold"
-            android:padding="5dp"
-            android:text="@string/username" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/list_entry_nested"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
-
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:gravity="center"
+            android:orientation="vertical">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_image_bubble"
-                android:layout_width="48dp"
-                app:civ_circle_background_color="@color/teal_700"
-                android:layout_height="48dp"
-                android:layout_marginTop="10dp"
+                android:id="@+id/profile_image_friend"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:layout_marginBottom="10dp"
                 android:gravity="center"
-                android:src="@drawable/ic_baseline_profile_picture_24"/>
+                android:src="@drawable/ic_baseline_profile_picture_24"
+                app:civ_circle_background_color="@color/teal_700" />
+
+            <TextView
+                android:id="@+id/textViewUsernameFriend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed-light"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/username"
+                android:textSize="21sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/list_entry_nested"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="10dp"
-                app:cardBackgroundColor="@color/teal_700"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="25dp"
-                app:contentPadding="10dp">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profile_image_bubble"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:src="@drawable/ic_baseline_profile_picture_24"
+                    app:civ_circle_background_color="@color/teal_700" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="vertical"
-                    android:padding="5dp">
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:fontFamily="sans-serif-condensed-light"
-                        android:id="@+id/textViewSender"
+                    <androidx.cardview.widget.CardView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginBottom="25dp"
+                        app:cardBackgroundColor="@color/teal_700"
+                        app:cardCornerRadius="10dp"
+                        app:cardElevation="10dp"
+                        app:contentPadding="10dp">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical"
+                            android:padding="5dp">
+
+                            <TextView
+                                android:id="@+id/textViewSender"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-condensed-light"
+                                android:hint="@string/latest_message"
+                                android:textColor="@color/white"
+                                android:textColorHint="@color/white"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/textViewLatestMessage"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-condensed-light"
+                                android:hint="@string/latest_message"
+                                android:textColor="@color/white"
+                                android:textColorHint="@color/white" />
+
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <TextView
+                        android:id="@+id/textViewTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:fontFamily="sans-serif-condensed-light"
                         android:hint="@string/latest_message"
-                        android:textColorHint="@color/white"
-                        android:textColor="@color/white"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:fontFamily="sans-serif-condensed-light"
-                        android:id="@+id/textViewLatestMessage"
-                        android:textColorHint="@color/white"
-                        android:textColor="@color/white"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/latest_message" />
-
+                        android:visibility="gone" />
                 </LinearLayout>
+            </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
-
-                <TextView
-                    android:fontFamily="sans-serif-condensed-light"
-                    android:id="@+id/textViewTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:visibility="gone"
-                    android:hint="@string/latest_message" />
         </LinearLayout>
-        </LinearLayout>
-
-    </LinearLayout>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.cardview.widget.CardView>
 

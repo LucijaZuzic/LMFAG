@@ -2,55 +2,59 @@
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".activities.EventsNearbyActivity"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    tools:context=".activities.EventsNearbyActivity">
     <!--tools:openDrawer="start"-->
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:orientation="vertical">
-                <TextView
-                    android:fontFamily="sans-serif-condensed-light"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    app:drawableTint="@color/teal_700"
-                    android:drawableStart="@drawable/ic_baseline_location_searching_24"
-                    android:gravity="center"
-                    android:minWidth="48dp"
-                    android:minHeight="48dp"
-                    android:padding="5dp"
-                    android:text="@string/events_nearby"
-                    android:textSize="21sp"
-                    android:textStyle="bold" />
-                <View
-                    android:id="@+id/divider_top"
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp"
-                    android:layout_gravity="center"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginTop="10dp"
-                    android:background="?android:attr/listDivider" />
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="10dp"
         android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif-condensed-light"
+            android:gravity="center"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:padding="5dp"
+            android:text="@string/events_nearby"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            app:drawableStartCompat="@drawable/ic_baseline_location_searching_24"
+            app:drawableTint="@color/teal_700" />
+
+        <View
+            android:id="@+id/divider_top"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="?android:attr/listDivider" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:orientation="vertical"
-                android:gravity="center" >
+                android:orientation="vertical">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
 
                     <LinearLayout
@@ -62,51 +66,53 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:layout_marginEnd="10dp"
+                            android:layout_weight="1"
                             android:gravity="center"
                             android:orientation="vertical">
 
                             <TextView
-                                android:fontFamily="sans-serif-condensed-light"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="21sp"
-                                android:textStyle="bold"
                                 android:layout_marginBottom="10dp"
-                                android:text="@string/marker_latitude"/>
+                                android:fontFamily="sans-serif-condensed-light"
+                                android:text="@string/marker_latitude"
+                                android:textSize="21sp"
+                                android:textStyle="bold" />
 
                             <EditText
                                 android:id="@+id/inputLatitude"
-                                android:fontFamily="sans-serif-condensed-light"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-condensed-light"
                                 android:hint="@string/enter_latitude"
                                 android:importantForAutofill="no"
                                 android:inputType="numberDecimal"
                                 android:minHeight="48dp" />
 
                         </LinearLayout>
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
                             <TextView
-                                android:fontFamily="sans-serif-condensed-light"
                                 android:layout_width="wrap_content"
-                                android:textSize="21sp"
-                                android:textStyle="bold"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="10dp"
-                                android:text="@string/marker_longitude"/>
+                                android:fontFamily="sans-serif-condensed-light"
+                                android:text="@string/marker_longitude"
+                                android:textSize="21sp"
+                                android:textStyle="bold" />
 
                             <EditText
-                                android:fontFamily="sans-serif-condensed-light"
                                 android:id="@+id/inputLongitude"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-condensed-light"
                                 android:hint="@string/enter_longitude"
                                 android:importantForAutofill="no"
                                 android:inputType="numberDecimal"
@@ -117,14 +123,14 @@
                             android:id="@+id/updateLocation"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            app:tint="@color/teal_700"
                             android:layout_gravity="center"
                             android:layout_marginStart="10dp"
                             android:clickable="true"
                             android:contentDescription="@string/choose_location"
                             android:focusable="true"
                             android:padding="5dp"
-                            android:src="@drawable/ic_baseline_location_on_24">
+                            android:src="@drawable/ic_baseline_location_on_24"
+                            app:tint="@color/teal_700">
 
                         </ImageView>
                     </LinearLayout>
@@ -137,46 +143,50 @@
 
 
                         <EditText
-                            android:fontFamily="sans-serif-condensed-light"
                             android:id="@+id/editTextRadius"
-                            app:drawableTint="@color/teal_700"
-                            android:inputType="numberDecimal"
-                            android:drawableStart="@drawable/ic_baseline_radar_24"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="10dp"
                             android:layout_weight="0.9"
                             android:ems="10"
-                            android:padding="5dp"
+                            android:fontFamily="sans-serif-condensed-light"
                             android:hint="@string/enter_search_radius"
-                            android:minHeight="48dp" />
+                            android:importantForAutofill="no"
+                            android:inputType="numberDecimal"
+                            android:minHeight="48dp"
+                            android:padding="5dp"
+                            app:drawableStartCompat="@drawable/ic_baseline_radar_24"
+                            app:drawableTint="@color/teal_700" />
 
                         <ImageView
                             android:id="@+id/imageViewBeginSearchRadius"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:padding="5dp"
-                            app:tint="@color/teal_700"
-                             android:minWidth="48dp"
+                            android:contentDescription="@string/events_nearby"
+                            android:minWidth="48dp"
                             android:minHeight="48dp"
-                            app:srcCompat="@drawable/ic_baseline_search_24" />
+                            android:padding="5dp"
+                            app:srcCompat="@drawable/ic_baseline_search_24"
+                            app:tint="@color/teal_700" />
                     </LinearLayout>
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/switchMapOnOff"
-                    android:layout_width="match_parent"
-                    android:layout_marginTop="10dp"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-condensed-light"
-                    android:textSize="21sp"
-                    android:drawableStart="@drawable/ic_baseline_map_24"
-                    android:checked="true"
-                    app:drawableTint="@color/teal_700"
-                    android:padding="5dp"
-                    android:textStyle="bold"
-                    android:text="@string/display_map">
 
-                </androidx.appcompat.widget.SwitchCompat>
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/switchMapOnOff"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:checked="true"
+                        android:fontFamily="sans-serif-condensed-light"
+                        android:padding="5dp"
+                        android:text="@string/display_map"
+                        android:textSize="21sp"
+                        android:textStyle="bold"
+                        app:drawableStartCompat="@drawable/ic_baseline_map_24"
+                        app:drawableTint="@color/teal_700">
+
+                    </androidx.appcompat.widget.SwitchCompat>
                 </LinearLayout>
+
                 <View
                     android:id="@+id/divider"
                     android:layout_width="match_parent"
@@ -187,28 +197,29 @@
                     android:background="?android:attr/listDivider" />
 
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewEventsNearby"
-                android:layout_width="match_parent"
-                android:visibility="gone"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_margin="10dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewEventsNearby"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="10dp"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
-            </androidx.recyclerview.widget.RecyclerView>
+                </androidx.recyclerview.widget.RecyclerView>
 
 
                 <org.osmdroid.views.MapView
                     android:id="@+id/map"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
-                    android:layout_margin="10dp" >
+                    android:layout_margin="10dp">
 
                 </org.osmdroid.views.MapView>
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Base64;
@@ -29,10 +28,10 @@ import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MyProfileInfoFragment extends Fragment {
-    private Context context;
-    private Activity activity;
     SharedPreferences preferences;
     FirebaseFirestore db;
+    private Context context;
+    private Activity activity;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,8 +58,7 @@ public class MyProfileInfoFragment extends Fragment {
 
     private void fillUserData(@NonNull View view) {
         String name = preferences.getString("userID", "");
-        if(name.equalsIgnoreCase(""))
-        {
+        if (name.equalsIgnoreCase("")) {
             Intent myIntent = new Intent(context, MainActivity.class);
             startActivity(myIntent);
             return;
@@ -72,8 +70,8 @@ public class MyProfileInfoFragment extends Fragment {
         TextView myOrganizerRankPoints = view.findViewById(R.id.textViewRankPoints);
         myUsername.setText(preferences.getString("userUsername", ""));
         myLocation.setText(preferences.getString("userLocation", ""));
-        Double points_rank = Double.parseDouble(preferences.getString("userRankPoints", ""));
-        Integer rank = (int) (Math.floor(points_rank / 1000));
+        double points_rank = Double.parseDouble(preferences.getString("userRankPoints", ""));
+        int rank = (int) (Math.floor(points_rank / 1000));
         String text_rank = Integer.toString(rank);
         Double upper_bound = Math.ceil(points_rank / 1000) * 1000;
         if (upper_bound.equals(0.0)) {
@@ -81,7 +79,7 @@ public class MyProfileInfoFragment extends Fragment {
         }
         String text_rank_points = points_rank + "/" + upper_bound;
         ProgressBar progressBar = view.findViewById(R.id.determinateBar);
-        progressBar.setProgress((int)((points_rank - (upper_bound - 1000)) / 10));
+        progressBar.setProgress((int) ((points_rank - (upper_bound - 1000)) / 10));
         myOrganizerRank.setText(text_rank);
         myOrganizerRankPoints.setText(text_rank_points);
         myDescription.setText(Objects.requireNonNull(preferences.getString("userDescription", "")));

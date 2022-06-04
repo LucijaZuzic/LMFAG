@@ -28,6 +28,7 @@ import java.util.List;
 public class ViewProfileAreasOfInterestFragment extends Fragment {
     private Context context;
     private Activity activity;
+    private TextView noResults;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,16 +48,16 @@ public class ViewProfileAreasOfInterestFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         DrawerHelper.fillNavbarData(activity);
+        noResults = view.findViewById(R.id.noResults);
         fillUserData(view);
     }
 
     private void fillUserData(@NonNull View view) {
         TextView title = view.findViewById(R.id.list_title);
-        title.setText("Areas of interest");
+        title.setText(R.string.user_areas_of_interest);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         String name = preferences.getString("friendID", "");
-        if(name.equalsIgnoreCase(""))
-        {
+        if (name.equalsIgnoreCase("")) {
             Intent myIntent = new Intent(context, MainActivity.class);
             startActivity(myIntent);
             return;
@@ -74,6 +75,11 @@ public class ViewProfileAreasOfInterestFragment extends Fragment {
             }
             CustomAdapterAreaOfInterest customAdapterAreaOfInterest = new CustomAdapterAreaOfInterest(areas_array, points_array);
             recyclerViewAreasOfInterest.setAdapter(customAdapterAreaOfInterest);
+            if (areas_array.size() > 0) {
+                noResults.setVisibility(View.GONE);
+            } else {
+                noResults.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

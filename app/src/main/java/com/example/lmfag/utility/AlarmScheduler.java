@@ -8,32 +8,28 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
 
-import androidx.annotation.NonNull;
-
 import com.example.lmfag.receivers.EventAlarmReceiver;
 import com.example.lmfag.receivers.RateAlarmReceiver;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 
 public class AlarmScheduler {
 
     public static void scheduleAlarmStart(Context applicationContext, long timeInMillis, String icon, String name, String description, String eventID) {
         AlarmManager alarmManager = (AlarmManager) applicationContext.getSystemService(Context.ALARM_SERVICE);
         Intent alarmReceiverIntent = new Intent(applicationContext, EventAlarmReceiver.class);
-        alarmReceiverIntent.putExtra("icon",icon);
-        alarmReceiverIntent.putExtra("name",name);
-        alarmReceiverIntent.putExtra("description",description);
-        alarmReceiverIntent.putExtra("eventID",eventID);
+        alarmReceiverIntent.putExtra("icon", icon);
+        alarmReceiverIntent.putExtra("name", name);
+        alarmReceiverIntent.putExtra("description", description);
+        alarmReceiverIntent.putExtra("eventID", eventID);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(applicationContext, 0, alarmReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + timeInMillis, pendingIntent);
@@ -41,13 +37,14 @@ public class AlarmScheduler {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + timeInMillis, pendingIntent);
         }
     }
+
     public static void scheduleAlarmEnd(Context applicationContext, String icon, String name, String description, String eventID) {
         AlarmManager alarmManager = (AlarmManager) applicationContext.getSystemService(Context.ALARM_SERVICE);
         Intent alarmReceiverIntent = new Intent(applicationContext, RateAlarmReceiver.class);
-        alarmReceiverIntent.putExtra("icon",icon);
-        alarmReceiverIntent.putExtra("name",name);
-        alarmReceiverIntent.putExtra("description",description);
-        alarmReceiverIntent.putExtra("eventID",eventID);
+        alarmReceiverIntent.putExtra("icon", icon);
+        alarmReceiverIntent.putExtra("name", name);
+        alarmReceiverIntent.putExtra("description", description);
+        alarmReceiverIntent.putExtra("eventID", eventID);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(applicationContext, 0, alarmReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
@@ -55,60 +52,52 @@ public class AlarmScheduler {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
         }
     }
+
     public static void cancelAllAlarms(Context applicationContext) {
         AlarmManager alarmManager = (AlarmManager) applicationContext.getSystemService(Context.ALARM_SERVICE);
         Intent alarmReceiverIntent = new Intent(applicationContext, EventAlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(applicationContext, 0, alarmReceiverIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_CANCEL_CURRENT);
         alarmManager.cancel(pendingIntent);
     }
+
     public static void getAllSubscriberEvents(Context applicationContext) {
         cancelAllAlarms(applicationContext);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
         String userID = preferences.getString("userID", "");
         if (!userID.equals("")) {
-            db.collection("event_attending").whereEqualTo("user", userID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        if (task.getResult().size() > 0) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                String isSubscribed = document.getData().get("notifications").toString();
-                                if (isSubscribed.equals("true")) {
-                                    DocumentReference docRef = db.collection("events").document(document.getData().get("event").toString());
-                                    docRef.get().addOnCompleteListener(taskTime -> {
-                                        if (taskTime.isSuccessful()) {
-                                            DocumentSnapshot documentTime = taskTime.getResult();
-                                            if (documentTime.exists()) {
-                                                Map<String, Object> docData = documentTime.getData();
-                                                Timestamp start_timestamp = (Timestamp)(docData.get("datetime"));
-                                                Date start_date = start_timestamp.toDate();
-                                                Calendar cldr_start = Calendar.getInstance();
-                                                cldr_start.setTime(start_date);
-                                                Timestamp end_timestamp = (Timestamp)(docData.get("ending"));
-                                                Date end_date = end_timestamp.toDate();
-                                                Calendar cldr_end = Calendar.getInstance();
-                                                cldr_end.setTime(end_date);
-                                                Calendar current = Calendar.getInstance();
-                                                if (current.getTimeInMillis() < cldr_start.getTimeInMillis()) {
-                                                    scheduleAlarmStart(applicationContext, cldr_start.getTimeInMillis() - current.getTimeInMillis(), docData.get("event_type").toString(), docData.get("event_name").toString(), docData.get("event_description").toString(), documentTime.getId());
-                                                }
-                                                if (current.getTimeInMillis() > cldr_end.getTimeInMillis() && !document.getData().get("rated").toString().equals("true")) {
-                                                    scheduleAlarmEnd(applicationContext, docData.get("event_type").toString(), docData.get("event_name").toString(), docData.get("event_description").toString(), documentTime.getId());
-                                                }
-                                            } else {
+            db.collection("event_attending").whereEqualTo("user", userID).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    if (task.getResult().size() > 0) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String isSubscribed = Objects.requireNonNull(document.getData().get("notifications")).toString();
+                            if (isSubscribed.equals("true")) {
+                                DocumentReference docRef = db.collection("events").document(Objects.requireNonNull(document.getData().get("event")).toString());
+                                docRef.get().addOnCompleteListener(taskTime -> {
+                                    if (taskTime.isSuccessful()) {
+                                        DocumentSnapshot documentTime = taskTime.getResult();
+                                        if (documentTime.exists()) {
+                                            Map<String, Object> docData = documentTime.getData();
+                                            Timestamp start_timestamp = (Timestamp) (Objects.requireNonNull(docData).get("datetime"));
+                                            Date start_date = Objects.requireNonNull(start_timestamp).toDate();
+                                            Calendar cldr_start = Calendar.getInstance();
+                                            cldr_start.setTime(start_date);
+                                            Timestamp end_timestamp = (Timestamp) (docData.get("ending"));
+                                            Date end_date = Objects.requireNonNull(end_timestamp).toDate();
+                                            Calendar cldr_end = Calendar.getInstance();
+                                            cldr_end.setTime(end_date);
+                                            Calendar current = Calendar.getInstance();
+                                            if (current.getTimeInMillis() < cldr_start.getTimeInMillis()) {
+                                                scheduleAlarmStart(applicationContext, cldr_start.getTimeInMillis() - current.getTimeInMillis(), Objects.requireNonNull(docData.get("event_type")).toString(), Objects.requireNonNull(docData.get("event_name")).toString(), Objects.requireNonNull(docData.get("event_description")).toString(), documentTime.getId());
+                                            }
+                                            if (current.getTimeInMillis() > cldr_end.getTimeInMillis() && !Objects.requireNonNull(document.getData().get("rated")).toString().equals("true")) {
+                                                scheduleAlarmEnd(applicationContext, Objects.requireNonNull(docData.get("event_type")).toString(), Objects.requireNonNull(docData.get("event_name")).toString(), Objects.requireNonNull(docData.get("event_description")).toString(), documentTime.getId());
                                             }
                                         }
-                                    });
-                                } else {
-
-                                }
+                                    }
+                                });
                             }
-                        } else {
-
                         }
-                    } else {
-
                     }
                 }
             });

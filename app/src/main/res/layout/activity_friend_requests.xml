@@ -2,11 +2,11 @@
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".activities.FriendRequestsActivity"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    tools:context=".activities.FriendRequestsActivity">
     <!--tools:openDrawer="start"-->
 
     <LinearLayout
@@ -19,14 +19,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            app:drawableTint="@color/teal_700"
             android:fontFamily="sans-serif-condensed-light"
             android:gravity="center"
             android:padding="5dp"
             android:text="@string/friend_requests"
             android:textSize="21sp"
             android:textStyle="bold"
-            app:drawableStartCompat="@drawable/ic_baseline_mail_24" />
+            app:drawableStartCompat="@drawable/ic_baseline_mail_24"
+            app:drawableTint="@color/teal_700" />
 
 
         <View
@@ -37,21 +37,28 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:background="?android:attr/listDivider" />
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_margin="10dp"
-        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/noResults"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="sans-serif-condensed-light"
+            android:text="@string/no_results"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewFriendRequests"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
         </androidx.recyclerview.widget.RecyclerView>
-    </ScrollView>
-
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView

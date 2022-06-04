@@ -26,6 +26,7 @@ import java.util.List;
 public class ViewProfileEventsOrganizerFragment extends Fragment {
     private Context context;
     private Activity activity;
+    private TextView noResults;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class ViewProfileEventsOrganizerFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         DrawerHelper.fillNavbarData(activity);
+        noResults = view.findViewById(R.id.noResults);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         RecyclerView recyclerViewEventsOrganizer = view.findViewById(R.id.recyclerViewList);
         List<String> events_array = new ArrayList<>();
@@ -55,9 +57,14 @@ public class ViewProfileEventsOrganizerFragment extends Fragment {
             if (!organizer_string[0].equals("")) {
                 CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(events_array, context, preferences);
                 recyclerViewEventsOrganizer.setAdapter(customAdapterEvents);
+                if (events_array.size() > 0) {
+                    noResults.setVisibility(View.GONE);
+                } else {
+                    noResults.setVisibility(View.VISIBLE);
+                }
             }
         }
         TextView title = view.findViewById(R.id.list_title);
-        title.setText("Organizing events");
+        title.setText(R.string.events_view_organizer);
     }
 }

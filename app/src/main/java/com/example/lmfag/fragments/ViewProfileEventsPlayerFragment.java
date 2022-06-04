@@ -26,12 +26,13 @@ import java.util.Collections;
 import java.util.List;
 
 public class ViewProfileEventsPlayerFragment extends Fragment {
+    List<String> events_player_array;
+    List<String> event_subscriber_array;
     private Context context;
     private Activity activity;
     private SharedPreferences preferences;
     private boolean only_notified = false;
-    List<String> events_player_array;
-    List<String> event_subscriber_array;
+    private TextView noResults;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,10 +52,26 @@ public class ViewProfileEventsPlayerFragment extends Fragment {
         if (only_notified) {
             if (!event_subscriber_array.get(0).equals("")) {
                 recyclerViewEventsPlayer.setAdapter(new CustomAdapterEvent(event_subscriber_array, context, preferences));
+                if (event_subscriber_array.size() > 0) {
+                    noResults.setVisibility(View.GONE);
+                } else {
+                    noResults.setVisibility(View.VISIBLE);
+                }
+            } else {
+                recyclerViewEventsPlayer.setAdapter(new CustomAdapterEvent(new ArrayList<>(), context, preferences));
+                noResults.setVisibility(View.VISIBLE);
             }
         } else {
             if (!events_player_array.get(0).equals("")) {
                 recyclerViewEventsPlayer.setAdapter(new CustomAdapterEvent(events_player_array, context, preferences));
+                if (events_player_array.size() > 0) {
+                    noResults.setVisibility(View.GONE);
+                } else {
+                    noResults.setVisibility(View.VISIBLE);
+                }
+            } else {
+                recyclerViewEventsPlayer.setAdapter(new CustomAdapterEvent(new ArrayList<>(), context, preferences));
+                noResults.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -63,8 +80,9 @@ public class ViewProfileEventsPlayerFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         DrawerHelper.fillNavbarData(activity);
+        noResults = view.findViewById(R.id.noResults);
         TextView title = view.findViewById(R.id.list_title);
-        title.setText("Playing events");
+        title.setText(R.string.events_view_player);
         RecyclerView recyclerViewEventsPlayer = view.findViewById(R.id.recyclerViewList);
         SwitchCompat notificationsOnly = view.findViewById(R.id.onlyShowNotificationToggle);
         preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
@@ -79,6 +97,11 @@ public class ViewProfileEventsPlayerFragment extends Fragment {
             changeArray(recyclerViewEventsPlayer);
         }
         notificationsOnly.setOnClickListener(someView -> {
+            if (notificationsOnly.isChecked()) {
+                title.setText(R.string.events_view_subscriber);
+            } else {
+                title.setText(R.string.events_view_player);
+            }
             only_notified = notificationsOnly.isChecked();
             changeArray(recyclerViewEventsPlayer);
         });

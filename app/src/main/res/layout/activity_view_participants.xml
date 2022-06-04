@@ -21,10 +21,10 @@
             android:fontFamily="sans-serif-condensed-light"
             android:gravity="center"
             android:padding="5dp"
-            android:text="@string/rate_event"
+            android:text="@string/view_participants"
             android:textSize="21sp"
             android:textStyle="bold"
-            app:drawableStartCompat="@drawable/ic_baseline_star_24"
+            app:drawableStartCompat="@drawable/ic_baseline_groups_24"
             app:drawableTint="@color/teal_700" />
 
         <androidx.cardview.widget.CardView
@@ -75,8 +75,8 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:padding="10dp"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -102,58 +102,48 @@
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="80dp"
                         android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
                         android:layout_marginBottom="20dp"
-                        android:layout_marginTop="10dp"
+                        android:gravity="center"
                         app:cardCornerRadius="10dp"
                         app:cardElevation="10dp"
                         app:contentPadding="10dp">
 
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:orientation="vertical">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginBottom="10dp"
-                                android:gravity="center"
-                                android:orientation="horizontal">
+                                android:orientation="horizontal"
+                                android:weightSum="1">
 
                                 <de.hdodenhof.circleimageview.CircleImageView
                                     android:id="@+id/profile_image_organizer"
-                                    android:layout_width="48dp"
-                                    android:layout_height="48dp"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
                                     android:layout_marginEnd="10dp"
+                                    android:layout_weight="0.3"
                                     android:src="@drawable/ic_baseline_profile_picture_24"
-                                    app:civ_circle_background_color="@color/teal_700" />
+                                    app:civ_circle_background_color="@color/teal_700"/>
 
                                 <TextView
                                     android:id="@+id/textViewOrganizer"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="0.7"
                                     android:fontFamily="sans-serif-condensed-light"
+                                    android:gravity="center"
                                     android:hint="@string/username"
                                     android:padding="5dp"
                                     android:textSize="21sp"
-                                    android:textStyle="bold" />
+                                    android:textStyle="bold"  />
 
                             </LinearLayout>
 
-                            <RatingBar
-                                android:id="@+id/simpleRatingBarOrganizer"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:contentDescription="@string/rating_bar"
-                                android:progressTint="@color/teal_700"
-                                android:rating="2" />
 
-                        </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
 
@@ -199,63 +189,6 @@
             </LinearLayout>
         </ScrollView>
 
-        <View
-            android:id="@+id/divider_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:background="?android:attr/listDivider" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/imageViewApply"
-                    android:layout_width="96dp"
-                    android:layout_height="48dp"
-                    android:clickable="true"
-                    android:contentDescription="@string/apply"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:src="@drawable/ic_baseline_check_24"
-                    app:tint="@color/teal_700" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/imageViewDiscard"
-                    android:layout_width="96dp"
-                    android:layout_height="48dp"
-                    android:clickable="true"
-                    android:contentDescription="@string/cancel"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:src="@drawable/ic_baseline_close_24"
-                    app:tint="@color/teal_700" />
-            </LinearLayout>
-        </LinearLayout>
 
     </LinearLayout>
 

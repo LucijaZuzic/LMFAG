@@ -3,8 +3,6 @@ package com.example.lmfag.utility.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +16,6 @@ import com.bumptech.glide.Glide;
 import com.example.lmfag.R;
 import com.example.lmfag.activities.RateEventActivity;
 import com.example.lmfag.activities.ViewProfileActivity;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,48 +23,23 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class CustomAdapterRating extends RecyclerView.Adapter<CustomAdapterRating.ViewHolder> {
 
-    private List<String> localFriendUsernames;
-    private Context context;
-    private SharedPreferences preferences;
-    private RateEventActivity rateEventActivity;
-    /**
-     * Provide a reference to the type of views that you are using
-     * (custom ViewHolder).
-     */
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textViewUsername;
-        private final CircleImageView profile_image_player;
-        private final RatingBar ratingBar;
-
-        public ViewHolder(View view) {
-            super(view);
-            // Define click listener for the ViewHolder's View
-
-            textViewUsername = (TextView) view.findViewById(R.id.textViewPlayer);
-            profile_image_player = (CircleImageView) view.findViewById(R.id.profile_image_player);
-            ratingBar = (RatingBar) view.findViewById(R.id.simpleRatingBarPlayer);
-        }
-
-        public TextView getTextView() {
-            return textViewUsername;
-        }
-        public CircleImageView getProfileImage() { return profile_image_player; }
-        public RatingBar getRatingBar() {
-            return ratingBar;
-        }
-    }
+    private final List<String> localFriendUsernames;
+    private final Context context;
+    private final SharedPreferences preferences;
+    private final RateEventActivity rateEventActivity;
 
     /**
      * Initialize the dataset of the Adapter.
      *
      * @param dataSet String[] containing the data to populate views to be used
-     * by RecyclerView.
+     *                by RecyclerView.
      */
     public CustomAdapterRating(List<String> dataSet, Context context, SharedPreferences preferences, RateEventActivity rate) {
         localFriendUsernames = dataSet;
@@ -77,6 +49,7 @@ public class CustomAdapterRating extends RecyclerView.Adapter<CustomAdapterRatin
     }
 
     // Create new views (invoked by the layout manager)
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
@@ -94,18 +67,13 @@ public class CustomAdapterRating extends RecyclerView.Adapter<CustomAdapterRatin
         // contents of the view with that element
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String name = localFriendUsernames.get(position);
-        final int rating_position = position;
         DocumentReference docRef = db.collection("users").document(name);
-        viewHolder.getRatingBar().setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-
-            // Called when the user swipes the RatingBar
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                rateEventActivity.updateRating(rating_position, viewHolder.getRatingBar().getRating());
-            }
-        });
+        RatingBar ratingBar = viewHolder.getRatingBar();
+        CircleImageView profileImage = viewHolder.getProfileImage();
+        // Called when the user swipes the RatingBar
+        ratingBar.setOnRatingBarChangeListener((ratingBarNew, rating, fromUser) -> rateEventActivity.updateRating(position, ratingBar.getRating()));
         if (!name.equals(preferences.getString("userID", ""))) {
-            viewHolder.getProfileImage().setOnClickListener(view -> {
+            profileImage.setOnClickListener(view -> {
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("friendID", name);
                 editor.apply();
@@ -117,20 +85,13 @@ public class CustomAdapterRating extends RecyclerView.Adapter<CustomAdapterRatin
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
-                    viewHolder.getTextView().setText(document.get("username").toString());
+                    viewHolder.getTextView().setText(Objects.requireNonNull(document.get("username")).toString());
                     FirebaseStorage storage = FirebaseStorage.getInstance();
                     StorageReference storageRef = storage.getReference();
                     StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
                     final long ONE_MEGABYTE = 1024 * 1024;
-                    imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                        // Data for "images/island.jpg" is returns, use this as needed
-                        CircleImageView circleImageView = viewHolder.getProfileImage();
-                        Glide.with(context.getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Handle any errors
-                        }
+                    imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(context.getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(profileImage)).addOnFailureListener(exception -> {
+                        // Handle any errors
                     });
                 }
             }
@@ -141,5 +102,36 @@ public class CustomAdapterRating extends RecyclerView.Adapter<CustomAdapterRatin
     @Override
     public int getItemCount() {
         return localFriendUsernames.size();
+    }
+
+    /**
+     * Provide a reference to the type of views that you are using
+     * (custom ViewHolder).
+     */
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final TextView textViewUsername;
+        private final CircleImageView profile_image_player;
+        private final RatingBar ratingBar;
+
+        public ViewHolder(View view) {
+            super(view);
+            // Define click listener for the ViewHolder's View
+
+            textViewUsername = view.findViewById(R.id.textViewPlayer);
+            profile_image_player = view.findViewById(R.id.profile_image_player);
+            ratingBar = view.findViewById(R.id.simpleRatingBarPlayer);
+        }
+
+        public TextView getTextView() {
+            return textViewUsername;
+        }
+
+        public CircleImageView getProfileImage() {
+            return profile_image_player;
+        }
+
+        public RatingBar getRatingBar() {
+            return ratingBar;
+        }
     }
 }

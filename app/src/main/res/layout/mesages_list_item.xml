@@ -16,14 +16,14 @@
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            app:civ_circle_background_color="@color/teal_700"
             android:id="@+id/profile_image_bubble"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginTop="10dp"
             android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
-            android:src="@drawable/ic_baseline_profile_picture_24"/>
+            android:src="@drawable/ic_baseline_profile_picture_24"
+            app:civ_circle_background_color="@color/teal_700" />
 
 
         <LinearLayout
@@ -36,8 +36,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
                 android:layout_marginBottom="25dp"
                 app:cardBackgroundColor="@color/teal_700"
                 app:cardCornerRadius="10dp"
@@ -54,20 +54,20 @@
                         android:id="@+id/textViewSender"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColorHint="@color/white"
-                        android:textColor="@color/white"
-                        android:hint="@string/latest_message"
                         android:fontFamily="sans-serif-condensed-light"
+                        android:hint="@string/latest_message"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/textViewLatestMessage"
                         android:layout_width="wrap_content"
-                        android:textColorHint="@color/white"
-                        android:textColor="@color/white"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-condensed-light"
-                        android:hint="@string/latest_message" />
+                        android:hint="@string/latest_message"
+                        android:textColor="@color/white"
+                        android:textColorHint="@color/white" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -77,8 +77,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:fontFamily="sans-serif-condensed-light"
-                android:visibility="gone"
-                android:hint="@string/latest_message"  />
+                android:hint="@string/latest_message"
+                android:visibility="gone" />
         </LinearLayout>
 
     </LinearLayout>

@@ -2,60 +2,50 @@ package com.example.lmfag.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.lmfag.R;
-import com.example.lmfag.utility.DrawerHelper;
 import com.example.lmfag.utility.SecureHash;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Map;
-
+import java.util.Objects;
 
 public class ChangePasswordActivity extends MenuInterfaceActivity {
-    private Context context = this;
-    private ImageView apply, discard;
-    Map<String, Object> old_data;
+    private Context context;
+    private ImageView apply;
+    private Map<String, Object> old_data;
+    private EditText myUsername, passwordEdit, passwordEditRepeat;
+    private CheckBox checkBoxUsername, checkBoxPassword;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
-        discard = findViewById(R.id.imageViewDiscard);
+        context = this;
+        ImageView discard = findViewById(R.id.imageViewDiscard);
         apply = findViewById(R.id.imageViewApply);
+        myUsername = findViewById(R.id.editTextUsername);
+        passwordEdit = findViewById(R.id.editTextPassword);
+        passwordEditRepeat = findViewById(R.id.editTextPasswordRepeat);
+        checkBoxUsername = findViewById(R.id.checkBoxUsername);
+        checkBoxPassword = findViewById(R.id.checkBoxPassword);
+        
         fillUserData();
         createProfile();
-        getBack();
-
-    }
-
-    private void getBack() {
-        discard.setOnClickListener(view -> {
-            Intent myIntent = new Intent(context, MyProfileActivity.class);
-            startActivity(myIntent);
-        });
+        discard.setOnClickListener(view -> onBackPressed());
     }
 
     private void createProfile() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String name = preferences.getString("userID", "");
         apply.setOnClickListener(view -> {
-            EditText username = findViewById(R.id.editTextUsername);
-            EditText passwordEdit = findViewById(R.id.editTextPassword);
-            EditText passwordEditRepeat = findViewById(R.id.editTextPasswordRepeat);
-            CheckBox checkBoxUsername = findViewById(R.id.checkBoxUsername);
-            CheckBox checkBoxPassword = findViewById(R.id.checkBoxPassword);
             if (checkBoxPassword.isChecked()) {
                 if (passwordEditRepeat.getText() == passwordEdit.getText()) {
                     try {
@@ -65,39 +55,34 @@ public class ChangePasswordActivity extends MenuInterfaceActivity {
                         db.collection("users")
                                 .document(name)
                                 .set(old_data);
-                    } catch (NoSuchAlgorithmException e) {
-                        e.printStackTrace();
-                    } catch (InvalidKeySpecException e) {
+                    } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                         e.printStackTrace();
                     }
-                     Toast.makeText(getApplicationContext(), R.string.password_success_change, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.password_success_change, Toast.LENGTH_SHORT).show();
                 } else {
-                     Toast.makeText(getApplicationContext(), R.string.password_match, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.password_match, Toast.LENGTH_SHORT).show();
                 }
             }
             if (checkBoxUsername.isChecked()) {
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("userUsername", username.getText().toString());
+                editor.putString("userUsername", myUsername.getText().toString());
                 editor.apply();
-                DrawerHelper.fillNavbarData(this);
+                
                 old_data.remove("username");
-                old_data.put("username", username.getText().toString());
+                old_data.put("username", myUsername.getText().toString());
                 db.collection("users")
                         .document(name)
                         .set(old_data);
-                 Toast.makeText(getApplicationContext(), R.string.username_success_change, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.username_success_change, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void fillUserData() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String name = preferences.getString("userID", "");
-        if(name.equalsIgnoreCase(""))
-        {
+        if (name.equalsIgnoreCase("")) {
             Intent myIntent = new Intent(context, MainActivity.class);
             startActivity(myIntent);
+            finish();
             return;
         }
         DocumentReference docRef = db.collection("users").document(name);
@@ -105,20 +90,15 @@ public class ChangePasswordActivity extends MenuInterfaceActivity {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
-                    Map<String, Object> data = document.getData();
-                    old_data = data;
-                    EditText myUsername = findViewById(R.id.editTextUsername);
-                    myUsername.setText(data.get("username").toString());
-
-                    //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    old_data = document.getData();
+                    if (old_data != null) {
+                        myUsername.setText(Objects.requireNonNull(old_data.get("username")).toString());
+                    }
                 } else {
                     Intent myIntent = new Intent(context, MainActivity.class);
                     startActivity(myIntent);
-                    return;
-                    //Log.d(TAG, "No such document");
+                    finish();
                 }
-            } else {
-                //Log.d(TAG, "get failed with ", task.getException());
             }
         });
     }

@@ -31,7 +31,7 @@ android {
                 srcDirs 'src\\main\\assets'
             }
             res {
-                srcDirs 'src\\main\\res', 'src\\main\\res\\values-en', 'src\\main\\xml'
+                srcDirs 'src\\main\\res', 'src\\main\\res\\values-en', 'src\\main\\xml', 'src\\main\\res\\values\\hr'
             }
             java {
                 srcDirs 'src\\main\\java', 'src\\main\\java\\services', 'src\\main\\java\\com.example.lmfag\\services'

@@ -1,0 +1,246 @@
+<resources>
+    <string name="app_name">Let\'s meet for a game</string>
+    <string name="username">Korisničko ime</string>
+    <string name="find_events">Pronađi događaje</string>
+    <string name="rating_bar">Traka za ocjenu</string>
+    <string name="expand_friends">Prikaži prijatelje</string>
+    <string name="events_nearby">Događaji u blizini</string>
+    <string name="friends">Prijatelji</string>
+    <string name="areas_of_interest">Područja interesa</string>
+    <string name="find_friends">Pronađi prijatelje</string>
+    <string name="rank_points">Bodovi ranga/Bodovi do idućeg ranga</string>
+    <string name="my_events">Moji događaji</string>
+    <string name="rank">Rang</string>
+    <string name="user_description">Opis korisnika:</string>
+    <string name="enter_a_location">Unesi lokaciju</string>
+    <string name="edit_profile">Uredi profil</string>
+    <string name="enter_a_description">Unesi opis</string>
+    <string name="location">Lokacija:</string>
+    <string name="friend_requests">Zahtjevi za prijateljstvo</string>
+    <string name="my_messages">Moje poruke</string>
+    <string name="organizer_rank">Rang organizatora</string>
+    <string name="event_name">Ime događaja:</string>
+    <string name="create_event">Stvori događaj</string>
+    <string name="event_type">Vrsta događaja:</string>
+    <string name="players">Igrači</string>
+    <string name="number_of_players">Broj igrača:</string>
+    <string name="organizer_playing">Organizator sudjeluje</string>
+    <string name="choose_location">Odaberi lokaciju</string>
+    <string name="choose_date">Odaberi datum </string>
+    <string name="choose_time">Odaberi vrijeme</string>
+    <string name="public_event">Javno</string>
+    <string name="outdoor">Na otvorenom</string>
+    <string name="apply">Primijeni</string>
+    <string name="cancel">Odustani</string>
+    <string name="enter_a_username">Unesi korisničko ime</string>
+    <string name="minimum_level">Minimalna razina:</string>
+    <string name="choose_an_activity_category">Odaberi tip događaja</string>
+    <string name="area_of_interest">Područje interesa</string>
+    <string name="add_area_of_interest">Dodaj područje interesa</string>
+    <string name="level">Razina</string>
+    <string name="level_points">Bodovi razine/Bodovi do iduće razine</string>
+    <string name="organizer">Organizator</string>
+    <string name="rate_event">Ocijeni događaj</string>
+    <string name="area_of_interest_already_added">Već je dodano područje interesa</string>
+    <string name="write_success">Snimka dokumenta uspješno je zapisana!</string>
+    <string name="write_failed">Greška prilikom zapisa dokumenta</string>
+    <string name="remove_area_of_interest">Ukloni područje interesa</string>
+    <string name="area_of_interest_not_present">Područje interesa nije prisutno</string>
+    <string name="image_upload_finished">Slanje slike je završeno</string>
+    <string name="image_upload_started">Slanje slike je započelo</string>
+    <string name="go_back_upload">Ne možete se vratiti dok se slika ne pošalje.</string>
+    <string name="my_profile">Moj profil</string>
+    <string name="login">Prijava</string>
+    <string name="register">Registracija</string>
+    <string name="password">Lozinka</string>
+    <string name="long_app_name">Let\'s meet for a game</string>
+    <string name="update_password">Ažuriraj lozinku</string>
+    <string name="no_user_username">Nema korisnika s korisničkim imenom.</string>
+    <string name="multiple_username">Više korisnika s korisničkim imenom.</string>
+    <string name="password_incorrect">>Lozinka je netočna.</string>
+    <string name="username_taken">Korisničko ime je zauzeto, odaberite drugo.</string>
+    <string name="logged_in">Prijavljeni ste!</string>
+    <string name="password_short">Lozinka mora imati barem jedan znak.</string>
+    <string name="send_friend_request">Pošaljite zahtjev za prijateljstvo</string>
+    <string name="already_sent">Zahtjev za prijateljstvo je već poslan.</string>
+    <string name="send_message">Pošalji poruku</string>
+    <string name="friends_with_self">Ne možete postati prijatelj sami sebi.</string>
+    <string name="visiting_myself">Ne možete posjetiti vlastiti profil.</string>
+    <string name="already_friends">Već ste prijatelji s ovim korisnikom.</string>
+    <string name="event_description">Opis dogašaja:</string>
+    <string name="friend_request_sent">Zahtjev za prijateljstvo poslan.</string>
+    <string name="no_longer_friends">Više niste prijatelji.</string>
+    <string name="friend_request_declined">Zahtjev za prijateljstvo odbijen.</string>
+    <string name="friend_request_accepted">Zahtjev za prijateljstvo prihvaćen.</string>
+    <string name="notifications">Obavijesti</string>
+    <string name="date">Datum</string>
+    <string name="time">Vrijeme</string>
+    <string name="created_event">Događaj je stvoren!</string>
+    <string name="updated_event">Događaj je ažuriran</string>
+    <string name="initial_minimum_level">0</string>
+    <string name="enter_search_value">Unesi vrijednost za pretragu.</string>
+    <string name="latest_message">Najnovija poruka</string>
+    <string name="enter_message">Unesi poruku.</string>
+    <string name="choose_duration">Odaberi trajanje</string>
+    <string name="duration">Trajanje</string>
+    <string name="choose_start_date">Odaberi datum početka</string>
+    <string name="choose_start_time">Odaberi vrijeme početka</string>
+    <string name="choose_end_time">Odaberi datum završetka</string>
+    <string name="choose_end_date">Odaberi vrijeme završetka</string>
+    <string name="organizer_edit">Samo organizator može urediti događaj.</string>
+    <string name="enter_event_name">Unesi ime događaja.</string>
+    <string name="enter_organizer_name">Unesi ime organizatora.</string>
+    <string name="event_start">Početak događaja:</string>
+    <string name="event_end">Kraj događaja:</string>
+    <string name="private_event">Privatni događaj</string>
+    <string name="indoor">U zatvorenom</string>
+    <string name="latitude">Geografska širina</string>
+    <string name="longitude">Geografska dužina</string>
+    <string name="marker_latitude">Geografska širina oznake</string>
+    <string name="marker_longitude">Geografska dužina oznake</string>
+    <string name="waiting_location">Čekam novu lokaciju</string>
+    <string name="setting_location">Postavljam novu lokaciju oznake…</string>
+    <string name="enter_longitude">Unesi geografsku dužinu</string>
+    <string name="enter_latitude">Unesi geografsku širinu</string>
+    <string name="marker_location">Lokacija oznake</string>
+    <string name="confirm_location">Potvrdi lokaciju</string>
+    <string name="level_low">Vaša razina nije dovoljno visoka da sudjelujete.</string>
+    <string name="too_many">Prevelik broj sudionika.</string>
+    <string name="create_profile">Stvori događaj</string>
+    <string name="enter_a_username_to_search">Unesi korisničko ime za pretragu.</string>
+    <string name="delete_message">Želite li obrisati poruku?</string>
+    <string name="yes">Da</string>
+    <string name="no">Ne</string>
+    <string name="deleted_by_sender">Obrisano od strane pošiljatelja.</string>
+    <string name="player">Igrač</string>
+    <string name="enter_search_radius">Unesite promjer pretrage (km).</string>
+    <string name="results">Rezultati</string>
+    <string name="my_friends">Moji prijatelji</string>
+    <string name="my_areas_of_interest">Moja područja interesa</string>
+    <string name="begin_past">Događaj ne može započeti u prošlosti.</string>
+    <string name="end_before_beginning">Događaj ne može završiti prije nego je započeo.</string>
+    <string name="end_past">Događaj ne može završiti u prošlosti.</string>
+    <string name="no_connection">Izgubljena veza s internetom!</string>
+    <string-array name="event_types">
+        <item>skiing</item>
+        <item>hiking</item>
+        <item>ice skating</item>
+        <item>kayaking</item>
+        <item>kitesurfing</item>
+        <item>nordic walking</item>
+        <item>paragliding</item>
+        <item>biking</item>
+        <item>roller skating</item>
+        <item>rowing</item>
+        <item>sailing</item>
+        <item>scuba diving</item>
+        <item>yoga</item>
+        <item>skateboarding</item>
+        <item>sledding</item>
+        <item>snowboarding</item>
+        <item>baseball</item>
+        <item>basketball</item>
+        <item>cricket</item>
+        <item>esports</item>
+        <item>football</item>
+        <item>golf</item>
+        <item>gymnastics</item>
+        <item>handball</item>
+        <item>hockey</item>
+        <item>kabaddi</item>
+        <item>martial arts</item>
+        <item>MMA</item>
+        <item>motorsports</item>
+        <item>rugby</item>
+        <item>soccer</item>
+        <item>tennis</item>
+        <item>volleyball</item>
+        <item>dice games</item>
+        <item>card games</item>
+        <item>tabletop games</item>
+        <item>poker</item>
+        <item>other</item>
+    </string-array>
+    <string-array name="friend_search_params">
+        <item>areas of interest</item>
+        <item>description</item>
+        <item>location</item>
+        <item>username</item>
+    </string-array>
+    <string-array name="friend_sort_params">
+        <item>rank</item>
+        <item>username</item>
+    </string-array>
+    <string-array name="event_search_params">
+        <item>event type</item>
+        <item>event name</item>
+        <item>description</item>
+    </string-array>
+    <string-array name="event_sort_params">
+        <item>start time</item>
+        <item>event type</item>
+        <item>event name</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Pozdrav prazni fragment</string>
+    <string name="added_areas_of_interest">Prisutna područja interesa</string>
+    <string name="expand_areas_of_interest">Prikaži područja interesa</string>
+    <string name="expand_added_areas_of_interest">Prikaži prisutna područja interesa</string>
+    <string name="expand_not_added_areas_of_interest">Prikaži nova područja interesa</string>
+    <string name="not_added_areas_of_interest">Nova područja interesa</string>
+    <string name="filter_by_event_name">Ime događaja</string>
+    <string name="filter_by_event_type">Tip događaja</string>
+    <string name="filter_by_organizer">Organizator</string>
+    <string name="expand_subscriber">Prikaži pretplatnike</string>
+    <string name="subscriber">Pretplatnik</string>
+    <string name="user_areas_of_interest">Korisnikova područja interesa</string>
+    <string name="user_friends">Korisnikovi prijatelji</string>
+    <string name="events_organizer">Ja sam organizator</string>
+    <string name="events_player">Ja sam sudionik</string>
+    <string name="events_subscriber">Ja sam pretplaćen</string>
+    <string name="events_view_organizer">Korisnik je organizator</string>
+    <string name="events_view_player">Korisnik je sudjelovao</string>
+    <string name="events_view_subscriber">Korisnik je pretplaćen</string>
+    <string name="notifications_only">Samo obavijesti</string>
+    <string name="change_username">Promjeni korisničko ime</string>
+    <string name="change_password">Promjeni lozinku</string>
+    <string name="repeat_new_password">Ponovno unesi lozinku</string>
+    <string name="password_match">Lozinke se ne poklapaju</string>
+    <string name="change_username_or_password">Promjeni korisničko ime ili lozinku</string>
+    <string name="new_password">Nova lozinka</string>
+    <string name="edit_account">Uredi račun</string>
+    <string name="display_map">Prikaži kartu</string>
+    <string name="update_notify">Uspješno su ažurirane postavke za obavijesti</string>
+    <string name="not_friend_organizer">Morate biti prijatelj organizatora da biste sudjelovali u privatnom događaju.</string>
+    <string name="not_enough">Nema dovoljno sudionika.</string>
+    <string name="rate_twice">Ne možete ocijeniti događaj dvaput.</string>
+    <string name="not_participate_rate">Ne možete ocijeniti događaj ako ne sudjelujete niti organizirate.</string>
+    <string name="rate_before_end">Ne možete ocijeniti događaj prije nego završi</string>
+    <string name="password_success_change">Lozinka je uspješno izmijenjena.</string>
+    <string name="username_success_change">Korisničko ime je uspješno izmijenjeno.</string>
+    <string name="end_in_past">Događaj ne može završiti u prošlosti.</string>
+    <string name="end_before_begin">Događaj ne može završiti prije nego započne.</string>
+    <string name="edit_finished">Ne možete izmijeniti događaj koji je završio.</string>
+    <string name="default_notification_channel_id">default_channel</string>
+    <string name="msg_subscribed">Uspješno ste pretplaćeni na temu.</string>
+    <string name="msg_subscribe_failed">Niste uspješno pretplaćeni na temu.</string>
+    <string name="cant_edit_finished">Ne možete izmijeniti događaj koji je završio.</string>
+    <string name="delete_event">Jeste li sigurni da želite obrisati događaj?</string>
+    <string name="playing_events">Događaji u kojima sudjelujem</string>
+    <string name="organizing_events">Događaji koje organiziram</string>
+    <string name="channel_name">LMFAG_default_channel</string>
+    <string name="channel_description">Notify for upcoming events.</string>
+    <string name="channel_id">LMFAG_default_channel</string>
+    <string name="refresh_messages">Želite li osvježiti poruke?</string>
+    <string name="close_card">Zatvori karticu</string>
+    <string name="rotate_left">Rotiraj ulijevo</string>
+    <string name="rotate_right">Rotatiraj udesno</string>
+    <string name="flip_horizontal">Zrcali horizontalno</string>
+    <string name="flip_vertical">Zrcali vertikalno</string>
+    <string name="show_tabs">Prikaži karticu</string>
+    <string name="choose_theme">Odabir teme</string>
+    <string name="logout">Odjava</string>
+    <string name="open_drawer">Otvori ladicu</string>
+    <string name="no_results">Nema rezultata.</string>
+    <string name="view_participants">View participants</string>
+</resources>

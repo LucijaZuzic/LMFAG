@@ -10,6 +10,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
     <androidx.cardview.widget.CardView
         android:id="@+id/goBackToProfile"
         android:layout_width="match_parent"
@@ -23,30 +24,32 @@
         app:cardCornerRadius="10dp"
         app:cardElevation="10dp"
         app:contentPadding="10dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:weightSum="1">
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_image_nav"
-            app:civ_circle_background_color="@color/teal_700"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.3"
-            android:src="@drawable/ic_baseline_profile_picture_24" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image_nav"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:src="@drawable/ic_baseline_profile_picture_24"
+                app:civ_circle_background_color="@color/teal_700" />
 
             <TextView
-                android:textColor="@color/teal_700"
-                android:textColorHint="@color/teal_700"
                 android:id="@+id/textViewUsername_nav"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.7"
                 android:fontFamily="sans-serif-condensed-light"
                 android:gravity="center"
-                android:padding="5dp"
                 android:hint="@string/username"
+                android:padding="5dp"
+                android:textColor="@color/teal_700"
+                android:textColorHint="@color/teal_700"
                 android:textSize="21sp"
                 android:textStyle="bold" />
         </LinearLayout>

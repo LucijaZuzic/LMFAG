@@ -11,13 +11,25 @@ public class MySwipe implements OnTouchListener {
 
     private final GestureDetector gestureDetector;
 
-    public MySwipe (Context ctx){
+    public MySwipe(Context ctx) {
         gestureDetector = new GestureDetector(ctx, new GestureListener());
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         return gestureDetector.onTouchEvent(event);
+    }
+
+    public void onSwipeRight() {
+    }
+
+    public void onSwipeLeft() {
+    }
+
+    public void onSwipeTop() {
+    }
+
+    public void onSwipeBottom() {
     }
 
     private final class GestureListener extends SimpleOnGestureListener {
@@ -45,8 +57,7 @@ public class MySwipe implements OnTouchListener {
                         }
                         result = true;
                     }
-                }
-                else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                } else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
                     if (diffY > 0) {
                         onSwipeBottom();
                     } else {
@@ -59,17 +70,5 @@ public class MySwipe implements OnTouchListener {
             }
             return result;
         }
-    }
-
-    public void onSwipeRight() {
-    }
-
-    public void onSwipeLeft() {
-    }
-
-    public void onSwipeTop() {
-    }
-
-    public void onSwipeBottom() {
     }
 }

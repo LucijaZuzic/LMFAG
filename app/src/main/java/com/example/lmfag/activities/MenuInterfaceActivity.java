@@ -2,6 +2,7 @@ package com.example.lmfag.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,36 +16,61 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.lmfag.R;
 import com.example.lmfag.utility.AlarmScheduler;
 import com.example.lmfag.utility.DrawerHelper;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class MenuInterfaceActivity extends AppCompatActivity {
     private boolean flag = false;
+    public SharedPreferences preferences;
+    public SharedPreferences.Editor editor;
+    public FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public FirebaseStorage storage = FirebaseStorage.getInstance();
+    public StorageReference storageRef = storage.getReference();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        editor = preferences.edit();
+    }
 
     public void logout() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences.Editor editor = preferences.edit();
         editor.putString("userID", "");
         editor.apply();
         AlarmScheduler.cancelAllAlarms(this.getApplicationContext());
         Intent myIntent = new Intent(this, MainActivity.class);
         startActivity(myIntent);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(isTaskRoot()){
+            startActivity(new Intent(this, MainActivity.class));
+            // using finish() is optional, use it if you do not want to keep currentActivity in stack
+            finish();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
+        DrawerHelper.fillNavbarData(this);
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String user = preferences.getString("userID", "");
         if (user.equals("")) {
             Intent myIntent = new Intent(this, MainActivity.class);
             startActivity(myIntent);
+            finish();
         }
 
         String theme = preferences.getString("theme", "");
 
-        if (!theme.equals("night"))
-        {
+        if (!theme.equals("night")) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             menu.getItem(0).setIcon(R.drawable.ic_baseline_nights_stay_24);
         } else {
@@ -57,13 +83,18 @@ public class MenuInterfaceActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.logout:
+        int resourceID = item.getItemId();
+        final int logoutID = R.id.logout;
+        final int menu_openID = R.id.menu_open;
+        final int dayNightSwitchID = R.id.dayNightSwitch;
+        switch (resourceID) {
+            case logoutID:
                 logout();
                 return true;
-            case R.id.menu_open:
-                DrawerLayout drawer = findViewById(R.id.drawer_layout);
+            case menu_openID:
                 DrawerHelper.fillNavbarData(this);
+                DrawerLayout drawer = findViewById(R.id.drawer_layout);
+                
                 if (flag) {
                     drawer.closeDrawer(GravityCompat.START);
                 } else {
@@ -71,13 +102,10 @@ public class MenuInterfaceActivity extends AppCompatActivity {
                 }
                 flag = !flag;
                 return true;
-            case R.id.dayNightSwitch:
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            case dayNightSwitchID:
                 String theme = preferences.getString("theme", "");
 
-                SharedPreferences.Editor editor = preferences.edit();
-                if (!theme.equals("night"))
-                {
+                if (!theme.equals("night")) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                     editor.putString("theme", "night");
                 } else {

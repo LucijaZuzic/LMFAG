@@ -4,41 +4,54 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/list_title"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
         android:fontFamily="sans-serif-condensed-light"
-        android:textStyle="bold"
         android:gravity="center"
-        android:textSize="21sp" />
+        android:textSize="21sp"
+        android:textStyle="bold" />
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/onlyShowNotificationToggle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:drawableStart="@drawable/ic_baseline_notifications_24"
-        app:drawableTint="@color/teal_700"
+        android:layout_marginEnd="10dp"
         android:fontFamily="sans-serif-condensed-light"
         android:padding="5dp"
         android:text="@string/notifications_only"
         android:textSize="21sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:drawableStartCompat="@drawable/ic_baseline_notifications_24"
+        app:drawableTint="@color/teal_700" />
 
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="5dp"
         android:layout_gravity="center"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="20dp"
+        android:layout_margin="10dp"
         android:background="?android:attr/listDivider" />
+
+    <TextView
+        android:id="@+id/noResults"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginStart="10dp"
+        android:fontFamily="sans-serif-condensed-light"
+        android:text="@string/no_results"
+        android:textSize="21sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewList"
@@ -47,8 +60,8 @@
         android:layout_gravity="center"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        android:paddingBottom="20dp"
         android:orientation="vertical"
+        android:paddingBottom="20dp"
         android:visibility="visible"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 

@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 public class TabPagerAdapter extends FragmentStateAdapter {
-    private Fragment[] fragmentsList;
+    private final Fragment[] fragmentsList;
 
     public TabPagerAdapter(@NonNull FragmentActivity fragmentActivity, Fragment... fragments) {
         super(fragmentActivity);

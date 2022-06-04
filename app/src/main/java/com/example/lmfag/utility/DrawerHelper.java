@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 import android.util.Base64;
@@ -32,7 +31,6 @@ import com.example.lmfag.activities.MainActivity;
 import com.example.lmfag.activities.MyEventsActivity;
 import com.example.lmfag.activities.MyMessagesActivity;
 import com.example.lmfag.activities.MyProfileActivity;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -42,6 +40,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -89,12 +88,9 @@ public class DrawerHelper {
     public static void fillNavbarData(Activity context) {
         NavigationView navigationView = context.findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        selectDrawerItem(menuItem, context);
-                        return true;
-                    }
+                menuItem -> {
+                    selectDrawerItem(menuItem, context);
+                    return true;
                 });
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         SharedPreferences.Editor editor = preferences.edit();
@@ -103,8 +99,7 @@ public class DrawerHelper {
         String encoded = preferences.getString("userPicture", "");
         byte[] imageAsBytes = Base64.decode(encoded.getBytes(), Base64.DEFAULT);
 
-        if (name.equals(""))
-        {
+        if (name.equals("")) {
             Intent myIntent = new Intent(context, MainActivity.class);
             context.startActivity(myIntent);
             return;
@@ -142,12 +137,12 @@ public class DrawerHelper {
                     Map<String, Object> data = document.getData();
 
                     if (username.equals("")) {
-                        editor.putString("userUsername", data.get("username").toString());
+                        editor.putString("userUsername", Objects.requireNonNull(Objects.requireNonNull(data).get("username")).toString());
                         editor.apply();
                     }
 
                     if (myUsername != null) {
-                        myUsername.setText(data.get("username").toString());
+                        myUsername.setText(Objects.requireNonNull(Objects.requireNonNull(data).get("username")).toString());
                     }
 
                     if (encoded.equals("")) {
@@ -156,23 +151,19 @@ public class DrawerHelper {
                         StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
                         final long ONE_MEGABYTE = 1024 * 1024;
                         imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                            // Data for "images/island.jpg" is returns, use this as needed
-                            Glide.with(circleImageView.getContext().getApplicationContext())
+                            Glide.with(Objects.requireNonNull(circleImageView).getContext().getApplicationContext())
                                     .asBitmap()
                                     .load(bytes)
                                     .into((new CustomTarget<Bitmap>() {
-
                                         @Override
                                         public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                            resource.compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
-                                            byte[] b = baos.toByteArray();
+                                            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                                            resource.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                                            byte[] b = byteArrayOutputStream.toByteArray();
                                             String encoded = Base64.encodeToString(b, Base64.DEFAULT);
                                             editor.putString("userPicture", encoded);
                                             editor.apply();
-                                            if (circleImageView != null) {
-                                                circleImageView.setImageBitmap(resource);
-                                            }
+                                            circleImageView.setImageBitmap(resource);
                                         }
 
                                         @Override
@@ -180,21 +171,16 @@ public class DrawerHelper {
 
                                         }
                                     }));
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                // Handle any errors
-                            }
+                        }).addOnFailureListener(exception -> {
+                            // Handle any errors
                         });
                         //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                     }
-                    } else {
-                        Intent myIntent = new Intent(context, MainActivity.class);
-                        context.startActivity(myIntent);
-                        //Log.d(TAG, "No such document");
-                    }
-            } else {
-                //Log.d(TAG, "get failed with ", task.getException());
+                } else {
+                    Intent myIntent = new Intent(context, MainActivity.class);
+                    context.startActivity(myIntent);
+                    //Log.d(TAG, "No such document");
+                }
             }
         });
     }

@@ -16,9 +16,9 @@ import java.io.IOException;
 public class TransformBitmap {
 
     public static Bitmap fixRotation(Bitmap imageBitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] imageData = baos.toByteArray();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] imageData = byteArrayOutputStream.toByteArray();
         try {
             // Extract metadata.
             Metadata metadata = ImageMetadataReader.readMetadata(new BufferedInputStream(new ByteArrayInputStream(imageData)), imageData.length);
@@ -64,20 +64,15 @@ public class TransformBitmap {
                         }
 
                         // Create new bitmap.
-                        Bitmap transformedBitmap = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), bitmapMatrix, false);
-                        return transformedBitmap;
+                        return Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), bitmapMatrix, false);
                     } catch (Exception e) {
                         // TODO: handle exception
                     }
-                } else {
-                    /* Not found */
                 }
             } catch (Exception e) {
                 // TODO: handle exception
             }
-        } catch (ImageProcessingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (ImageProcessingException | IOException e) {
             e.printStackTrace();
         }
         return imageBitmap;
@@ -86,25 +81,24 @@ public class TransformBitmap {
     public static Bitmap RotateNegative90(Bitmap imageBitmap) {
         final Matrix bitmapMatrix = new Matrix();
         bitmapMatrix.postRotate(270);
-        Bitmap transformedBitmap = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), bitmapMatrix, false);
-        return transformedBitmap;
+        return Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), bitmapMatrix, false);
     }
+
     public static Bitmap RotateBy90(Bitmap imageBitmap) {
         final Matrix bitmapMatrix = new Matrix();
         bitmapMatrix.postRotate(90);
-        Bitmap transformedBitmap = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), bitmapMatrix, false);
-        return transformedBitmap;
+        return Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), bitmapMatrix, false);
     }
+
     public static Bitmap flipHorizontal(Bitmap imageBitmap) {
         final Matrix bitmapMatrix = new Matrix();
         bitmapMatrix.postScale(-1, 1);
-        Bitmap transformedBitmap = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), bitmapMatrix, false);
-        return transformedBitmap;
+        return Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), bitmapMatrix, false);
     }
+
     public static Bitmap flipVertical(Bitmap imageBitmap) {
         final Matrix bitmapMatrix = new Matrix();
         bitmapMatrix.postScale(1, -1);
-        Bitmap transformedBitmap = Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), bitmapMatrix, false);
-        return transformedBitmap;
+        return Bitmap.createBitmap(imageBitmap, 0, 0, imageBitmap.getWidth(), imageBitmap.getHeight(), bitmapMatrix, false);
     }
 }

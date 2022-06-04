@@ -25,10 +25,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class ViewProfileFriendsFragment extends Fragment {
     private Context context;
     private Activity activity;
+    private TextView noResults;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,10 +50,10 @@ public class ViewProfileFriendsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         DrawerHelper.fillNavbarData(activity);
+        noResults = view.findViewById(R.id.noResults);
         fillUserData(view);
-
         TextView title = view.findViewById(R.id.list_title);
-        title.setText(R.string.friends);
+        title.setText(R.string.user_friends);
     }
 
     private void fillUserData(@NonNull View view) {
@@ -62,19 +64,24 @@ public class ViewProfileFriendsFragment extends Fragment {
         db.collection("friends")
                 .document(name)
                 .get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    Map<String, Object> data = document.getData();
-                    String friends_string = data.get("friends").toString();
-                    if (friends_string.length() > 2) {
-                        String[] friends_string_array = friends_string.substring(1, friends_string.length() - 1).split(", ");
-                        List<String> friends_array = new ArrayList<>(Arrays.asList(friends_string_array));
-                        CustomAdapterFriends customAdapterFriends = new CustomAdapterFriends(friends_array, context, preferences);
-                        recyclerViewFriends.setAdapter(customAdapterFriends);
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Map<String, Object> data = document.getData();
+                            String friends_string = Objects.requireNonNull(Objects.requireNonNull(data).get("friends")).toString();
+                            if (friends_string.length() > 2) {
+                                String[] friends_string_array = friends_string.substring(1, friends_string.length() - 1).split(", ");
+                                List<String> friends_array = new ArrayList<>(Arrays.asList(friends_string_array));
+                                CustomAdapterFriends customAdapterFriends = new CustomAdapterFriends(friends_array, context, preferences);
+                                recyclerViewFriends.setAdapter(customAdapterFriends);
+                                if (friends_array.size() > 0) {
+                                    noResults.setVisibility(View.GONE);
+                                } else {
+                                    noResults.setVisibility(View.VISIBLE);
+                                }
+                            }
+                        }
                     }
-                }
-            }
-        });
+                });
     }
 }

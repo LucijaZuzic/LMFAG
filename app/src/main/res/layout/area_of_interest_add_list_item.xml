@@ -21,13 +21,13 @@
             android:id="@+id/textViewAreaOfInterest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_baseline_interests_24"
             android:fontFamily="sans-serif-condensed-light"
             android:gravity="center"
-            android:padding="5dp"
             android:hint="@string/area_of_interest"
+            android:padding="5dp"
             android:textSize="21sp"
             android:textStyle="bold"
+            app:drawableStartCompat="@drawable/ic_baseline_interests_24"
             app:drawableTint="@color/teal_700" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

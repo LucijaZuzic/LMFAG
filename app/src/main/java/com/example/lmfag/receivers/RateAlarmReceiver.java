@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -44,7 +43,7 @@ public class RateAlarmReceiver extends BroadcastReceiver {
             if (extras.getString("description") != null) {
                 description = extras.getString("description");
             }
-            if (extras.getString("eventID")!= null) {
+            if (extras.getString("eventID") != null) {
                 editor.putString("eventID", extras.getString("eventID"));
                 editor.apply();
             }
