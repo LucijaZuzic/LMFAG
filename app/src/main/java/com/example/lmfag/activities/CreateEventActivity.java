@@ -493,8 +493,8 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage(R.string.delete_event).setPositiveButton("Yes", dialogClickListener)
-                .setNegativeButton("No", dialogClickListener).show();
+        builder.setMessage(R.string.delete_event).setPositiveButton(R.string.yes, dialogClickListener)
+                .setNegativeButton(R.string.no, dialogClickListener).show();
 
         /*db.collection("events").document(docid).delete();
         db.collection("event_attending").whereEqualTo("event", docid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

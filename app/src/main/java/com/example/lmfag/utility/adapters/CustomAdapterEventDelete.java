@@ -175,8 +175,8 @@ public class CustomAdapterEventDelete extends RecyclerView.Adapter<CustomAdapter
             };
 
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage(R.string.delete_event).setPositiveButton("Yes", dialogClickListener)
-                    .setNegativeButton("No", dialogClickListener).show();
+            builder.setMessage(R.string.delete_event).setPositiveButton(R.string.yes, dialogClickListener)
+                    .setNegativeButton(R.string.no, dialogClickListener).show();
 
             return true;
         });

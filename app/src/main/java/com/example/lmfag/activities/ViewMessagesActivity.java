@@ -1,5 +1,6 @@
 package com.example.lmfag.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -9,6 +10,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
+import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,12 +19,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.lmfag.R;
+import com.example.lmfag.utility.MySwipe;
 import com.example.lmfag.utility.adapters.CustomAdapterMessages;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -240,6 +245,28 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
             }
         });
     }
+    private void messageDialog() {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        getAllMessages();
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(R.string.refresh_messages).setPositiveButton(R.string.yes, dialogClickListener)
+                .setNegativeButton(R.string.no, dialogClickListener).show();
+
+    }
+
+
 
     public void getAllMessages() {
         messages = new ArrayList<>();
@@ -275,6 +302,36 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
                     Collections.reverse(ids);
                     CustomAdapterMessages customAdapter = new CustomAdapterMessages(messages, times, sender, ids, me, context, myUsername, otherUsername, myImage, otherImage);
                     recyclerViewMessages.setAdapter(customAdapter);
+                    /*recyclerViewMessages.addOnScrollListener(new RecyclerView.OnScrollListener()  {
+                        @Override
+                        public void onScrolled (RecyclerView recyclerView, int dx, int dy) {
+                        // Grab the last child placed in the ScrollView, we need it to determinate the bottom position.
+                        View view = (View) recyclerViewMessages.getChildAt( recyclerViewMessages.getAdapter().getItemCount()-1);
+
+                        // Calculate the scrolldiff
+                        int diff = (view.getBottom()-(recyclerViewMessages.getHeight()+recyclerViewMessages.getScrollY()));
+
+                        // if diff is zero, then the bottom has been reached
+                        if( diff == 0 )
+                        {
+                            // notify that we have reached the bottom
+                            messageDialog();
+                        }
+                        }
+                    });*/
+                    recyclerViewMessages.setOnTouchListener(new MySwipe(context) {
+                        public void onSwipeTop() {
+                        }
+                        public void onSwipeRight() {
+                            messageDialog();
+                        }
+                        public void onSwipeLeft() {
+                            messageDialog();
+                        }
+                        public void onSwipeBottom() {
+                        }
+
+                    });
                     recyclerViewMessages.scrollToPosition(customAdapter.getItemCount() - 1);
                 }
             }

@@ -137,22 +137,22 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
             }
             public void onSwipeRight() {
                 if (editProfileActivity != null) {
-                    builder.setMessage("Are you sure you want to delete your area of interest " + text + "?").setPositiveButton("Yes", dialogClickListener)
-                            .setNegativeButton("No", dialogClickListener).show();
+                    builder.setMessage("Are you sure you want to delete your area of interest " + text + "?").setPositiveButton(R.string.yes, dialogClickListener)
+                            .setNegativeButton(R.string.no, dialogClickListener).show();
                 }
                 if (createProfileActivity != null) {
-                    builder.setMessage("Are you sure you want to delete your area of interest " + text + "?").setPositiveButton("Yes", dialogClickListener)
-                            .setNegativeButton("No", dialogClickListener).show();
+                    builder.setMessage("Are you sure you want to delete your area of interest " + text + "?").setPositiveButton(R.string.yes, dialogClickListener)
+                            .setNegativeButton(R.string.no, dialogClickListener).show();
                 }
             }
             public void onSwipeLeft() {
                 if (editProfileActivity != null) {
-                    builder.setMessage("Are you sure you want to delete your area of interest " + text + "?").setPositiveButton("Yes", dialogClickListener)
-                            .setNegativeButton("No", dialogClickListener).show();
+                    builder.setMessage("Are you sure you want to delete your area of interest " + text + "?").setPositiveButton(R.string.yes, dialogClickListener)
+                            .setNegativeButton(R.string.no, dialogClickListener).show();
                 }
                 if (createProfileActivity != null) {
-                    builder.setMessage("Are you sure you want to delete your area of interest " + text + "?").setPositiveButton("Yes", dialogClickListener)
-                            .setNegativeButton("No", dialogClickListener).show();
+                    builder.setMessage("Are you sure you want to delete your area of interest " + text + "?").setPositiveButton(R.string.yes, dialogClickListener)
+                            .setNegativeButton(R.string.no, dialogClickListener).show();
                 }
             }
             public void onSwipeBottom() {
@@ -163,8 +163,8 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
 
         viewHolder.getCardAreaOfInterest().setOnLongClickListener(view -> {
 
-            builder.setMessage("Are you sure you want to delete your area of interest " + text + "?").setPositiveButton("Yes", dialogClickListener)
-                    .setNegativeButton("No", dialogClickListener).show();
+            builder.setMessage("Are you sure you want to delete your area of interest " + text + "?").setPositiveButton(R.string.yes, dialogClickListener)
+                    .setNegativeButton(R.string.no, dialogClickListener).show();
 
             return true;
         });

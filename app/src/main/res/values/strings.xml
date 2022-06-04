@@ -231,4 +231,5 @@
     <string name="channel_name">LMFAG_default_channel</string>
     <string name="channel_description">Notify for upcoming events.</string>
     <string name="channel_id">LMFAG_default_channel</string>
+    <string name="refresh_messages">Do you want to refresh your messages?</string>
 </resources>
