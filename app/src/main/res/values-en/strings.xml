@@ -258,7 +258,6 @@
     <string name="rate_before_end">Event can\'t be rated before it ends</string>
     <string name="password_success_change">Password successfully changed.</string>
     <string name="username_success_change">Username successfully changed.</string>
-    <string name="end_in_past">Event can\'t end in the past.</string>
     <string name="end_before_begin">Event can\'t end before beginning.</string>
     <string name="edit_finished">Can\'t edit an event that finished.</string>
     <string name="default_notification_channel_id">default_channel</string>
@@ -290,4 +289,6 @@
     <string name="change_notify">Successfully changed notification preferences.</string>
     <string name="notifications_on">Notifications on</string>
     <string name="notifications_off">Notifications off</string>
+    <string name="please_choose_an_event_type">Choose an event type</string>
+    <string name="please_choose_a_location">Choose a location</string>
 </resources>

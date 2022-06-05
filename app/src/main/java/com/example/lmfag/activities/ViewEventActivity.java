@@ -24,7 +24,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import org.osmdroid.api.IMapController;
@@ -106,7 +105,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         edit = findViewById(R.id.imageViewEdit);
         edit.setOnClickListener(view -> {
             if (me.equals(organizer)) {
-                if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime())) {
+                if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime()) || cldr_start.getTime().equals(Calendar.getInstance().getTime()) || cldr_end.getTime().equals(Calendar.getInstance().getTime())) {
                     Toast.makeText(getApplicationContext(), R.string.edit_finished, Toast.LENGTH_SHORT).show();
                 } else {
                     Intent myIntent = new Intent(context, CreateEventActivity.class);
@@ -118,7 +117,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         });
         rate = findViewById(R.id.imageViewRate);
         rate.setOnClickListener(view -> {
-            if (Calendar.getInstance().getTime().before(cldr_end.getTime())) {
+            if (Calendar.getInstance().getTime().before(cldr_end.getTime()) || Calendar.getInstance().getTime().equals(cldr_end.getTime()) ) {
                 Toast.makeText(getApplicationContext(), R.string.rate_before_end, Toast.LENGTH_SHORT).show();
             } else {
                 CollectionReference docRef = db.collection("event_attending");
@@ -220,50 +219,46 @@ public class ViewEventActivity extends MenuInterfaceActivity {
     private void refresh() {
         Intent myIntent = new Intent(context, ViewEventActivity.class);
         context.startActivity(myIntent);
+        finish();
+    }
+
+    private void checkValidTime() {
+        if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
+            Toast.makeText(getApplicationContext(), R.string.end_before_begin, Toast.LENGTH_SHORT).show();
+            onBackPressed();
+            finish();
+        }
     }
 
     private void checkSubscribed() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String eventID = preferences.getString("eventID", "");
         String userID = preferences.getString("userID", "");
-        if (eventID.equals("")) {
-            Intent myIntent = new Intent(context, MyProfileActivity.class);
-            startActivity(myIntent);
-            finish();
-            return;
-        }
-        if (userID.equals("")) {
-            Intent myIntent = new Intent(context, MainActivity.class);
-            startActivity(myIntent);
-            finish();
-            return;
-        }
-        if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime())) {
+        if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime()) || cldr_start.getTime().equals(Calendar.getInstance().getTime()) || cldr_end.getTime().equals(Calendar.getInstance().getTime())) {
             apply.setVisibility(View.GONE);
             switch_notify.setVisibility(View.GONE);
         }
         CollectionReference docRef = db.collection("event_attending");
-        docRef.whereEqualTo("event", eventID).whereEqualTo("user", userID).get().addOnCompleteListener(task -> {
+        docRef.whereEqualTo("event", eventID).whereEqualTo("user", userID).whereEqualTo("attending", true).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().size() == 0) {
                     apply.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_person_add_24));
-                    for (QueryDocumentSnapshot doc : task.getResult()) {
-                        Map<String, Object> map = doc.getData();
-                        if (Objects.requireNonNull(map.get("rating")).toString().equals("true")) {
-                            rate.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_star_24));
-                        } else {
-                            rate.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_star_outline_24));
-                        }
-                    }
                 } else {
                     apply.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_person_remove_24));
+                }
+            }
+        });
+        docRef.whereEqualTo("event", eventID).whereEqualTo("user", userID).whereEqualTo("rated", "true").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult().size() != 0) {
+                    rate.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_star_24));
+                } else {
                     rate.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_star_outline_24));
                 }
             }
         });
     }
 
-    private void checkOtherDirection(CollectionReference docuRef, Map<String, Object> docData) {
+    private void checkOtherDirection() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String userID = preferences.getString("userID", "");
         CollectionReference dr = db.collection("friends");
@@ -274,7 +269,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                     if (!Objects.requireNonNull(Objects.requireNonNull(document2.getData()).get("friends")).toString().contains(userID)) {
                         Toast.makeText(getApplicationContext(), R.string.not_friend_organizer, Toast.LENGTH_SHORT).show();
                     } else {
-                        docuRef.add(docData);
+                        addParticipant();
                         Toast.makeText(getApplicationContext(), R.string.attending_event, Toast.LENGTH_SHORT).show();
                         AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                         refresh();
@@ -288,7 +283,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         });
     }
 
-    private void checkFriends(CollectionReference docuRef, Map<String, Object> docData) {
+    private void checkFriends() {
         CollectionReference dr = db.collection("friends");
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String userID = preferences.getString("userID", "");
@@ -297,23 +292,23 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     if (!Objects.requireNonNull(Objects.requireNonNull(document.getData()).get("friends")).toString().contains(userID)) {
-                        checkOtherDirection(docuRef, docData);
+                        checkOtherDirection();
                     } else {
-                        docuRef.add(docData);
+                        addParticipant();
                         Toast.makeText(getApplicationContext(), R.string.attending_event, Toast.LENGTH_SHORT).show();
                         AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                         refresh();
                     }
                 } else {
-                    checkOtherDirection(docuRef, docData);
+                    checkOtherDirection();
                 }
             } else {
-                checkOtherDirection(docuRef, docData);
+                checkOtherDirection();
             }
         });
     }
 
-    private void checkNumberOfParticipantsAdd(CollectionReference docuRef, Map<String, Object> docData) {
+    private void checkNumberOfParticipantsAdd() {
         String eventID = preferences.getString("eventID", "");
         String userID = preferences.getString("userID", "");
         if (eventID.equals("")) {
@@ -323,7 +318,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
             return;
         }
         CollectionReference dr = db.collection("event_attending");
-        dr.whereEqualTo("event", eventID).get().addOnCompleteListener(task -> {
+        dr.whereEqualTo("event", eventID).whereEqualTo("attending", true).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().size() < participate_maximum) {
                     db.collection("users").document(userID).get().addOnCompleteListener(task2 -> {
@@ -348,22 +343,22 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                                                 Toast.makeText(getApplicationContext(), R.string.level_low, Toast.LENGTH_SHORT).show();
                                             } else {
                                                 if (public_event) {
-                                                    docuRef.add(docData);
+                                                    addParticipant();
                                                     Toast.makeText(getApplicationContext(), R.string.attending_event, Toast.LENGTH_SHORT).show();
                                                     AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                                                     refresh();
                                                 } else {
-                                                    checkFriends(docuRef, docData);
+                                                    checkFriends();
                                                 }
                                             }
                                         } else {
                                             if (public_event) {
-                                                docuRef.add(docData);
+                                                addParticipant();
                                                 Toast.makeText(getApplicationContext(), R.string.attending_event, Toast.LENGTH_SHORT).show();
                                                 AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                                                 refresh();
                                             } else {
-                                                checkFriends(docuRef, docData);
+                                                checkFriends();
                                             }
                                         }
                                     } else {
@@ -371,12 +366,12 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                                             Toast.makeText(getApplicationContext(), R.string.level_low, Toast.LENGTH_SHORT).show();
                                         } else {
                                             if (public_event) {
-                                                docuRef.add(docData);
+                                                addParticipant();
                                                 Toast.makeText(getApplicationContext(), R.string.attending_event, Toast.LENGTH_SHORT).show();
                                                 AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                                                 refresh();
                                             } else {
-                                                checkFriends(docuRef, docData);
+                                                checkFriends();
                                             }
                                         }
                                     }
@@ -385,12 +380,12 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                                         Toast.makeText(getApplicationContext(), R.string.level_low, Toast.LENGTH_SHORT).show();
                                     } else {
                                         if (public_event) {
-                                            docuRef.add(docData);
+                                            addParticipant();
                                             Toast.makeText(getApplicationContext(), R.string.attending_event, Toast.LENGTH_SHORT).show();
                                             AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                                             refresh();
                                         } else {
-                                            checkFriends(docuRef, docData);
+                                            checkFriends();
                                         }
                                     }
                                 }
@@ -404,23 +399,15 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         });
     }
 
-    private void checkNumberOfParticipantsRemove(QueryDocumentSnapshot docuRef) {
+    private void checkNumberOfParticipantsRemove() {
         String eventID = preferences.getString("eventID", "");
         String userID = preferences.getString("userID", "");
-        if (eventID.equals("")) {
-            return;
-        }
-        if (userID.equals("")) {
-            return;
-        }
         CollectionReference dr = db.collection("event_attending");
-        dr.whereEqualTo("event", eventID).get().addOnCompleteListener(task -> {
+        dr.whereEqualTo("event", eventID).whereEqualTo("attending", true).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().size() > participate_minimum) {
-                    db.collection("event_attending").document(docuRef.getId()).delete();
                     Toast.makeText(getApplicationContext(), R.string.no_longer_attending, Toast.LENGTH_SHORT).show();
-                    AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
-                    refresh();
+                    removeParticipant();
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.not_enough, Toast.LENGTH_SHORT).show();
                 }
@@ -430,32 +417,66 @@ public class ViewEventActivity extends MenuInterfaceActivity {
 
     private void subscribe() {
         String eventID = preferences.getString("eventID", "");
-        String userID = preferences.getString("userID", "");
-        Map<String, Object> docData = new HashMap<>();
-        docData.put("event", eventID);
-        docData.put("user", userID);
-        docData.put("notifications", switch_notify.isChecked());
-        docData.put("rated", false);
-        if (eventID.equals("")) {
-            return;
-        }
-        if (userID.equals("")) {
-            return;
-        }
         CollectionReference docRef = db.collection("event_attending");
-        docRef.whereEqualTo("event", eventID).whereEqualTo("user", userID).get().addOnCompleteListener(task -> {
+        String userID = preferences.getString("userID", "");
+        docRef.whereEqualTo("event", eventID).whereEqualTo("user", userID).whereEqualTo("attending", true).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().size() == 0) {
-                    checkNumberOfParticipantsAdd(docRef, docData);
+                    checkNumberOfParticipantsAdd();
                 } else {
-                    for (QueryDocumentSnapshot doc : task.getResult()) {
-                        checkNumberOfParticipantsRemove(doc);
+                    checkNumberOfParticipantsRemove();
+                }
+            }
+        });
+    }
+
+    private void removeParticipant() {
+        String eventID = preferences.getString("eventID", "");
+        CollectionReference docRef = db.collection("event_attending");
+        String userID = preferences.getString("userID", "");
+        docRef.whereEqualTo("event", eventID).whereEqualTo("user", userID).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult().size() > 0) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if (!userID.equals(organizer)) {
+                            docRef.document(document.getId()).delete();
+                        } else {
+                            Map<String, Object> map = document.getData();
+                            map.put("attending", false);
+                            map.put("notifications", switch_notify.isChecked());
+                            docRef.document(document.getId()).set(map);
+                        }
                     }
                 }
             }
         });
     }
 
+    private void addParticipant() {
+        String eventID = preferences.getString("eventID", "");
+        CollectionReference docRef = db.collection("event_attending");
+        String userID = preferences.getString("userID", "");
+        docRef.whereEqualTo("event", eventID).whereEqualTo("user", userID).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult().size() > 0) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Map<String, Object> map = document.getData();
+                        map.put("attending", true);
+                        map.put("notifications", switch_notify.isChecked());
+                        docRef.document(document.getId()).set(map);
+                    }
+                } else {
+                    Map<String, Object> docData = new HashMap<>();
+                    docData.put("event", eventID);
+                    docData.put("user", userID);
+                    docData.put("attending", true);
+                    docData.put("notifications", switch_notify.isChecked());
+                    docData.put("rated", false);
+                    docRef.add(docData);
+                }
+            }
+        });
+    }
 
     private void getOrganizerData(String name) {
         DocumentReference docRef = db.collection("users").document(name);
@@ -467,15 +488,12 @@ public class ViewEventActivity extends MenuInterfaceActivity {
 
                     myUsername.setText(Objects.requireNonNull(Objects.requireNonNull(data).get("username")).toString());
 
-                    FirebaseStorage storage = FirebaseStorage.getInstance();
-                    StorageReference storageRef = storage.getReference();
                     StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
                     final long ONE_MEGABYTE = 1024 * 1024;
                     imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
 
                         Glide.with(context.getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
                         circleImageView.setOnClickListener(view -> {
-                            SharedPreferences.Editor editor = preferences.edit();
                             editor.putString("friendID", name);
                             editor.apply();
                             Intent myIntent = new Intent(context, ViewProfileActivity.class);
@@ -486,13 +504,51 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                     });
                     //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                 } else {
-                    Intent myIntent = new Intent(context, MainActivity.class);
-                    startActivity(myIntent);
+                    editor.putString("eventID", "");
+                    editor.apply();
+                    onBackPressed();
                     finish();
                     //Log.d(TAG, "No such document");
                 }
+            } else {
+                editor.putString("eventID", "");
+                editor.apply();
+                onBackPressed();
+                finish();
             }
         });
+    }
+
+    private void checkEdit() {
+        String me = preferences.getString("userID", "");
+        if (me.equals(organizer)) {
+            if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime()) || cldr_start.getTime().equals(Calendar.getInstance().getTime()) || cldr_end.getTime().equals(Calendar.getInstance().getTime())) {
+                edit.setVisibility(View.GONE);
+            } else {
+                edit.setVisibility(View.VISIBLE);
+            }
+        } else {
+            edit.setVisibility(View.GONE);
+        }
+    }
+
+    private void checkRate() {
+        String eventID = preferences.getString("eventID", "");
+        String me = preferences.getString("userID", "");
+        if (Calendar.getInstance().getTime().before(cldr_end.getTime()) || Calendar.getInstance().getTime().equals(cldr_end.getTime())) {
+            rate.setVisibility(View.GONE);
+        } else {
+            CollectionReference docRef2 = db.collection("event_attending");
+            docRef2.whereEqualTo("event", eventID).whereEqualTo("user", me).whereEqualTo("rated", "true").get().addOnCompleteListener(task2 -> {
+                if (task2.isSuccessful()) {
+                    if (task2.getResult().size() != 0) {
+                        rate.setVisibility(View.GONE);
+                    } else {
+                        rate.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+        }
     }
 
     private void fillData() {
@@ -501,10 +557,13 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         if (eventID.equals("")) {
             Intent myIntent = new Intent(context, MyProfileActivity.class);
             startActivity(myIntent);
-            finish();
             return;
         }
-
+        if (userID.equals("")) {
+            Intent myIntent = new Intent(context, MainActivity.class);
+            startActivity(myIntent);
+            return;
+        }
         DocumentReference docRef = db.collection("events").document(eventID);
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -545,42 +604,10 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                     Timestamp end_timestamp = (Timestamp) (docData.get("ending"));
                     Date end_date = Objects.requireNonNull(end_timestamp).toDate();
                     cldr_end.setTime(end_date);
+                    checkValidTime();
                     checkSubscribed();
-                    String me = preferences.getString("userID", "");
-                    if (me.equals(organizer)) {
-                        if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime())) {
-                            edit.setVisibility(View.GONE);
-                        } else {
-                            edit.setVisibility(View.VISIBLE);
-                        }
-                    } else {
-                        edit.setVisibility(View.GONE);
-                    }
-                    if (Calendar.getInstance().getTime().before(cldr_end.getTime())) {
-                        rate.setVisibility(View.GONE);
-                    } else {
-                        CollectionReference docRef2 = db.collection("event_attending");
-                        docRef2.whereEqualTo("event", eventID).whereEqualTo("user", me).get().addOnCompleteListener(task2 -> {
-                            if (task2.isSuccessful()) {
-                                if (task2.getResult().size() == 0 && !me.equals(organizer)) {
-                                    rate.setVisibility(View.GONE);
-                                } else {
-                                    boolean found = false;
-                                    for (QueryDocumentSnapshot doc2 : task2.getResult()) {
-                                        if (Objects.requireNonNull(doc2.getData().get("rated")).toString().equals("true")) {
-                                            rate.setVisibility(View.GONE);
-                                            found = true;
-                                            break;
-                                        }
-                                    }
-                                    if (!found) {
-                                        rate.setVisibility(View.VISIBLE);
-                                    }
-                                }
-                            }
-                        });
-                    }
-
+                    checkEdit();
+                    checkRate();
                     textViewChooseStartDate.setText(DateFormat.getDateInstance().format(cldr_start.getTime()));
                     textViewChooseStartTime.setText(DateFormat.getTimeInstance().format(cldr_start.getTime()));
                     textViewChooseEndDate.setText(DateFormat.getDateInstance().format(cldr_end.getTime()));
@@ -612,7 +639,18 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                             switch_notify.setChecked(true);
                         }
                     });
+                } else {
+                    editor.putString("eventID", "");
+                    editor.apply();
+                    onBackPressed();
+                    finish();
+                    //Log.d(TAG, "No such document");
                 }
+            } else {
+                editor.putString("eventID", "");
+                editor.apply();
+                onBackPressed();
+                finish();
             }
         });
     }

@@ -73,8 +73,8 @@ public class CreateEventActivity extends MenuInterfaceActivity {
     private RangeSlider slider;
     private TextView location;
     private Marker chosenLocationMarker;
-    private double longitude = 45.23;
-    private double latitude = 45.36;
+    private double longitude;
+    private double latitude;
     private Context context;
     private String selected_item;
     private ImageView imageViewChooseStartDate;
@@ -134,7 +134,6 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         location_choose.setOnClickListener(view -> {
             Intent myIntent = new Intent(context, ChooseLocationActivity.class);
             startActivity(myIntent);
-            finish();
         });
         close.setOnClickListener(view -> onBackPressed());
         setDate();
@@ -172,13 +171,6 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         mapController.setZoom(17.0);
         mapController.setCenter(new org.osmdroid.util.GeoPoint(latitude, longitude));
 
-        switch_organizer.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                switch_notify.setVisibility(View.VISIBLE);
-            } else {
-                switch_notify.setVisibility(View.GONE);
-            }
-        });
     }
 
     @Override
@@ -193,19 +185,31 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         mapController.setCenter(new org.osmdroid.util.GeoPoint(latitude, longitude));
     }
 
-    void setDate() {
+    private boolean checkCorrectTime() {
+        boolean correct = true;
+        if (cldr_end.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().equals(Calendar.getInstance().getTime())) {
+            Toast.makeText(getApplicationContext(), R.string.end_past, Toast.LENGTH_SHORT).show();
+            correct = false;
+        }
+        if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_start.getTime().equals(Calendar.getInstance().getTime())) {
+            Toast.makeText(getApplicationContext(), R.string.begin_past, Toast.LENGTH_SHORT).show();
+            correct = false;
+        }
+        if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
+            Toast.makeText(getApplicationContext(), R.string.end_before_begin, Toast.LENGTH_SHORT).show();
+            correct = false;
+        }
+        return correct;
+    }
+
+    private void setDate() {
         imageViewChooseStartDate.setOnClickListener(v -> {
             // time picker dialog
             DatePickerDialog picker = new DatePickerDialog(context,
                     (dp, sYear, sMonth, sDay) -> {
                         cldr_start.set(sYear, sMonth, sDay, cldr_start.get(HOUR), cldr_start.get(MINUTE));
                         textViewChooseStartDate.setText(DateFormat.getDateInstance().format(cldr_start.getTime()));
-                        if (cldr_start.getTime().before(Calendar.getInstance().getTime())) {
-                            Toast.makeText(getApplicationContext(), R.string.begin_past, Toast.LENGTH_SHORT).show();
-                        }
-                        if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
-                            Toast.makeText(getApplicationContext(), R.string.end_before_beginning, Toast.LENGTH_SHORT).show();
-                        }
+                        checkCorrectTime();
                     }, cldr_start.get(YEAR), cldr_start.get(MONTH), cldr_start.get(DAY_OF_MONTH));
             picker.show();
         });
@@ -215,30 +219,20 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                     (dp, sYear, sMonth, sDay) -> {
                         cldr_end.set(sYear, sMonth, sDay, cldr_end.get(HOUR), cldr_end.get(MINUTE));
                         textViewChooseEndDate.setText(DateFormat.getDateInstance().format(cldr_end.getTime()));
-                        if (cldr_end.getTime().before(Calendar.getInstance().getTime())) {
-                            Toast.makeText(getApplicationContext(), R.string.end_past, Toast.LENGTH_SHORT).show();
-                        }
-                        if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
-                            Toast.makeText(getApplicationContext(), R.string.end_before_beginning, Toast.LENGTH_SHORT).show();
-                        }
+                        checkCorrectTime();
                     }, cldr_end.get(YEAR), cldr_end.get(MONTH), cldr_end.get(DAY_OF_MONTH));
             picker.show();
         });
     }
 
-    void setTime() {
+    private void setTime() {
         imageViewChooseStartTime.setOnClickListener(v -> {
             // time picker dialog
             TimePickerDialog picker = new TimePickerDialog(context,
                     (tp, sHour, sMinute) -> {
                         cldr_start.set(cldr_start.get(YEAR), cldr_start.get(MONTH), cldr_start.get(DAY_OF_MONTH), sHour, sMinute);
                         textViewChooseStartTime.setText(DateFormat.getTimeInstance().format(cldr_start.getTime()));
-                        if (cldr_start.getTime().before(Calendar.getInstance().getTime())) {
-                            Toast.makeText(getApplicationContext(), R.string.begin_past, Toast.LENGTH_SHORT).show();
-                        }
-                        if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
-                            Toast.makeText(getApplicationContext(), R.string.end_before_beginning, Toast.LENGTH_SHORT).show();
-                        }
+                        checkCorrectTime();
                     }, cldr_start.get(HOUR), cldr_start.get(MINUTE), true);
             picker.show();
         });
@@ -248,18 +242,13 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                     (tp, sHour, sMinute) -> {
                         cldr_end.set(cldr_start.get(YEAR), cldr_start.get(MONTH), cldr_start.get(DAY_OF_MONTH), sHour, sMinute);
                         textViewChooseEndTime.setText(DateFormat.getTimeInstance().format(cldr_end.getTime()));
-                        if (cldr_end.getTime().before(Calendar.getInstance().getTime())) {
-                            Toast.makeText(getApplicationContext(), R.string.end_in_past, Toast.LENGTH_SHORT).show();
-                        }
-                        if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
-                            Toast.makeText(getApplicationContext(), R.string.end_before_begin, Toast.LENGTH_SHORT).show();
-                        }
+                        checkCorrectTime();
                     }, cldr_end.get(HOUR), cldr_end.get(MINUTE), true);
             picker.show();
         });
     }
 
-    void writeAttending() {
+    private void checkAbleToAttend() {
         double minimum_level_val = Double.parseDouble(String.valueOf(minimum_level.getValue()));
         String userID = preferences.getString("userID", "");
         db.collection("users").document(userID).get().addOnCompleteListener(task2 -> {
@@ -267,7 +256,6 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                 DocumentSnapshot document2 = task2.getResult();
                 if (document2.exists()) {
                     Map<String, Object> data = document2.getData();
-
                     String area_string = Objects.requireNonNull(Objects.requireNonNull(data).get("areas_of_interest")).toString();
                     if (area_string.length() > 2) {
                         String[] area_string_array = area_string.substring(1, area_string.length() - 1).split(", ");
@@ -283,24 +271,27 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                             if (minimum_level_val > 0) {
                                 if (points_array.get(areas_array.indexOf(selected_item)) < minimum_level_val * 1000) {
                                     Toast.makeText(getApplicationContext(), R.string.level_low, Toast.LENGTH_SHORT).show();
+                                    writeAttendingToDB(false);
                                 } else {
-                                    writeAttendingToDB();
+                                    writeAttendingToDB(true);
                                 }
                             } else {
-                                writeAttendingToDB();
+                                writeAttendingToDB(true);
                             }
                         } else {
                             if (minimum_level_val > 0) {
                                 Toast.makeText(getApplicationContext(), R.string.level_low, Toast.LENGTH_SHORT).show();
+                                writeAttendingToDB(false);
                             } else {
-                                writeAttendingToDB();
+                                writeAttendingToDB(true);
                             }
                         }
                     } else {
                         if (minimum_level_val > 0) {
                             Toast.makeText(getApplicationContext(), R.string.level_low, Toast.LENGTH_SHORT).show();
+                            writeAttendingToDB(false);
                         } else {
-                            writeAttendingToDB();
+                            writeAttendingToDB(true);
                         }
                     }
                 }
@@ -308,12 +299,13 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         });
     }
 
-    void writeAttendingToDB() {
+    void writeAttendingToDB(boolean able_to_attend) {
         String eventID = preferences.getString("eventID", "");
         String userID = preferences.getString("userID", "");
         Map<String, Object> docData = new HashMap<>();
         docData.put("event", eventID);
         docData.put("user", userID);
+        docData.put("attending", switch_organizer.isChecked() && able_to_attend);
         docData.put("notifications", switch_notify.isChecked());
         docData.put("rated", false);
         if (eventID.equals("")) {
@@ -332,6 +324,11 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                         docRef.document(doc.getId()).set(docData);
                     }
                 }
+                if (switch_organizer.isChecked() && able_to_attend) {
+                    Toast.makeText(this, R.string.attending_event, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, R.string.no_longer_attending, Toast.LENGTH_SHORT).show();
+                }
                 if (switch_notify.isChecked()) {
                     Toast.makeText(this, R.string.notifications_on, Toast.LENGTH_SHORT).show();
                 } else {
@@ -342,32 +339,23 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         });
     }
 
-    void writeDB(Map<String, Object> docData, boolean attending) {
-        db.collection("events")
-                .add(docData)
-                .addOnSuccessListener(aVoid -> {
-                    //Log.d(TAG, "DocumentSnapshot successfully written!");
-                    Toast.makeText(getApplicationContext(), R.string.created_event, Toast.LENGTH_SHORT).show();
-                    editor.putString("eventID", aVoid.getId());
-                    editor.apply();
-                    if (attending) {
-                        writeAttending();
-                    }
-                    editor.apply();
-                    Intent myIntent = new Intent(context, MyProfileActivity.class);
-                    startActivity(myIntent);
-                    finish();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(getApplicationContext(), R.string.write_failed, Toast.LENGTH_SHORT).show();
-                    //Log.w(TAG, "Error writing document", e);
-                });
-    }
 
-    void setDB(Map<String, Object> docData, boolean attending) {
+    void setDB(Map<String, Object> docData) {
         String eventID = preferences.getString("eventID", "");
         if (eventID.equals("")) {
-            writeDB(docData, attending);
+            db.collection("events")
+                    .add(docData)
+                    .addOnSuccessListener(aVoid -> {
+                        //Log.d(TAG, "DocumentSnapshot successfully written!");
+                        Toast.makeText(getApplicationContext(), R.string.created_event, Toast.LENGTH_SHORT).show();
+                        editor.putString("eventID", aVoid.getId());
+                        editor.apply();
+                        checkAbleToAttend();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(getApplicationContext(), R.string.write_failed, Toast.LENGTH_SHORT).show();
+                        //Log.w(TAG, "Error writing document", e);
+                    });
         } else {
             db.collection("events")
                     .document(eventID)
@@ -375,9 +363,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                     .addOnSuccessListener(aVoid -> {
                         //Log.d(TAG, "DocumentSnapshot successfully written!");
                         Toast.makeText(getApplicationContext(), R.string.updated_event, Toast.LENGTH_SHORT).show();
-                        if (attending) {
-                            writeAttending();
-                        }
+                        checkAbleToAttend();
                     })
                     .addOnFailureListener(e -> {
                         Toast.makeText(getApplicationContext(), R.string.write_failed, Toast.LENGTH_SHORT).show();
@@ -387,6 +373,17 @@ public class CreateEventActivity extends MenuInterfaceActivity {
     }
 
     void fetchDataFromUI() {
+        boolean correct = true;
+        if (!Arrays.asList(getResources().getStringArray(R.array.event_types)).contains(selected_item)) {
+            Toast.makeText(getApplicationContext(), R.string.please_choose_an_event_type, Toast.LENGTH_SHORT).show();
+            correct = false;
+        }
+        if (!checkCorrectTime()) {
+            correct = false;
+        }
+        if (!correct) {
+            return;
+        }
         String userID = preferences.getString("userID", "");
         Map<String, Object> docData = new HashMap<>();
         docData.put("event_name", eventName.getText().toString());
@@ -402,11 +399,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         docData.put("organizer", userID);
         docData.put("location", new GeoPoint(latitude, longitude));
         docData.put("geo_hash", GeoFireUtils.getGeoHashForLocation(new GeoLocation(latitude, longitude)));
-        if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
-            Toast.makeText(getApplicationContext(), R.string.end_before_beginning, Toast.LENGTH_SHORT).show();
-        } else {
-            setDB(docData, switch_organizer.isChecked());
-        }
+        setDB(docData);
     }
 
     void deleteEvent(String docID) {
@@ -425,11 +418,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                     });
                     editor.putString("eventID", "");
                     editor.apply();
-                    editor.putInt("selectedTab", 3);
-                    editor.apply();
-                    Intent myIntent = new Intent(context, MyProfileActivity.class);
-                    context.startActivity(myIntent);
-                    finish();
+                    onBackPressed();
                 case DialogInterface.BUTTON_NEGATIVE:
                     //No button clicked
                     break;
@@ -443,9 +432,15 @@ public class CreateEventActivity extends MenuInterfaceActivity {
     public void checkIfAbleToEdit(String organizer) {
         String me = preferences.getString("userID", "");
         if (me.equals(organizer)) {
-            if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime())) {
+            if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
+                Toast.makeText(getApplicationContext(), R.string.end_before_begin, Toast.LENGTH_SHORT).show();
+                onBackPressed();
+                finish();
+            }
+            if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime()) || cldr_start.getTime().equals(Calendar.getInstance().getTime()) || cldr_end.getTime().equals(Calendar.getInstance().getTime())) {
                 Toast.makeText(getApplicationContext(), R.string.edit_finished, Toast.LENGTH_SHORT).show();
                 onBackPressed();
+                finish();
             }
         } else {
             Toast.makeText(getApplicationContext(), R.string.organizer_edit, Toast.LENGTH_SHORT).show();
@@ -458,7 +453,6 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         if (userID.equals("")) {
             Intent myIntent = new Intent(context, MainActivity.class);
             startActivity(myIntent);
-            finish();
             return;
         }
         String eventID = preferences.getString("eventID", "");
@@ -471,7 +465,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Map<String, Object> docData = document.getData();
-                        eventName.setText(Objects.requireNonNull(docData.get("event_name")).toString());
+                        eventName.setText(Objects.requireNonNull(Objects.requireNonNull(docData).get("event_name")).toString());
                         selected_item = Objects.requireNonNull(docData.get("event_type")).toString();
                         sp.setText(EventTypeToDrawable.getEventTypeToTranslation(this, Objects.requireNonNull(docData.get("event_type")).toString()));
                         imageViewEventType.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), EventTypeToDrawable.getEventTypeToDrawable(selected_item)));

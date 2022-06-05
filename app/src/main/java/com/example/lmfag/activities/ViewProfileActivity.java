@@ -93,7 +93,10 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                             if (isSubscribed.equals("true")) {
                                 subscriber_events_array.add(Objects.requireNonNull(document.getData().get("event")).toString());
                             }
-                            player_events_array.add(Objects.requireNonNull(document.getData().get("event")).toString());
+                            String isAttending = Objects.requireNonNull(document.getData().get("attending")).toString();
+                            if (isAttending.equals("true")) {
+                                player_events_array.add(Objects.requireNonNull(document.getData().get("event")).toString());
+                            }
                         }
                         Collections.sort(subscriber_events_array);
                         Collections.sort(player_events_array);

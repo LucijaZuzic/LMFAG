@@ -56,12 +56,10 @@ public class ViewParticipantsActivity extends MenuInterfaceActivity {
     public void onResume() {
         super.onResume();
         getWhoAttended();
-        fillData();
     }
 
     private void getWhoAttended() {
         String eventID = preferences.getString("eventID", "");
-        String userID = preferences.getString("userID", "");
         if (eventID.equals("")) {
             Intent myIntent = new Intent(context, MyProfileActivity.class);
             startActivity(myIntent);
@@ -70,15 +68,14 @@ public class ViewParticipantsActivity extends MenuInterfaceActivity {
         }
         db.collection("event_attending")
                 .whereEqualTo("event", eventID)
+                .whereEqualTo("attending", true)
                 .get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         if (task.getResult().size() > 0) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Map<String, Object> map = document.getData();
                                 String participantID = Objects.requireNonNull(map.get("user")).toString();
-                                if (!userID.equals(participantID)) {
-                                    people.add(participantID);
-                                }
+                                people.add(participantID);
                             }
                         }
                         CustomAdapterFriends customAdapter = new CustomAdapterFriends(people, context, preferences);
@@ -88,6 +85,7 @@ public class ViewParticipantsActivity extends MenuInterfaceActivity {
                         } else {
                             noResults.setVisibility(View.VISIBLE);
                         }
+                        fillData();
                     }
                 });
     }
@@ -113,9 +111,17 @@ public class ViewParticipantsActivity extends MenuInterfaceActivity {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     Map<String, Object> docData = document.getData();
+
+                    rate_event_list_entry_banner_text.setText(Objects.requireNonNull(Objects.requireNonNull(docData).get("event_name")).toString());
+                    rate_event_list_entry_banner_text.setCompoundDrawablesWithIntrinsicBounds(EventTypeToDrawable.getEventTypeToDrawable(Objects.requireNonNull(document.get("event_type")).toString()), 0, 0, 0);
+
+                    rate_event_list_entry_banner_card.setOnClickListener(view -> {
+                        Intent myIntent = new Intent(context, ViewEventActivity.class);
+                        context.startActivity(myIntent);
+                        finish();
+                    });
                     organizer = Objects.requireNonNull(Objects.requireNonNull(docData).get("organizer")).toString();
                     getOrganizerData(organizer);
-                    getEventType();
                 }
             }
         });
@@ -160,32 +166,5 @@ public class ViewParticipantsActivity extends MenuInterfaceActivity {
         });
     }
 
-    private void getEventType() {
-        String eventID = preferences.getString("eventID", "");
-        if (eventID.equals("")) {
-            Intent myIntent = new Intent(context, MyProfileActivity.class);
-            startActivity(myIntent);
-            finish();
-            return;
-        }
-        DocumentReference docRef = db.collection("events").document(eventID);
-        docRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    Map<String, Object> docData = document.getData();
-
-                    rate_event_list_entry_banner_text.setText(Objects.requireNonNull(Objects.requireNonNull(docData).get("event_name")).toString());
-                    rate_event_list_entry_banner_text.setCompoundDrawablesWithIntrinsicBounds(EventTypeToDrawable.getEventTypeToDrawable(Objects.requireNonNull(document.get("event_type")).toString()), 0, 0, 0);
-
-                    rate_event_list_entry_banner_card.setOnClickListener(view -> {
-                        Intent myIntent = new Intent(context, ViewEventActivity.class);
-                        context.startActivity(myIntent);
-                        finish();
-                    });
-                }
-            }
-        });
-    }
 
 }

@@ -51,6 +51,7 @@ public class RateEventActivity extends MenuInterfaceActivity {
     private LinearLayout organizerBanner;
     private TextView noResults;
     private final Calendar cldr_end = Calendar.getInstance();
+    private final Calendar cldr_start = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,18 +72,7 @@ public class RateEventActivity extends MenuInterfaceActivity {
         String userID = preferences.getString("userID", "");
         ImageView apply =  findViewById(R.id.imageViewApply);
         apply.setOnClickListener(view -> {
-            for (int i = 0; i < people.size(); i++) {
-                if (!userID.equals(people.get(i))) {
-                    updatePlayer(people.get(i), ratings.get(i));
-                }
-            }
-            if (!people.contains(organizer)  && !userID.equals(organizer)) {
-                updateOrganizer();
-            }
-            checkRated();
-            Intent myIntent = new Intent(context, ViewEventActivity.class);
-            startActivity(myIntent);
-            finish();
+            updatePlayer(0);
         });
         findViewById(R.id.imageViewDiscard).setOnClickListener(view -> {
             Intent myIntent = new Intent(context, ViewEventActivity.class);
@@ -107,6 +97,8 @@ public class RateEventActivity extends MenuInterfaceActivity {
                         Map<String, Object> map = document.getData();
                         map.put("rated", true);
                         docRef.document(document.getId()).set(map);
+                        onBackPressed();
+                        finish();
                     }
                 }
             }
@@ -140,8 +132,10 @@ public class RateEventActivity extends MenuInterfaceActivity {
         }
         db.collection("event_attending")
                 .whereEqualTo("event", eventID)
+                .whereEqualTo("attending", true)
                 .get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
+                        boolean user_participated = false;
                         if (task.getResult().size() > 0) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Map<String, Object> map = document.getData();
@@ -150,12 +144,15 @@ public class RateEventActivity extends MenuInterfaceActivity {
                                     people.add(participantID);
                                     ratings.add(0.0F);
                                 }
-                                if (userID.equals(participantID) && Objects.requireNonNull(map.get("rated")).toString().equals("true")) {
-                                    Toast.makeText(getApplicationContext(), R.string.rate_twice, Toast.LENGTH_SHORT).show();
-                                    Intent myIntent = new Intent(context, ViewEventActivity.class);
-                                    startActivity(myIntent);
-                                    finish();
-                                    return;
+                                if (userID.equals(participantID)){
+                                    user_participated = true;
+                                    if (Objects.requireNonNull(map.get("rated")).toString().equals("true")) {
+                                        Toast.makeText(getApplicationContext(), R.string.rate_twice, Toast.LENGTH_SHORT).show();
+                                        Intent myIntent = new Intent(context, ViewEventActivity.class);
+                                        startActivity(myIntent);
+                                        finish();
+                                        return;
+                                    }
                                 }
                             }
                         }
@@ -166,12 +163,12 @@ public class RateEventActivity extends MenuInterfaceActivity {
                         } else {
                             noResults.setVisibility(View.VISIBLE);
                         }
-                        fillEventData();
+                        fillEventData(user_participated);
                     }
                 });
     }
 
-    private void fillEventData() {
+    private void fillEventData(boolean user_participated) {
         String eventID = preferences.getString("eventID", "");
         String userID = preferences.getString("userID", "");
         if (userID.equals("")) {
@@ -193,10 +190,19 @@ public class RateEventActivity extends MenuInterfaceActivity {
                 if (document.exists()) {
                     Map<String, Object> docData = document.getData();
 
+                    Timestamp start_timestamp = (Timestamp) (docData.get("datetime"));
+                    Date start_date = Objects.requireNonNull(start_timestamp).toDate();
+                    cldr_start.setTime(start_date);
                     Timestamp end_timestamp = (Timestamp) (Objects.requireNonNull(docData).get("ending"));
                     Date end_date = Objects.requireNonNull(end_timestamp).toDate();
                     cldr_end.setTime(end_date);
-                    if (Calendar.getInstance().getTime().before(cldr_end.getTime())) {
+                    if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
+                        Toast.makeText(getApplicationContext(), R.string.end_before_begin, Toast.LENGTH_SHORT).show();
+                        Intent myIntent = new Intent(context, ViewEventActivity.class);
+                        context.startActivity(myIntent);
+                        finish();
+                    }
+                    if (Calendar.getInstance().getTime().before(cldr_end.getTime()) || Calendar.getInstance().getTime().equals(cldr_end.getTime())) {
                         Toast.makeText(getApplicationContext(), R.string.rate_before_end, Toast.LENGTH_SHORT).show();
                         Intent myIntent = new Intent(context, ViewEventActivity.class);
                         context.startActivity(myIntent);
@@ -209,14 +215,13 @@ public class RateEventActivity extends MenuInterfaceActivity {
                     rate_event_list_entry_banner_card.setOnClickListener(view -> {
                         Intent myIntent = new Intent(context, ViewEventActivity.class);
                         context.startActivity(myIntent);
-                        finish();
                     });
 
                     organizer = Objects.requireNonNull(Objects.requireNonNull(docData).get("organizer")).toString();
                     if (organizer.equals(userID)) {
                         organizerBanner.setVisibility(View.GONE);
                     }
-                    if (!people.contains(userID) && !organizer.equals(userID)) {
+                    if (!user_participated && !organizer.equals(userID)) {
                         Toast.makeText(getApplicationContext(), R.string.not_participate_rate, Toast.LENGTH_SHORT).show();
                         Intent myIntent = new Intent(context, ViewEventActivity.class);
                         context.startActivity(myIntent);
@@ -244,7 +249,6 @@ public class RateEventActivity extends MenuInterfaceActivity {
         if (userID.equals("")) {
             Intent myIntent = new Intent(context, MainActivity.class);
             startActivity(myIntent);
-            finish();
             return;
         }
         if (eventID.equals("")) {
@@ -295,12 +299,12 @@ public class RateEventActivity extends MenuInterfaceActivity {
     }
 
 
-    private void updatePlayer(String playerID, Float rating) {
+    private void updatePlayer(int index) {
         String userID = preferences.getString("userID", "");
-        if (userID.equals(playerID)) {
+        if (userID.equals(people.get(index))) {
             return;
         }
-        DocumentReference docRef = db.collection("users").document(playerID);
+        DocumentReference docRef = db.collection("users").document(people.get(index));
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
@@ -323,20 +327,31 @@ public class RateEventActivity extends MenuInterfaceActivity {
                             points_array.add(Float.parseFloat(s));
                         }
                         if (areas_array.contains(event_type)) {
-                            points_array.set(areas_array.indexOf(event_type), points_array.get(areas_array.indexOf(event_type)) + rating);
+                            points_array.set(areas_array.indexOf(event_type), points_array.get(areas_array.indexOf(event_type)) + ratings.get(index));
                         } else {
                             areas_array.add(event_type);
-                            points_array.add(rating);
+                            points_array.add(ratings.get(index));
                         }
                         data.put("areas_of_interest", areas_array);
                         data.put("points_levels", points_array);
                     } else {
                         List<String> areas_array = new ArrayList<>();
                         List<Float> points_array = new ArrayList<>();
+                        areas_array.add(event_type);
+                        points_array.add(ratings.get(index));
                         data.put("areas_of_interest", areas_array);
                         data.put("points_levels", points_array);
                     }
                     docRef.set(data);
+                    if (index != people.size() - 1) {
+                        updatePlayer(index + 1);
+                    } else {
+                        if (!people.contains(organizer) && !userID.equals(organizer)) {
+                            updateOrganizer();
+                        } else {
+                            checkRated();
+                        }
+                    }
                 }
             }
         });
@@ -359,6 +374,7 @@ public class RateEventActivity extends MenuInterfaceActivity {
                         data.put("points_rank", value);
                     }
                     docRef.set(Objects.requireNonNull(data));
+                    checkRated();
                 }
             }
         });

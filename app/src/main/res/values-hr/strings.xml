@@ -258,7 +258,6 @@
     <string name="rate_before_end">Ne možete ocijeniti događaj prije nego završi</string>
     <string name="password_success_change">Lozinka je uspješno izmijenjena.</string>
     <string name="username_success_change">Korisničko ime je uspješno izmijenjeno.</string>
-    <string name="end_in_past">Događaj ne može završiti u prošlosti.</string>
     <string name="end_before_begin">Događaj ne može završiti prije nego započne.</string>
     <string name="edit_finished">Ne možete izmijeniti događaj koji je završio.</string>
     <string name="default_notification_channel_id">default_channel</string>
@@ -282,7 +281,7 @@
     <string name="logout">Odjava</string>
     <string name="open_drawer">Otvori ladicu</string>
     <string name="no_results">Nema rezultata.</string>
-    <string name="view_participants">View participants</string>
+    <string name="view_participants">Pregledaj sudionike</string>
     <string name="my_location">Moja lokacija</string>
     <string name="radius_too_large">Ne može se prikazati kružnica.</string>
     <string name="no_longer_attending">Više ne sudjelujete na događaju.</string>
@@ -290,4 +289,6 @@
     <string name="change_notify">Uspješno su izmjenje postavke obavijesti.</string>
     <string name="notifications_on">Obavijesti uključene</string>
     <string name="notifications_off">Obavijesti isključene</string>
+    <string name="please_choose_an_event_type">Odaberite vrstu događaja</string>
+    <string name="please_choose_a_location">Odaberite lokaciju</string>
 </resources>
