@@ -100,7 +100,9 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
             }
             layout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
             background.setCardBackgroundColor(ContextCompat.getColor(context, R.color.teal_700));
-            layout.setOnLongClickListener(view -> {
+        }
+        layout.setOnLongClickListener(view -> {
+            if (sender.get(position).equals(me)) {
                 DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
                     switch (which) {
                         case DialogInterface.BUTTON_POSITIVE:
@@ -115,9 +117,9 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
                 };
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.context);
                 builder.setMessage(R.string.delete_message).setPositiveButton(R.string.yes, dialogClickListener).setNegativeButton(R.string.no, dialogClickListener).show();
-                return true;
-            });
-        }
+            }
+            return true;
+        });
     }
 
     // Return the size of your dataset (invoked by the layout manager)
