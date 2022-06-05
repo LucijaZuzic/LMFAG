@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.example.lmfag.R;
 import com.example.lmfag.utility.SecureHash;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -47,32 +48,46 @@ public class ChangePasswordActivity extends MenuInterfaceActivity {
         String name = preferences.getString("userID", "");
         apply.setOnClickListener(view -> {
             if (checkBoxPassword.isChecked()) {
-                if (passwordEditRepeat.getText() == passwordEdit.getText()) {
-                    try {
-                        String new_hash = SecureHash.generateStrongPasswordHash(passwordEdit.getText().toString());
-                        old_data.remove("password_hash");
-                        old_data.put("password_hash", new_hash);
-                        db.collection("users")
-                                .document(name)
-                                .set(old_data);
-                    } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-                        e.printStackTrace();
-                    }
-                    Toast.makeText(getApplicationContext(), R.string.password_success_change, Toast.LENGTH_SHORT).show();
+                if (passwordEdit.getText().toString().length() == 0) {
+                    Toast.makeText(getApplicationContext(), R.string.password_short, Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getApplicationContext(), R.string.password_match, Toast.LENGTH_SHORT).show();
+                    if (passwordEditRepeat.getText() == passwordEdit.getText()) {
+                        try {
+                            String new_hash = SecureHash.generateStrongPasswordHash(passwordEdit.getText().toString());
+                            old_data.remove("password_hash");
+                            old_data.put("password_hash", new_hash);
+                            db.collection("users")
+                                    .document(name)
+                                    .set(old_data);
+                        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                            e.printStackTrace();
+                        }
+                        Toast.makeText(getApplicationContext(), R.string.password_success_change, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), R.string.password_match, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
             if (checkBoxUsername.isChecked()) {
-                editor.putString("userUsername", myUsername.getText().toString());
-                editor.apply();
-                
-                old_data.remove("username");
-                old_data.put("username", myUsername.getText().toString());
-                db.collection("users")
-                        .document(name)
-                        .set(old_data);
-                Toast.makeText(getApplicationContext(), R.string.username_success_change, Toast.LENGTH_SHORT).show();
+                String text = myUsername.getText().toString();
+                CollectionReference docRef = db.collection("users");
+                docRef.whereEqualTo("username", text).get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().size() > 0) {
+                            Toast.makeText(getApplicationContext(), R.string.username_taken, Toast.LENGTH_SHORT).show();
+                        } else {
+                            editor.putString("userUsername", text);
+                            editor.apply();
+
+                            old_data.remove("username");
+                            old_data.put("username", text);
+                            db.collection("users")
+                                    .document(name)
+                                    .set(old_data);
+                            Toast.makeText(getApplicationContext(), R.string.username_success_change, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
     }
