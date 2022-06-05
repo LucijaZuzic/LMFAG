@@ -34,7 +34,7 @@
     <string name="cancel">Odustani</string>
     <string name="enter_a_username">Unesi korisničko ime</string>
     <string name="minimum_level">Minimalna razina:</string>
-    <string name="choose_an_activity_category">Odaberi tip događaja</string>
+    <string name="choose_an_activity_category">Odaberi vrstu događaja</string>
     <string name="area_of_interest">Područje interesa</string>
     <string name="add_area_of_interest">Dodaj područje interesa</string>
     <string name="level">Razina</string>
@@ -67,7 +67,7 @@
     <string name="friends_with_self">Ne možete postati prijatelj sami sebi.</string>
     <string name="visiting_myself">Ne možete posjetiti vlastiti profil.</string>
     <string name="already_friends">Već ste prijatelji s ovim korisnikom.</string>
-    <string name="event_description">Opis dogašaja:</string>
+    <string name="event_description">Opis događaja:</string>
     <string name="friend_request_sent">Zahtjev za prijateljstvo poslan.</string>
     <string name="no_longer_friends">Više niste prijatelji.</string>
     <string name="friend_request_declined">Zahtjev za prijateljstvo odbijen.</string>
@@ -161,6 +161,46 @@
         <item>poker</item>
         <item>other</item>
     </string-array>
+    <string-array name="event_types_translated">
+        <item>skijanje</item>
+        <item>planinarenje</item>
+        <item>klizanje</item>
+        <item>kajakarenje</item>
+        <item>surfanje sa zmajem</item>
+        <item>nordijsko hodanje</item>
+        <item>paraglajding</item>
+        <item>biciklizam</item>
+        <item>rolanje</item>
+        <item>veslanje</item>
+        <item>jedrenje</item>
+        <item>ronjenje sa spremnikom kisika</item>
+        <item>joga</item>
+        <item>skateboarding</item>
+        <item>sanjkanje</item>
+        <item>snowboarding</item>
+        <item>bejzbol</item>
+        <item>košarka</item>
+        <item>kriket</item>
+        <item>esportovi</item>
+        <item>američki nogomet</item>
+        <item>golf</item>
+        <item>gimnastika</item>
+        <item>rukomet</item>
+        <item>hokej</item>
+        <item>kabaddi</item>
+        <item>borilačke vještine</item>
+        <item>MMA</item>
+        <item>motoristički sporotvi</item>
+        <item>ragbi</item>
+        <item>nogomet</item>
+        <item>tenis</item>
+        <item>odbojka</item>
+        <item>igre s kockom</item>
+        <item>kartaške igre</item>
+        <item>igre na ploči</item>
+        <item>poker</item>
+        <item>ostalo</item>
+    </string-array>
     <string-array name="friend_search_params">
         <item>areas of interest</item>
         <item>description</item>
@@ -189,7 +229,7 @@
     <string name="expand_not_added_areas_of_interest">Prikaži nova područja interesa</string>
     <string name="not_added_areas_of_interest">Nova područja interesa</string>
     <string name="filter_by_event_name">Ime događaja</string>
-    <string name="filter_by_event_type">Tip događaja</string>
+    <string name="filter_by_event_type">Vrsta događaja</string>
     <string name="filter_by_organizer">Organizator</string>
     <string name="expand_subscriber">Prikaži pretplatnike</string>
     <string name="subscriber">Pretplatnik</string>
@@ -243,4 +283,11 @@
     <string name="open_drawer">Otvori ladicu</string>
     <string name="no_results">Nema rezultata.</string>
     <string name="view_participants">View participants</string>
+    <string name="my_location">Moja lokacija</string>
+    <string name="radius_too_large">Ne može se prikazati kružnica.</string>
+    <string name="no_longer_attending">Više ne sudjelujete na događaju.</string>
+    <string name="attending_event">Sudjelujete u događaju.</string>
+    <string name="change_notify">Uspješno su izmjenje postavke obavijesti.</string>
+    <string name="notifications_on">Obavijesti uključene</string>
+    <string name="notifications_off">Obavijesti isključene</string>
 </resources>

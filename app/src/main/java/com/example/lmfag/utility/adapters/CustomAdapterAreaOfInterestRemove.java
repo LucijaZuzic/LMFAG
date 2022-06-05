@@ -58,8 +58,9 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
         TextView textViewAreaOfInterest = viewHolder.getTextViewAreaOfInterest();
-        textViewAreaOfInterest.setText(localAreasOfInterest.get(position));
-        textViewAreaOfInterest.setCompoundDrawablesWithIntrinsicBounds(EventTypeToDrawable.getEventTypeToDrawable(localAreasOfInterest.get(position)), 0, 0, 0);
+        String text = localAreasOfInterest.get(position);
+        textViewAreaOfInterest.setText(EventTypeToDrawable.getEventTypeToTranslation(textViewAreaOfInterest.getContext(), text));
+        textViewAreaOfInterest.setCompoundDrawablesWithIntrinsicBounds(EventTypeToDrawable.getEventTypeToDrawable(text), 0, 0, 0);
         int level = (int) (Math.floor(localLevelPoints.get(position) / 1000));
         String text_level = Integer.toString(level);
         Double upper_bound = Math.ceil(localLevelPoints.get(position) / 1000) * 1000;
@@ -70,7 +71,6 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
         viewHolder.getDeterminateBar().setProgress((int) ((localLevelPoints.get(position) - (upper_bound - 1000)) / 10));
         viewHolder.getTextViewLevel().setText(text_level);
         viewHolder.getTextViewLevelPoints().setText(text_level_points);
-        String text = localAreasOfInterest.get(position);
         Context ctx1 = editProfileActivity;
         Context ctx2 = createProfileActivity;
         Context ctx = ctx1;

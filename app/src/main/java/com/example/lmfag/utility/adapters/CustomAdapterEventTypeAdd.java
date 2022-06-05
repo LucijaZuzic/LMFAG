@@ -50,9 +50,9 @@ public class CustomAdapterEventTypeAdd extends RecyclerView.Adapter<CustomAdapte
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        String text = localAreasOfInterest.get(position);
         TextView textViewAreaOfInterest = viewHolder.getTextViewAreaOfInterest();
-        textViewAreaOfInterest.setText(text);
+        String text = localAreasOfInterest.get(position);
+        textViewAreaOfInterest.setText(EventTypeToDrawable.getEventTypeToTranslation(textViewAreaOfInterest.getContext(), text));
         textViewAreaOfInterest.setCompoundDrawablesWithIntrinsicBounds(EventTypeToDrawable.getEventTypeToDrawable(text), 0, 0, 0);
         viewHolder.getMainLayoutAddAreaOfInterest().setOnClickListener(view -> {
             if (createEventActivity != null) {

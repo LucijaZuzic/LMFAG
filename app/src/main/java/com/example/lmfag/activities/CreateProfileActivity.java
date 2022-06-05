@@ -216,7 +216,7 @@ public class CreateProfileActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString("userID", aVoid.getId());
                     editor.apply();
-                    if (uri != null) {
+                    if (bitmap != null) {
                         blocked = true;
                         FirebaseStorage storage = FirebaseStorage.getInstance();
                         StorageReference storageRef = storage.getReference();
@@ -227,15 +227,22 @@ public class CreateProfileActivity extends AppCompatActivity {
                         UploadTask uploadTask = imagesRef.putBytes(imageDataTransformed);
                         Toast.makeText(getApplicationContext(), R.string.image_upload_started, Toast.LENGTH_SHORT).show();
                         uploadTask.addOnFailureListener(exception -> {
-                            // Handle unsuccessful uploads
+                            blocked = false;
+                            Toast.makeText(getApplicationContext(), R.string.image_upload_finished, Toast.LENGTH_SHORT).show();
+                            Intent myIntent = new Intent(context, MyProfileActivity.class);
+                            startActivity(myIntent);
+                            finish();
                         }).addOnSuccessListener(taskSnapshot -> {
                             blocked = false;
                             Toast.makeText(getApplicationContext(), R.string.image_upload_finished, Toast.LENGTH_SHORT).show();
                             Intent myIntent = new Intent(context, MyProfileActivity.class);
                             startActivity(myIntent);
-                            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                            // ...
+                            finish();
                         });
+                    } else {
+                        Intent myIntent = new Intent(context, MyProfileActivity.class);
+                        startActivity(myIntent);
+                        finish();
                     }
                 })
                 .addOnFailureListener(e -> {

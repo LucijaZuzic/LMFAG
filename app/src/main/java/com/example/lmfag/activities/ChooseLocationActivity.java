@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,7 +32,7 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.util.Locale;
 
 
-public class ChooseLocationActivity extends MenuInterfaceActivity {
+public class ChooseLocationActivity extends MenuInterfaceActivity implements TextWatcher {
     private MapView map;
     private IMapController mapController;
     private MyLocationNewOverlay myLocationOverlay;
@@ -39,6 +41,31 @@ public class ChooseLocationActivity extends MenuInterfaceActivity {
     private TextView markerView;
     private EditText enterLongitude, enterLatitude;
 
+    // Location choosing on tap
+    private final MapEventsReceiver mapEventsReceiver = new MapEventsReceiver() {
+        @Override
+        public boolean singleTapConfirmedHelper(GeoPoint p) {
+            return false;
+        }
+
+        @Override
+        public boolean longPressHelper(GeoPoint p) {
+            Toast.makeText(getApplicationContext(), getString(R.string.setting_location), Toast.LENGTH_SHORT).show();
+            map.getOverlays().clear();
+            map.getOverlays().add(myLocationOverlay);
+            map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
+            map.getOverlays().add(chosenLocationMarker);
+            mapController.setCenter(chosenLocationMarker.getPosition());
+
+            enterLatitude.setText(String.format(Locale.getDefault(), "%.4f", p.getLatitude()).replace(',','.'));
+            enterLongitude.setText(String.format(Locale.getDefault(), "%.4f", p.getLongitude()).replace(',','.'));
+            String formattedLocation = getString(R.string.marker_location) + ":\n" + getString(R.string.latitude) + ": " +
+                    Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0 + "\n"
+                    + getString(R.string.longitude) + ": " + Math.round(chosenLocationMarker.getPosition().getLongitude() * 10000) / 10000.0;
+            markerView.setText(formattedLocation);
+            return true;
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +77,8 @@ public class ChooseLocationActivity extends MenuInterfaceActivity {
 
         enterLatitude = findViewById(R.id.inputLatitude);
         enterLongitude = findViewById(R.id.inputLongitude);
-        ImageView updateButton = findViewById(R.id.updateLocation);
+        enterLatitude.addTextChangedListener(this);
+        enterLongitude.addTextChangedListener(this);
 
         //Request permission dialog
         ActivityResultLauncher<String[]> locationPermissionRequest =
@@ -93,9 +121,15 @@ public class ChooseLocationActivity extends MenuInterfaceActivity {
         myLocationOverlay.disableFollowLocation();
 
         myLocationOverlay.runOnFirstFix(() -> runOnUiThread(() -> {
-            mapController.setCenter(myLocationOverlay.getMyLocation());
-            chosenLocationMarker.setPosition(myLocationOverlay.getMyLocation());
-            String formattedLocation = getString(org.osmdroid.library.R.string.my_location) + ":\n" + getString(R.string.latitude) + ": " +
+            map.getOverlays().clear();
+            map.getOverlays().add(myLocationOverlay);
+            map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
+            map.getOverlays().add(chosenLocationMarker);
+            mapController.setCenter(chosenLocationMarker.getPosition());
+
+            enterLatitude.setText(String.format(Locale.getDefault(), "%.4f", myLocationOverlay.getMyLocation().getLatitude()).replace(',', '.'));
+            enterLongitude.setText(String.format(Locale.getDefault(), "%.4f", myLocationOverlay.getMyLocation().getLongitude()).replace(',', '.'));
+            String formattedLocation = getString(R.string.my_location) + ":\n" + getString(R.string.latitude) + ": " +
                     Math.round(myLocationOverlay.getMyLocation().getLatitude() * 10000) / 10000.0 + "\n"
                     + getString(R.string.longitude) + ": " + Math.round(myLocationOverlay.getMyLocation().getLongitude() * 10000) / 10000.0;
             coordinatesView.setText(formattedLocation);
@@ -103,27 +137,6 @@ public class ChooseLocationActivity extends MenuInterfaceActivity {
         map.getOverlays().add(myLocationOverlay);
         mapController.setZoom(17.0);
 
-        // Location choosing on tap
-        MapEventsReceiver mapEventsReceiver = new MapEventsReceiver() {
-            @Override
-            public boolean singleTapConfirmedHelper(GeoPoint p) {
-                return false;
-            }
-
-            @Override
-            public boolean longPressHelper(GeoPoint p) {
-                Toast.makeText(getApplicationContext(), getString(R.string.setting_location), Toast.LENGTH_SHORT).show();
-                chosenLocationMarker.setPosition(p);
-                enterLatitude.setText(String.format(Locale.getDefault(), "%.6f", p.getLatitude()));
-                enterLongitude.setText(String.format(Locale.getDefault(), "%.6f", p.getLongitude()));
-                String formattedLocation = getString(R.string.marker_location) + ":\n" + getString(R.string.latitude) + ": " +
-                        Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0 + "\n"
-                        + getString(R.string.longitude) + ": " + Math.round(chosenLocationMarker.getPosition().getLongitude() * 10000) / 10000.0;
-                mapController.setCenter(chosenLocationMarker.getPosition());
-                markerView.setText(formattedLocation);
-                return true;
-            }
-        };
         map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
 
         // Init marker
@@ -137,13 +150,17 @@ public class ChooseLocationActivity extends MenuInterfaceActivity {
 
             @Override
             public void onMarkerDragEnd(Marker marker) {
+                map.getOverlays().clear();
+                map.getOverlays().add(myLocationOverlay);
+                map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
+                map.getOverlays().add(chosenLocationMarker);
+                mapController.setCenter(chosenLocationMarker.getPosition());
+
+                enterLatitude.setText(String.format(Locale.getDefault(), "%.4f", chosenLocationMarker.getPosition().getLatitude()).replace(',', '.'));
+                enterLongitude.setText(String.format(Locale.getDefault(), "%.4f", chosenLocationMarker.getPosition().getLongitude()).replace(',', '.'));
                 String formattedLocation = getString(R.string.marker_location) + ":\n" + getString(R.string.latitude) + ": " +
                         Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0 + "\n"
                         + getString(R.string.longitude) + ": " + Math.round(chosenLocationMarker.getPosition().getLongitude() * 10000) / 10000.0;
-
-                mapController.setCenter(chosenLocationMarker.getPosition());
-                enterLatitude.setText(String.format(Locale.getDefault(), "%.6f", chosenLocationMarker.getPosition().getLatitude()));
-                enterLongitude.setText(String.format(Locale.getDefault(), "%.6f", chosenLocationMarker.getPosition().getLongitude()));
                 markerView.setText(formattedLocation);
             }
 
@@ -161,20 +178,24 @@ public class ChooseLocationActivity extends MenuInterfaceActivity {
             saveMarkerLocationToSP();
             finish();
         });
+        /* Update button ImageView updateButton = findViewById(R.id.updateLocation);
         updateButton.setOnClickListener(view -> {
             if (enterLongitude.getText().toString().length() != 0 && enterLatitude.getText().toString().length() != 0) {
-                float temp_latitude = Float.parseFloat(enterLatitude.getText().toString());
-                float temp_longitude = Float.parseFloat(enterLongitude.getText().toString());
-                chosenLocationMarker.setPosition(new GeoPoint(temp_latitude, temp_longitude));
-
+                float temp_latitude = Float.parseFloat(enterLatitude.getText().toString().replace(',', '.'));
+                float temp_longitude = Float.parseFloat(enterLongitude.getText().toString().replace(',', '.'));
+                map.getOverlays().clear();
+                map.getOverlays().add(myLocationOverlay);
+                map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
+                map.getOverlays().add(chosenLocationMarker);
+                chosenLocationMarker.setPosition(new org.osmdroid.util.GeoPoint(temp_latitude, temp_longitude));
                 mapController.setCenter(chosenLocationMarker.getPosition());
+
                 String formattedLocation = getString(R.string.marker_location) + ":\n" + getString(R.string.latitude) + ": " +
                         Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0 + "\n"
                         + getString(R.string.longitude) + ": " + Math.round(chosenLocationMarker.getPosition().getLongitude() * 10000) / 10000.0;
-
                 markerView.setText(formattedLocation);
             }
-        });
+        });*/
     }
 
     private void saveMarkerLocationToSP() {
@@ -201,5 +222,56 @@ public class ChooseLocationActivity extends MenuInterfaceActivity {
         //if you make changes to the configuration, use SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Configuration.getInstance().save(this, prefs);
         map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
+    }
+
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        float temp_latitude = 0.0f, temp_longitude = 0.0f;
+        if (enterLatitude.getText().toString().length() > 0) {
+            temp_latitude = Float.parseFloat(enterLatitude.getText().toString().replace(',', '.'));
+            if (temp_latitude > 85) {
+                enterLatitude.setText(String.format(Locale.getDefault(), "%.4f", chosenLocationMarker.getPosition().getLatitude()).replace(',', '.'));
+                temp_latitude = (float) chosenLocationMarker.getPosition().getLatitude();
+            }
+            if (temp_latitude < -85) {
+                enterLatitude.setText(String.format(Locale.getDefault(), "%.4f", chosenLocationMarker.getPosition().getLatitude()).replace(',', '.'));
+                temp_latitude = (float) chosenLocationMarker.getPosition().getLatitude();
+            }
+        }
+        if (enterLongitude.getText().toString().length() > 0) {
+            temp_longitude = Float.parseFloat(enterLongitude.getText().toString().replace(',', '.'));
+            if (temp_longitude > 180) {
+                enterLongitude.setText(String.format(Locale.getDefault(), "%.4f", chosenLocationMarker.getPosition().getLongitude()).replace(',', '.'));
+                temp_longitude = (float) chosenLocationMarker.getPosition().getLongitude();
+            }
+            if (temp_longitude < -180) {
+                enterLongitude.setText(String.format(Locale.getDefault(), "%.4f", chosenLocationMarker.getPosition().getLongitude()).replace(',', '.'));
+                temp_longitude = (float) chosenLocationMarker.getPosition().getLongitude();
+            }
+        }
+        if (enterLongitude.getText().toString().length() > 0 && enterLatitude.getText().toString().length() > 0) {
+            map.getOverlays().clear();
+            map.getOverlays().add(myLocationOverlay);
+            map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
+            map.getOverlays().add(chosenLocationMarker);
+            chosenLocationMarker.setPosition(new GeoPoint(temp_latitude, temp_longitude));
+            mapController.setCenter(chosenLocationMarker.getPosition());
+
+            String formattedLocation = getString(R.string.marker_location) + ":\n" + getString(R.string.latitude) + ": " +
+                    Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0 + "\n"
+                    + getString(R.string.longitude) + ": " + Math.round(chosenLocationMarker.getPosition().getLongitude() * 10000) / 10000.0;
+            markerView.setText(formattedLocation);
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
     }
 }

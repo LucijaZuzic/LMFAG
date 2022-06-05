@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
@@ -32,10 +31,7 @@ public class ViewParticipantsActivity extends MenuInterfaceActivity {
     private String organizer;
     private List<String> people;
     private Context context = this;
-    private ViewParticipantsActivity viewParticipantsActivity;
     private RecyclerView recyclerViewPlayers;
-    private String event_type;
-    private RatingBar ratingBarOrganizer;
     private CircleImageView circleImageView;
     private CardView rate_event_list_entry_banner_card;
     private TextView rate_event_list_entry_banner_text, organizerUsername;
@@ -45,15 +41,13 @@ public class ViewParticipantsActivity extends MenuInterfaceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_participants);
-        
-        ratingBarOrganizer = findViewById(R.id.simpleRatingBarOrganizer);
+
         noResults = findViewById(R.id.noResults);
         circleImageView = findViewById(R.id.profile_image_organizer);
         rate_event_list_entry_banner_card = findViewById(R.id.rate_event_list_entry_banner_card);
         rate_event_list_entry_banner_text = findViewById(R.id.rate_event_list_entry_banner_text);
         organizerUsername = findViewById(R.id.textViewOrganizer);
         people = new ArrayList<>();
-        viewParticipantsActivity = this;
         recyclerViewPlayers = findViewById(R.id.recyclerViewPlayers);
         context = this;
     }
@@ -181,8 +175,7 @@ public class ViewParticipantsActivity extends MenuInterfaceActivity {
                 if (document.exists()) {
                     Map<String, Object> docData = document.getData();
 
-                    event_type = Objects.requireNonNull(Objects.requireNonNull(docData).get("event_type")).toString();
-                    rate_event_list_entry_banner_text.setText(Objects.requireNonNull(docData.get("event_name")).toString());
+                    rate_event_list_entry_banner_text.setText(Objects.requireNonNull(Objects.requireNonNull(docData).get("event_name")).toString());
                     rate_event_list_entry_banner_text.setCompoundDrawablesWithIntrinsicBounds(EventTypeToDrawable.getEventTypeToDrawable(Objects.requireNonNull(document.get("event_type")).toString()), 0, 0, 0);
 
                     rate_event_list_entry_banner_card.setOnClickListener(view -> {

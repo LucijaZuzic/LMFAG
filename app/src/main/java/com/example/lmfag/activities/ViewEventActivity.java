@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,7 +17,6 @@ import com.bumptech.glide.Glide;
 import com.example.lmfag.BuildConfig;
 import com.example.lmfag.R;
 import com.example.lmfag.utility.AlarmScheduler;
-import com.example.lmfag.utility.DrawerHelper;
 import com.example.lmfag.utility.EventTypeToDrawable;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
@@ -49,8 +49,8 @@ import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ViewEventActivity extends MenuInterfaceActivity {
-    final Calendar cldr_start = Calendar.getInstance();
-    final Calendar cldr_end = Calendar.getInstance();
+    private final Calendar cldr_start = Calendar.getInstance();
+    private final Calendar cldr_end = Calendar.getInstance();
     private Context context;
     private MapView map;
     private IMapController mapController;
@@ -59,6 +59,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
     private String event_type;
     private ImageView apply;
     private ImageView rate;
+    private ImageView edit;
     private TextView textViewChooseStartDate, textViewChooseStartTime, myUsername, textViewChooseEndDate, textViewChooseEndTime, eventName, eventType, location, description, minimum_level_view, switch_public, switch_out, slider;
     private double longitude = 45.23;
     private double latitude = 45.36;
@@ -97,39 +98,33 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         participants_view.setOnClickListener(view -> {
             Intent myIntent = new Intent(context, ViewParticipantsActivity.class);
             context.startActivity(myIntent);
-            finish();
         });
         switch_notify.setOnClickListener(view -> changeNotify());
 
-        ImageView edit = findViewById(R.id.imageViewEdit);
+        String me = preferences.getString("userID", "");
+        String eventID = preferences.getString("eventID", "");
+        edit = findViewById(R.id.imageViewEdit);
         edit.setOnClickListener(view -> {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            String me = preferences.getString("userID", "");
             if (me.equals(organizer)) {
                 if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime())) {
                     Toast.makeText(getApplicationContext(), R.string.edit_finished, Toast.LENGTH_SHORT).show();
                 } else {
                     Intent myIntent = new Intent(context, CreateEventActivity.class);
                     context.startActivity(myIntent);
-                    finish();
                 }
             } else {
                 Toast.makeText(getApplicationContext(), R.string.organizer_edit, Toast.LENGTH_SHORT).show();
             }
         });
-
         rate = findViewById(R.id.imageViewRate);
         rate.setOnClickListener(view -> {
-            String eventID = preferences.getString("eventID", "");
-            String userID = preferences.getString("userID", "");
-
             if (Calendar.getInstance().getTime().before(cldr_end.getTime())) {
                 Toast.makeText(getApplicationContext(), R.string.rate_before_end, Toast.LENGTH_SHORT).show();
             } else {
                 CollectionReference docRef = db.collection("event_attending");
-                docRef.whereEqualTo("event", eventID).whereEqualTo("user", userID).get().addOnCompleteListener(task -> {
+                docRef.whereEqualTo("event", eventID).whereEqualTo("user", me).get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        if (task.getResult().size() == 0 && !userID.equals(organizer)) {
+                        if (task.getResult().size() == 0 && !me.equals(organizer)) {
                             Toast.makeText(getApplicationContext(), R.string.not_participate_rate, Toast.LENGTH_SHORT).show();
                         } else {
                             boolean found = false;
@@ -143,7 +138,6 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                             if (!found) {
                                 Intent myIntent = new Intent(context, RateEventActivity.class);
                                 context.startActivity(myIntent);
-                                finish();
                             }
                         }
                     }
@@ -174,6 +168,12 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                         db.collection("event_attending")
                                 .document(doc.getId())
                                 .set(docData);
+                        Toast.makeText(this, R.string.change_notify, Toast.LENGTH_SHORT).show();
+                        if (switch_notify.isChecked()) {
+                            Toast.makeText(this, R.string.notifications_on, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this, R.string.notifications_off, Toast.LENGTH_SHORT).show();
+                        }
                         AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                     }
                 }
@@ -208,7 +208,6 @@ public class ViewEventActivity extends MenuInterfaceActivity {
     protected void onResume() {
         super.onResume();
         fillData();
-        checkSubscribed();
         latitude = preferences.getFloat("newEventLatitude", (float) latitude);
         longitude = preferences.getFloat("newEventLongitude", (float) longitude);
         String formattedLocation = getString(R.string.location) + "\n" + getString(R.string.latitude) + ": " + Math.round(latitude * 10000) / 10000.0 + "\n"
@@ -238,6 +237,10 @@ public class ViewEventActivity extends MenuInterfaceActivity {
             startActivity(myIntent);
             finish();
             return;
+        }
+        if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime())) {
+            apply.setVisibility(View.GONE);
+            switch_notify.setVisibility(View.GONE);
         }
         CollectionReference docRef = db.collection("event_attending");
         docRef.whereEqualTo("event", eventID).whereEqualTo("user", userID).get().addOnCompleteListener(task -> {
@@ -272,6 +275,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                         Toast.makeText(getApplicationContext(), R.string.not_friend_organizer, Toast.LENGTH_SHORT).show();
                     } else {
                         docuRef.add(docData);
+                        Toast.makeText(getApplicationContext(), R.string.attending_event, Toast.LENGTH_SHORT).show();
                         AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                         refresh();
                     }
@@ -296,6 +300,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                         checkOtherDirection(docuRef, docData);
                     } else {
                         docuRef.add(docData);
+                        Toast.makeText(getApplicationContext(), R.string.attending_event, Toast.LENGTH_SHORT).show();
                         AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                         refresh();
                     }
@@ -344,20 +349,22 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                                             } else {
                                                 if (public_event) {
                                                     docuRef.add(docData);
+                                                    Toast.makeText(getApplicationContext(), R.string.attending_event, Toast.LENGTH_SHORT).show();
                                                     AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
+                                                    refresh();
                                                 } else {
                                                     checkFriends(docuRef, docData);
                                                 }
-                                                refresh();
                                             }
                                         } else {
                                             if (public_event) {
                                                 docuRef.add(docData);
+                                                Toast.makeText(getApplicationContext(), R.string.attending_event, Toast.LENGTH_SHORT).show();
                                                 AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
+                                                refresh();
                                             } else {
                                                 checkFriends(docuRef, docData);
                                             }
-                                            refresh();
                                         }
                                     } else {
                                         if (minimum_level > 0) {
@@ -365,11 +372,25 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                                         } else {
                                             if (public_event) {
                                                 docuRef.add(docData);
+                                                Toast.makeText(getApplicationContext(), R.string.attending_event, Toast.LENGTH_SHORT).show();
                                                 AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
+                                                refresh();
                                             } else {
                                                 checkFriends(docuRef, docData);
                                             }
+                                        }
+                                    }
+                                } else {
+                                    if (minimum_level > 0) {
+                                        Toast.makeText(getApplicationContext(), R.string.level_low, Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        if (public_event) {
+                                            docuRef.add(docData);
+                                            Toast.makeText(getApplicationContext(), R.string.attending_event, Toast.LENGTH_SHORT).show();
+                                            AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                                             refresh();
+                                        } else {
+                                            checkFriends(docuRef, docData);
                                         }
                                     }
                                 }
@@ -397,6 +418,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
             if (task.isSuccessful()) {
                 if (task.getResult().size() > participate_minimum) {
                     db.collection("event_attending").document(docuRef.getId()).delete();
+                    Toast.makeText(getApplicationContext(), R.string.no_longer_attending, Toast.LENGTH_SHORT).show();
                     AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                     refresh();
                 } else {
@@ -458,7 +480,6 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                             editor.apply();
                             Intent myIntent = new Intent(context, ViewProfileActivity.class);
                             startActivity(myIntent);
-                            finish();
                         });
                     }).addOnFailureListener(exception -> {
                         // Handle any errors
@@ -491,7 +512,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                 if (document.exists()) {
                     Map<String, Object> docData = document.getData();
                     eventName.setText(Objects.requireNonNull(Objects.requireNonNull(docData).get("event_name")).toString());
-                    eventType.setText(Objects.requireNonNull(docData.get("event_type")).toString());
+                    eventType.setText(EventTypeToDrawable.getEventTypeToTranslation(this, Objects.requireNonNull(Objects.requireNonNull(docData).get("event_type")).toString()));
                     eventType.setCompoundDrawablesRelativeWithIntrinsicBounds(EventTypeToDrawable.getEventTypeToDrawable(Objects.requireNonNull(docData.get("event_type")).toString()), 0, 0, 0);
                     description.setText(Objects.requireNonNull(docData.get("event_description")).toString());
                     minimum_level_view.setText(Objects.requireNonNull(docData.get("minimum_level")).toString());
@@ -510,8 +531,9 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                         switch_out.setText(R.string.indoor);
                     }
                     Float val1 = Float.parseFloat(Objects.requireNonNull(docData.get("minimum_players")).toString());
-                    float val2 = Float.parseFloat(Objects.requireNonNull(docData.get("maximum_players")).toString());
+                    Float val2 = Float.parseFloat(Objects.requireNonNull(docData.get("maximum_players")).toString());
                     organizer = Objects.requireNonNull(docData.get("organizer")).toString();
+
                     event_type = Objects.requireNonNull(docData.get("event_type")).toString();
                     participate_minimum = val1;
                     participate_maximum = val2;
@@ -523,6 +545,42 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                     Timestamp end_timestamp = (Timestamp) (docData.get("ending"));
                     Date end_date = Objects.requireNonNull(end_timestamp).toDate();
                     cldr_end.setTime(end_date);
+                    checkSubscribed();
+                    String me = preferences.getString("userID", "");
+                    if (me.equals(organizer)) {
+                        if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime())) {
+                            edit.setVisibility(View.GONE);
+                        } else {
+                            edit.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        edit.setVisibility(View.GONE);
+                    }
+                    if (Calendar.getInstance().getTime().before(cldr_end.getTime())) {
+                        rate.setVisibility(View.GONE);
+                    } else {
+                        CollectionReference docRef2 = db.collection("event_attending");
+                        docRef2.whereEqualTo("event", eventID).whereEqualTo("user", me).get().addOnCompleteListener(task2 -> {
+                            if (task2.isSuccessful()) {
+                                if (task2.getResult().size() == 0 && !me.equals(organizer)) {
+                                    rate.setVisibility(View.GONE);
+                                } else {
+                                    boolean found = false;
+                                    for (QueryDocumentSnapshot doc2 : task2.getResult()) {
+                                        if (Objects.requireNonNull(doc2.getData().get("rated")).toString().equals("true")) {
+                                            rate.setVisibility(View.GONE);
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!found) {
+                                        rate.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            }
+                        });
+                    }
+
                     textViewChooseStartDate.setText(DateFormat.getDateInstance().format(cldr_start.getTime()));
                     textViewChooseStartTime.setText(DateFormat.getTimeInstance().format(cldr_start.getTime()));
                     textViewChooseEndDate.setText(DateFormat.getDateInstance().format(cldr_end.getTime()));

@@ -115,37 +115,37 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         textViewChooseEndTime = findViewById(R.id.textViewChooseEndTime);
         map = findViewById(R.id.map);
         sp = findViewById(R.id.sp);
+        imageViewDelete = findViewById(R.id.imageViewDelete);
+        imageViewDeleteLayout = findViewById(R.id.imageViewDeleteLayout);
+        openableCard = findViewById(R.id.openableCard);
+        imageViewEventType = findViewById(R.id.imageViewEventType);
+        ImageView closeCard = findViewById(R.id.closeCard);
+        ImageView location_choose = findViewById(R.id.imageViewChooseLocation);
+        ImageView close = findViewById(R.id.imageViewDiscard);
         
         List<String> all_areas = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.event_types)));
         RecyclerView recyclerViewAreasOfInterestNew = findViewById(R.id.recyclerViewAreasOfInterestNew);
         CustomAdapterEventTypeAdd customAdapterEventTypeAdd = new CustomAdapterEventTypeAdd(all_areas, this);
         recyclerViewAreasOfInterestNew.setAdapter(customAdapterEventTypeAdd);
-        setDate();
-        setTime();
-        fillData();
-        imageViewDelete = findViewById(R.id.imageViewDelete);
-        imageViewDeleteLayout = findViewById(R.id.imageViewDeleteLayout);
         ImageView apply = findViewById(R.id.imageViewApply);
         apply.setOnClickListener(view -> fetchDataFromUI());
-        ImageView closeCard = findViewById(R.id.closeCard);
-        openableCard = findViewById(R.id.openableCard);
-        imageViewEventType = findViewById(R.id.imageViewEventType);
         sp.setOnClickListener(view -> openableCard.setVisibility(View.VISIBLE));
         closeCard.setOnClickListener(view -> openableCard.setVisibility(View.GONE));
-        ImageView location_choose = findViewById(R.id.imageViewChooseLocation);
         location_choose.setOnClickListener(view -> {
             Intent myIntent = new Intent(context, ChooseLocationActivity.class);
             startActivity(myIntent);
             finish();
         });
-        ImageView close = findViewById(R.id.imageViewDiscard);
         close.setOnClickListener(view -> onBackPressed());
+        setDate();
+        setTime();
+        fillData();
         firstMapSetup();
     }
 
     public void selectAreaOfInterest(String selected_item) {
         this.selected_item = selected_item;
-        sp.setText(selected_item);
+        sp.setText(EventTypeToDrawable.getEventTypeToTranslation(this,selected_item));
         imageViewEventType.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), EventTypeToDrawable.getEventTypeToDrawable(selected_item)));
         openableCard.setVisibility(View.GONE);
     }
@@ -296,6 +296,12 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                                 writeAttendingToDB();
                             }
                         }
+                    } else {
+                        if (minimum_level_val > 0) {
+                            Toast.makeText(getApplicationContext(), R.string.level_low, Toast.LENGTH_SHORT).show();
+                        } else {
+                            writeAttendingToDB();
+                        }
                     }
                 }
             }
@@ -321,13 +327,17 @@ public class CreateEventActivity extends MenuInterfaceActivity {
             if (task.isSuccessful()) {
                 if (task.getResult().size() == 0) {
                     docRef.add(docData);
-                    AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                 } else {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         docRef.document(doc.getId()).set(docData);
-                        AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                     }
                 }
+                if (switch_notify.isChecked()) {
+                    Toast.makeText(this, R.string.notifications_on, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, R.string.notifications_off, Toast.LENGTH_SHORT).show();
+                }
+                AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
             }
         });
     }
@@ -380,7 +390,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         String userID = preferences.getString("userID", "");
         Map<String, Object> docData = new HashMap<>();
         docData.put("event_name", eventName.getText().toString());
-        docData.put("event_type", sp.getText().toString());
+        docData.put("event_type", selected_item);
         docData.put("event_description", description.getText().toString());
         docData.put("minimum_level", Integer.parseInt(String.valueOf(minimum_level.getValue())));
         docData.put("public", switch_public.isChecked());
@@ -461,10 +471,9 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Map<String, Object> docData = document.getData();
-                        checkIfAbleToEdit(Objects.requireNonNull(Objects.requireNonNull(docData).get("organizer")).toString());
                         eventName.setText(Objects.requireNonNull(docData.get("event_name")).toString());
                         selected_item = Objects.requireNonNull(docData.get("event_type")).toString();
-                        sp.setText(Objects.requireNonNull(docData.get("event_type")).toString());
+                        sp.setText(EventTypeToDrawable.getEventTypeToTranslation(this, Objects.requireNonNull(docData.get("event_type")).toString()));
                         imageViewEventType.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), EventTypeToDrawable.getEventTypeToDrawable(selected_item)));
                         description.setText(Objects.requireNonNull(docData.get("event_description")).toString());
                         minimum_level.setValue(Integer.parseInt(Objects.requireNonNull(docData.get("minimum_level")).toString()));
@@ -483,10 +492,9 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                         textViewChooseStartTime.setText(DateFormat.getTimeInstance().format(cldr_start.getTime()));
                         textViewChooseEndDate.setText(DateFormat.getDateInstance().format(cldr_end.getTime()));
                         textViewChooseEndTime.setText(DateFormat.getTimeInstance().format(cldr_end.getTime()));
-                        if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime())) {
-                            Toast.makeText(getApplicationContext(), R.string.cant_edit_finished, Toast.LENGTH_SHORT).show();
-                            onBackPressed();
-                        }
+
+                        checkIfAbleToEdit(Objects.requireNonNull(Objects.requireNonNull(docData).get("organizer")).toString());
+
                         GeoPoint location_point = (GeoPoint) (docData.get("location"));
                         latitude = Objects.requireNonNull(location_point).getLatitude();
                         longitude = location_point.getLongitude();

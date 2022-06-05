@@ -161,6 +161,46 @@
         <item>poker</item>
         <item>other</item>
     </string-array>
+    <string-array name="event_types_translated">
+        <item>skiing</item>
+        <item>hiking</item>
+        <item>ice skating</item>
+        <item>kayaking</item>
+        <item>kitesurfing</item>
+        <item>nordic walking</item>
+        <item>paragliding</item>
+        <item>biking</item>
+        <item>roller skating</item>
+        <item>rowing</item>
+        <item>sailing</item>
+        <item>scuba diving</item>
+        <item>yoga</item>
+        <item>skateboarding</item>
+        <item>sledding</item>
+        <item>snowboarding</item>
+        <item>baseball</item>
+        <item>basketball</item>
+        <item>cricket</item>
+        <item>esports</item>
+        <item>football</item>
+        <item>golf</item>
+        <item>gymnastics</item>
+        <item>handball</item>
+        <item>hockey</item>
+        <item>kabaddi</item>
+        <item>martial arts</item>
+        <item>MMA</item>
+        <item>motorsports</item>
+        <item>rugby</item>
+        <item>soccer</item>
+        <item>tennis</item>
+        <item>volleyball</item>
+        <item>dice games</item>
+        <item>card games</item>
+        <item>tabletop games</item>
+        <item>poker</item>
+        <item>other</item>
+    </string-array>
     <string-array name="friend_search_params">
         <item>areas of interest</item>
         <item>description</item>
@@ -243,4 +283,11 @@
     <string name="open_drawer">Open drawer</string>
     <string name="no_results">No results.</string>
     <string name="view_participants">View participants</string>
+    <string name="my_location">My location</string>
+    <string name="radius_too_large">Unable to display circle.</string>
+    <string name="no_longer_attending">No longer attending event.</string>
+    <string name="attending_event">Attending event.</string>
+    <string name="change_notify">Successfully changed notification preferences.</string>
+    <string name="notifications_on">Notifications on</string>
+    <string name="notifications_off">Notifications off</string>
 </resources>

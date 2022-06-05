@@ -51,9 +51,9 @@ public class CustomAdapterAreaOfInterestAdd extends RecyclerView.Adapter<CustomA
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
         TextView textViewAreaOfInterest = viewHolder.getTextViewAreaOfInterest();
-        textViewAreaOfInterest.setText(localAreasOfInterest.get(position));
-        textViewAreaOfInterest.setCompoundDrawablesWithIntrinsicBounds(EventTypeToDrawable.getEventTypeToDrawable(localAreasOfInterest.get(position)), 0, 0, 0);
         String text = localAreasOfInterest.get(position);
+        textViewAreaOfInterest.setText(EventTypeToDrawable.getEventTypeToTranslation(textViewAreaOfInterest.getContext(), text));
+        textViewAreaOfInterest.setCompoundDrawablesWithIntrinsicBounds(EventTypeToDrawable.getEventTypeToDrawable(text), 0, 0, 0);
         viewHolder.getMainLayoutAddAreaOfInterest().setOnClickListener(view -> {
             if (editProfileActivity != null) {
                 editProfileActivity.addAreaOfInterest(text);

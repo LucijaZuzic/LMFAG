@@ -38,6 +38,10 @@ public class MenuInterfaceActivity extends AppCompatActivity {
     public void logout() {
         editor.putString("userID", "");
         editor.apply();
+        editor.putString("userUsername", "");
+        editor.apply();
+        editor.putString("userPicture", "");
+        editor.apply();
         AlarmScheduler.cancelAllAlarms(this.getApplicationContext());
         Intent myIntent = new Intent(this, MainActivity.class);
         startActivity(myIntent);

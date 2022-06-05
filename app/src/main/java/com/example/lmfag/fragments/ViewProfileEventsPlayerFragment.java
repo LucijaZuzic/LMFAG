@@ -85,6 +85,7 @@ public class ViewProfileEventsPlayerFragment extends Fragment {
         title.setText(R.string.events_view_player);
         RecyclerView recyclerViewEventsPlayer = view.findViewById(R.id.recyclerViewList);
         SwitchCompat notificationsOnly = view.findViewById(R.id.onlyShowNotificationToggle);
+        notificationsOnly.setVisibility(View.GONE);
         preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         String friendID = preferences.getString("friendID", "");
         if (!friendID.equals("")) {

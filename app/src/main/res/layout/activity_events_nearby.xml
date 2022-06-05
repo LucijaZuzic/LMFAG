@@ -87,7 +87,7 @@
                                 android:fontFamily="sans-serif-condensed-light"
                                 android:hint="@string/enter_latitude"
                                 android:importantForAutofill="no"
-                                android:inputType="numberDecimal"
+                                android:inputType="numberDecimal|numberSigned"
                                 android:minHeight="48dp" />
 
                         </LinearLayout>
@@ -115,11 +115,12 @@
                                 android:fontFamily="sans-serif-condensed-light"
                                 android:hint="@string/enter_longitude"
                                 android:importantForAutofill="no"
-                                android:inputType="numberDecimal"
+                                android:inputType="numberDecimal|numberSigned"
                                 android:minHeight="48dp" />
                         </LinearLayout>
 
                         <ImageView
+                            android:visibility="gone"
                             android:id="@+id/updateLocation"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
@@ -209,6 +210,17 @@
                 </androidx.recyclerview.widget.RecyclerView>
 
 
+                <TextView
+                    android:id="@+id/noResults"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:text="@string/no_results"
+                    android:textSize="21sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
                 <org.osmdroid.views.MapView
                     android:id="@+id/map"
                     android:layout_width="match_parent"
