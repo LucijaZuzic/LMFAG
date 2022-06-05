@@ -104,7 +104,7 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
                 DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
                     switch (which) {
                         case DialogInterface.BUTTON_POSITIVE:
-                            db.collection("messages").document(delete_id).update("messages", R.string.deleted_by_sender);
+                            db.collection("messages").document(delete_id).update("messages", context.getResources().getString(R.string.deleted_by_sender));
                             context.getAllMessages();
                             break;
 
