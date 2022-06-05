@@ -23,6 +23,7 @@ import com.example.lmfag.activities.MainActivity;
 import com.example.lmfag.utility.DrawerHelper;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Locale;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -77,7 +78,7 @@ public class MyProfileInfoFragment extends Fragment {
         if (upper_bound.equals(0.0)) {
             upper_bound = 1000.0;
         }
-        String text_rank_points = points_rank + "/" + upper_bound;
+        String text_rank_points = String.format(Locale.getDefault(), "%.1f / %.1f", points_rank, upper_bound).replace(',', '.');
         ProgressBar progressBar = view.findViewById(R.id.determinateBar);
         progressBar.setProgress((int) ((points_rank - (upper_bound - 1000)) / 10));
         myOrganizerRank.setText(text_rank);

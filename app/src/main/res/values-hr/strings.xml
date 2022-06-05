@@ -106,7 +106,7 @@
     <string name="confirm_location">Potvrdi lokaciju</string>
     <string name="level_low">Vaša razina nije dovoljno visoka da sudjelujete.</string>
     <string name="too_many">Prevelik broj sudionika.</string>
-    <string name="create_profile">Stvori događaj</string>
+    <string name="create_profile">Stvori profil</string>
     <string name="enter_a_username_to_search">Unesi korisničko ime za pretragu.</string>
     <string name="delete_message">Želite li obrisati poruku?</string>
     <string name="yes">Da</string>

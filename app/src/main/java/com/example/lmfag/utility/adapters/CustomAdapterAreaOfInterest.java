@@ -13,6 +13,7 @@ import com.example.lmfag.R;
 import com.example.lmfag.utility.EventTypeToDrawable;
 
 import java.util.List;
+import java.util.Locale;
 
 public class CustomAdapterAreaOfInterest extends RecyclerView.Adapter<CustomAdapterAreaOfInterest.ViewHolder> {
 
@@ -51,7 +52,8 @@ public class CustomAdapterAreaOfInterest extends RecyclerView.Adapter<CustomAdap
         if (upper_bound.equals(0.0)) {
             upper_bound = 1000.0;
         }
-        String text_level_points = localLevelPoints.get(position).toString() + "/" + upper_bound;
+        float points_level = Float.parseFloat(localLevelPoints.get(position).toString().replace(',', '.'));
+        String text_level_points = String.format(Locale.getDefault(), "%.1f / %.1f", points_level, upper_bound).replace(',', '.');
         viewHolder.getProgressBar().setProgress((int) ((localLevelPoints.get(position) - (upper_bound - 1000)) / 10));
         viewHolder.getTextViewLevel().setText(text_level);
         viewHolder.getTextViewLevelPoints().setText(text_level_points);

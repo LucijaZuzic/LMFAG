@@ -31,6 +31,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -111,7 +112,7 @@ public class ViewProfileInfoFragment extends Fragment {
         if (upper_bound.equals(0.0)) {
             upper_bound = 1000.0;
         }
-        String text_rank_points = points_rank + "/" + upper_bound;
+        String text_rank_points = String.format(Locale.getDefault(), "%.1f / %.1f", points_rank, upper_bound).replace(',', '.');
         ProgressBar progressBar = view.findViewById(R.id.determinateBar);
         progressBar.setProgress((int) ((points_rank - (upper_bound - 1000)) / 10));
         myOrganizerRank.setText(text_rank);
