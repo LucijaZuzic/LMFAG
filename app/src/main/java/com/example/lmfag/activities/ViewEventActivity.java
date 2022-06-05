@@ -401,7 +401,6 @@ public class ViewEventActivity extends MenuInterfaceActivity {
 
     private void checkNumberOfParticipantsRemove() {
         String eventID = preferences.getString("eventID", "");
-        String userID = preferences.getString("userID", "");
         CollectionReference dr = db.collection("event_attending");
         dr.whereEqualTo("event", eventID).whereEqualTo("attending", true).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -488,21 +487,21 @@ public class ViewEventActivity extends MenuInterfaceActivity {
 
                     myUsername.setText(Objects.requireNonNull(Objects.requireNonNull(data).get("username")).toString());
 
-                    StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
-                    final long ONE_MEGABYTE = 1024 * 1024;
-                    imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-
-                        Glide.with(context.getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
-                        circleImageView.setOnClickListener(view -> {
-                            editor.putString("friendID", name);
-                            editor.apply();
-                            Intent myIntent = new Intent(context, ViewProfileActivity.class);
-                            startActivity(myIntent);
-                        });
-                    }).addOnFailureListener(exception -> {
-                        // Handle any errors
+                    circleImageView.setOnClickListener(view -> {
+                        editor.putString("friendID", name);
+                        editor.apply();
+                        Intent myIntent = new Intent(context, ViewProfileActivity.class);
+                        startActivity(myIntent);
                     });
-                    //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    String imageView = preferences.getString("showImage", "true");
+                    if (imageView.equals("true")) {
+                        StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
+                        final long ONE_MEGABYTE = 1024 * 1024;
+                        imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(context.getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView)).addOnFailureListener(exception -> {
+                            // Handle any errors
+                        });
+                        //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    }
                 } else {
                     editor.putString("eventID", "");
                     editor.apply();

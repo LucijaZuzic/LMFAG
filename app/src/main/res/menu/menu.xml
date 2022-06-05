@@ -7,17 +7,20 @@
         android:id="@+id/dayNightSwitch"
         android:icon="@drawable/ic_baseline_wb_sunny_24"
         android:title="@string/choose_theme"
-        app:showAsAction="ifRoom">
-
-    </item>
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/image_show"
+        android:icon="@drawable/ic_baseline_image_24"
+        android:title="@string/turn_off_images"
+        app:showAsAction="always" />
     <item
         android:id="@+id/menu_open"
         android:icon="@drawable/ic_baseline_menu_24"
         android:title="@string/open_drawer"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
     <item
         android:id="@+id/logout"
         android:icon="@drawable/ic_baseline_logout_24"
         android:title="@string/logout"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 </menu>

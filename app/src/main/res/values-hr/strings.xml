@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Let\'s meet for a game</string>
+    <string name="app_name">Sastanimo se za igru</string>
     <string name="username">Korisničko ime</string>
     <string name="find_events">Pronađi događaje</string>
     <string name="rating_bar">Traka za ocjenu</string>
@@ -53,7 +53,7 @@
     <string name="login">Prijava</string>
     <string name="register">Registracija</string>
     <string name="password">Lozinka</string>
-    <string name="long_app_name">Let\'s meet for a game</string>
+    <string name="long_app_name">Sastanimo se za igru</string>
     <string name="update_password">Ažuriraj lozinku</string>
     <string name="no_user_username">Nema korisnika s korisničkim imenom.</string>
     <string name="multiple_username">Više korisnika s korisničkim imenom.</string>
@@ -291,4 +291,5 @@
     <string name="notifications_off">Obavijesti isključene</string>
     <string name="please_choose_an_event_type">Odaberite vrstu događaja</string>
     <string name="please_choose_a_location">Odaberite lokaciju</string>
+    <string name="turn_off_images">Uključi ili isključi slike</string>
 </resources>

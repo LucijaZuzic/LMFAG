@@ -146,12 +146,13 @@ public class DrawerHelper {
                     }
 
                     if (encoded.equals("")) {
-                        FirebaseStorage storage = FirebaseStorage.getInstance();
-                        StorageReference storageRef = storage.getReference();
-                        StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
-                        final long ONE_MEGABYTE = 1024 * 1024;
-                        imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                            Glide.with(Objects.requireNonNull(circleImageView).getContext().getApplicationContext())
+                        String imageView = preferences.getString("showImage", "true");
+                        if (imageView.equals("true")) {
+                            FirebaseStorage storage = FirebaseStorage.getInstance();
+                            StorageReference storageRef = storage.getReference();
+                            StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
+                            final long ONE_MEGABYTE = 1024 * 1024;
+                            imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(Objects.requireNonNull(circleImageView).getContext().getApplicationContext())
                                     .asBitmap()
                                     .load(bytes)
                                     .into((new CustomTarget<Bitmap>() {
@@ -170,16 +171,16 @@ public class DrawerHelper {
                                         public void onLoadCleared(@Nullable Drawable placeholder) {
 
                                         }
-                                    }));
-                        }).addOnFailureListener(exception -> {
-                            // Handle any errors
-                        });
-                        //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                                    }))).addOnFailureListener(exception -> {
+                                // Handle any errors
+                            });
+                            //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        }
+                    } else {
+                        Intent myIntent = new Intent(context, MainActivity.class);
+                        context.startActivity(myIntent);
+                        //Log.d(TAG, "No such document");
                     }
-                } else {
-                    Intent myIntent = new Intent(context, MainActivity.class);
-                    context.startActivity(myIntent);
-                    //Log.d(TAG, "No such document");
                 }
             }
         });

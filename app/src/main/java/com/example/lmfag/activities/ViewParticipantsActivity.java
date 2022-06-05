@@ -137,25 +137,25 @@ public class ViewParticipantsActivity extends MenuInterfaceActivity {
 
                     organizerUsername.setText(Objects.requireNonNull(Objects.requireNonNull(data).get("username")).toString());
 
-                    FirebaseStorage storage = FirebaseStorage.getInstance();
-                    StorageReference storageRef = storage.getReference();
-                    StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
-                    final long ONE_MEGABYTE = 1024 * 1024;
-                    imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-
-                        Glide.with(circleImageView.getContext().getApplicationContext()).asBitmap().load(bytes).into(circleImageView);
-                        circleImageView.setOnClickListener(view -> {
-                            SharedPreferences.Editor editor = preferences.edit();
-                            editor.putString("friendID", name);
-                            editor.apply();
-                            Intent myIntent = new Intent(context, ViewProfileActivity.class);
-                            startActivity(myIntent);
-                            finish();
-                        });
-                    }).addOnFailureListener(exception -> {
-                        // Handle any errors
+                    circleImageView.setOnClickListener(view -> {
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString("friendID", name);
+                        editor.apply();
+                        Intent myIntent = new Intent(context, ViewProfileActivity.class);
+                        startActivity(myIntent);
+                        finish();
                     });
-                    //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    String imageView = preferences.getString("showImage", "true");
+                    if (imageView.equals("true")) {
+                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                        StorageReference storageRef = storage.getReference();
+                        StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
+                        final long ONE_MEGABYTE = 1024 * 1024;
+                        imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(circleImageView.getContext().getApplicationContext()).asBitmap().load(bytes).into(circleImageView)).addOnFailureListener(exception -> {
+                            // Handle any errors
+                        });
+                        //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    }
                 } else {
                     Intent myIntent = new Intent(context, MainActivity.class);
                     startActivity(myIntent);

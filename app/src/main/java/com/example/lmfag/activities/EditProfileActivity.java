@@ -77,7 +77,6 @@ public class EditProfileActivity extends MenuInterfaceActivity {
         setContentView(R.layout.activity_edit_profile);
         context = this;
 
-        
         areas_not_present_array = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.event_types)));
 
         recyclerViewAreasOfInterest = findViewById(R.id.recyclerViewAreasOfInterest);
@@ -103,27 +102,35 @@ public class EditProfileActivity extends MenuInterfaceActivity {
         circleImageView = findViewById(R.id.profile_image);
         ImageView rotateLeft = findViewById(R.id.profile_image_rotate_left);
         rotateLeft.setOnClickListener(view -> {
-            bitmap = TransformBitmap.RotateNegative90(bitmap);
-            circleImageView.setImageBitmap(bitmap);
-            rotated = true;
+            if (bitmap != null) {
+                bitmap = TransformBitmap.RotateNegative90(bitmap);
+                circleImageView.setImageBitmap(bitmap);
+                rotated = true;
+            }
         });
         ImageView profileRotate = findViewById(R.id.profile_image_rotate);
         profileRotate.setOnClickListener(view -> {
-            bitmap = TransformBitmap.RotateBy90(bitmap);
-            circleImageView.setImageBitmap(bitmap);
-            rotated = true;
+            if (bitmap != null) {
+                bitmap = TransformBitmap.RotateBy90(bitmap);
+                circleImageView.setImageBitmap(bitmap);
+                rotated = true;
+            }
         });
         ImageView flipHorizontal = findViewById(R.id.profile_image_flip_horizontal);
         flipHorizontal.setOnClickListener(view -> {
-            bitmap = TransformBitmap.flipHorizontal(bitmap);
-            circleImageView.setImageBitmap(bitmap);
-            rotated = true;
+            if (bitmap != null) {
+                bitmap = TransformBitmap.flipHorizontal(bitmap);
+                circleImageView.setImageBitmap(bitmap);
+                rotated = true;
+            }
         });
         ImageView flipVertical = findViewById(R.id.profile_image_flip_vertical);
         flipVertical.setOnClickListener(view -> {
-            bitmap = TransformBitmap.flipVertical(bitmap);
-            circleImageView.setImageBitmap(bitmap);
-            rotated = true;
+            if (bitmap != null) {
+                bitmap = TransformBitmap.flipVertical(bitmap);
+                circleImageView.setImageBitmap(bitmap);
+                rotated = true;
+            }
         });
         fillUserData();
         createProfile();
@@ -334,33 +341,34 @@ public class EditProfileActivity extends MenuInterfaceActivity {
                         recyclerViewAreasOfInterest.setAdapter(customAdapterAreaOfInterestRemove);
                     }
                     myDescription.setText(Objects.requireNonNull(data.get("description")).toString());
-                    if (bitmap == null) {
-                        FirebaseStorage storage = FirebaseStorage.getInstance();
-                        StorageReference storageRef = storage.getReference();
-                        StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
-                        final long ONE_MEGABYTE = 1024 * 1024;
-                        imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(circleImageView.getContext().getApplicationContext())
-                                .asBitmap()
-                                .load(bytes)
-                                .into((new CustomTarget<Bitmap>() {
+                    String imageView = preferences.getString("showImage", "true");
+                    if (imageView.equals("true")) {
+                        if (bitmap == null) {
+                            StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
+                            final long ONE_MEGABYTE = 1024 * 1024;
+                            imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(circleImageView.getContext().getApplicationContext())
+                                    .asBitmap()
+                                    .load(bytes)
+                                    .into((new CustomTarget<Bitmap>() {
 
-                                    @Override
-                                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                        bitmap = resource;
-                                        if (circleImageView != null) {
-                                            circleImageView.setImageBitmap(resource);
+                                        @Override
+                                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                            bitmap = resource;
+                                            if (circleImageView != null) {
+                                                circleImageView.setImageBitmap(resource);
+                                            }
                                         }
-                                    }
 
-                                    @Override
-                                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                                        @Override
+                                        public void onLoadCleared(@Nullable Drawable placeholder) {
 
-                                    }
-                                }))).addOnFailureListener(exception -> {
-                            // Handle any errors
-                        });
+                                        }
+                                    }))).addOnFailureListener(exception -> {
+                                // Handle any errors
+                            });
+                        }
+                        //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                     }
-                    //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                 } else {
                     Intent myIntent = new Intent(context, MainActivity.class);
                     startActivity(myIntent);

@@ -23,7 +23,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -69,11 +68,8 @@ public class RateEventActivity extends MenuInterfaceActivity {
         rateEventActivity = this;
         recyclerViewPlayers = findViewById(R.id.recyclerViewPlayers);
         context = this;
-        String userID = preferences.getString("userID", "");
         ImageView apply =  findViewById(R.id.imageViewApply);
-        apply.setOnClickListener(view -> {
-            updatePlayer(0);
-        });
+        apply.setOnClickListener(view -> updatePlayer(0));
         findViewById(R.id.imageViewDiscard).setOnClickListener(view -> {
             Intent myIntent = new Intent(context, ViewEventActivity.class);
             context.startActivity(myIntent);
@@ -190,7 +186,7 @@ public class RateEventActivity extends MenuInterfaceActivity {
                 if (document.exists()) {
                     Map<String, Object> docData = document.getData();
 
-                    Timestamp start_timestamp = (Timestamp) (docData.get("datetime"));
+                    Timestamp start_timestamp = (Timestamp) (Objects.requireNonNull(docData).get("datetime"));
                     Date start_date = Objects.requireNonNull(start_timestamp).toDate();
                     cldr_start.setTime(start_date);
                     Timestamp end_timestamp = (Timestamp) (Objects.requireNonNull(docData).get("ending"));
@@ -266,23 +262,22 @@ public class RateEventActivity extends MenuInterfaceActivity {
 
                     organizerUsername.setText(Objects.requireNonNull(Objects.requireNonNull(data).get("username")).toString());
 
-                    FirebaseStorage storage = FirebaseStorage.getInstance();
-                    StorageReference storageRef = storage.getReference();
-                    StorageReference imagesRef = storageRef.child("profile_pictures/" + organizer);
-                    final long ONE_MEGABYTE = 1024 * 1024;
-                    imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                        Glide.with(circleImageView.getContext().getApplicationContext()).asBitmap().load(bytes).into(circleImageView);
-                        circleImageView.setOnClickListener(view -> {
-                            SharedPreferences.Editor editor = preferences.edit();
-                            editor.putString("friendID", organizer);
-                            editor.apply();
-                            Intent myIntent = new Intent(context, ViewProfileActivity.class);
-                            startActivity(myIntent);
-                        });
-                    }).addOnFailureListener(exception -> {
-                        // Handle any errors
+                    circleImageView.setOnClickListener(view -> {
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString("friendID", organizer);
+                        editor.apply();
+                        Intent myIntent = new Intent(context, ViewProfileActivity.class);
+                        startActivity(myIntent);
                     });
-                    //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    String imageView = preferences.getString("showImage", "true");
+                    if (imageView.equals("true")) {
+                        StorageReference imagesRef = storageRef.child("profile_pictures/" + organizer);
+                        final long ONE_MEGABYTE = 1024 * 1024;
+                        imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(circleImageView.getContext().getApplicationContext()).asBitmap().load(bytes).into(circleImageView)).addOnFailureListener(exception -> {
+                            // Handle any errors
+                        });
+                        //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    }
                 } else {
                     Intent myIntent = new Intent(context, MyProfileActivity.class);
                     startActivity(myIntent);

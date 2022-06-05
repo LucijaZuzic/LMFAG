@@ -79,6 +79,12 @@ public class MenuInterfaceActivity extends AppCompatActivity {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             menu.getItem(0).setIcon(R.drawable.ic_baseline_wb_sunny_24);
         }
+        String imageShow = preferences.getString("showImage", "");
+        if (imageShow.equals("true")) {
+            menu.getItem(1).setIcon(R.drawable.ic_baseline_image_24);
+        } else {
+            menu.getItem(1).setIcon(R.drawable.ic_baseline_image_not_supported_24);
+        }
         return true;
     }
 
@@ -89,6 +95,7 @@ public class MenuInterfaceActivity extends AppCompatActivity {
         final int logoutID = R.id.logout;
         final int menu_openID = R.id.menu_open;
         final int dayNightSwitchID = R.id.dayNightSwitch;
+        final int imageSwitch = R.id.image_show;
         switch (resourceID) {
             case logoutID:
                 logout();
@@ -116,6 +123,19 @@ public class MenuInterfaceActivity extends AppCompatActivity {
                 }
                 editor.apply();
                 recreate();
+            case imageSwitch:
+                String imageShow = preferences.getString("showImage", "");
+                if (imageShow.equals("true")) {
+                    editor.putString("showImage", "false");
+                } else {
+                    editor.putString("showImage", "true");
+                }
+                if (imageShow.equals("false")) {
+                    item.setIcon(R.drawable.ic_baseline_image_24);
+                } else {
+                    item.setIcon(R.drawable.ic_baseline_image_not_supported_24);
+                }
+                editor.apply();
             default:
                 return super.onOptionsItemSelected(item);
         }

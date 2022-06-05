@@ -3,6 +3,7 @@ package com.example.lmfag.utility.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,7 +93,11 @@ public class CustomAdapterFriendsMessages extends RecyclerView.Adapter<CustomAda
                     final long ONE_MEGABYTE = 1024 * 1024;
                     imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
                         CircleImageView circleImageView = viewHolder.getProfileImage();
-                        Glide.with(context.getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(circleImageView.getContext().getApplicationContext());
+                        String imageView = preferences.getString("showImage", "true");
+                        if (imageView.equals("true")) {
+                            Glide.with(circleImageView.getContext().getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
+                        }
                     }).addOnFailureListener(exception -> {
                         // Handle any errors
                     });
@@ -140,8 +145,11 @@ public class CustomAdapterFriendsMessages extends RecyclerView.Adapter<CustomAda
                                                 final long ONE_MEGABYTE = 1024 * 1024;
                                                 imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
                                                     CircleImageView circleImageView = viewHolder.getProfileImageTwo();
-                                                    Glide.with(context.getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
-                                                }).addOnFailureListener(exception -> {
+                                                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(circleImageView.getContext().getApplicationContext());
+                                                    String imageView = preferences.getString("showImage", "true");
+                                                    if (imageView.equals("true")) {
+                                                        Glide.with(circleImageView.getContext().getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
+                                                    }                                                }).addOnFailureListener(exception -> {
                                                     // Handle any errors
                                                 });
                                             }

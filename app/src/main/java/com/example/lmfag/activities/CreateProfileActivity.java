@@ -93,23 +93,31 @@ public class CreateProfileActivity extends AppCompatActivity {
         circleImageView = findViewById(R.id.profile_image);
         ImageView rotateLeft = findViewById(R.id.profile_image_rotate_left);
         rotateLeft.setOnClickListener(view -> {
-            bitmap = TransformBitmap.RotateNegative90(bitmap);
-            circleImageView.setImageBitmap(bitmap);
+            if (bitmap != null) {
+                bitmap = TransformBitmap.RotateNegative90(bitmap);
+                circleImageView.setImageBitmap(bitmap);
+            }
         });
         ImageView profileRotate = findViewById(R.id.profile_image_rotate);
         profileRotate.setOnClickListener(view -> {
-            bitmap = TransformBitmap.RotateBy90(bitmap);
-            circleImageView.setImageBitmap(bitmap);
+            if (bitmap != null) {
+                bitmap = TransformBitmap.RotateBy90(bitmap);
+                circleImageView.setImageBitmap(bitmap);
+            }
         });
         ImageView flipHorizontal = findViewById(R.id.profile_image_flip_horizontal);
         flipHorizontal.setOnClickListener(view -> {
-            bitmap = TransformBitmap.flipHorizontal(bitmap);
-            circleImageView.setImageBitmap(bitmap);
+            if (bitmap != null) {
+                bitmap = TransformBitmap.flipHorizontal(bitmap);
+                circleImageView.setImageBitmap(bitmap);
+            }
         });
         ImageView flipVertical = findViewById(R.id.profile_image_flip_vertical);
         flipVertical.setOnClickListener(view -> {
-            bitmap = TransformBitmap.flipVertical(bitmap);
-            circleImageView.setImageBitmap(bitmap);
+            if (bitmap != null) {
+                bitmap = TransformBitmap.flipVertical(bitmap);
+                circleImageView.setImageBitmap(bitmap);
+            }
         });
         createProfile();
         getBack();

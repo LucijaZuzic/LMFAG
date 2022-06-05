@@ -122,7 +122,8 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
                     myUsername = Objects.requireNonNull(Objects.requireNonNull(data).get("username")).toString();
                     StorageReference imagesRef = storageRef.child("profile_pictures/" + document.getId());
                     final long ONE_MEGABYTE = 1024 * 1024;
-                    if (myImage == null) {
+                    String imageView = preferences.getString("showImage", "true");
+                    if (myImage == null && imageView.equals("true")) {
                         imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(circleImageView.getContext().getApplicationContext())
                                 .asBitmap()
                                 .load(bytes)
@@ -174,7 +175,8 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
                     usernameFriend.setText(otherUsername);
                     StorageReference imagesRef = storageRef.child("profile_pictures/" + document.getId());
                     final long ONE_MEGABYTE = 1024 * 1024;
-                    if (otherImage == null) {
+                    String imageView = preferences.getString("showImage", "true");
+                    if (otherImage == null && imageView.equals("true")) {
                         imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(getApplicationContext())
                                 .asBitmap()
                                 .load(bytes)

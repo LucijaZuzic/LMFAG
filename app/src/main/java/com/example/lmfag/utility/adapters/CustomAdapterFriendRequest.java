@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -83,7 +84,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                     final long ONE_MEGABYTE = 1024 * 1024;
                     imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
                         CircleImageView circleImageView = viewHolder.getProfileImage();
-                        circleImageView.setOnClickListener(view -> {
+                        viewHolder.getListEntry().setOnClickListener(view -> {
                             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(circleImageView.getContext().getApplicationContext());
                             SharedPreferences.Editor editor = preferences.edit();
                             editor.putString("friendID",replace_string);
@@ -91,7 +92,11 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                             Intent intent = new Intent(circleImageView.getContext(), ViewProfileActivity.class);
                             circleImageView.getContext().startActivity(intent);
                         });
-                        Glide.with(circleImageView.getContext().getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(circleImageView.getContext().getApplicationContext());
+                        String imageView = preferences.getString("showImage", "true");
+                        if (imageView.equals("true")) {
+                            Glide.with(circleImageView.getContext().getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
+                        }
                     }).addOnFailureListener(exception -> {
                         // Handle any errors
                     });
@@ -267,6 +272,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
         private final TextView textViewUsername;
         private final CircleImageView profile_image;
         private final ImageView accept, decline;
+        private final CardView listEntry;
 
         public ViewHolder(View view) {
             super(view);
@@ -276,6 +282,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
             profile_image = view.findViewById(R.id.profile_image_friend);
             accept = view.findViewById(R.id.imageViewApply);
             decline = view.findViewById(R.id.imageViewDiscard);
+            listEntry = view.findViewById(R.id.list_entry);
         }
 
         public TextView getTextView() {
@@ -292,6 +299,10 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
 
         public ImageView getDecline() {
             return decline;
+        }
+
+        public CardView getListEntry() {
+            return listEntry;
         }
     }
 }
