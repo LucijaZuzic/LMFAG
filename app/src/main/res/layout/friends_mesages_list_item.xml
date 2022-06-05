@@ -13,19 +13,19 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image_friend"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="10dp"
                 android:gravity="center"
                 android:src="@drawable/ic_baseline_profile_picture_24"
                 app:civ_circle_background_color="@color/teal_700" />
@@ -47,7 +47,7 @@
             android:id="@+id/list_entry_nested"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
             android:gravity="center_vertical"
             android:orientation="vertical">
 
@@ -95,7 +95,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="sans-serif-condensed-light"
-                                android:hint="@string/latest_message"
+                                android:hint="@string/username"
                                 android:textColor="@color/white"
                                 android:textColorHint="@color/white"
                                 android:textStyle="bold" />

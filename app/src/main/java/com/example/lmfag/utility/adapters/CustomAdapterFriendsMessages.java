@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -70,10 +71,9 @@ public class CustomAdapterFriendsMessages extends RecyclerView.Adapter<CustomAda
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
         TextView time = viewHolder.getTime();
-        CircleImageView profileImage = viewHolder.getProfileImage();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users").document(localFriendUsernames.get(position));
-        profileImage.setOnClickListener(view -> {
+        viewHolder.getListEntry().setOnClickListener(view -> {
             SharedPreferences.Editor editor = preferences.edit();
             String name = localFriendUsernames.get(position);
             editor.putString("friendID", name);
@@ -91,7 +91,7 @@ public class CustomAdapterFriendsMessages extends RecyclerView.Adapter<CustomAda
                     StorageReference imagesRef = storageRef.child("profile_pictures/" + localFriendUsernames.get(position));
                     final long ONE_MEGABYTE = 1024 * 1024;
                     imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                        CircleImageView circleImageView = profileImage;
+                        CircleImageView circleImageView = viewHolder.getProfileImage();
                         Glide.with(context.getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
                     }).addOnFailureListener(exception -> {
                         // Handle any errors
@@ -173,6 +173,7 @@ public class CustomAdapterFriendsMessages extends RecyclerView.Adapter<CustomAda
         private final TextView sender;
         private final TextView time;
         private final LinearLayout nested;
+        private final CardView listEntry;
 
 
         public ViewHolder(View view) {
@@ -186,6 +187,7 @@ public class CustomAdapterFriendsMessages extends RecyclerView.Adapter<CustomAda
             sender = view.findViewById(R.id.textViewSender);
             nested = view.findViewById(R.id.list_entry_nested);
             time = view.findViewById(R.id.textViewTime);
+            listEntry = view.findViewById(R.id.list_entry);
         }
 
         public TextView getTextView() {
@@ -214,6 +216,10 @@ public class CustomAdapterFriendsMessages extends RecyclerView.Adapter<CustomAda
 
         public LinearLayout getNested() {
             return nested;
+        }
+
+        public CardView getListEntry() {
+            return listEntry;
         }
     }
 }
