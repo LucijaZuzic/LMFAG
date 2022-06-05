@@ -5,17 +5,30 @@
       <map>
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.196" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/gradient.xml" value="0.2095" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/gradient_bg.xml" value="0.219" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_access_time_24.xml" value="0.3675" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.196" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_app_registration_24.xml" value="0.219" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_attribution_24.xml" value="0.219" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_calendar_today_24.xml" value="0.297" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_casino_24.xml" value="0.219" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_category_24.xml" value="0.219" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_chat_bubble_24.xml" value="0.297" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.219" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_cloud_off_24.xml" value="0.219" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_description_24.xml" value="0.263" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_edit_calendar_24.xml" value="0.297" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_emoji_events_24.xml" value="0.297" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_event_24.xml" value="0.219" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_expand_less_24.xml" value="0.2095" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_expand_more_24.xml" value="0.2095" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_exposure_zero_24.xml" value="0.219" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_filter_alt_24.xml" value="0.219" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_home_24.xml" value="0.297" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_hourglass_bottom_24.xml" value="0.219" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_ice_skating_24.xml" value="0.219" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_interests_24.xml" value="0.263" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_interests_smaller.xml" value="0.219" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_location_city_24.xml" value="0.196" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_location_on_24.xml" value="0.204" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_location_searching_24.xml" value="0.196" />
@@ -25,22 +38,38 @@
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_message_24.xml" value="0.196" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_notifications_24.xml" value="0.196" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_notifications_off_24.xml" value="0.196" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_password_24.xml" value="0.219" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_person2_24.xml" value="0.297" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.196" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_person_add_24.xml" value="0.196" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_person_remove_24.xml" value="0.219" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_person_search_24.xml" value="0.196" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_plus_one_24.xml" value="0.219" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_profile_picture_24.xml" value="0.3365" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_profilepic_24.xml" value="0.297" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.196" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_self_improvement_24.xml" value="0.263" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.196" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_shield_24.xml" value="0.297" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_sort_24.xml" value="0.219" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_sports_gymnastics_24.xml" value="0.219" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_sports_handball_24.xml" value="0.219" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_sports_kabaddi_24.xml" value="0.151" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_timelapse_24.xml" value="0.219" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_today_24.xml" value="0.219" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_wb_sunny_24.xml" value="0.219" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_baseline_workspace_premium_24.xml" value="0.219" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_launcher_background.xml" value="0.196" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.196" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_menu_camera.xml" value="0.219" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_menu_gallery.xml" value="0.219" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/ic_menu_slideshow.xml" value="0.219" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/no_gradient.xml" value="0.2935" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/progress_bar_states.xml" value="0.3235" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/progress_bar_states_teal.xml" value="0.3675" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/rating_bar.xml" value="0.2185" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/rounded_corner_highlight.xml" value="0.219" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/drawable/rounded_corner_no_highlight.xml" value="0.219" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_change_password.xml" value="0.18" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_choose_location.xml" value="0.22" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/layout/activity_create_event.xml" value="0.22" />
@@ -116,7 +145,9 @@
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/values-en/drawable/ic_baseline_star_outline_24.xml" value="0.2495" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/values-en/drawable/rounded_corner_highlight.xml" value="0.231" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/values-en/drawable/rounded_corner_no_highlight.xml" value="0.231" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/res/values/hr/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.219" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/xml/drawable/ic_baseline_nights_stay_24.xml" value="0.196" />
+        <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/xml/drawable/ic_baseline_radar_24.xml" value="0.219" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/xml/drawable/ic_baseline_wb_sunny_24.xml" value="0.196" />
         <entry key="..\:/Users/Lucija/AndroidStudioProjects/LMFAG/app/src/main/xml/drawable/map_marker.xml" value="0.204" />
         <entry key="..\:/fax/RMA/LMFAG/app/src/main/res/drawable/background_gradient.xml" value="0.2265" />
