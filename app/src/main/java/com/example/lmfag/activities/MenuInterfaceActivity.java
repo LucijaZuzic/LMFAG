@@ -3,6 +3,7 @@ package com.example.lmfag.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +28,30 @@ public class MenuInterfaceActivity extends AppCompatActivity {
     public FirebaseFirestore db = FirebaseFirestore.getInstance();
     public FirebaseStorage storage = FirebaseStorage.getInstance();
     public StorageReference storageRef = storage.getReference();
+
+    private Handler handlerForAlarm;
+
+    @Override
+    protected void onResume() {
+        countDownAlarmStart();
+        super.onResume();
+    }
+
+    public void countDownAlarmStart() {
+        handlerForAlarm = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                handlerForAlarm.postDelayed(this, 10000);
+                try {
+                    AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        handlerForAlarm.postDelayed(runnable, 10000);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +80,7 @@ public class MenuInterfaceActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
+        finish();
     }
 
     @Override

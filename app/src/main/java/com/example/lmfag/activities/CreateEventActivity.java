@@ -89,6 +89,17 @@ public class CreateEventActivity extends MenuInterfaceActivity {
     private LinearLayout imageViewDeleteLayout;
 
     @Override
+    public void onBackPressed() {
+        String userID = preferences.getString("userID", "");
+        if (userID.equals("")) {
+            startActivity(new Intent(this, MainActivity.class));
+        } else {
+            startActivity(new Intent(this, MyProfileActivity.class));
+        }
+        finish();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
@@ -135,7 +146,10 @@ public class CreateEventActivity extends MenuInterfaceActivity {
             Intent myIntent = new Intent(context, ChooseLocationActivity.class);
             startActivity(myIntent);
         });
-        close.setOnClickListener(view -> onBackPressed());
+        close.setOnClickListener(view -> {
+            onBackPressed();
+            finish();
+        });
         setDate();
         setTime();
         fillData();
@@ -209,7 +223,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                     (dp, sYear, sMonth, sDay) -> {
                         cldr_start.set(sYear, sMonth, sDay, cldr_start.get(HOUR), cldr_start.get(MINUTE));
                         textViewChooseStartDate.setText(DateFormat.getDateInstance().format(cldr_start.getTime()));
-                        checkCorrectTime();
+                        //checkCorrectTime();
                     }, cldr_start.get(YEAR), cldr_start.get(MONTH), cldr_start.get(DAY_OF_MONTH));
             picker.show();
         });
@@ -219,7 +233,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                     (dp, sYear, sMonth, sDay) -> {
                         cldr_end.set(sYear, sMonth, sDay, cldr_end.get(HOUR), cldr_end.get(MINUTE));
                         textViewChooseEndDate.setText(DateFormat.getDateInstance().format(cldr_end.getTime()));
-                        checkCorrectTime();
+                        //checkCorrectTime();
                     }, cldr_end.get(YEAR), cldr_end.get(MONTH), cldr_end.get(DAY_OF_MONTH));
             picker.show();
         });
@@ -232,7 +246,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                     (tp, sHour, sMinute) -> {
                         cldr_start.set(cldr_start.get(YEAR), cldr_start.get(MONTH), cldr_start.get(DAY_OF_MONTH), sHour, sMinute);
                         textViewChooseStartTime.setText(DateFormat.getTimeInstance().format(cldr_start.getTime()));
-                        checkCorrectTime();
+                        //checkCorrectTime();
                     }, cldr_start.get(HOUR), cldr_start.get(MINUTE), true);
             picker.show();
         });
@@ -240,9 +254,9 @@ public class CreateEventActivity extends MenuInterfaceActivity {
             // time picker dialog
             TimePickerDialog picker = new TimePickerDialog(context,
                     (tp, sHour, sMinute) -> {
-                        cldr_end.set(cldr_start.get(YEAR), cldr_start.get(MONTH), cldr_start.get(DAY_OF_MONTH), sHour, sMinute);
+                        cldr_end.set(cldr_end.get(YEAR), cldr_end.get(MONTH), cldr_end.get(DAY_OF_MONTH), sHour, sMinute);
                         textViewChooseEndTime.setText(DateFormat.getTimeInstance().format(cldr_end.getTime()));
-                        checkCorrectTime();
+                        //checkCorrectTime();
                     }, cldr_end.get(HOUR), cldr_end.get(MINUTE), true);
             picker.show();
         });
@@ -335,6 +349,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                     Toast.makeText(this, R.string.notifications_off, Toast.LENGTH_SHORT).show();
                 }
                 AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
+                onBackPressed();
             }
         });
     }
@@ -419,6 +434,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                     editor.putString("eventID", "");
                     editor.apply();
                     onBackPressed();
+                    finish();
                 case DialogInterface.BUTTON_NEGATIVE:
                     //No button clicked
                     break;
@@ -445,6 +461,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         } else {
             Toast.makeText(getApplicationContext(), R.string.organizer_edit, Toast.LENGTH_SHORT).show();
             onBackPressed();
+            finish();
         }
     }
 
@@ -453,6 +470,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         if (userID.equals("")) {
             Intent myIntent = new Intent(context, MainActivity.class);
             startActivity(myIntent);
+            finish();
             return;
         }
         String eventID = preferences.getString("eventID", "");

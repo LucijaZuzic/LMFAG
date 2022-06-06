@@ -65,6 +65,7 @@ public class EditProfileActivity extends MenuInterfaceActivity {
     private String old_password = "";
     private Bitmap bitmap;
     private boolean rotated = false;
+    private boolean uploaded = false;
     private EditText myUsername;
     private TextView myLocation;
     private TextView myDescription;
@@ -134,7 +135,10 @@ public class EditProfileActivity extends MenuInterfaceActivity {
         });
         fillUserData();
         createProfile();
-        discard.setOnClickListener(view -> onBackPressed());
+        discard.setOnClickListener(view -> {
+                onBackPressed();
+                finish();
+        });
         changeProfilePicture();
     }
 
@@ -149,7 +153,7 @@ public class EditProfileActivity extends MenuInterfaceActivity {
                             bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                             bitmap = TransformBitmap.fixRotation(bitmap);
                             circleImageView.setImageBitmap(bitmap);
-
+                            uploaded = true;
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -281,7 +285,7 @@ public class EditProfileActivity extends MenuInterfaceActivity {
             }
             StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
 
-            if (bitmap != null || rotated) {
+            if (bitmap != null && (uploaded || rotated)) {
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 20, byteArrayOutputStream);
                 byte[] imageDataTransformed = byteArrayOutputStream.toByteArray();

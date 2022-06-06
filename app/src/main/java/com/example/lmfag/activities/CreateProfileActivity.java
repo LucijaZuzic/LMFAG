@@ -131,6 +131,7 @@ public class CreateProfileActivity extends AppCompatActivity {
             return;
         }
         super.onBackPressed();
+        finish();
     }
 
     private void changeProfilePicture() {

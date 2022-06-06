@@ -73,6 +73,7 @@ public class RateEventActivity extends MenuInterfaceActivity {
         findViewById(R.id.imageViewDiscard).setOnClickListener(view -> {
             Intent myIntent = new Intent(context, ViewEventActivity.class);
             context.startActivity(myIntent);
+            finish();
         });
     }
 
@@ -211,6 +212,7 @@ public class RateEventActivity extends MenuInterfaceActivity {
                     rate_event_list_entry_banner_card.setOnClickListener(view -> {
                         Intent myIntent = new Intent(context, ViewEventActivity.class);
                         context.startActivity(myIntent);
+                        finish();
                     });
 
                     organizer = Objects.requireNonNull(Objects.requireNonNull(docData).get("organizer")).toString();
@@ -245,6 +247,7 @@ public class RateEventActivity extends MenuInterfaceActivity {
         if (userID.equals("")) {
             Intent myIntent = new Intent(context, MainActivity.class);
             startActivity(myIntent);
+            finish();
             return;
         }
         if (eventID.equals("")) {
@@ -268,6 +271,7 @@ public class RateEventActivity extends MenuInterfaceActivity {
                         editor.apply();
                         Intent myIntent = new Intent(context, ViewProfileActivity.class);
                         startActivity(myIntent);
+                        finish();
                     });
                     String imageView = preferences.getString("showImage", "true");
                     if (imageView.equals("true")) {

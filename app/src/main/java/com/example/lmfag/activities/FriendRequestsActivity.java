@@ -36,6 +36,7 @@ public class FriendRequestsActivity extends MenuInterfaceActivity {
     public void refresh() {
         Intent myIntent = new Intent(context, FriendRequestsActivity.class);
         context.startActivity(myIntent);
+        finish();
     }
 
     @Override
