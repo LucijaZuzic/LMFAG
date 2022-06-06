@@ -1,21 +1,13 @@
 package com.example.lmfag.activities;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Base64;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.example.lmfag.R;
 import com.example.lmfag.fragments.ViewProfileAreasOfInterestFragment;
 import com.example.lmfag.fragments.ViewProfileEventsOrganizerFragment;
@@ -28,9 +20,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.storage.StorageReference;
 
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -165,14 +155,14 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                     String points_string = Objects.requireNonNull(data.get("points_levels")).toString();
                     editor.putString("friend_points_levels", points_string);
                     editor.apply();
-                    String imageView = preferences.getString("showImage", "true");
+                    /* Preferences String imageView = preferences.getString("showImage", "true");
                     if (imageView.equals("true")) {
                         StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
                         final long ONE_MEGABYTE = 1024 * 1024;
                         imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(getApplicationContext())
                                 .asBitmap()
-                                .load(bytes)
-                                .into((new CustomTarget<Bitmap>() {
+                                .load(bytes).into()
+                                /*.into((new CustomTarget<Bitmap>() {
                                     @Override
                                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                                         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -198,7 +188,8 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                         editor.putString("friendPicture", "");
                         editor.apply();
                         getSubscriberEvents();
-                    }
+                    }*/
+                    getSubscriberEvents();
                 } else {
                     Intent myIntent = new Intent(this, MainActivity.class);
                     startActivity(myIntent);

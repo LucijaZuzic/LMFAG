@@ -3,22 +3,15 @@ package com.example.lmfag.utility;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
-import android.util.Base64;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.example.lmfag.R;
 import com.example.lmfag.activities.ChangePasswordActivity;
 import com.example.lmfag.activities.CreateEventActivity;
@@ -38,7 +31,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.ByteArrayOutputStream;
 import java.util.Map;
 import java.util.Objects;
 
@@ -96,8 +88,9 @@ public class DrawerHelper {
         SharedPreferences.Editor editor = preferences.edit();
         String name = preferences.getString("userID", "");
         String username = preferences.getString("userUsername", "");
-        String encoded = preferences.getString("userPicture", "");
-        byte[] imageAsBytes = Base64.decode(encoded.getBytes(), Base64.DEFAULT);
+
+        /* Preferences String encoded = preferences.getString("userPicture", "");
+        byte[] imageAsBytes = Base64.decode(encoded.getBytes(), Base64.DEFAULT);*/
 
         if (name.equals("")) {
             Intent myIntent = new Intent(context, MainActivity.class);
@@ -120,13 +113,13 @@ public class DrawerHelper {
             myUsername.setText(username);
         }
 
-        if (circleImageView != null && !encoded.equals("")) {
+        /* Preferences if (circleImageView != null && !encoded.equals("")) {
             Glide.with(context.getApplicationContext()).asBitmap().load(imageAsBytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
         }
 
         if (myUsername != null && !username.equals("") && circleImageView != null && !encoded.equals("")) {
             return;
-        }
+        }*/
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users").document(name);
@@ -145,7 +138,7 @@ public class DrawerHelper {
                         myUsername.setText(Objects.requireNonNull(Objects.requireNonNull(data).get("username")).toString());
                     }
 
-                    if (encoded.equals("")) {
+                    //if (encoded.equals("")) {
                         String imageView = preferences.getString("showImage", "true");
                         if (imageView.equals("true")) {
                             FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -154,12 +147,13 @@ public class DrawerHelper {
                             final long ONE_MEGABYTE = 1024 * 1024;
                             imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(Objects.requireNonNull(circleImageView).getContext().getApplicationContext())
                                     .asBitmap()
-                                    .load(bytes)
-                                    .into((new CustomTarget<Bitmap>() {
+                                    .placeholder(R.drawable.ic_baseline_person_24)
+                                    .load(bytes).into(circleImageView)
+                                    /*.into((new CustomTarget<Bitmap>() {
                                         @Override
                                         public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                                             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                                            resource.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                                            resource.compress(Bitmap.CompressFormat.JPEG, 20, byteArrayOutputStream);
                                             byte[] b = byteArrayOutputStream.toByteArray();
                                             String encoded = Base64.encodeToString(b, Base64.DEFAULT);
                                             editor.putString("userPicture", encoded);
@@ -171,16 +165,16 @@ public class DrawerHelper {
                                         public void onLoadCleared(@Nullable Drawable placeholder) {
 
                                         }
-                                    }))).addOnFailureListener(exception -> {
+                                    }))*/).addOnFailureListener(exception -> {
                                 // Handle any errors
                             });
                             //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                         }
-                    } else {
+                    /* Preferences } else {
                         Intent myIntent = new Intent(context, MainActivity.class);
                         context.startActivity(myIntent);
                         //Log.d(TAG, "No such document");
-                    }
+                    }*/
                 }
             }
         });

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +28,8 @@ import com.example.lmfag.utility.DrawerHelper;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -118,10 +119,15 @@ public class ViewProfileInfoFragment extends Fragment {
         myOrganizerRank.setText(text_rank);
         myOrganizerRankPoints.setText(text_rank_points);
         myDescription.setText(Objects.requireNonNull(preferences.getString("friendDescription", "")));
-        String encoded = preferences.getString("friendPicture", "");
-        byte[] imageAsBytes = Base64.decode(encoded.getBytes(), Base64.DEFAULT);
         CircleImageView circleImageView = view.findViewById(R.id.profile_image);
-        Glide.with(context.getApplicationContext()).asBitmap().load(imageAsBytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
+        /* Preferences String encoded = preferences.getString("userPicture", "");
+        byte[] imageAsBytes = Base64.decode(encoded.getBytes(), Base64.DEFAULT);
+        Glide.with(context.getApplicationContext()).asBitmap().load(imageAsBytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);*/
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
+        final long ONE_MEGABYTE = 1024 * 1024;
+        imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(context.getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView));
     }
 
     private void writeToDb(String sender, String receiver) {
