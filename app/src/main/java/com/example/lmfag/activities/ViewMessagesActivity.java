@@ -1,10 +1,10 @@
 package com.example.lmfag.activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -13,14 +13,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.lmfag.R;
-import com.example.lmfag.utility.MySwipe;
 import com.example.lmfag.utility.adapters.CustomAdapterMessages;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
@@ -55,6 +53,7 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
     private TextView usernameFriend;
     private TextView noResults;
     private StorageReference storageRef;
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +90,7 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
 
     @Override
     protected void onResume() {
+        countDownStart();
         super.onResume();
     }
 
@@ -216,24 +216,6 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
         });
     }
 
-    private void messageDialog() {
-        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE:
-                    getAllMessages();
-
-                case DialogInterface.BUTTON_NEGATIVE:
-                    //No button clicked
-                    break;
-            }
-        };
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage(R.string.refresh_messages).setPositiveButton(R.string.yes, dialogClickListener)
-                .setNegativeButton(R.string.no, dialogClickListener).show();
-
-    }
-
     public void getAllMessages() {
         messages = new ArrayList<>();
         times = new ArrayList<>();
@@ -286,7 +268,7 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
                                 messageDialog();
                             }
                             }
-                        });*/
+                        });
                         recyclerViewMessages.setOnTouchListener(new MySwipe(context) {
                             public void onSwipeTop() {
                             }
@@ -301,10 +283,25 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
 
                             public void onSwipeBottom() {
                             }
-                        });
+                        });*/
                         recyclerViewMessages.scrollToPosition(customAdapter.getItemCount() - 1);
                     }
                 });
     }
 
+    public void countDownStart() {
+        handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                handler.postDelayed(this, 10000);
+                try {
+                    getAllMessages();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        handler.postDelayed(runnable, 10000);
+    }
 }
