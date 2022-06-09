@@ -69,14 +69,20 @@ public class RateEventActivity extends MenuInterfaceActivity {
         recyclerViewPlayers = findViewById(R.id.recyclerViewPlayers);
         context = this;
         ImageView apply =  findViewById(R.id.imageViewApply);
-        apply.setOnClickListener(view -> updatePlayer(0));
+        apply.setOnClickListener(view -> writeRating());
         findViewById(R.id.imageViewDiscard).setOnClickListener(view -> {
             Intent myIntent = new Intent(context, ViewEventActivity.class);
             context.startActivity(myIntent);
             finish();
         });
     }
-
+    private void writeRating() {
+        if (people.size() > 0) {
+            updatePlayer(0);
+        } else {
+            updateOrganizer();
+        }
+    }
     private void checkRated() {
         String eventID = preferences.getString("eventID", "");
         String userID = preferences.getString("userID", "");
@@ -94,7 +100,8 @@ public class RateEventActivity extends MenuInterfaceActivity {
                         Map<String, Object> map = document.getData();
                         map.put("rated", true);
                         docRef.document(document.getId()).set(map);
-                        onBackPressed();
+                        Intent myIntent = new Intent(context, ViewEventActivity.class);
+                        context.startActivity(myIntent);
                         finish();
                     }
                 }
@@ -300,46 +307,45 @@ public class RateEventActivity extends MenuInterfaceActivity {
 
     private void updatePlayer(int index) {
         String userID = preferences.getString("userID", "");
-        if (userID.equals(people.get(index))) {
-            return;
-        }
         DocumentReference docRef = db.collection("users").document(people.get(index));
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     Map<String, Object> data = document.getData();
-                    if (organizer.equals(document.getId()) && !userID.equals(organizer)) {
-                        float value = Float.parseFloat(Objects.requireNonNull(Objects.requireNonNull(data).get("points_rank")).toString());
-                        value += ratingBarOrganizer.getRating();
-                        data.put("points_rank", value);
-                    }
-                    String area_string = Objects.requireNonNull(Objects.requireNonNull(data).get("areas_of_interest")).toString();
-                    if (area_string.length() > 2) {
-                        String[] area_string_array = area_string.substring(1, area_string.length() - 1).split(", ");
-                        List<String> areas_array = new ArrayList<>();
-                        Collections.addAll(areas_array, area_string_array);
-                        String points_string = Objects.requireNonNull(data.get("points_levels")).toString();
-                        String[] points_string_array = points_string.substring(1, points_string.length() - 1).split(", ");
-                        List<Float> points_array = new ArrayList<>();
-                        for (String s : points_string_array) {
-                            points_array.add(Float.parseFloat(s));
+                    if (!userID.equals(people.get(index))) {
+                        if (organizer.equals(document.getId()) && !userID.equals(organizer)) {
+                            float value = Float.parseFloat(Objects.requireNonNull(Objects.requireNonNull(data).get("points_rank")).toString());
+                            value += ratingBarOrganizer.getRating();
+                            data.put("points_rank", value);
                         }
-                        if (areas_array.contains(event_type)) {
-                            points_array.set(areas_array.indexOf(event_type), points_array.get(areas_array.indexOf(event_type)) + ratings.get(index));
+                        String area_string = Objects.requireNonNull(Objects.requireNonNull(data).get("areas_of_interest")).toString();
+                        if (area_string.length() > 2) {
+                            String[] area_string_array = area_string.substring(1, area_string.length() - 1).split(", ");
+                            List<String> areas_array = new ArrayList<>();
+                            Collections.addAll(areas_array, area_string_array);
+                            String points_string = Objects.requireNonNull(data.get("points_levels")).toString();
+                            String[] points_string_array = points_string.substring(1, points_string.length() - 1).split(", ");
+                            List<Float> points_array = new ArrayList<>();
+                            for (String s : points_string_array) {
+                                points_array.add(Float.parseFloat(s));
+                            }
+                            if (areas_array.contains(event_type)) {
+                                points_array.set(areas_array.indexOf(event_type), points_array.get(areas_array.indexOf(event_type)) + ratings.get(index));
+                            } else {
+                                areas_array.add(event_type);
+                                points_array.add(ratings.get(index));
+                            }
+                            data.put("areas_of_interest", areas_array);
+                            data.put("points_levels", points_array);
                         } else {
+                            List<String> areas_array = new ArrayList<>();
+                            List<Float> points_array = new ArrayList<>();
                             areas_array.add(event_type);
                             points_array.add(ratings.get(index));
+                            data.put("areas_of_interest", areas_array);
+                            data.put("points_levels", points_array);
                         }
-                        data.put("areas_of_interest", areas_array);
-                        data.put("points_levels", points_array);
-                    } else {
-                        List<String> areas_array = new ArrayList<>();
-                        List<Float> points_array = new ArrayList<>();
-                        areas_array.add(event_type);
-                        points_array.add(ratings.get(index));
-                        data.put("areas_of_interest", areas_array);
-                        data.put("points_levels", points_array);
                     }
                     docRef.set(data);
                     if (index != people.size() - 1) {
@@ -359,7 +365,7 @@ public class RateEventActivity extends MenuInterfaceActivity {
     private void updateOrganizer() {
         String userID = preferences.getString("userID", "");
         if (userID.equals(organizer)) {
-            return;
+            checkRated();
         }
         DocumentReference docRef = db.collection("users").document(organizer);
         docRef.get().addOnCompleteListener(task -> {

@@ -247,7 +247,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                 }
             }
         });
-        docRef.whereEqualTo("event", eventID).whereEqualTo("user", userID).whereEqualTo("rated", "true").get().addOnCompleteListener(task -> {
+        docRef.whereEqualTo("event", eventID).whereEqualTo("user", userID).whereEqualTo("rated", true).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().size() != 0) {
                     rate.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_star_24));
@@ -538,7 +538,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
             rate.setVisibility(View.GONE);
         } else {
             CollectionReference docRef2 = db.collection("event_attending");
-            docRef2.whereEqualTo("event", eventID).whereEqualTo("user", me).whereEqualTo("rated", "true").get().addOnCompleteListener(task2 -> {
+            docRef2.whereEqualTo("event", eventID).whereEqualTo("user", me).whereEqualTo("rated", true).get().addOnCompleteListener(task2 -> {
                 if (task2.isSuccessful()) {
                     if (task2.getResult().size() != 0) {
                         rate.setVisibility(View.GONE);
