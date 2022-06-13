@@ -41,8 +41,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
+import org.osmdroid.events.MapEventsReceiver;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -131,9 +133,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         openableCard = findViewById(R.id.openableCard);
         imageViewEventType = findViewById(R.id.imageViewEventType);
         ImageView closeCard = findViewById(R.id.closeCard);
-        ImageView location_choose = findViewById(R.id.imageViewChooseLocation);
         ImageView close = findViewById(R.id.imageViewDiscard);
-        
         List<String> all_areas = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.event_types)));
         RecyclerView recyclerViewAreasOfInterestNew = findViewById(R.id.recyclerViewAreasOfInterestNew);
         CustomAdapterEventTypeAdd customAdapterEventTypeAdd = new CustomAdapterEventTypeAdd(all_areas, this);
@@ -142,10 +142,6 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         apply.setOnClickListener(view -> fetchDataFromUI());
         sp.setOnClickListener(view -> openableCard.setVisibility(View.VISIBLE));
         closeCard.setOnClickListener(view -> openableCard.setVisibility(View.GONE));
-        location_choose.setOnClickListener(view -> {
-            Intent myIntent = new Intent(context, ChooseLocationActivity.class);
-            startActivity(myIntent);
-        });
         close.setOnClickListener(view -> {
             onBackPressed();
             finish();
@@ -168,7 +164,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         Configuration.getInstance().setUserAgentValue(BuildConfig.APPLICATION_ID);
 
         map.setTileSource(TileSourceFactory.MAPNIK);
-        map.setMultiTouchControls(true);
+        map.setMultiTouchControls(false);
         mapController = map.getController();
 
         chosenLocationMarker = new Marker(map);
@@ -182,6 +178,19 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         chosenLocationMarker.setPosition(new org.osmdroid.util.GeoPoint(latitude, longitude));
 
         map.getOverlays().add(chosenLocationMarker);
+        map.getOverlays().add(new MapEventsOverlay(new MapEventsReceiver() {
+            @Override
+            public boolean singleTapConfirmedHelper(org.osmdroid.util.GeoPoint p) {
+                Intent myIntent = new Intent(context, ChooseLocationActivity.class);
+                startActivity(myIntent);
+                return false;
+            }
+
+            @Override
+            public boolean longPressHelper(org.osmdroid.util.GeoPoint p) {
+                return false;
+            }
+        }));
         mapController.setZoom(17.0);
         mapController.setCenter(new org.osmdroid.util.GeoPoint(latitude, longitude));
 

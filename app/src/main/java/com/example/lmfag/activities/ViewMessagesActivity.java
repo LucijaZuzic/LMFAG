@@ -86,11 +86,11 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
             getMyData();
         });
         getMyData();
+        countDownStart();
     }
 
     @Override
     protected void onResume() {
-        countDownStart();
         super.onResume();
     }
 
