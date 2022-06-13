@@ -33,7 +33,7 @@ public class MenuInterfaceActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        countDownAlarmStart();
+        //countDownAlarmStart();
         super.onResume();
     }
 

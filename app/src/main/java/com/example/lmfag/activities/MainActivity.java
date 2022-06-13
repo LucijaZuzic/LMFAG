@@ -137,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
                                         editor.putString("userID", document.getId());
                                         editor.apply();
                                         AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
+                                        AlarmScheduler.getAllReceivedFriendRequests(getApplicationContext());
                                         Intent myIntent = new Intent(context, MyProfileActivity.class);
                                         startActivity(myIntent);
                                         finish();
@@ -193,6 +194,7 @@ public class MainActivity extends AppCompatActivity {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
                             AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
+                            AlarmScheduler.getAllReceivedFriendRequests(getApplicationContext());
                             Intent myIntent = new Intent(context, MyProfileActivity.class);
                             startActivity(myIntent);
                             finish();
