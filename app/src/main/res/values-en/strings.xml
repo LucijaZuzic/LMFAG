@@ -292,4 +292,7 @@
     <string name="please_choose_an_event_type">Choose an event type</string>
     <string name="please_choose_a_location">Choose a location</string>
     <string name="turn_off_images">Turn images on and off</string>
+    <string name="received">Received</string>
+    <string name="sent">Sent</string>
+    <string name="friend_request_received">Friend request received</string>
 </resources>

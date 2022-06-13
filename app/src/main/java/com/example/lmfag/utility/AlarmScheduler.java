@@ -9,6 +9,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 
 import com.example.lmfag.receivers.EventAlarmReceiver;
+import com.example.lmfag.receivers.FriendRequestAlarmReceiver;
 import com.example.lmfag.receivers.RateAlarmReceiver;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
@@ -53,6 +54,19 @@ public class AlarmScheduler {
         }
     }
 
+    public static void scheduleAlarmFriendRequest(Context applicationContext,  String name, String friendID ) {
+        AlarmManager alarmManager = (AlarmManager) applicationContext.getSystemService(Context.ALARM_SERVICE);
+        Intent alarmReceiverIntent = new Intent(applicationContext, FriendRequestAlarmReceiver.class);
+        alarmReceiverIntent.putExtra("name", name);
+        alarmReceiverIntent.putExtra("friendID", friendID);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(applicationContext, 0, alarmReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
+        } else {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
+        }
+    }
+
     public static void cancelAllAlarms(Context applicationContext) {
         AlarmManager alarmManager = (AlarmManager) applicationContext.getSystemService(Context.ALARM_SERVICE);
         Intent alarmReceiverIntent = new Intent(applicationContext, EventAlarmReceiver.class);
@@ -60,6 +74,30 @@ public class AlarmScheduler {
         alarmManager.cancel(pendingIntent);
     }
 
+    public static void getAllReceivedFriendRequests(Context applicationContext) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
+        String me = preferences.getString("userID", "");
+        db.collection("friend_requests")
+                .whereEqualTo("receiver", me)
+                .get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().size() > 0) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                db.collection("users")
+                                    .document(document.getData().get("sender").toString())
+                                    .get()
+                                    .addOnCompleteListener(task2 -> {
+                                        if (task2.isSuccessful()) {
+                                            scheduleAlarmFriendRequest(applicationContext,  task2.getResult().getData().get("username").toString(), document.getData().get("sender").toString());
+                                        }
+                                    });
+                            }
+                        }
+                    }
+                });
+
+    }
     public static void getAllSubscriberEvents(Context applicationContext) {
         cancelAllAlarms(applicationContext);
         FirebaseFirestore db = FirebaseFirestore.getInstance();

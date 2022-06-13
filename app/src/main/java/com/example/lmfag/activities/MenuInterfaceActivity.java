@@ -45,6 +45,7 @@ public class MenuInterfaceActivity extends AppCompatActivity {
                 handlerForAlarm.postDelayed(this, 10000);
                 try {
                     AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
+                    AlarmScheduler.getAllReceivedFriendRequests(getApplicationContext());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

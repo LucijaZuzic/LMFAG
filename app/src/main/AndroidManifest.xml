@@ -25,6 +25,9 @@
             android:exported="false" />
 
         <receiver
+            android:name=".receivers.FriendRequestAlarmReceiver"
+            android:exported="true"></receiver>
+        <receiver
             android:name=".receivers.RateAlarmReceiver"
             android:exported="true"></receiver>
         <receiver
