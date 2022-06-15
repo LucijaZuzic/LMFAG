@@ -1,8 +1,6 @@
 package com.example.lmfag.activities;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -11,13 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.example.lmfag.R;
 import com.example.lmfag.utility.adapters.CustomAdapterMessages;
 import com.google.firebase.Timestamp;
@@ -48,7 +42,7 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
     private List<String> sender = new ArrayList<>();
     private List<String> ids = new ArrayList<>();
     private String me, other, myUsername, otherUsername;
-    private Bitmap myImage, otherImage;
+    //private Bitmap myImage, otherImage;
     private CircleImageView circleImageView;
     private TextView usernameFriend;
     private TextView noResults;
@@ -108,10 +102,6 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
             finish();
             return;
         }
-        if (myImage != null && myUsername != null) {
-            getFriendData();
-            return;
-        }
         DocumentReference docRef = db.collection("users").document(me);
         docRef.get().addOnCompleteListener(taskUser -> {
             if (taskUser.isSuccessful()) {
@@ -120,100 +110,36 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
                     Map<String, Object> data = document.getData();
 
                     myUsername = Objects.requireNonNull(Objects.requireNonNull(data).get("username")).toString();
-                    StorageReference imagesRef = storageRef.child("profile_pictures/" + document.getId());
-                    final long ONE_MEGABYTE = 1024 * 1024;
-                    String imageView = preferences.getString("showImage", "true");
-                    if (myImage == null && imageView.equals("true")) {
-                        imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(circleImageView.getContext().getApplicationContext())
-                                .asBitmap()
-                                .load(bytes)
-                                .into((new CustomTarget<Bitmap>() {
-                                    @Override
-                                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                        myImage = resource;
-                                        getFriendData();
-                                    }
 
-                                    @Override
-                                    public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                                    }
-                                }))).addOnFailureListener(exception -> {
-                            // Handle any errors
-                            getFriendData();
-                        });
-                    } else {
-                        getFriendData();
-                    }
-                } else {
-                    getFriendData();
                 }
-            } else {
-                getFriendData();
             }
-        }).addOnFailureListener(exception -> {
-            // Handle any errors
             getFriendData();
-        });
+        }).addOnFailureListener(taskUser -> getFriendData());
     }
 
     public void getFriendData() {
-        if (otherUsername != null && otherImage != null) {
-            getAllMessages();
-            usernameFriend.setText(otherUsername);
-            circleImageView.setImageBitmap(otherImage);
-            return;
-        }
         DocumentReference docRef = db.collection("users").document(other);
         docRef.get().addOnCompleteListener(taskUser -> {
             if (taskUser.isSuccessful()) {
                 DocumentSnapshot document = taskUser.getResult();
                 if (document.exists()) {
                     Map<String, Object> data = document.getData();
-
                     otherUsername = Objects.requireNonNull(Objects.requireNonNull(data).get("username")).toString();
                     usernameFriend.setText(otherUsername);
                     StorageReference imagesRef = storageRef.child("profile_pictures/" + document.getId());
                     final long ONE_MEGABYTE = 1024 * 1024;
                     String imageView = preferences.getString("showImage", "true");
-                    if (otherImage == null && imageView.equals("true")) {
-                        imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(getApplicationContext())
+                    if (imageView.equals("true")) {
+                        imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes ->
+                                Glide.with(getApplicationContext())
                                 .asBitmap()
                                 .load(bytes)
-                                .into((new CustomTarget<Bitmap>() {
-                                    @Override
-                                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                        otherImage = resource;
-                                        circleImageView.setImageBitmap(otherImage);
-                                        getAllMessages();
-                                    }
-
-                                    @Override
-                                    public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                                    }
-                                }))).addOnFailureListener(exception -> {
-                            // Handle any errors
-                            circleImageView.setImageBitmap(otherImage);
-                            getAllMessages();
-                        });
-                    } else {
-                        circleImageView.setImageBitmap(otherImage);
-                        getAllMessages();
+                                .into(circleImageView));
                     }
-                } else {
-                    circleImageView.setImageBitmap(otherImage);
-                    getAllMessages();
                 }
-            } else {
-                circleImageView.setImageBitmap(otherImage);
-                getAllMessages();
             }
-        }).addOnFailureListener(exception -> {
-            // Handle any errors
-            circleImageView.setImageBitmap(otherImage);
             getAllMessages();
-        });
+        }).addOnFailureListener(taskUser -> getAllMessages());
     }
 
     public void getAllMessages() {
@@ -245,7 +171,7 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
                         Collections.reverse(times);
                         Collections.reverse(sender);
                         Collections.reverse(ids);
-                        CustomAdapterMessages customAdapter = new CustomAdapterMessages(messages, times, sender, ids, me, context, myUsername, otherUsername, myImage, otherImage);
+                        CustomAdapterMessages customAdapter = new CustomAdapterMessages(messages, times, sender, ids, me, context, myUsername, otherUsername);
                         if (messages.size() > 0) {
                             noResults.setVisibility(View.GONE);
                         } else {

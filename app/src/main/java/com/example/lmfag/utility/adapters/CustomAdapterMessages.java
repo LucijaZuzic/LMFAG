@@ -1,7 +1,6 @@
 package com.example.lmfag.utility.adapters;
 
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +19,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMessages.ViewHolder> {
 
     private final List<String> message;
@@ -31,11 +28,9 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
     private final String me;
     private final String myUsername;
     private final String otherUsername;
-    private final Bitmap myImage;
-    private final Bitmap otherImage;
     private final ViewMessagesActivity context;
 
-    public CustomAdapterMessages(List<String> msg, List<String> times, List<String> senders, List<String> ids, String me, ViewMessagesActivity context, String myUsername, String otherUsername, Bitmap myImage, Bitmap otherImage) {
+    public CustomAdapterMessages(List<String> msg, List<String> times, List<String> senders, List<String> ids, String me, ViewMessagesActivity context, String myUsername, String otherUsername) {
         message = msg;
         this.ids = ids;
         timestamp = times;
@@ -43,9 +38,7 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
         this.me = me;
         this.context = context;
         this.myUsername = myUsername;
-        this.myImage = myImage;
         this.otherUsername = otherUsername;
-        this.otherImage = otherImage;
     }
 
     // Create new views (invoked by the layout manager)
@@ -82,12 +75,9 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
                 time.setVisibility(View.GONE);
             }
         });
-        CircleImageView circleImageView = viewHolder.getProfileImageTwo();
+        //CircleImageView circleImageView = viewHolder.getProfileImageTwo();
         if (!sender.get(position).equals(me)) {
             senderTextView.setText(otherUsername);
-            if (otherImage != null) {
-                circleImageView.setImageBitmap(otherImage);
-            }
             layout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
             background.setCardBackgroundColor(ContextCompat.getColor(context, R.color.dark_teal_700));
             // Old version set to white senderTextView.setTextColor(context.getResources().getColor(R.color.white));
@@ -95,9 +85,6 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
             //time.setTextColor(context.getResources().getColor(R.color.white));
         } else {
             senderTextView.setText(myUsername);
-            if (myImage != null) {
-                circleImageView.setImageBitmap(myImage);
-            }
             layout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
             background.setCardBackgroundColor(ContextCompat.getColor(context, R.color.teal_700));
         }
@@ -138,7 +125,7 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
         private final TextView time;
         private final CardView background;
         private final LinearLayout layout;
-        private final CircleImageView profile_image_two;
+        //private final CircleImageView profile_image_two;
 
         public ViewHolder(View view) {
             super(view);
@@ -149,7 +136,7 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
             senderTextView = view.findViewById(R.id.textViewSender);
             layout = view.findViewById(R.id.list_entry_nested);
             background = view.findViewById(R.id.background_change);
-            profile_image_two = view.findViewById(R.id.profile_image_bubble);
+            //profile_image_two = view.findViewById(R.id.profile_image_bubble);
         }
 
         public TextView getMessageTextView() {
@@ -172,8 +159,8 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
             return background;
         }
 
-        public CircleImageView getProfileImageTwo() {
+        /*img old public CircleImageView getProfileImageTwo() {
             return profile_image_two;
-        }
+        }*/
     }
 }
