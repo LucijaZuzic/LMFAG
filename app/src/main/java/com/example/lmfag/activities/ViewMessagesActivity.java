@@ -68,6 +68,7 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
         });
         usernameFriend = findViewById(R.id.textViewUsernameFriend);
         recyclerViewMessages = findViewById(R.id.recyclerViewMessages);
+        recyclerViewMessages = findViewById(R.id.recyclerViewMessages);
         ImageView imageViewSend = findViewById(R.id.imageViewSend);
         imageViewSend.setOnClickListener(view -> {
             Map<String, Object> docData = new HashMap<>();
@@ -77,6 +78,8 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
             docData.put("messages", editTextMessage.getText().toString());
             docData.put("timestamp", Timestamp.now());
             db.collection("messages").add(docData);
+            editTextMessage.setText("");
+            editTextMessage.requestFocus();
             getMyData();
         });
         getMyData();
