@@ -8,8 +8,7 @@
     android:gravity="center"
     android:orientation="vertical"
     app:cardCornerRadius="10dp"
-    app:cardElevation="10dp"
-    app:contentPadding="10dp">
+    app:contentPadding="5dp">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -30,17 +29,21 @@
             app:drawableStartCompat="@drawable/ic_baseline_interests_24"
             app:drawableTint="@color/teal_700" />
 
+        <View
+            android:id="@+id/divider3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:baselineAligned="false"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="5dp"
                 android:layout_weight="0.25"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -62,7 +65,7 @@
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="0.75"
                 android:gravity="center"
                 android:orientation="vertical">

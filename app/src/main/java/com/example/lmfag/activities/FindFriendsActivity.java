@@ -30,7 +30,7 @@ public class FindFriendsActivity extends MenuInterfaceActivity {
         setContentView(R.layout.activity_find_friends);
         context = this;
         
-         noResults = findViewById(R.id.noResults);
+        noResults = findViewById(R.id.noResults);
         recyclerViewFindFriends = findViewById(R.id.recyclerViewFriends);
         ImageView imageViewBeginSearch = findViewById(R.id.imageViewBeginSearch);
         editTextSearchValue = findViewById(R.id.editTextSearchValue);

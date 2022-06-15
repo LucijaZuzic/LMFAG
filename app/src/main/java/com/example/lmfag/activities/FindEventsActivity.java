@@ -71,6 +71,8 @@ public class FindEventsActivity extends MenuInterfaceActivity {
         typeRadio.setOnClickListener(view -> showType());
         editTextEventName = findViewById(R.id.editTextEventName);
         editTextOrganizerName = findViewById(R.id.editTextOrganizerName);
+
+        getAllEventsWithOrganizer();
     }
 
     public void selectAreaOfInterest(String selected_item) {
