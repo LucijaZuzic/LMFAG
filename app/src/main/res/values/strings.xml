@@ -295,4 +295,7 @@
     <string name="received">Received</string>
     <string name="sent">Sent</string>
     <string name="friend_request_received">Friend request received</string>
+    <string name="string_0">0</string>
+    <string name="erased_subscriptions">When an event is edited, all participants are removed. Do you want to continue?</string>
+    <string name="search_by">Search by:</string>
 </resources>

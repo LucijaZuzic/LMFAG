@@ -294,5 +294,8 @@
     <string name="turn_off_images">Uključi ili isključi slike</string>
     <string name="received">Primljeni</string>
     <string name="sent">Poslani</string>
-    <string name="friend_request_received">Friend request received</string>
+    <string name="friend_request_received">Primljen je zahtjev za prijateljstvo</string>
+    <string name="string_0">0</string>
+    <string name="erased_subscriptions">Kada izmijenite događaj, svi se sudionici brišu. Želite li nastaviti?</string>
+    <string name="search_by">Kriterij pretrage:</string>
 </resources>

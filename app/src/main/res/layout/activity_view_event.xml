@@ -473,6 +473,7 @@
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switchNotifications"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
@@ -489,6 +490,7 @@
 
             <ImageView
                 android:id="@+id/imageViewApply"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
@@ -508,6 +510,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
+                android:visibility="gone"
                 android:contentDescription="@string/create_event"
                 android:focusable="true"
                 android:gravity="center"
@@ -518,6 +521,7 @@
 
             <ImageView
                 android:id="@+id/imageViewRate"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
@@ -541,6 +545,12 @@
                 android:padding="10dp"
                 android:src="@drawable/ic_baseline_groups_24"
                 app:tint="@color/teal_700" />
+            <TextView
+                android:id="@+id/textViewNumberOfPlayersCurrent"
+                android:text="@string/string_0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </TextView>
 
         </LinearLayout>
 

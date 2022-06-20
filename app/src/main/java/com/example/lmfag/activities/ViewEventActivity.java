@@ -233,9 +233,9 @@ public class ViewEventActivity extends MenuInterfaceActivity {
     private void checkSubscribed() {
         String eventID = preferences.getString("eventID", "");
         String userID = preferences.getString("userID", "");
-        if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime()) || cldr_start.getTime().equals(Calendar.getInstance().getTime()) || cldr_end.getTime().equals(Calendar.getInstance().getTime())) {
-            apply.setVisibility(View.GONE);
-            switch_notify.setVisibility(View.GONE);
+        if (!(cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime()) || cldr_start.getTime().equals(Calendar.getInstance().getTime()) || cldr_end.getTime().equals(Calendar.getInstance().getTime()))) {
+            apply.setVisibility(View.VISIBLE);
+            switch_notify.setVisibility(View.VISIBLE);
         }
         CollectionReference docRef = db.collection("event_attending");
         docRef.whereEqualTo("event", eventID).whereEqualTo("user", userID).whereEqualTo("attending", true).get().addOnCompleteListener(task -> {
@@ -414,6 +414,18 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         });
     }
 
+    private void checkNumberOfParticipants() {
+        String eventID = preferences.getString("eventID", "");
+        CollectionReference dr = db.collection("event_attending");
+        dr.whereEqualTo("event", eventID).whereEqualTo("attending", true).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                TextView participant_number = findViewById(R.id.textViewNumberOfPlayersCurrent);
+                Integer size = task.getResult().size();
+                participant_number.setText(size + "");
+            }
+        });
+    }
+
     private void subscribe() {
         String eventID = preferences.getString("eventID", "");
         CollectionReference docRef = db.collection("event_attending");
@@ -563,6 +575,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
             startActivity(myIntent);
             return;
         }
+        checkNumberOfParticipants();
         DocumentReference docRef = db.collection("events").document(eventID);
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {

@@ -223,8 +223,8 @@ public class RateEventActivity extends MenuInterfaceActivity {
                     });
 
                     organizer = Objects.requireNonNull(Objects.requireNonNull(docData).get("organizer")).toString();
-                    if (organizer.equals(userID)) {
-                        organizerBanner.setVisibility(View.GONE);
+                    if (!organizer.equals(userID)) {
+                        organizerBanner.setVisibility(View.VISIBLE);
                     }
                     if (!user_participated && !organizer.equals(userID)) {
                         Toast.makeText(getApplicationContext(), R.string.not_participate_rate, Toast.LENGTH_SHORT).show();

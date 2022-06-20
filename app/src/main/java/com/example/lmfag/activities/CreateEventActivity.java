@@ -338,6 +338,15 @@ public class CreateEventActivity extends MenuInterfaceActivity {
             return;
         }
         CollectionReference docRef = db.collection("event_attending");
+        docRef.whereEqualTo("event", eventID).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult().size() > 0) {
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        docRef.document(doc.getId()).delete();
+                    }
+                }
+            }
+        });
         docRef.whereEqualTo("event", eventID).whereEqualTo("user", userID).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().size() == 0) {
@@ -397,6 +406,21 @@ public class CreateEventActivity extends MenuInterfaceActivity {
     }
 
     void fetchDataFromUI() {
+        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    continueEdit();
+                case DialogInterface.BUTTON_NEGATIVE:
+                    //No button clicked
+                    break;
+            }
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(R.string.erased_subscriptions).setPositiveButton(R.string.yes, dialogClickListener)
+                .setNegativeButton(R.string.no, dialogClickListener).show();
+    }
+
+    void continueEdit() {
         boolean correct = true;
         if (!Arrays.asList(getResources().getStringArray(R.array.event_types)).contains(selected_item)) {
             Toast.makeText(getApplicationContext(), R.string.please_choose_an_event_type, Toast.LENGTH_SHORT).show();
