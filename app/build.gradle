@@ -31,7 +31,10 @@ android {
                 srcDirs 'src\\main\\assets'
             }
             res {
-                srcDirs 'src\\main\\res', 'src\\main\\res\\values-en', 'src\\main\\xml'
+                srcDirs 'src\\main\\res', 'src\\main\\res\\values-en', 'src\\main\\xml', 'src\\main\\res\\values\\hr'
+            }
+            java {
+                srcDirs 'src\\main\\java', 'src\\main\\java\\services', 'src\\main\\java\\com.example.lmfag\\services'
             }
         }
     }
@@ -41,7 +44,11 @@ android {
 }
 
 dependencies {
+    implementation 'com.github.bumptech.glide:glide:4.13.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
+    implementation 'com.drewnoakes:metadata-extractor:2.18.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'com.google.firebase:firebase-messaging:22.0.0'
     def nav_version = "2.4.1"
 
     // Java language implementation

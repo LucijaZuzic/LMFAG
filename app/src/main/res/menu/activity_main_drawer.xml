@@ -9,6 +9,10 @@
             android:icon="@drawable/ic_baseline_settings_24"
             android:title="@string/edit_profile" />
         <item
+            android:id="@+id/change_password"
+            android:icon="@drawable/ic_baseline_password_24"
+            android:title="@string/edit_account" />
+        <item
             android:id="@+id/friend_requests"
             android:icon="@drawable/ic_baseline_mail_24"
             android:title="@string/friend_requests" />

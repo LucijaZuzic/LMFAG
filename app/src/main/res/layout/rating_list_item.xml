@@ -1,66 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardElevation="10dp"
-    app:cardCornerRadius="10dp"
-    app:contentPadding="10dp"
-    android:layout_marginStart="10dp"
-    android:layout_marginEnd="10dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginBottom="20dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="10dp"
+    app:contentPadding="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_image_player"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="10dp"
-            android:layout_weight="0.3"
-            android:src="@drawable/ic_baseline_profile_picture_24"
-            app:civ_border_color="@color/my_pink"
-            app:civ_border_width="10dp"
-            app:civ_circle_background_color="@color/blue_gray_100" />
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.7"
+            android:layout_marginBottom="10dp"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="horizontal">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image_player"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_baseline_profile_picture_24"
+                app:civ_circle_background_color="@color/teal_700" />
 
             <TextView
                 android:id="@+id/textViewPlayer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/gradient"
-                android:gravity="center"
+                android:fontFamily="sans-serif-condensed-light"
                 android:hint="@string/username"
                 android:padding="5dp"
-                android:textColor="@color/white"
                 android:textSize="21sp"
                 android:textStyle="bold" />
 
-            <RatingBar
-                android:id="@+id/simpleRatingBarPlayer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:contentDescription="@string/rating_bar"
-                android:progressBackgroundTint="#CFD8DC"
-                android:progressTint="@color/my_pink"
-                android:rating="2" />
-
         </LinearLayout>
+
+        <RatingBar
+            android:id="@+id/simpleRatingBarPlayer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/rating_bar"
+            android:progressTint="@color/teal_700"
+            android:rating="2" />
+
     </LinearLayout>
 
 

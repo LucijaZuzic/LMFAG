@@ -1,72 +1,123 @@
 package com.example.lmfag.activities;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.view.View;
+import android.widget.TextView;
+
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
 import com.example.lmfag.utility.adapters.CustomAdapterFriendRequest;
-import com.example.lmfag.utility.DrawerHelper;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.example.lmfag.utility.adapters.CustomAdapterFriends;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 public class FriendRequestsActivity extends MenuInterfaceActivity {
     private RecyclerView recyclerViewFriendRequests;
-    private FriendRequestsActivity context = this;
+    private FriendRequestsActivity context;
+    private TextView noResults;
+    private List<String> received, sent;
+    private SwitchCompat switchSentReceived;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_requests);
-        DrawerHelper.fillNavbarData(this);
+        context = this;
+        received = new ArrayList<>();
+        sent = new ArrayList<>();
+        noResults = findViewById(R.id.noResults);
         recyclerViewFriendRequests = findViewById(R.id.recyclerViewFriendRequests);
+        String me = preferences.getString("userID", "");
+        switchSentReceived = findViewById(R.id.toggleReceivedSent);
+        getFriendRequests();
+        switchSentReceived.setOnClickListener(view -> {
+            if (!switchSentReceived.isChecked()) {
+                switchSentReceived.setText(R.string.received);
+                switchSentReceived.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_baseline_inbox_24, 0, 0, 0);
+                CustomAdapterFriendRequest customAdapterAreaOfInterest = new CustomAdapterFriendRequest(received, me, context);
+                recyclerViewFriendRequests.setAdapter(customAdapterAreaOfInterest);
+                if (received.size() > 0) {
+                    noResults.setVisibility(View.GONE);
+                } else {
+                    noResults.setVisibility(View.VISIBLE);
+                }
+            } else {
+                switchSentReceived.setText(R.string.sent);
+                switchSentReceived.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_baseline_send_24, 0, 0, 0);
+                CustomAdapterFriends customAdapterFriendRequest = new CustomAdapterFriends(sent, context, preferences);
+                recyclerViewFriendRequests.setAdapter(customAdapterFriendRequest);
+                if (sent.size() > 0) {
+                    noResults.setVisibility(View.GONE);
+                } else {
+                    noResults.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     public void refresh() {
         Intent myIntent = new Intent(context, FriendRequestsActivity.class);
         context.startActivity(myIntent);
-    }
-    @Override
-    protected void onStart() {
-        super.onStart();
-        getFriendRequests();
+        finish();
     }
 
+    private void getSentFriendRequests() {
+        String me = preferences.getString("userID", "");
+        db.collection("friend_requests")
+                .whereEqualTo("sender", me)
+                .get().addOnCompleteListener(task2 -> {
+                    if (task2.isSuccessful()) {
+                        if (task2.getResult().size() > 0) {
+                            for (QueryDocumentSnapshot document2 : task2.getResult()) {
+                                sent.add(Objects.requireNonNull(document2.getData().get("receiver")).toString());
+                            }
+                        }
+                    }
+                    if (!switchSentReceived.isChecked()) {
+                        switchSentReceived.setText(R.string.received);
+                        switchSentReceived.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_baseline_inbox_24, 0, 0, 0);
+                        CustomAdapterFriendRequest customAdapterAreaOfInterest = new CustomAdapterFriendRequest(received, me, context);
+                        recyclerViewFriendRequests.setAdapter(customAdapterAreaOfInterest);
+                        if (received.size() > 0) {
+                            noResults.setVisibility(View.GONE);
+                        } else {
+                            noResults.setVisibility(View.VISIBLE);
+                        }
+                    } else {
+                        switchSentReceived.setText(R.string.sent);
+                        switchSentReceived.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_baseline_send_24, 0, 0, 0);
+                        CustomAdapterFriends customAdapterFriendRequest = new CustomAdapterFriends(sent, context, preferences);
+                        recyclerViewFriendRequests.setAdapter(customAdapterFriendRequest);
+                        if (sent.size() > 0) {
+                            noResults.setVisibility(View.GONE);
+                        } else {
+                            noResults.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
+    }
 
     private void getFriendRequests() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String receiver = preferences.getString("userID", "");
-        Map<String, Object> docData = new HashMap<>();
-        docData.put("receiver", receiver);
-        List<String> friends_array = new ArrayList<>();
+        String me = preferences.getString("userID", "");
+        received = new ArrayList<>();
+        sent = new ArrayList<>();
         db.collection("friend_requests")
-                .whereEqualTo("receiver", receiver)
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    if (task.getResult().size() > 0) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            friends_array.add(document.get("sender").toString());
+                .whereEqualTo("receiver", me)
+                .get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().size() > 0) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                received.add(Objects.requireNonNull(document.getData().get("sender")).toString());
+                            }
                         }
-                        CustomAdapterFriendRequest customAdapterAreaOfInterest = new CustomAdapterFriendRequest(friends_array, receiver, context);
-                        recyclerViewFriendRequests.setAdapter(customAdapterAreaOfInterest);
                     }
-                }
-            }
-        });
+                    getSentFriendRequests();
+                });
     }
 }

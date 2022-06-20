@@ -1,11 +1,5 @@
 package com.example.lmfag.activities;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,110 +10,148 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.lmfag.utility.adapters.CustomAdapterAreaOfInterestRemove;
-import com.example.lmfag.utility.DrawerHelper;
-import com.example.lmfag.utility.EventTypeToDrawable;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.lmfag.R;
 import com.example.lmfag.utility.SecureHash;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
+import com.example.lmfag.utility.TransformBitmap;
+import com.example.lmfag.utility.adapters.CustomAdapterAreaOfInterestAdd;
+import com.example.lmfag.utility.adapters.CustomAdapterAreaOfInterestRemove;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class CreateProfileActivity extends MenuInterfaceActivity {
-
+public class CreateProfileActivity extends AppCompatActivity {
     private TextView myUsername;
     private TextView myLocation;
     private TextView myDescription;
-    private ImageView apply, discard;
     private EditText passwordEdit;
-
     private FirebaseFirestore db;
-
     private boolean blocked = false;
-    private Context context = this;
+    private Context context;
+    private CircleImageView circleImageView;
     private List<String> areas_array = new ArrayList<>();
+    private List<String> areas_not_present_array;
     private List<Double> points_array = new ArrayList<>();
-    private String selected_item;
     private Uri uri;
+    private Bitmap bitmap;
+    private ImageView apply;
+    private ImageView discard;
+    private LinearLayout openableCard;
+    private RecyclerView recyclerViewAreasOfInterest, recyclerViewAreasOfInterestNew;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_profile);
+        context = this;
+        areas_array = new ArrayList<>();
+        points_array = new ArrayList<>();
+        areas_not_present_array = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.event_types)));
+        recyclerViewAreasOfInterest = findViewById(R.id.recyclerViewAreasOfInterest);
+        CustomAdapterAreaOfInterestRemove customAdapterAreaOfInterestRemove = new CustomAdapterAreaOfInterestRemove(areas_array, points_array, this);
+        recyclerViewAreasOfInterest.setAdapter(customAdapterAreaOfInterestRemove);
+        recyclerViewAreasOfInterestNew = findViewById(R.id.recyclerViewAreasOfInterestNew);
+        CustomAdapterAreaOfInterestAdd customAdapterAreaOfInterestAdd = new CustomAdapterAreaOfInterestAdd(areas_not_present_array, this);
+        recyclerViewAreasOfInterestNew.setAdapter(customAdapterAreaOfInterestAdd);
         db = FirebaseFirestore.getInstance();
         myUsername = findViewById(R.id.editTextUsername);
         myLocation = findViewById(R.id.editTextMyLocation);
         myDescription = findViewById(R.id.editTextMyDescription);
         passwordEdit = findViewById(R.id.editTextPassword);
-        apply = findViewById(R.id.imageViewApply);
         discard = findViewById(R.id.imageViewDiscard);
-        DrawerHelper.fillNavbarData(this);
-        fillSpinner();
-        addAreaOfInterest();
-        removeAreaOfInterest();
-        createProfile();
-        getBack();
-        showAreasOfInterest();
-        changeProfilePicture();
-        Spinner sp = findViewById(R.id.sp);
-        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
-
-                selected_item = adapter.getItemAtPosition(i).toString();
-                ImageView iv = findViewById(R.id.imageViewEventType);
-                iv.setImageDrawable(getDrawable(EventTypeToDrawable.getEventTypeToDrawable(selected_item)));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-
+        apply = findViewById(R.id.imageViewApply);
+        FloatingActionButton openCard = findViewById(R.id.floatingActionButtonAddAreaOfInterest);
+        ImageView closeCard = findViewById(R.id.closeCard);
+        openableCard = findViewById(R.id.openableCard);
+        openCard.setOnClickListener(view -> openableCard.setVisibility(View.VISIBLE));
+        closeCard.setOnClickListener(view -> openableCard.setVisibility(View.GONE));
+        circleImageView = findViewById(R.id.profile_image);
+        ImageView rotateLeft = findViewById(R.id.profile_image_rotate_left);
+        rotateLeft.setOnClickListener(view -> {
+            if (bitmap != null) {
+                bitmap = TransformBitmap.RotateNegative90(bitmap);
+                circleImageView.setImageBitmap(bitmap);
             }
         });
+        ImageView profileRotate = findViewById(R.id.profile_image_rotate);
+        profileRotate.setOnClickListener(view -> {
+            if (bitmap != null) {
+                bitmap = TransformBitmap.RotateBy90(bitmap);
+                circleImageView.setImageBitmap(bitmap);
+            }
+        });
+        ImageView flipHorizontal = findViewById(R.id.profile_image_flip_horizontal);
+        flipHorizontal.setOnClickListener(view -> {
+            if (bitmap != null) {
+                bitmap = TransformBitmap.flipHorizontal(bitmap);
+                circleImageView.setImageBitmap(bitmap);
+            }
+        });
+        ImageView flipVertical = findViewById(R.id.profile_image_flip_vertical);
+        flipVertical.setOnClickListener(view -> {
+            if (bitmap != null) {
+                bitmap = TransformBitmap.flipVertical(bitmap);
+                circleImageView.setImageBitmap(bitmap);
+            }
+        });
+        createProfile();
+        getBack();
+        changeProfilePicture();
     }
 
-    void changeProfilePicture() {
-        CircleImageView circleImageView = findViewById(R.id.profile_image);
+    @Override
+    public void onBackPressed() {
+        if (blocked) {
+            Toast.makeText(getApplicationContext(), R.string.go_back_upload, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        super.onBackPressed();
+        finish();
+    }
+
+    private void changeProfilePicture() {
         ActivityResultLauncher<Intent> photoPicker = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
+
+                        assert data != null;
                         uri = data.getData();
                         try {
-                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                            bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                            bitmap = TransformBitmap.fixRotation(bitmap);
                             circleImageView.setImageBitmap(bitmap);
-
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
                 });
-
         circleImageView.setOnClickListener(view -> {
             Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
             photoPickerIntent.setType("image/*");
@@ -127,80 +159,53 @@ public class CreateProfileActivity extends MenuInterfaceActivity {
         });
     }
 
-    void showAreasOfInterest() {
-        LinearLayout ll_areas_show = findViewById(R.id.linearLayoutShowAreasOfInterest);
-        RecyclerView ll_areas = findViewById(R.id.recyclerViewAreasOfInterest);
-        ImageView iv_areas = findViewById(R.id.imageViewExpandAreasOfInterest);
-        ll_areas_show.setOnClickListener(view -> {
-            if (ll_areas.getVisibility() == View.GONE) {
-                ll_areas.setVisibility(View.VISIBLE);
-                iv_areas.setImageResource(R.drawable.ic_baseline_expand_less_24);
-            } else {
-                ll_areas.setVisibility(View.GONE);
-                iv_areas.setImageResource(R.drawable.ic_baseline_expand_more_24);
+    public void addAreaOfInterest(String text) {
+        if (!areas_array.contains(text)) {
+            areas_array.add(text);
+            points_array.add(0.0);
+
+            areas_not_present_array = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.event_types)));
+            for (String newArea : areas_array) {
+                areas_not_present_array.remove(newArea);
             }
-        });
-    }
+            java.util.Collections.sort(areas_not_present_array);
 
-    void fillSpinner() {
-        Spinner sp = findViewById(R.id.sp);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.event_types, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sp.setAdapter(adapter);
-    }
-
-    void addAreaOfInterest() {
-        ImageView floatingActionButtonAreaOfInterest = findViewById(R.id.imageViewButtonAreaOfInterest);
-        floatingActionButtonAreaOfInterest.setOnClickListener(view -> {
-            Spinner sp = findViewById(R.id.sp);
-            String text = sp.getSelectedItem().toString();
-            if (!areas_array.contains(text)) {
-                areas_array.add(text);
-                points_array.add(0.0);
-                RecyclerView recyclerViewAreasOfInterest = findViewById(R.id.recyclerViewAreasOfInterest);
-                CustomAdapterAreaOfInterestRemove customAdapterAreaOfInterestRemove = new CustomAdapterAreaOfInterestRemove(areas_array, points_array, this);
-                recyclerViewAreasOfInterest.setAdapter(customAdapterAreaOfInterestRemove);
-            } else {
-                Snackbar.make(floatingActionButtonAreaOfInterest, R.string.area_of_interest_already_added, Snackbar.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void removeAreaOfInterest() {
-        ImageView floatingActionButtonRemoveAreaOfInterest = findViewById(R.id.imageViewRemoveAreaOfInterest);
-        floatingActionButtonRemoveAreaOfInterest.setOnClickListener(view -> {
-            Spinner sp = findViewById(R.id.sp);
-            String text = sp.getSelectedItem().toString();
-            if (areas_array.contains(text)) {
-                points_array.remove(areas_array.indexOf(text));
-                areas_array.remove(text);
-                RecyclerView recyclerViewAreasOfInterest = findViewById(R.id.recyclerViewAreasOfInterest);
-                CustomAdapterAreaOfInterestRemove customAdapterAreaOfInterestRemove = new CustomAdapterAreaOfInterestRemove(areas_array, points_array, this);
-                recyclerViewAreasOfInterest.setAdapter(customAdapterAreaOfInterestRemove);
-            } else {
-                Snackbar.make(floatingActionButtonRemoveAreaOfInterest, R.string.area_of_interest_not_present, Snackbar.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    public void removeAreaOfInterest(String text) {
-        ImageView floatingActionButtonRemoveAreaOfInterest = findViewById(R.id.imageViewRemoveAreaOfInterest);
-        if (areas_array.contains(text) && areas_array.contains(text)) {
-            points_array.remove(areas_array.indexOf(text));
-            areas_array.remove(text);
-            RecyclerView recyclerViewAreasOfInterest = findViewById(R.id.recyclerViewAreasOfInterest);
             CustomAdapterAreaOfInterestRemove customAdapterAreaOfInterestRemove = new CustomAdapterAreaOfInterestRemove(areas_array, points_array, this);
             recyclerViewAreasOfInterest.setAdapter(customAdapterAreaOfInterestRemove);
+
+            CustomAdapterAreaOfInterestAdd customAdapterAreaOfInterestAdd = new CustomAdapterAreaOfInterestAdd(areas_not_present_array, this);
+            recyclerViewAreasOfInterestNew.setAdapter(customAdapterAreaOfInterestAdd);
         } else {
-            Snackbar.make(floatingActionButtonRemoveAreaOfInterest, R.string.area_of_interest_not_present, Snackbar.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.area_of_interest_already_added, Toast.LENGTH_SHORT).show();
         }
     }
 
-    void getBack() {
+    public void removeAreaOfInterest(String text) {
+        if (areas_array.contains(text)) {
+            int remove_index = areas_array.indexOf(text);
+            points_array.remove(remove_index);
+            areas_array.remove(remove_index);
+
+            areas_not_present_array = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.event_types)));
+            for (String newArea : areas_array) {
+                areas_not_present_array.remove(newArea);
+            }
+            java.util.Collections.sort(areas_not_present_array);
+
+            CustomAdapterAreaOfInterestRemove customAdapterAreaOfInterestRemove = new CustomAdapterAreaOfInterestRemove(areas_array, points_array, this);
+            recyclerViewAreasOfInterest.setAdapter(customAdapterAreaOfInterestRemove);
+
+            CustomAdapterAreaOfInterestAdd customAdapterAreaOfInterestAdd = new CustomAdapterAreaOfInterestAdd(areas_not_present_array, this);
+            recyclerViewAreasOfInterestNew.setAdapter(customAdapterAreaOfInterestAdd);
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.area_of_interest_not_present, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void getBack() {
         discard.setOnClickListener(view -> {
             if (blocked) {
-                Snackbar.make(discard, R.string.go_back_upload, Snackbar.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.go_back_upload, Toast.LENGTH_SHORT).show();
                 return;
             }
             Intent myIntent = new Intent(context, MainActivity.class);
@@ -210,39 +215,47 @@ public class CreateProfileActivity extends MenuInterfaceActivity {
 
 
     void writeDB(Map<String, Object> docData) {
-
-
         db.collection("users")
                 .add(docData)
                 .addOnSuccessListener(aVoid -> {
                     //Log.d(TAG, "DocumentSnapshot successfully written!");
-                    Snackbar.make(apply, R.string.write_success, Snackbar.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.write_success, Toast.LENGTH_SHORT).show();
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    Snackbar.make(apply, R.string.logged_in, Snackbar.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.logged_in, Toast.LENGTH_SHORT).show();
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString("userID", aVoid.getId());
                     editor.apply();
-                    if (uri != null) {
+                    if (bitmap != null) {
                         blocked = true;
                         FirebaseStorage storage = FirebaseStorage.getInstance();
                         StorageReference storageRef = storage.getReference();
                         StorageReference imagesRef = storageRef.child("profile_pictures/" + aVoid.getId());
-                        UploadTask uploadTask = imagesRef.putFile(uri);
-                        Snackbar.make(apply, R.string.image_upload_started, Snackbar.LENGTH_SHORT).show();
+                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 20, byteArrayOutputStream);
+                        byte[] imageDataTransformed = byteArrayOutputStream.toByteArray();
+                        UploadTask uploadTask = imagesRef.putBytes(imageDataTransformed);
+                        Toast.makeText(getApplicationContext(), R.string.image_upload_started, Toast.LENGTH_SHORT).show();
                         uploadTask.addOnFailureListener(exception -> {
-                            // Handle unsuccessful uploads
-                        }).addOnSuccessListener(taskSnapshot -> {
                             blocked = false;
-                            Snackbar.make(apply, R.string.image_upload_finished, Snackbar.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), R.string.image_upload_finished, Toast.LENGTH_SHORT).show();
                             Intent myIntent = new Intent(context, MyProfileActivity.class);
                             startActivity(myIntent);
-                            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                            // ...
+                            finish();
+                        }).addOnSuccessListener(taskSnapshot -> {
+                            blocked = false;
+                            Toast.makeText(getApplicationContext(), R.string.image_upload_finished, Toast.LENGTH_SHORT).show();
+                            Intent myIntent = new Intent(context, MyProfileActivity.class);
+                            startActivity(myIntent);
+                            finish();
                         });
+                    } else {
+                        Intent myIntent = new Intent(context, MyProfileActivity.class);
+                        startActivity(myIntent);
+                        finish();
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Snackbar.make(apply, R.string.write_failed, Snackbar.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.write_failed, Toast.LENGTH_SHORT).show();
                     //Log.w(TAG, "Error writing document", e);
                 });
     }
@@ -253,37 +266,31 @@ public class CreateProfileActivity extends MenuInterfaceActivity {
 
             String text = myUsername.getText().toString();
             CollectionReference docRef = db.collection("users");
-            docRef.whereEqualTo("username", text).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        if (task.getResult().size() > 0) {
-                            Snackbar.make(apply, R.string.username_taken, Snackbar.LENGTH_SHORT).show();
+            docRef.whereEqualTo("username", text).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    if (task.getResult().size() > 0) {
+                        Toast.makeText(getApplicationContext(), R.string.username_taken, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Map<String, Object> docData = new HashMap<>();
+                        docData.put("username", myUsername.getText().toString());
+                        docData.put("location", myLocation.getText().toString());
+                        docData.put("description", myDescription.getText().toString());
+                        if (passwordEdit.getText().toString().length() == 0) {
+                            Toast.makeText(getApplicationContext(), R.string.password_short, Toast.LENGTH_SHORT).show();
                         } else {
-                            Map<String, Object> docData = new HashMap<>();
-                            docData.put("username", myUsername.getText().toString());
-                            docData.put("location", myLocation.getText().toString());
-                            docData.put("description", myDescription.getText().toString());
-                            if (passwordEdit.getText().toString().length() == 0) {
-                                Snackbar.make(apply, R.string.password_short, Snackbar.LENGTH_SHORT).show();
-                            } else {
-                                try {
-                                    docData.put("password_hash", SecureHash.generateStrongPasswordHash(passwordEdit.getText().toString()));
-                                } catch (NoSuchAlgorithmException e) {
-                                    e.printStackTrace();
-                                } catch (InvalidKeySpecException e) {
-                                    e.printStackTrace();
-                                }
-                                docData.put("points_rank", 0.0);
-                                docData.put("areas_of_interest", areas_array);
-                                docData.put("points_levels", points_array);
-                                writeDB(docData);
+                            try {
+                                docData.put("password_hash", SecureHash.generateStrongPasswordHash(passwordEdit.getText().toString()));
+                            } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                                e.printStackTrace();
                             }
+                            docData.put("points_rank", 0.0);
+                            docData.put("areas_of_interest", areas_array);
+                            docData.put("points_levels", points_array);
+                            writeDB(docData);
                         }
                     }
                 }
             });
         });
     }
-
 }

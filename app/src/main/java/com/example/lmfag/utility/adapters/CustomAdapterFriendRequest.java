@@ -1,18 +1,23 @@
 package com.example.lmfag.utility.adapters;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.lmfag.activities.FriendRequestsActivity;
+import com.bumptech.glide.Glide;
 import com.example.lmfag.R;
-import com.google.android.material.snackbar.Snackbar;
+import com.example.lmfag.activities.FriendRequestsActivity;
+import com.example.lmfag.activities.ViewProfileActivity;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -25,53 +30,21 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapterFriendRequest.ViewHolder> {
 
-    private List<String> localFriendUsernames;
-    private String receiver;
-    private FriendRequestsActivity friendRequestsActivity;
-
-    /**
-     * Provide a reference to the type of views that you are using
-     * (custom ViewHolder).
-     */
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textViewUsername;
-        private final CircleImageView profile_image;
-        private final ImageView accept, decline;
-
-        public ViewHolder(View view) {
-            super(view);
-            // Define click listener for the ViewHolder's View
-
-            textViewUsername = (TextView) view.findViewById(R.id.textViewUsernameFriend);
-            profile_image = (CircleImageView) view.findViewById(R.id.profile_image_friend);
-            accept = (ImageView) view.findViewById(R.id.imageViewApply);
-            decline = (ImageView) view.findViewById(R.id.imageViewDiscard);
-        }
-
-        public TextView getTextView() {
-            return textViewUsername;
-        }
-        public CircleImageView getProfileImage() {
-            return profile_image;
-        }
-        public ImageView getAccept() {
-            return accept;
-        }
-        public ImageView getDecline() {
-            return decline;
-        }
-    }
+    private final List<String> localFriendUsernames;
+    private final String receiver;
+    private final FriendRequestsActivity friendRequestsActivity;
 
     /**
      * Initialize the dataset of the Adapter.
      *
      * @param dataSet String[] containing the data to populate views to be used
-     * by RecyclerView.
+     *                by RecyclerView.
      */
     public CustomAdapterFriendRequest(List<String> dataSet, String receiver, FriendRequestsActivity friendRequestsActivity) {
         this.receiver = receiver;
@@ -80,6 +53,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
     }
 
     // Create new views (invoked by the layout manager)
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
@@ -87,10 +61,6 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                 .inflate(R.layout.friend_request_item, viewGroup, false);
 
         return new ViewHolder(view);
-    }
- 
-    void addFriendOneDir(String one, String two) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -100,30 +70,40 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
         CustomAdapterFriendRequest ca = this;
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
+        ImageView decline = viewHolder.getDecline();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users").document(replace_string);
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
-                    viewHolder.getTextView().setText(document.get("username").toString());
+                    viewHolder.getTextView().setText(Objects.requireNonNull(document.get("username")).toString());
                     FirebaseStorage storage = FirebaseStorage.getInstance();
                     StorageReference storageRef = storage.getReference();
                     StorageReference imagesRef = storageRef.child("profile_pictures/" + replace_string);
                     final long ONE_MEGABYTE = 1024 * 1024;
                     imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                        // Data for "images/island.jpg" is returns, use this as needed
                         CircleImageView circleImageView = viewHolder.getProfileImage();
-                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        circleImageView.setImageBitmap(bmp);
+                        viewHolder.getListEntry().setOnClickListener(view -> {
+                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(circleImageView.getContext().getApplicationContext());
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("friendID",replace_string);
+                            editor.apply();
+                            Intent intent = new Intent(circleImageView.getContext(), ViewProfileActivity.class);
+                            circleImageView.getContext().startActivity(intent);
+                        });
+                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(circleImageView.getContext().getApplicationContext());
+                        String imageView = preferences.getString("showImage", "true");
+                        if (imageView.equals("true")) {
+                            Glide.with(circleImageView.getContext().getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
+                        }
                     }).addOnFailureListener(exception -> {
                         // Handle any errors
                     });
                 }
             }
         });
-        viewHolder.getAccept().setOnClickListener(view -> {
-            db.collection("friend_requests")
+        viewHolder.getAccept().setOnClickListener(view -> db.collection("friend_requests")
                 .whereEqualTo("sender", replace_string)
                 .whereEqualTo("receiver", this.receiver).get().addOnCompleteListener(task3 -> {
                     if (task3.isSuccessful()) {
@@ -136,7 +116,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                     DocumentSnapshot document = task.getResult();
                                     if (document.exists()) {
                                         Map<String, Object> data = document.getData();
-                                        String friends_string = data.get("friends").toString();
+                                        String friends_string = Objects.requireNonNull(Objects.requireNonNull(data).get("friends")).toString();
                                         if (friends_string.length() > 2) {
                                             String[] friends_string_array = friends_string.substring(1, friends_string.length() - 1).split(", ");
                                             List<String> friends_array = new ArrayList<>();
@@ -151,7 +131,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                     DocumentSnapshot document2 = task2.getResult();
                                                     if (document2.exists()) {
                                                         Map<String, Object> data2 = document2.getData();
-                                                        String friends_string2 = data2.get("friends").toString();
+                                                        String friends_string2 = Objects.requireNonNull(Objects.requireNonNull(data2).get("friends")).toString();
                                                         if (friends_string2.length() > 2) {
                                                             String[] friends_string_array2 = friends_string2.substring(1, friends_string2.length() - 1).split(", ");
                                                             List<String> friends_array2 = new ArrayList<>();
@@ -160,16 +140,12 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                             Map<String, Object> docuDataNew2 = document2.getData();
                                                             docuDataNew2.put("friends", friends_array2);
                                                             db1.collection("friends").document(replace_string).set(docuDataNew2);
-                                                            Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
-                                                            ca.friendRequestsActivity.refresh();
                                                         } else {
                                                             List<String> friends_array2 = new ArrayList<>();
                                                             friends_array2.add(receiver);
                                                             Map<String, Object> docuDataNew2 = new HashMap<>();
                                                             docuDataNew2.put("friends", friends_array2);
                                                             db1.collection("friends").document(replace_string).set(docuDataNew2);
-                                                            Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
-                                                            ca.friendRequestsActivity.refresh();
                                                         }
                                                     } else {
                                                         List<String> friends_array2 = new ArrayList<>();
@@ -177,9 +153,9 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                         Map<String, Object> docuDataNew2 = new HashMap<>();
                                                         docuDataNew2.put("friends", friends_array2);
                                                         db1.collection("friends").document(replace_string).set(docuDataNew2);
-                                                        Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
-                                                        ca.friendRequestsActivity.refresh();
                                                     }
+                                                    Toast.makeText(decline.getContext().getApplicationContext(), R.string.friend_request_accepted, Toast.LENGTH_SHORT).show();
+                                                    ca.friendRequestsActivity.refresh();
                                                 }
                                             });
                                         } else {
@@ -194,7 +170,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                     DocumentSnapshot document2 = task2.getResult();
                                                     if (document2.exists()) {
                                                         Map<String, Object> data2 = document2.getData();
-                                                        String friends_string2 = data2.get("friends").toString();
+                                                        String friends_string2 = Objects.requireNonNull(Objects.requireNonNull(data2).get("friends")).toString();
                                                         if (friends_string2.length() > 2) {
                                                             String[] friends_string_array2 = friends_string2.substring(1, friends_string2.length() - 1).split(", ");
                                                             List<String> friends_array2 = new ArrayList<>();
@@ -203,16 +179,12 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                             Map<String, Object> docuDataNew2 = document2.getData();
                                                             docuDataNew2.put("friends", friends_array2);
                                                             db1.collection("friends").document(replace_string).set(docuDataNew2);
-                                                            Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
-                                                            ca.friendRequestsActivity.refresh();
                                                         } else {
                                                             List<String> friends_array2 = new ArrayList<>();
                                                             friends_array2.add(receiver);
                                                             Map<String, Object> docuDataNew2 = new HashMap<>();
                                                             docuDataNew2.put("friends", friends_array2);
                                                             db1.collection("friends").document(replace_string).set(docuDataNew2);
-                                                            Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
-                                                            ca.friendRequestsActivity.refresh();
                                                         }
                                                     } else {
                                                         List<String> friends_array2 = new ArrayList<>();
@@ -220,9 +192,9 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                         Map<String, Object> docuDataNew2 = new HashMap<>();
                                                         docuDataNew2.put("friends", friends_array2);
                                                         db1.collection("friends").document(replace_string).set(docuDataNew2);
-                                                        Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
-                                                        ca.friendRequestsActivity.refresh();
                                                     }
+                                                    Toast.makeText(decline.getContext().getApplicationContext(), R.string.friend_request_accepted, Toast.LENGTH_SHORT).show();
+                                                    ca.friendRequestsActivity.refresh();
                                                 }
                                             });
                                         }
@@ -238,7 +210,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                 DocumentSnapshot document2 = task2.getResult();
                                                 if (document2.exists()) {
                                                     Map<String, Object> data2 = document2.getData();
-                                                    String friends_string2 = data2.get("friends").toString();
+                                                    String friends_string2 = Objects.requireNonNull(Objects.requireNonNull(data2).get("friends")).toString();
                                                     if (friends_string2.length() > 2) {
                                                         String[] friends_string_array2 = friends_string2.substring(1, friends_string2.length() - 1).split(", ");
                                                         List<String> friends_array2 = new ArrayList<>();
@@ -247,16 +219,12 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                         Map<String, Object> docuDataNew2 = document2.getData();
                                                         docuDataNew2.put("friends", friends_array2);
                                                         db1.collection("friends").document(replace_string).set(docuDataNew2);
-                                                        Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
-                                                        ca.friendRequestsActivity.refresh();
                                                     } else {
                                                         List<String> friends_array2 = new ArrayList<>();
                                                         friends_array2.add(receiver);
                                                         Map<String, Object> docuDataNew2 = new HashMap<>();
                                                         docuDataNew2.put("friends", friends_array2);
                                                         db1.collection("friends").document(replace_string).set(docuDataNew2);
-                                                        Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
-                                                        ca.friendRequestsActivity.refresh();
                                                     }
                                                 } else {
                                                     List<String> friends_array2 = new ArrayList<>();
@@ -264,9 +232,9 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                                                     Map<String, Object> docuDataNew2 = new HashMap<>();
                                                     docuDataNew2.put("friends", friends_array2);
                                                     db1.collection("friends").document(replace_string).set(docuDataNew2);
-                                                    Snackbar.make(viewHolder.getDecline(), R.string.friend_request_accepted, Snackbar.LENGTH_SHORT).show();
-                                                    ca.friendRequestsActivity.refresh();
                                                 }
+                                                Toast.makeText(decline.getContext().getApplicationContext(), R.string.friend_request_accepted, Toast.LENGTH_SHORT).show();
+                                                ca.friendRequestsActivity.refresh();
                                             }
                                         });
                                     }
@@ -274,26 +242,67 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                             });
                         }
                     }
-                });
-        });
-        viewHolder.getDecline().setOnClickListener(view -> db.collection("friend_requests")
-            .whereEqualTo("sender", replace_string)
-            .whereEqualTo("receiver", this.receiver).get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    if (task.getResult().size() > 0) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            db.collection("friend_requests").document(document.getId()).delete();
+                }));
+        decline.setOnClickListener(view -> db.collection("friend_requests")
+                .whereEqualTo("sender", replace_string)
+                .whereEqualTo("receiver", this.receiver).get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().size() > 0) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                db.collection("friend_requests").document(document.getId()).delete();
+                            }
+                            Toast.makeText(decline.getContext().getApplicationContext(), R.string.friend_request_declined, Toast.LENGTH_SHORT).show();
+                            ca.friendRequestsActivity.refresh();
                         }
-                        Snackbar.make(viewHolder.getDecline(), R.string.friend_request_declined, Snackbar.LENGTH_SHORT).show();
-                        ca.friendRequestsActivity.refresh();
                     }
-                }
-            }));
+                }));
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return localFriendUsernames.size();
+    }
+
+    /**
+     * Provide a reference to the type of views that you are using
+     * (custom ViewHolder).
+     */
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final TextView textViewUsername;
+        private final CircleImageView profile_image;
+        private final ImageView accept, decline;
+        private final CardView listEntry;
+
+        public ViewHolder(View view) {
+            super(view);
+            // Define click listener for the ViewHolder's View
+
+            textViewUsername = view.findViewById(R.id.textViewUsernameFriend);
+            profile_image = view.findViewById(R.id.profile_image_friend);
+            accept = view.findViewById(R.id.imageViewApply);
+            decline = view.findViewById(R.id.imageViewDiscard);
+            listEntry = view.findViewById(R.id.list_entry);
+        }
+
+        public TextView getTextView() {
+            return textViewUsername;
+        }
+
+        public CircleImageView getProfileImage() {
+            return profile_image;
+        }
+
+        public ImageView getAccept() {
+            return accept;
+        }
+
+        public ImageView getDecline() {
+            return decline;
+        }
+
+        public CardView getListEntry() {
+            return listEntry;
+        }
     }
 }

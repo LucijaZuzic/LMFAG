@@ -1,20 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/menu">
 
-    <item android:title="Item"
+    <item
         android:id="@+id/dayNightSwitch"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_baseline_wb_sunny_24">
-
-    </item>
-    <item android:title="Item"
+        android:icon="@drawable/ic_baseline_wb_sunny_24"
+        android:title="@string/choose_theme"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/image_show"
+        android:icon="@drawable/ic_baseline_image_24"
+        android:title="@string/turn_off_images"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/menu_open"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_baseline_menu_24"/>
-    <item android:title="Item"
+        android:icon="@drawable/ic_baseline_menu_24"
+        android:title="@string/open_drawer"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/logout"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_baseline_logout_24"/>
+        android:icon="@drawable/ic_baseline_logout_24"
+        android:title="@string/logout"
+        app:showAsAction="always" />
 </menu>

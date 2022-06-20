@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardAreaOfInterest"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="10dp"
-    android:layout_marginEnd="10dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginBottom="20dp"
+    android:layout_margin="10dp"
     android:gravity="center"
     android:orientation="vertical"
     app:cardCornerRadius="10dp"
-    app:cardElevation="10dp"
-    app:contentPadding="10dp">
+    app:contentPadding="5dp">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -23,25 +20,30 @@
             android:id="@+id/textViewAreaOfInterest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/gradient"
-            android:drawableStart="@drawable/ic_baseline_interests_24"
+            android:fontFamily="sans-serif-condensed-light"
             android:gravity="center"
+            android:hint="@string/area_of_interest"
             android:padding="5dp"
-            android:text="@string/area_of_interest"
-            android:textColor="@color/white"
             android:textSize="21sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:drawableStartCompat="@drawable/ic_baseline_interests_24"
+            app:drawableTint="@color/teal_700" />
+
+        <View
+            android:id="@+id/divider3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:baselineAligned="false"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="5dp"
                 android:layout_weight="0.25"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -50,38 +52,47 @@
                     android:id="@+id/textViewLevel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/gradient"
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:hint="@string/level"
                     android:padding="5dp"
-                    android:text="@string/level"
                     android:textAlignment="center"
-                    android:textColor="@color/white"
                     android:textSize="21sp"
                     android:textStyle="bold"
+                    app:drawableTint="@color/teal_700"
                     app:drawableTopCompat="@drawable/ic_baseline_workspace_premium_24" />
             </LinearLayout>
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="5dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="0.75"
                 android:gravity="center"
                 android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textViewLevelPoints"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/level_points" />
 
                 <ProgressBar
                     android:id="@+id/determinateBar"
                     style="@android:style/Widget.ProgressBar.Horizontal"
                     android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:progress="0"
+                    android:progressDrawable="@drawable/progress_bar_states_teal"
+                    android:progressTint="@color/teal_700" />
+
+                <TextView
+                    android:id="@+id/textViewLevelPoints"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:progress="75"
-                    android:progressDrawable="@drawable/progress_bar_states" />
-            </LinearLayout>
+                    android:layout_gravity="center"
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:gravity="center"
+                    android:hint="@string/level_points"
+                    android:textAlignment="center"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
         </LinearLayout>
 
     </androidx.appcompat.widget.LinearLayoutCompat>

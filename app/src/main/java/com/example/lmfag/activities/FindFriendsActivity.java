@@ -1,61 +1,40 @@
 package com.example.lmfag.activities;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.widget.ArrayAdapter;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
+import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
 import com.example.lmfag.utility.adapters.CustomAdapterFriends;
-import com.example.lmfag.utility.DrawerHelper;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FindFriendsActivity extends MenuInterfaceActivity {
-    private Context context = this;
+    private Context context;
     private RecyclerView recyclerViewFindFriends;
-    private SharedPreferences preferences;
-    private Spinner search_params;
-    private Spinner sort_params;
     private EditText editTextSearchValue;
-    private ImageView imageViewBeginSearch;
+    private TextView noResults;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_friends);
-
-        DrawerHelper.fillNavbarData(this);
-        preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        context = this;
+        
+        noResults = findViewById(R.id.noResults);
         recyclerViewFindFriends = findViewById(R.id.recyclerViewFriends);
-        imageViewBeginSearch = findViewById(R.id.imageViewBeginSearch);
+        ImageView imageViewBeginSearch = findViewById(R.id.imageViewBeginSearch);
         editTextSearchValue = findViewById(R.id.editTextSearchValue);
-        imageViewBeginSearch.setOnClickListener(view -> {
-            getAllFriends();
-        });
-    }
-
-    private void fillSpinner() {
-        ArrayAdapter<CharSequence> adapter_search_params = ArrayAdapter.createFromResource(this, R.array.event_search_params, android.R.layout.simple_spinner_item);
-        adapter_search_params.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        search_params.setAdapter(adapter_search_params);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.event_sort_params, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sort_params.setAdapter(adapter);
+        imageViewBeginSearch.setOnClickListener(view -> getAllFriends());
     }
 
     private void getAllFriends() {
@@ -66,26 +45,30 @@ public class FindFriendsActivity extends MenuInterfaceActivity {
         if (!text.equals("")) {
             q = db.collection("users").whereEqualTo("username", text);
         }
-        q.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    if (task.getResult().size() > 0) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            if(!(document.getId().equals(preferences.getString("userID", "")))) {
-                                friends_array.add(document.getId());
-                            }
+        q.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult().size() > 0) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if (!(document.getId().equals(preferences.getString("userID", "")))) {
+                            friends_array.add(document.getId());
                         }
-                        CustomAdapterFriends customAdapterFriends = new CustomAdapterFriends(friends_array, context, preferences);
-                        recyclerViewFindFriends.setAdapter(customAdapterFriends);
+                    }
+                    CustomAdapterFriends customAdapterFriends = new CustomAdapterFriends(friends_array, context, preferences);
+                    recyclerViewFindFriends.setAdapter(customAdapterFriends);
+                    if (friends_array.size() > 0) {
+                        noResults.setVisibility(View.GONE);
                     } else {
-                        CustomAdapterFriends customAdapterFriends = new CustomAdapterFriends(new ArrayList<String>(), context, preferences);
-                        recyclerViewFindFriends.setAdapter(customAdapterFriends);
+                        noResults.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    CustomAdapterFriends customAdapterFriends = new CustomAdapterFriends(new ArrayList<String>(), context, preferences);
+                    CustomAdapterFriends customAdapterFriends = new CustomAdapterFriends(new ArrayList<>(), context, preferences);
                     recyclerViewFindFriends.setAdapter(customAdapterFriends);
+                    noResults.setVisibility(View.VISIBLE);
                 }
+            } else {
+                CustomAdapterFriends customAdapterFriends = new CustomAdapterFriends(new ArrayList<>(), context, preferences);
+                recyclerViewFindFriends.setAdapter(customAdapterFriends);
+                noResults.setVisibility(View.VISIBLE);
             }
         });
     }

@@ -1,8 +1,19 @@
 package com.example.lmfag.utility;
 
+import android.content.Context;
+
 import com.example.lmfag.R;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class EventTypeToDrawable {
+    public static String getEventTypeToTranslation(Context context, String eventType) {
+        List<String> all_types = new ArrayList<>(Arrays.asList(context.getResources().getStringArray(R.array.event_types)));
+        List<String> all_translations = new ArrayList<>(Arrays.asList(context.getResources().getStringArray(R.array.event_types_translated)));
+        return all_translations.get(all_types.indexOf(eventType));
+    }
     public static int getEventTypeToDrawable(String eventType) {
         switch (eventType) {
             case "skiing":

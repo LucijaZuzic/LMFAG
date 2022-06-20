@@ -1,186 +1,236 @@
 package com.example.lmfag.activities;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.util.Log;
+import android.os.Handler;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.example.lmfag.R;
 import com.example.lmfag.utility.adapters.CustomAdapterMessages;
-import com.example.lmfag.utility.DrawerHelper;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ViewMessagesActivity extends MenuInterfaceActivity {
-    private ViewMessagesActivity context = this;
+    private ViewMessagesActivity context;
     private RecyclerView recyclerViewMessages;
+    private List<String> messages = new ArrayList<>();
+    private List<String> times = new ArrayList<>();
+    private List<String> sender = new ArrayList<>();
+    private List<String> ids = new ArrayList<>();
+    private String me, other, myUsername, otherUsername;
+    //private Bitmap myImage, otherImage;
+    private CircleImageView circleImageView;
+    private TextView usernameFriend;
+    private TextView noResults;
+    private StorageReference storageRef;
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_messages);
-        DrawerHelper.fillNavbarData(this);
+        context = this;
+        me = preferences.getString("userID", "");
+        other = preferences.getString("friendID", "");
+        storageRef = storage.getReference();
+        circleImageView = findViewById(R.id.profile_image);
+        noResults = findViewById(R.id.noResults);
+        circleImageView.setOnClickListener(view -> {
+            editor.putString("friendID", other);
+            editor.apply();
+            Intent myIntent = new Intent(context, ViewProfileActivity.class);
+            startActivity(myIntent);
+            finish();
+        });
+        usernameFriend = findViewById(R.id.textViewUsernameFriend);
         recyclerViewMessages = findViewById(R.id.recyclerViewMessages);
-        getFriendData();
-        getAllMessages();
-        ImageView iv = findViewById(R.id.imageViewSend);
-        iv.setOnClickListener(view -> {
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
+        recyclerViewMessages = findViewById(R.id.recyclerViewMessages);
+        ImageView imageViewSend = findViewById(R.id.imageViewSend);
+        imageViewSend.setOnClickListener(view -> {
             Map<String, Object> docData = new HashMap<>();
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            String sender = preferences.getString("userID", "");
-            String receiver = preferences.getString("friendID", "");
             EditText editTextMessage = findViewById(R.id.editTextMessage);
-            docData.put("sender", sender);
-            docData.put("receiver", receiver);
+            docData.put("sender", me);
+            docData.put("receiver", other);
             docData.put("messages", editTextMessage.getText().toString());
             docData.put("timestamp", Timestamp.now());
             db.collection("messages").add(docData);
-            refresh();
+            editTextMessage.setText("");
+            editTextMessage.requestFocus();
+            getMyData();
         });
+        getMyData();
+        countDownStart();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
-        getFriendData();
-        getAllMessages();
     }
 
-    public void refresh() {
-        Intent myIntent = new Intent(context, ViewMessagesActivity.class);
-        context.startActivity(myIntent);
-    }
-
-    private void getFriendData( ) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String name = preferences.getString("friendID", "");
-        DocumentReference docRef = db.collection("users").document(name);
-        docRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    Map<String, Object> data = document.getData();
-
-                    TextView myUsername = findViewById(R.id.textViewUsernameFriend);
-                    myUsername.setText(data.get("username").toString());
-
-                    FirebaseStorage storage = FirebaseStorage.getInstance();
-                    StorageReference storageRef = storage.getReference();
-                    StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
-                    final long ONE_MEGABYTE = 1024 * 1024;
-                    imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                        // Data for "images/island.jpg" is returns, use this as needed
-                        CircleImageView circleImageView = findViewById(R.id.profile_image);
-                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-                        circleImageView.setImageBitmap(bmp);
-                        findViewById(R.id.profile_image).setOnClickListener(view -> {
-                            SharedPreferences.Editor editor = preferences.edit();
-                            editor.putString("friendID", name);
-                            editor.apply();
-                            Intent myIntent = new Intent(context, ViewProfileActivity.class);
-                            startActivity(myIntent);
-                        });
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Handle any errors
-                        }
-                    });
-                    //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                } else {
-                    Intent myIntent = new Intent(context, MainActivity.class);
-                    startActivity(myIntent);
-                    //Log.d(TAG, "No such document");
-                }
-            } else {
-                //Log.d(TAG, "get failed with ", task.getException());
-            }
-        });
-    }
-
-    private void getAllMessages() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        List<String> messages = new ArrayList<>();
-        List<String> times = new ArrayList<>();
-        List<String> sender = new ArrayList<>();
-        List<String> ids = new ArrayList<>();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        String me = preferences.getString("userID", "");
-        String other = preferences.getString("friendID", "");
+    public void getMyData() {
         if (me.equals("")) {
             Intent myIntent = new Intent(context, MainActivity.class);
             startActivity(myIntent);
+            finish();
             return;
         }
         if (other.equals(me)) {
-            Snackbar.make(recyclerViewMessages, R.string.visiting_myself, Snackbar.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.visiting_myself, Toast.LENGTH_SHORT).show();
             Intent myIntent = new Intent(context, MyProfileActivity.class);
             startActivity(myIntent);
+            finish();
             return;
         }
-        db.collection("messages")
-                .whereIn("receiver", Arrays.asList(me, other))
-                .orderBy("timestamp", Query.Direction.DESCENDING)
-                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    if (task.getResult().size() > 0) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Map<String, Object> map = document.getData();
-                            if (map.get("sender").toString().equals(me) || map.get("sender").toString().equals(other)) {
-                                messages.add(map.get("messages").toString());
-                                Timestamp start_timestamp = (Timestamp) (map.get("timestamp"));
-                                Date start_date = start_timestamp.toDate();
-                                Calendar cldr_start = Calendar.getInstance();
-                                cldr_start.setTime(start_date);
-                                times.add(DateFormat.getDateTimeInstance().format(cldr_start.getTime()));
-                                sender.add(map.get("sender").toString());
-                                ids.add(document.getId());
-                            }
-                        }
-                    }
-                    CustomAdapterMessages customAdapter = new CustomAdapterMessages(messages, times, sender, ids, me, context);
-                    recyclerViewMessages.setAdapter(customAdapter);
-                } else {
-                    Object ngs = task.getException();
-                    String sd = ngs.toString();
-                    Log.d("ERROR", "get failed with ", task.getException());
+        DocumentReference docRef = db.collection("users").document(me);
+        docRef.get().addOnCompleteListener(taskUser -> {
+            if (taskUser.isSuccessful()) {
+                DocumentSnapshot document = taskUser.getResult();
+                if (document.exists()) {
+                    Map<String, Object> data = document.getData();
+
+                    myUsername = Objects.requireNonNull(Objects.requireNonNull(data).get("username")).toString();
 
                 }
             }
-        });
+            getFriendData();
+        }).addOnFailureListener(taskUser -> getFriendData());
+    }
+
+    public void getFriendData() {
+        DocumentReference docRef = db.collection("users").document(other);
+        docRef.get().addOnCompleteListener(taskUser -> {
+            if (taskUser.isSuccessful()) {
+                DocumentSnapshot document = taskUser.getResult();
+                if (document.exists()) {
+                    Map<String, Object> data = document.getData();
+                    otherUsername = Objects.requireNonNull(Objects.requireNonNull(data).get("username")).toString();
+                    usernameFriend.setText(otherUsername);
+                    StorageReference imagesRef = storageRef.child("profile_pictures/" + document.getId());
+                    final long ONE_MEGABYTE = 1024 * 1024;
+                    String imageView = preferences.getString("showImage", "true");
+                    if (imageView.equals("true")) {
+                        imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes ->
+                                Glide.with(getApplicationContext())
+                                .asBitmap()
+                                .load(bytes)
+                                .into(circleImageView));
+                    }
+                }
+            }
+            getAllMessages();
+        }).addOnFailureListener(taskUser -> getAllMessages());
+    }
+
+    public void getAllMessages() {
+        messages = new ArrayList<>();
+        times = new ArrayList<>();
+        sender = new ArrayList<>();
+        ids = new ArrayList<>();
+        db.collection("messages")
+                .whereIn("receiver", Arrays.asList(me, other))
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().size() > 0) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Map<String, Object> map = document.getData();
+                                if (Objects.requireNonNull(map.get("sender")).toString().equals(me) || Objects.requireNonNull(map.get("sender")).toString().equals(other)) {
+                                    messages.add(Objects.requireNonNull(map.get("messages")).toString());
+                                    Timestamp start_timestamp = (Timestamp) (map.get("timestamp"));
+                                    Date start_date = Objects.requireNonNull(start_timestamp).toDate();
+                                    Calendar cldr_start = Calendar.getInstance();
+                                    cldr_start.setTime(start_date);
+                                    times.add(DateFormat.getDateTimeInstance().format(cldr_start.getTime()));
+                                    sender.add(Objects.requireNonNull(map.get("sender")).toString());
+                                    ids.add(document.getId());
+                                }
+                            }
+                        }
+                        Collections.reverse(messages);
+                        Collections.reverse(times);
+                        Collections.reverse(sender);
+                        Collections.reverse(ids);
+                        CustomAdapterMessages customAdapter = new CustomAdapterMessages(messages, times, sender, ids, me, context, myUsername, otherUsername);
+                        if (messages.size() > 0) {
+                            noResults.setVisibility(View.GONE);
+                        } else {
+                            noResults.setVisibility(View.VISIBLE);
+                        }
+                        recyclerViewMessages.setAdapter(customAdapter);
+                        /* Testing addOnScrollListener, had an error recyclerViewMessages.addOnScrollListener(new RecyclerView.OnScrollListener()  {
+                            @Override
+                            public void onScrolled (RecyclerView recyclerView, int dx, int dy) {
+                            // Grab the last child placed in the ScrollView, we need it to determinate the bottom position.
+                            View view = (View) recyclerViewMessages.getChildAt( recyclerViewMessages.getAdapter().getItemCount()-1);
+
+                            // Calculate the scrollDiff
+                            int diff = (view.getBottom()-(recyclerViewMessages.getHeight()+recyclerViewMessages.getScrollY()));
+
+                            // if diff is zero, then the bottom has been reached
+                            if( diff == 0 )
+                            {
+                                // notify that we have reached the bottom
+                                messageDialog();
+                            }
+                            }
+                        });
+                        recyclerViewMessages.setOnTouchListener(new MySwipe(context) {
+                            public void onSwipeTop() {
+                            }
+
+                            public void onSwipeRight() {
+                                messageDialog();
+                            }
+
+                            public void onSwipeLeft() {
+                                messageDialog();
+                            }
+
+                            public void onSwipeBottom() {
+                            }
+                        });*/
+                        recyclerViewMessages.scrollToPosition(customAdapter.getItemCount() - 1);
+                    }
+                });
+    }
+
+    public void countDownStart() {
+        handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                handler.postDelayed(this, 10000);
+                try {
+                    getAllMessages();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        handler.postDelayed(runnable, 10000);
     }
 }

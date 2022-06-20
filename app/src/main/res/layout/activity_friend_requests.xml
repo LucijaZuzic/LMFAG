@@ -6,47 +6,75 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:openDrawer="start">
+    tools:context=".activities.FriendRequestsActivity">
+    <!--tools:openDrawer="start"-->
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activities.FriendRequestsActivity">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/textViewFriendRequests"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:fontFamily="sans-serif-condensed-light"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/friend_requests"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            app:drawableStartCompat="@drawable/ic_baseline_mail_24"
+            app:drawableTint="@color/teal_700" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/toggleReceivedSent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:fontFamily="sans-serif-condensed-light"
+            android:padding="5dp"
+            android:text="@string/received"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            app:drawableStartCompat="@drawable/ic_baseline_inbox_24"
+            app:drawableTint="@color/teal_700" />
+
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="?android:attr/listDivider" />
+
+        <TextView
+            android:id="@+id/noResults"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:orientation="vertical">
+            android:fontFamily="sans-serif-condensed-light"
+            android:text="@string/no_results"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/textViewFriendRequests"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/gradient"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="@string/friend_requests"
-                android:textColor="@color/white"
-                android:textSize="21sp"
-                android:textStyle="bold"
-                app:drawableStartCompat="@drawable/ic_baseline_mail_24" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewFriendRequests"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewFriendRequests"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
-
-            </androidx.recyclerview.widget.RecyclerView>
-
-        </LinearLayout>
-    </ScrollView>
+        </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
