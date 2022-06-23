@@ -75,6 +75,8 @@ public class RateEventActivity extends MenuInterfaceActivity {
             context.startActivity(myIntent);
             finish();
         });
+
+        getWhoAttended();
     }
     private void writeRating() {
         if (people.size() > 0) {
@@ -107,12 +109,6 @@ public class RateEventActivity extends MenuInterfaceActivity {
                 }
             }
         });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getWhoAttended();
     }
 
     public void updateRating(int index, Float value) {

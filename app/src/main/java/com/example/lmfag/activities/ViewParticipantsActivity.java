@@ -33,7 +33,6 @@ public class ViewParticipantsActivity extends MenuInterfaceActivity {
     private Context context = this;
     private RecyclerView recyclerViewPlayers;
     private CircleImageView circleImageView;
-    private CardView rate_event_list_entry_banner_card;
     private TextView rate_event_list_entry_banner_text, organizerUsername;
     private TextView noResults;
 
@@ -44,7 +43,6 @@ public class ViewParticipantsActivity extends MenuInterfaceActivity {
 
         noResults = findViewById(R.id.noResults);
         circleImageView = findViewById(R.id.profile_image_organizer);
-        rate_event_list_entry_banner_card = findViewById(R.id.rate_event_list_entry_banner_card);
         rate_event_list_entry_banner_text = findViewById(R.id.rate_event_list_entry_banner_text);
         organizerUsername = findViewById(R.id.textViewOrganizer);
         people = new ArrayList<>();
@@ -115,11 +113,6 @@ public class ViewParticipantsActivity extends MenuInterfaceActivity {
                     rate_event_list_entry_banner_text.setText(Objects.requireNonNull(Objects.requireNonNull(docData).get("event_name")).toString());
                     rate_event_list_entry_banner_text.setCompoundDrawablesWithIntrinsicBounds(EventTypeToDrawable.getEventTypeToDrawable(Objects.requireNonNull(document.get("event_type")).toString()), 0, 0, 0);
 
-                    rate_event_list_entry_banner_card.setOnClickListener(view -> {
-                        Intent myIntent = new Intent(context, ViewEventActivity.class);
-                        context.startActivity(myIntent);
-                        finish();
-                    });
                     organizer = Objects.requireNonNull(Objects.requireNonNull(docData).get("organizer")).toString();
                     getOrganizerData(organizer);
                 }

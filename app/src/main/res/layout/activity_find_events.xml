@@ -94,6 +94,17 @@
                 android:orientation="vertical">
 
 
+                <TextView
+                    android:id="@+id/noResults"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="sans-serif-condensed-light"
+                    android:text="@string/no_results"
+                    android:textSize="21sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -121,7 +132,7 @@
                         <RadioButton
                             android:id="@+id/chooseOrganizer"
                             android:layout_width="wrap_content"
-                            android:layout_height="30dp"
+                            android:layout_height="35dp"
                             android:fontFamily="sans-serif-condensed-light"
                             android:text="@string/filter_by_organizer"
                             android:textSize="21sp"
@@ -133,7 +144,7 @@
                         <RadioButton
                             android:id="@+id/chooseEventName"
                             android:layout_width="wrap_content"
-                            android:layout_height="30dp"
+                            android:layout_height="35dp"
                             android:fontFamily="sans-serif-condensed-light"
                             android:text="@string/filter_by_event_name"
                             android:textSize="21sp"
@@ -145,7 +156,7 @@
                         <RadioButton
                             android:id="@+id/chooseEventType"
                             android:layout_width="wrap_content"
-                            android:layout_height="30dp"
+                            android:layout_height="35dp"
                             android:fontFamily="sans-serif-condensed-light"
                             android:text="@string/filter_by_event_type"
                             android:textSize="21sp"
@@ -344,17 +355,6 @@
                     android:layout_height="3dp"
                     android:layout_margin="10dp"
                     android:background="?android:attr/listDivider" />
-
-                <TextView
-                    android:id="@+id/noResults"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:fontFamily="sans-serif-condensed-light"
-                    android:text="@string/no_results"
-                    android:textSize="21sp"
-                    android:textStyle="bold"
-                    android:visibility="gone" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewEvents"

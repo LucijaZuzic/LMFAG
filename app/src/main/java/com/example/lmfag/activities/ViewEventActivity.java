@@ -59,11 +59,11 @@ public class ViewEventActivity extends MenuInterfaceActivity {
     private ImageView apply;
     private ImageView rate;
     private ImageView edit;
-    private TextView textViewChooseStartDate, textViewChooseStartTime, myUsername, textViewChooseEndDate, textViewChooseEndTime, eventName, eventType, location, description, minimum_level_view, switch_public, switch_out, slider;
+    private TextView textViewChooseStartDate, textViewChooseStartTime, textViewChooseEndDate, textViewChooseEndTime, eventName, eventType, location, description, minimum_level_view, switch_public, switch_out, slider;
     private double longitude = 45.23;
     private double latitude = 45.36;
-    private String organizer;
     private boolean public_event;
+    private String organizerID;
     private Float participate_minimum, participate_maximum;
     private Float minimum_level;
     private CircleImageView circleImageView;
@@ -90,7 +90,6 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         switch_out = findViewById(R.id.textViewOutdoor);
         location = findViewById(R.id.textViewChooseLocation);
         slider = findViewById(R.id.textViewNumberOfPlayers);
-        myUsername = findViewById(R.id.textViewOrganizer);
         apply = findViewById(R.id.imageViewApply);
         apply.setOnClickListener(view -> subscribe());
         ImageView participants_view = findViewById(R.id.imageViewParticipants);
@@ -104,7 +103,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         String eventID = preferences.getString("eventID", "");
         edit = findViewById(R.id.imageViewEdit);
         edit.setOnClickListener(view -> {
-            if (me.equals(organizer)) {
+            if (me.equals(organizerID)) {
                 if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime()) || cldr_start.getTime().equals(Calendar.getInstance().getTime()) || cldr_end.getTime().equals(Calendar.getInstance().getTime())) {
                     Toast.makeText(getApplicationContext(), R.string.edit_finished, Toast.LENGTH_SHORT).show();
                 } else {
@@ -123,7 +122,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                 CollectionReference docRef = db.collection("event_attending");
                 docRef.whereEqualTo("event", eventID).whereEqualTo("user", me).get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        if (task.getResult().size() == 0 && !me.equals(organizer)) {
+                        if (task.getResult().size() == 0 && !me.equals(organizerID)) {
                             Toast.makeText(getApplicationContext(), R.string.not_participate_rate, Toast.LENGTH_SHORT).show();
                         } else {
                             boolean found = false;
@@ -287,7 +286,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         CollectionReference dr = db.collection("friends");
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String userID = preferences.getString("userID", "");
-        dr.document(organizer).get().addOnCompleteListener(task -> {
+        dr.document(organizerID).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
@@ -449,7 +448,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
             if (task.isSuccessful()) {
                 if (task.getResult().size() > 0) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        if (!userID.equals(organizer)) {
+                        if (!userID.equals(organizerID)) {
                             docRef.document(document.getId()).delete();
                         } else {
                             Map<String, Object> map = document.getData();
@@ -496,9 +495,8 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     Map<String, Object> data = document.getData();
-
-                    myUsername.setText(Objects.requireNonNull(Objects.requireNonNull(data).get("username")).toString());
-
+                    String organizerUserName = Objects.requireNonNull(Objects.requireNonNull(data).get("username")).toString();
+                    eventName.setText(organizerUserName + "'s " + eventName.getText());
                     circleImageView.setOnClickListener(view -> {
                         editor.putString("friendID", name);
                         editor.apply();
@@ -532,7 +530,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
 
     private void checkEdit() {
         String me = preferences.getString("userID", "");
-        if (me.equals(organizer)) {
+        if (me.equals(organizerID)) {
             if (cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime()) || cldr_start.getTime().equals(Calendar.getInstance().getTime()) || cldr_end.getTime().equals(Calendar.getInstance().getTime())) {
                 edit.setVisibility(View.GONE);
             } else {
@@ -582,7 +580,10 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     Map<String, Object> docData = document.getData();
+
+                    organizerID = Objects.requireNonNull(docData.get("organizer")).toString();
                     eventName.setText(Objects.requireNonNull(Objects.requireNonNull(docData).get("event_name")).toString());
+                    getOrganizerData(organizerID);
                     eventType.setText(EventTypeToDrawable.getEventTypeToTranslation(this, Objects.requireNonNull(Objects.requireNonNull(docData).get("event_type")).toString()));
                     eventType.setCompoundDrawablesRelativeWithIntrinsicBounds(EventTypeToDrawable.getEventTypeToDrawable(Objects.requireNonNull(docData.get("event_type")).toString()), 0, 0, 0);
                     description.setText(Objects.requireNonNull(docData.get("event_description")).toString());
@@ -603,7 +604,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                     }
                     Float val1 = Float.parseFloat(Objects.requireNonNull(docData.get("minimum_players")).toString());
                     Float val2 = Float.parseFloat(Objects.requireNonNull(docData.get("maximum_players")).toString());
-                    organizer = Objects.requireNonNull(docData.get("organizer")).toString();
+                    System.out.println(Objects.requireNonNull(docData.get("organizer")).toString());
 
                     event_type = Objects.requireNonNull(docData.get("event_type")).toString();
                     participate_minimum = val1;
@@ -635,7 +636,6 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                     location.setText(formattedLocation);
                     mapController.setCenter(new org.osmdroid.util.GeoPoint(latitude, longitude));
 
-                    getOrganizerData(Objects.requireNonNull(docData.get("organizer")).toString());
                     CollectionReference docRef2 = db.collection("event_attending");
                     docRef2.whereEqualTo("event", eventID).whereEqualTo("user", userID).get().addOnCompleteListener(task2 -> {
                         if (task2.isSuccessful()) {
