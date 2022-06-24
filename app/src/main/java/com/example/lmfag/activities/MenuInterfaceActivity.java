@@ -74,15 +74,6 @@ public class MenuInterfaceActivity extends AppCompatActivity {
         finish();
     }
 
-    @Override
-    public void onBackPressed() {
-        if(isTaskRoot()){
-            startActivity(new Intent(this, MainActivity.class));
-        } else {
-            super.onBackPressed();
-        }
-        finish();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
