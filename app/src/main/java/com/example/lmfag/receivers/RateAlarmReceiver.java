@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 
@@ -14,8 +13,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.example.lmfag.R;
-import com.example.lmfag.activities.RateEventActivity;
-import com.example.lmfag.utility.EventTypeToDrawable;
+import com.example.lmfag.activities.MyProfileActivity;
 
 public class RateAlarmReceiver extends BroadcastReceiver {
 
@@ -25,29 +23,18 @@ public class RateAlarmReceiver extends BroadcastReceiver {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         SharedPreferences.Editor editor = preferences.edit();
 
-        Intent getToEventIntent = new Intent(context, RateEventActivity.class);
-        getToEventIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, getToEventIntent, PendingIntent.FLAG_IMMUTABLE);
-        int icon = R.drawable.ic_baseline_interests_24;
-        String title = context.getApplicationContext().getResources().getString(R.string.rate_event) + ": ";
+        Intent getToUnratedIntent = new Intent(context, MyProfileActivity.class);
+        getToUnratedIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, getToUnratedIntent, PendingIntent.FLAG_IMMUTABLE);
+        int icon = R.drawable.ic_baseline_star_outline_24;
+        String title = context.getApplicationContext().getResources().getString(R.string.events_are_unrated);
         String description = "";
         vibrator.vibrate(200);
-        Bundle extras = intent.getExtras();
-        if (extras != null) {
-            if (extras.getString("icon") != null) {
-                icon = EventTypeToDrawable.getEventTypeToDrawable(extras.getString("icon"));
-            }
-            if (extras.getString("name") != null) {
-                title += extras.getString("name");
-            }
-            if (extras.getString("description") != null) {
-                description = extras.getString("description");
-            }
-            if (extras.getString("eventID") != null) {
-                editor.putString("eventID", extras.getString("eventID"));
-                editor.apply();
-            }
-        }
+
+
+        editor.putInt("selectedTab", 5);
+        editor.apply();
+
         Notification notification = new NotificationCompat.Builder(context.getApplicationContext(), context.getApplicationContext().getResources().getString(R.string.channel_id))
                 .setSmallIcon(icon)
                 .setContentTitle(title)

@@ -496,7 +496,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                 if (document.exists()) {
                     Map<String, Object> data = document.getData();
                     String organizerUserName = Objects.requireNonNull(Objects.requireNonNull(data).get("username")).toString();
-                    eventName.setText(organizerUserName + "'s " + eventName.getText());
+                    eventName.setText(organizerUserName + ": " + eventName.getText());
                     circleImageView.setOnClickListener(view -> {
                         editor.putString("friendID", name);
                         editor.apply();

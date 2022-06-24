@@ -298,4 +298,9 @@
     <string name="string_0">0</string>
     <string name="erased_subscriptions">When an event is edited, all participants are removed. Do you want to continue?</string>
     <string name="search_by">Search by:</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="current">Current</string>
+    <string name="past">Past</string>
+    <string name="events_unrated">Events that are unrated</string>
+    <string name="events_are_unrated">You have unrated events</string>
 </resources>

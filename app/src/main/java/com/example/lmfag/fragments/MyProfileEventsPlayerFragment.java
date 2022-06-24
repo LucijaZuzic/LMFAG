@@ -19,19 +19,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.lmfag.R;
 import com.example.lmfag.utility.DrawerHelper;
 import com.example.lmfag.utility.adapters.CustomAdapterEvent;
+import com.google.android.material.chip.Chip;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class MyProfileEventsPlayerFragment extends Fragment {
     List<String> events_player_array;
     List<String> event_subscriber_array;
+    List<Integer> events_player_timestamp_array;
+    List<Integer> event_subscriber_timestamp_array;
     private Context context;
     private Activity activity;
     private TextView noResults, title;
     private SharedPreferences preferences;
     private boolean only_notified = false;
+    private Chip upcoming, current, past;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,34 +49,40 @@ public class MyProfileEventsPlayerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_titled_list_events_subsribed, container, false);
+        return inflater.inflate(R.layout.fragment_titled_list_events_subscribed, container, false);
     }
 
     public void changeArray(RecyclerView recyclerViewEventsPlayer) {
-        if (only_notified) {
-            if (!event_subscriber_array.get(0).equals("")) {
-                recyclerViewEventsPlayer.setAdapter(new CustomAdapterEvent(event_subscriber_array, context, preferences));
-                if (event_subscriber_array.size() > 0) {
-                    noResults.setVisibility(View.GONE);
-                } else {
-                    noResults.setVisibility(View.VISIBLE);
-                }
-            } else {
-                recyclerViewEventsPlayer.setAdapter(new CustomAdapterEvent(new ArrayList<>(), context, preferences));
-                noResults.setVisibility(View.VISIBLE);
-            }
+        List<String> events_array_selected_time = new ArrayList<>();
+        List<String> events = new ArrayList<>();
+        List<Integer> timestamps = new ArrayList<>();
+
+        if (!only_notified) {
+            events = events_player_array;
+            timestamps = events_player_timestamp_array;
         } else {
-            if (!events_player_array.get(0).equals("")) {
-                recyclerViewEventsPlayer.setAdapter(new CustomAdapterEvent(events_player_array, context, preferences));
-                if (events_player_array.size() > 0) {
-                    noResults.setVisibility(View.GONE);
-                } else {
-                    noResults.setVisibility(View.VISIBLE);
-                }
-            } else {
-                recyclerViewEventsPlayer.setAdapter(new CustomAdapterEvent(new ArrayList<>(), context, preferences));
-                noResults.setVisibility(View.VISIBLE);
+            events = event_subscriber_array;
+            timestamps = event_subscriber_timestamp_array;
+        }
+
+        for (int i = 0, n = events.size(); i < n; i++) {
+            if (upcoming.isChecked() && timestamps.get(i) == 0) {
+                events_array_selected_time.add(events.get(i));
             }
+            if (current.isChecked() && timestamps.get(i) == 1) {
+                events_array_selected_time.add(events.get(i));
+            }
+            if (past.isChecked() && timestamps.get(i) == 2) {
+                events_array_selected_time.add(events.get(i));
+            }
+        }
+
+        Collections.sort(events_array_selected_time);
+        recyclerViewEventsPlayer.setAdapter(new CustomAdapterEvent(events_array_selected_time, context, preferences));
+        if (events_array_selected_time.size() > 0) {
+            noResults.setVisibility(View.GONE);
+        } else {
+            noResults.setVisibility(View.VISIBLE);
         }
     }
 
@@ -82,17 +93,47 @@ public class MyProfileEventsPlayerFragment extends Fragment {
         noResults = view.findViewById(R.id.noResults);
         title = view.findViewById(R.id.list_title);
         title.setText(R.string.events_player);
+
+        upcoming = view.findViewById(R.id.upcoming);
+        current = view.findViewById(R.id.current);
+        past = view.findViewById(R.id.past);
+
         RecyclerView recyclerViewEventsPlayer = view.findViewById(R.id.recyclerViewList);
         SwitchCompat notificationsOnly = view.findViewById(R.id.onlyShowNotificationToggle);
         preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
+        upcoming.setOnClickListener((v) -> changeArray(recyclerViewEventsPlayer));
+        current.setOnClickListener((v) -> changeArray(recyclerViewEventsPlayer));
+        past.setOnClickListener((v) -> changeArray(recyclerViewEventsPlayer));
         String userID = preferences.getString("userID", "");
         if (!userID.equals("")) {
+
             String[] player_string = preferences.getString("userPlayer", "").split("_");
             events_player_array = new ArrayList<>();
-            events_player_array.addAll(Arrays.asList(player_string));
+            if (!player_string[0].equals("")) {
+                events_player_array.addAll(Arrays.asList(player_string));
+            }
+
+            String[] player_timestamp_string = preferences.getString("userPlayerTimestamp", "").split("_");
+            events_player_timestamp_array = new ArrayList<>();
+            if (!player_timestamp_string[0].equals("")) {
+                for (int i = 0; i < player_timestamp_string.length; i++) {
+                    events_player_timestamp_array.add(Integer.parseInt(player_timestamp_string[i]));
+                }
+            }
+
             String[] subscriber_string = preferences.getString("userSubscriber", "").split("_");
             event_subscriber_array = new ArrayList<>();
-            event_subscriber_array.addAll(Arrays.asList(subscriber_string));
+            if (!subscriber_string[0].equals("")) {
+                event_subscriber_array.addAll(Arrays.asList(subscriber_string));
+            }
+
+            String[] subscriber_timestamp_string = preferences.getString("userSubscriberTimestamp", "").split("_");
+            event_subscriber_timestamp_array = new ArrayList<>();
+            if (!subscriber_timestamp_string[0].equals("")) {
+                for (int i = 0; i < subscriber_timestamp_string.length; i++) {
+                    event_subscriber_timestamp_array.add(Integer.parseInt(subscriber_timestamp_string[i]));
+                }
+            }
             changeArray(recyclerViewEventsPlayer);
         }
         notificationsOnly.setOnClickListener(someView -> {

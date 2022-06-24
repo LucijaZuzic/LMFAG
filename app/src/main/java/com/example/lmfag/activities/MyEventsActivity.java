@@ -8,6 +8,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.lmfag.R;
 import com.example.lmfag.fragments.MyProfileEventsOrganizerFragment;
 import com.example.lmfag.fragments.MyProfileEventsPlayerFragment;
+import com.example.lmfag.fragments.MyProfileEventsUnratedFragment;
 import com.example.lmfag.utility.adapters.TabPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -23,7 +24,7 @@ public class MyEventsActivity extends MenuInterfaceActivity {
     }
 
     private void fillPager() {
-        TabPagerAdapter tabPagerAdapter = new TabPagerAdapter(this, new MyProfileEventsOrganizerFragment(), new MyProfileEventsPlayerFragment());
+        TabPagerAdapter tabPagerAdapter = new TabPagerAdapter(this, new MyProfileEventsOrganizerFragment(), new MyProfileEventsPlayerFragment(), new MyProfileEventsUnratedFragment());
         ViewPager2 viewPager = findViewById(R.id.pager);
         viewPager.setAdapter(tabPagerAdapter);
 
@@ -35,6 +36,9 @@ public class MyEventsActivity extends MenuInterfaceActivity {
                     break;
                 case 1:
                     tab.setIcon(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_calendar_today_24));
+                    break;
+                case 2:
+                    tab.setIcon(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_star_outline_24));
                     break;
             }
         }).attach();

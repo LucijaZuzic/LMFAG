@@ -406,6 +406,11 @@ public class CreateEventActivity extends MenuInterfaceActivity {
     }
 
     void fetchDataFromUI() {
+        String eventID = preferences.getString("eventID", "");
+        if (eventID.equals("")) {
+            continueEdit();
+            return;
+        }
         DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:

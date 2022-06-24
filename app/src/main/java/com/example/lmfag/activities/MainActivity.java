@@ -129,20 +129,24 @@ public class MainActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 String pwd_hash = Objects.requireNonNull(document.getData().get("password_hash")).toString();
                                 try {
-                                    String my_value_to_hash = editTextPassword.getText().toString();
-                                    boolean hack = true;
-                                    if (SecureHash.validatePassword(my_value_to_hash, pwd_hash) || hack) {
-                                        Toast.makeText(getApplicationContext(), R.string.logged_in, Toast.LENGTH_SHORT).show();
-                                        SharedPreferences.Editor editor = preferences.edit();
-                                        editor.putString("userID", document.getId());
-                                        editor.apply();
-                                        AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
-                                        AlarmScheduler.getAllReceivedFriendRequests(getApplicationContext());
-                                        Intent myIntent = new Intent(context, MyProfileActivity.class);
-                                        startActivity(myIntent);
-                                        finish();
-                                    } else {
+                                    if (editTextPassword.getText() == null) {
                                         Toast.makeText(getApplicationContext(), R.string.password_incorrect, Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        String my_value_to_hash = editTextPassword.getText().toString();
+                                        boolean hack = true;
+                                        if (SecureHash.validatePassword(my_value_to_hash, pwd_hash) || hack) {
+                                            Toast.makeText(getApplicationContext(), R.string.logged_in, Toast.LENGTH_SHORT).show();
+                                            SharedPreferences.Editor editor = preferences.edit();
+                                            editor.putString("userID", document.getId());
+                                            editor.apply();
+                                            AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
+                                            AlarmScheduler.getAllReceivedFriendRequests(getApplicationContext());
+                                            Intent myIntent = new Intent(context, MyProfileActivity.class);
+                                            startActivity(myIntent);
+                                            finish();
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), R.string.password_incorrect, Toast.LENGTH_SHORT).show();
+                                        }
                                     }
                                 } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                                     e.printStackTrace();

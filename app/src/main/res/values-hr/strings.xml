@@ -298,4 +298,9 @@
     <string name="string_0">0</string>
     <string name="erased_subscriptions">Kada izmijenite događaj, svi se sudionici brišu. Želite li nastaviti?</string>
     <string name="search_by">Kriterij pretrage:</string>
+    <string name="upcoming">Budući</string>
+    <string name="current">Trenutni</string>
+    <string name="past">Prošli</string>
+    <string name="events_unrated">Događaji koji nisu ocijenjeni</string>
+    <string name="events_are_unrated">Postoje događaji koje niste ocijenili</string>
 </resources>

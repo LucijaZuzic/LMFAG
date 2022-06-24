@@ -17,15 +17,18 @@ import com.example.lmfag.fragments.ViewProfileInfoFragment;
 import com.example.lmfag.utility.adapters.TabPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ViewProfileActivity extends MenuInterfaceActivity {
 
@@ -39,6 +42,7 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
 
     private void getOrganizerEvents() {
         List<String> organizer_events_array = new ArrayList<>();
+        List<Integer> organizer_events_timestamps = new ArrayList<>();
         String friendID = preferences.getString("friendID", "");
         if (!friendID.equals("")) {
             db.collection("events").whereEqualTo("organizer", friendID).get().addOnCompleteListener(task -> {
@@ -46,80 +50,160 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                     if (task.getResult().size() > 0) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             organizer_events_array.add(document.getId());
+                            Calendar cldr_start = Calendar.getInstance();
+                            Timestamp start_timestamp = (Timestamp) (document.getData().get("datetime"));
+                            Date start_date = Objects.requireNonNull(start_timestamp).toDate();
+                            cldr_start.setTime(start_date);
+                            Calendar cldr_end = Calendar.getInstance();
+                            Timestamp end_timestamp = (Timestamp) (document.getData().get("ending"));
+                            Date end_date = Objects.requireNonNull(end_timestamp).toDate();
+                            cldr_end.setTime(end_date);
+                            organizer_events_timestamps.add(checkTimestamp(cldr_start, cldr_end));
                         }
-                        Collections.sort(organizer_events_array);
+
                         StringBuilder events_organizer_stringBuilder = new StringBuilder();
+                        StringBuilder events_organizer_timestamp_stringBuilder = new StringBuilder();
                         for (String event : organizer_events_array) {
                             events_organizer_stringBuilder.append(event).append("_");
                         }
+                        for (Integer timestamp : organizer_events_timestamps) {
+                            events_organizer_timestamp_stringBuilder.append(timestamp).append("_");
+                        }
                         String events_organizer_string = events_organizer_stringBuilder.toString();
+                        String events_organizer_timestamp_string = events_organizer_timestamp_stringBuilder.toString();
                         if (events_organizer_string.length() > 0) {
                             editor.putString("friendOrganizer", events_organizer_string.substring(0, events_organizer_string.length() - 1));
+                            editor.apply();
+                            editor.putString("friendOrganizerTimestamp", events_organizer_timestamp_string.substring(0, events_organizer_timestamp_string.length() - 1));
                         } else {
                             editor.putString("friendOrganizer", "");
+                            editor.apply();
+                            editor.putString("friendOrganizerTimestamp", "");
                         }
                     } else {
                         editor.putString("friendOrganizer", "");
+                        editor.apply();
+                        editor.putString("friendOrganizerTimestamp", "");
                     }
                 } else {
                     editor.putString("friendOrganizer", "");
+                    editor.apply();
+                    editor.putString("friendOrganizerTimestamp", "");
                 }
                 editor.apply();
                 fillPager();
             });
         }
     }
-
+    private int checkTimestamp(Calendar cldr_start, Calendar cldr_end) {
+        if (cldr_start.getTime().after(Calendar.getInstance().getTime()) && cldr_end.getTime().after(Calendar.getInstance().getTime())) {
+            return 0;
+        }
+        if (cldr_start.getTime().before(Calendar.getInstance().getTime()) && cldr_end.getTime().after(Calendar.getInstance().getTime())) {
+            return 1;
+        }
+        if (cldr_start.getTime().before(Calendar.getInstance().getTime()) && cldr_end.getTime().before(Calendar.getInstance().getTime())) {
+            return 2;
+        }
+        return -1;
+    }
     private void getSubscriberEvents() {
         List<String> player_events_array = new ArrayList<>();
         List<String> subscriber_events_array = new ArrayList<>();
+        List<Integer> player_events_timestamps = new ArrayList<>();
+        List<Integer> subscriber_events_timestamps = new ArrayList<>();
         String friendID = preferences.getString("friendID", "");
+        AtomicInteger processed = new AtomicInteger();
         if (!friendID.equals("")) {
             db.collection("event_attending").whereEqualTo("user", friendID).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             String isSubscribed = Objects.requireNonNull(document.getData().get("notifications")).toString();
-                            if (isSubscribed.equals("true")) {
-                                subscriber_events_array.add(Objects.requireNonNull(document.getData().get("event")).toString());
-                            }
-                            String isAttending = Objects.requireNonNull(document.getData().get("attending")).toString();
-                            if (isAttending.equals("true")) {
-                                player_events_array.add(Objects.requireNonNull(document.getData().get("event")).toString());
-                            }
-                        }
-                        Collections.sort(subscriber_events_array);
-                        Collections.sort(player_events_array);
-                        StringBuilder events_player_stringBuilder = new StringBuilder();
-                        for (String event : player_events_array) {
-                            events_player_stringBuilder.append(event).append("_");
-                        }
-                        String events_player_string = events_player_stringBuilder.toString();
-                        StringBuilder events_subscriber_stringBuilder = new StringBuilder();
-                        for (String event : subscriber_events_array) {
-                            events_subscriber_stringBuilder.append(event).append("_");
-                        }
-                        String events_subscriber_string = events_subscriber_stringBuilder.toString();
-                        if (events_player_string.length() > 0) {
-                            editor.putString("friendPlayer", events_player_string.substring(0, events_player_string.length() - 1));
-                        } else {
-                            editor.putString("friendPlayer", "");
-                        }
-                        editor.apply();
-                        if (events_subscriber_string.length() > 0) {
-                            editor.putString("friendSubscriber", events_subscriber_string.substring(0, events_subscriber_string.length() - 1));
-                        } else {
-                            editor.putString("friendSubscriber", "");
+                            db.collection("events").document(document.getData().get("event").toString()).get().addOnCompleteListener(task1 -> {
+                                if (task1.isSuccessful()) {
+                                    DocumentSnapshot document1 = task1.getResult();
+                                    Calendar cldr_start = Calendar.getInstance();
+                                    Timestamp start_timestamp = (Timestamp) (document1.getData().get("datetime"));
+                                    Date start_date = Objects.requireNonNull(start_timestamp).toDate();
+                                    cldr_start.setTime(start_date);
+                                    Calendar cldr_end = Calendar.getInstance();
+                                    Timestamp end_timestamp = (Timestamp) (document1.getData().get("ending"));
+                                    Date end_date = Objects.requireNonNull(end_timestamp).toDate();
+                                    cldr_end.setTime(end_date);
+                                    int timestamp = checkTimestamp(cldr_start, cldr_end);
+
+                                    if (isSubscribed.equals("true")) {
+                                        subscriber_events_array.add(Objects.requireNonNull(document.getData().get("event")).toString());
+                                        subscriber_events_timestamps.add(timestamp);
+                                    }
+                                    String isAttending = Objects.requireNonNull(document.getData().get("attending")).toString();
+                                    if (isAttending.equals("true")) {
+                                        player_events_array.add(Objects.requireNonNull(document.getData().get("event")).toString());
+                                        player_events_timestamps.add(timestamp);
+                                    }
+                                    processed.getAndIncrement();
+                                    if (processed.get() == task.getResult().size()) {
+                                        StringBuilder events_player_stringBuilder = new StringBuilder();
+                                        StringBuilder events_player_timestamp_stringBuilder = new StringBuilder();
+                                        for (String event : player_events_array) {
+                                            events_player_stringBuilder.append(event).append("_");
+                                        }
+                                        for (Integer timestampTMP : player_events_timestamps) {
+                                            events_player_timestamp_stringBuilder.append(timestampTMP).append("_");
+                                        }
+                                        String events_player_string = events_player_stringBuilder.toString();
+                                        String events_player_timestamp_string = events_player_timestamp_stringBuilder.toString();
+                                        StringBuilder events_subscriber_stringBuilder = new StringBuilder();
+                                        StringBuilder events_subscriber_timestamp_stringBuilder = new StringBuilder();
+                                        for (String event : subscriber_events_array) {
+                                            events_subscriber_stringBuilder.append(event).append("_");
+                                        }
+                                        for (Integer timestampTMP : subscriber_events_timestamps) {
+                                            events_subscriber_timestamp_stringBuilder.append(timestampTMP).append("_");
+                                        }
+                                        String events_subscriber_string = events_subscriber_stringBuilder.toString();
+                                        String events_subscriber_timestamp_string = events_subscriber_timestamp_stringBuilder.toString();
+                                        if (events_player_string.length() > 0) {
+                                            editor.putString("friendPlayer", events_player_string.substring(0, events_player_string.length() - 1));
+                                            editor.apply();
+                                            editor.putString("friendPlayerTimestamp", events_player_timestamp_string.substring(0, events_player_timestamp_string.length() - 1));
+                                        } else {
+                                            editor.putString("friendPlayer", "");
+                                            editor.apply();
+                                            editor.putString("friendPlayerTimestamp", "");
+                                        }
+                                        editor.apply();
+                                        if (events_subscriber_string.length() > 0) {
+                                            editor.putString("friendSubscriber", events_subscriber_string.substring(0, events_subscriber_string.length() - 1));
+                                            editor.apply();
+                                            editor.putString("friendSubscriberTimestamp", events_subscriber_timestamp_string.substring(0, events_subscriber_timestamp_string.length() - 1));
+                                        } else {
+                                            editor.putString("friendSubscriber", "");
+                                            editor.apply();
+                                            editor.putString("friendSubscriberTimestamp", "");
+                                        }
+                                    }
+                                }
+                            });
                         }
                     } else {
                         editor.putString("friendPlayer", "");
                         editor.apply();
+                        editor.putString("friendPlayerTimestamp", "");
+                        editor.apply();
                         editor.putString("friendSubscriber", "");
+                        editor.apply();
+                        editor.putString("friendSubscriberTimestamp", "");
                     }
                 } else {
                     editor.putString("friendPlayer", "");
                     editor.apply();
+                    editor.putString("friendPlayerTimestamp", "");
+                    editor.apply();
                     editor.putString("friendSubscriber", "");
+                    editor.apply();
+                    editor.putString("friendSubscriberTimestamp", "");
                 }
                 editor.apply();
                 getOrganizerEvents();

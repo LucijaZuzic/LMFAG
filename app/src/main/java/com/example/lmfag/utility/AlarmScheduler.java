@@ -21,6 +21,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class AlarmScheduler {
 
@@ -39,13 +40,10 @@ public class AlarmScheduler {
         }
     }
 
-    public static void scheduleAlarmEnd(Context applicationContext, String icon, String name, String description, String eventID) {
+    public static void scheduleAlarmEnd(Context applicationContext) {
         AlarmManager alarmManager = (AlarmManager) applicationContext.getSystemService(Context.ALARM_SERVICE);
         Intent alarmReceiverIntent = new Intent(applicationContext, RateAlarmReceiver.class);
-        alarmReceiverIntent.putExtra("icon", icon);
-        alarmReceiverIntent.putExtra("name", name);
-        alarmReceiverIntent.putExtra("description", description);
-        alarmReceiverIntent.putExtra("eventID", eventID);
+
         PendingIntent pendingIntent = PendingIntent.getBroadcast(applicationContext, 0, alarmReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
@@ -103,6 +101,7 @@ public class AlarmScheduler {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
         String userID = preferences.getString("userID", "");
+        AtomicBoolean sentWarning = new AtomicBoolean(false);
         if (!userID.equals("")) {
             db.collection("event_attending").whereEqualTo("user", userID).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
@@ -129,7 +128,8 @@ public class AlarmScheduler {
                                                 scheduleAlarmStart(applicationContext, cldr_start.getTimeInMillis() - current.getTimeInMillis(), Objects.requireNonNull(docData.get("event_type")).toString(), Objects.requireNonNull(docData.get("event_name")).toString(), Objects.requireNonNull(docData.get("event_description")).toString(), documentTime.getId());
                                             }
                                             if (current.getTimeInMillis() > cldr_end.getTimeInMillis() && !Objects.requireNonNull(document.getData().get("rated")).toString().equals("true")) {
-                                                scheduleAlarmEnd(applicationContext, Objects.requireNonNull(docData.get("event_type")).toString(), Objects.requireNonNull(docData.get("event_name")).toString(), Objects.requireNonNull(docData.get("event_description")).toString(), documentTime.getId());
+                                                sentWarning.set(true);
+                                                scheduleAlarmEnd(applicationContext);
                                             }
                                         }
                                     }
