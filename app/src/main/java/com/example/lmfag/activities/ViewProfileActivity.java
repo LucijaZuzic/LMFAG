@@ -109,9 +109,9 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
     }
     private void getSubscriberEvents() {
         List<String> player_events_array = new ArrayList<>();
-        List<String> subscriber_events_array = new ArrayList<>();
+        /* friend List<String> subscriber_events_array = new ArrayList<>(); */
         List<Integer> player_events_timestamps = new ArrayList<>();
-        List<Integer> subscriber_events_timestamps = new ArrayList<>();
+        /* friend List<Integer> subscriber_events_timestamps = new ArrayList<>(); */
         String friendID = preferences.getString("friendID", "");
         AtomicInteger processed = new AtomicInteger();
         if (!friendID.equals("")) {
@@ -119,12 +119,12 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            String isSubscribed = Objects.requireNonNull(document.getData().get("notifications")).toString();
-                            db.collection("events").document(document.getData().get("event").toString()).get().addOnCompleteListener(task1 -> {
+                            /* friend String isSubscribed = Objects.requireNonNull(document.getData().get("notifications")).toString(); */
+                            db.collection("events").document(Objects.requireNonNull(document.getData().get("event")).toString()).get().addOnCompleteListener(task1 -> {
                                 if (task1.isSuccessful()) {
                                     DocumentSnapshot document1 = task1.getResult();
                                     Calendar cldr_start = Calendar.getInstance();
-                                    Timestamp start_timestamp = (Timestamp) (document1.getData().get("datetime"));
+                                    Timestamp start_timestamp = (Timestamp) (Objects.requireNonNull(document1.getData()).get("datetime"));
                                     Date start_date = Objects.requireNonNull(start_timestamp).toDate();
                                     cldr_start.setTime(start_date);
                                     Calendar cldr_end = Calendar.getInstance();
@@ -133,10 +133,10 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                                     cldr_end.setTime(end_date);
                                     int timestamp = checkTimestamp(cldr_start, cldr_end);
 
-                                    if (isSubscribed.equals("true")) {
+                                    /* friend if (isSubscribed.equals("true")) {
                                         subscriber_events_array.add(Objects.requireNonNull(document.getData().get("event")).toString());
                                         subscriber_events_timestamps.add(timestamp);
-                                    }
+                                    } */
                                     String isAttending = Objects.requireNonNull(document.getData().get("attending")).toString();
                                     if (isAttending.equals("true")) {
                                         player_events_array.add(Objects.requireNonNull(document.getData().get("event")).toString());
@@ -154,7 +154,7 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                                         }
                                         String events_player_string = events_player_stringBuilder.toString();
                                         String events_player_timestamp_string = events_player_timestamp_stringBuilder.toString();
-                                        StringBuilder events_subscriber_stringBuilder = new StringBuilder();
+                                        /* friend StringBuilder events_subscriber_stringBuilder = new StringBuilder();
                                         StringBuilder events_subscriber_timestamp_stringBuilder = new StringBuilder();
                                         for (String event : subscriber_events_array) {
                                             events_subscriber_stringBuilder.append(event).append("_");
@@ -163,7 +163,7 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                                             events_subscriber_timestamp_stringBuilder.append(timestampTMP).append("_");
                                         }
                                         String events_subscriber_string = events_subscriber_stringBuilder.toString();
-                                        String events_subscriber_timestamp_string = events_subscriber_timestamp_stringBuilder.toString();
+                                        String events_subscriber_timestamp_string = events_subscriber_timestamp_stringBuilder.toString(); */
                                         if (events_player_string.length() > 0) {
                                             editor.putString("friendPlayer", events_player_string.substring(0, events_player_string.length() - 1));
                                             editor.apply();
@@ -174,7 +174,7 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                                             editor.putString("friendPlayerTimestamp", "");
                                         }
                                         editor.apply();
-                                        if (events_subscriber_string.length() > 0) {
+                                        /* friend if (events_subscriber_string.length() > 0) {
                                             editor.putString("friendSubscriber", events_subscriber_string.substring(0, events_subscriber_string.length() - 1));
                                             editor.apply();
                                             editor.putString("friendSubscriberTimestamp", events_subscriber_timestamp_string.substring(0, events_subscriber_timestamp_string.length() - 1));
@@ -182,7 +182,7 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                                             editor.putString("friendSubscriber", "");
                                             editor.apply();
                                             editor.putString("friendSubscriberTimestamp", "");
-                                        }
+                                        }*/
                                     }
                                 }
                             });
@@ -191,19 +191,19 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                         editor.putString("friendPlayer", "");
                         editor.apply();
                         editor.putString("friendPlayerTimestamp", "");
-                        editor.apply();
+                        /* friend editor.apply();
                         editor.putString("friendSubscriber", "");
                         editor.apply();
-                        editor.putString("friendSubscriberTimestamp", "");
+                        editor.putString("friendSubscriberTimestamp", ""); */
                     }
                 } else {
                     editor.putString("friendPlayer", "");
                     editor.apply();
                     editor.putString("friendPlayerTimestamp", "");
-                    editor.apply();
+                    /* friend editor.apply();
                     editor.putString("friendSubscriber", "");
                     editor.apply();
-                    editor.putString("friendSubscriberTimestamp", "");
+                    editor.putString("friendSubscriberTimestamp", ""); */
                 }
                 editor.apply();
                 getOrganizerEvents();

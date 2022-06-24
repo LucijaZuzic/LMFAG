@@ -30,8 +30,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class FindEventsActivity extends MenuInterfaceActivity {
-    TextView sp;
-    List<String> all_areas;
+    private TextView sp;
+    private List<String> all_areas;
     private Context context = this;
     private RecyclerView recyclerViewFindEvents;
     private LinearLayout nameCard, organizerCard, typeCard;

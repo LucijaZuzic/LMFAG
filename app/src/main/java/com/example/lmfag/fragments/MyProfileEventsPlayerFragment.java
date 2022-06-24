@@ -27,10 +27,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class MyProfileEventsPlayerFragment extends Fragment {
-    List<String> events_player_array;
-    List<String> event_subscriber_array;
-    List<Integer> events_player_timestamp_array;
-    List<Integer> event_subscriber_timestamp_array;
+    private List<String> events_player_array;
+    private List<String> event_subscriber_array;
+    private List<Integer> events_player_timestamp_array;
+    private List<Integer> event_subscriber_timestamp_array;
     private Context context;
     private Activity activity;
     private TextView noResults, title;
@@ -61,8 +61,12 @@ public class MyProfileEventsPlayerFragment extends Fragment {
             events = events_player_array;
             timestamps = events_player_timestamp_array;
         } else {
-            events = event_subscriber_array;
-            timestamps = event_subscriber_timestamp_array;
+            for (int i = 0, n = event_subscriber_array.size(); i < n; i++) {
+                if (events_player_array.contains(event_subscriber_array.get(i))) {
+                    events.add(event_subscriber_array.get(i));
+                    timestamps.add(event_subscriber_timestamp_array.get(i));
+                }
+            }
         }
 
         for (int i = 0, n = events.size(); i < n; i++) {
@@ -116,8 +120,8 @@ public class MyProfileEventsPlayerFragment extends Fragment {
             String[] player_timestamp_string = preferences.getString("userPlayerTimestamp", "").split("_");
             events_player_timestamp_array = new ArrayList<>();
             if (!player_timestamp_string[0].equals("")) {
-                for (int i = 0; i < player_timestamp_string.length; i++) {
-                    events_player_timestamp_array.add(Integer.parseInt(player_timestamp_string[i]));
+                for (String s : player_timestamp_string) {
+                    events_player_timestamp_array.add(Integer.parseInt(s));
                 }
             }
 
@@ -130,15 +134,15 @@ public class MyProfileEventsPlayerFragment extends Fragment {
             String[] subscriber_timestamp_string = preferences.getString("userSubscriberTimestamp", "").split("_");
             event_subscriber_timestamp_array = new ArrayList<>();
             if (!subscriber_timestamp_string[0].equals("")) {
-                for (int i = 0; i < subscriber_timestamp_string.length; i++) {
-                    event_subscriber_timestamp_array.add(Integer.parseInt(subscriber_timestamp_string[i]));
+                for (String s : subscriber_timestamp_string) {
+                    event_subscriber_timestamp_array.add(Integer.parseInt(s));
                 }
             }
             changeArray(recyclerViewEventsPlayer);
         }
         notificationsOnly.setOnClickListener(someView -> {
             if (notificationsOnly.isChecked()) {
-                title.setText(R.string.events_subscriber);
+                title.setText(R.string.events_subscriber_player);
             } else {
                 title.setText(R.string.events_player);
             }

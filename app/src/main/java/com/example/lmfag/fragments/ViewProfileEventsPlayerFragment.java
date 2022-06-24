@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,14 +26,13 @@ import java.util.Collections;
 import java.util.List;
 
 public class ViewProfileEventsPlayerFragment extends Fragment {
-    List<String> events_player_array;
-    List<String> event_subscriber_array;
-    List<Integer> events_player_timestamp_array;
-    List<Integer> event_subscriber_timestamp_array;
+    private List<String> events_player_array;
+    private List<String> event_subscriber_array;
+    private List<Integer> events_player_timestamp_array;
+    private List<Integer> event_subscriber_timestamp_array;
     private Context context;
     private Activity activity;
     private SharedPreferences preferences;
-    private boolean only_notified = false;
     private TextView noResults;
     private Chip upcoming, current, past;
 
@@ -49,30 +47,20 @@ public class ViewProfileEventsPlayerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_titled_list_events_subscribed, container, false);
+        return inflater.inflate(R.layout.fragment_titled_list_events_time, container, false);
     }
     public void changeArray(RecyclerView recyclerViewEventsPlayer) {
         List<String> events_array_selected_time = new ArrayList<>();
-        List<String> events = new ArrayList<>();
-        List<Integer> timestamps = new ArrayList<>();
 
-        if (!only_notified) {
-            events = events_player_array;
-            timestamps = events_player_timestamp_array;
-        } else {
-            events = event_subscriber_array;
-            timestamps = event_subscriber_timestamp_array;
-        }
-
-        for (int i = 0, n = events.size(); i < n; i++) {
-            if (upcoming.isChecked() && timestamps.get(i) == 0) {
-                events_array_selected_time.add(events.get(i));
+        for (int i = 0, n = events_player_array.size(); i < n; i++) {
+            if (upcoming.isChecked() && events_player_timestamp_array.get(i) == 0) {
+                events_array_selected_time.add(events_player_array.get(i));
             }
-            if (current.isChecked() && timestamps.get(i) == 1) {
-                events_array_selected_time.add(events.get(i));
+            if (current.isChecked() && events_player_timestamp_array.get(i) == 1) {
+                events_array_selected_time.add(events_player_array.get(i));
             }
-            if (past.isChecked() && timestamps.get(i) == 2) {
-                events_array_selected_time.add(events.get(i));
+            if (past.isChecked() && events_player_timestamp_array.get(i) == 2) {
+                events_array_selected_time.add(events_player_array.get(i));
             }
         }
 
@@ -96,12 +84,12 @@ public class ViewProfileEventsPlayerFragment extends Fragment {
         past = view.findViewById(R.id.past);
 
         RecyclerView recyclerViewEventsPlayer = view.findViewById(R.id.recyclerViewList);
-        SwitchCompat notificationsOnly = view.findViewById(R.id.onlyShowNotificationToggle);
+
         preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         upcoming.setOnClickListener((v) -> changeArray(recyclerViewEventsPlayer));
         current.setOnClickListener((v) -> changeArray(recyclerViewEventsPlayer));
         past.setOnClickListener((v) -> changeArray(recyclerViewEventsPlayer));
-        notificationsOnly.setVisibility(View.GONE);
+
         preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         String friendID = preferences.getString("friendID", "");
         if (!friendID.equals("")) {
@@ -135,15 +123,7 @@ public class ViewProfileEventsPlayerFragment extends Fragment {
             }
             changeArray(recyclerViewEventsPlayer);
         }
-        notificationsOnly.setOnClickListener(someView -> {
-            if (notificationsOnly.isChecked()) {
-                title.setText(R.string.events_view_subscriber);
-            } else {
-                title.setText(R.string.events_view_player);
-            }
-            only_notified = notificationsOnly.isChecked();
-            changeArray(recyclerViewEventsPlayer);
-        });
+        title.setText(R.string.events_view_player);
     }
 
 }

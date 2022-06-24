@@ -235,12 +235,12 @@
     <string name="subscriber">Subscriber</string>
     <string name="user_areas_of_interest">User\'s areas of interest</string>
     <string name="user_friends">User\'s friends</string>
-    <string name="events_organizer">Events that I organized</string>
-    <string name="events_player">Events that I played</string>
-    <string name="events_subscriber">Events I subscribed to</string>
-    <string name="events_view_organizer">Events that the user organized</string>
-    <string name="events_view_player">Events that the user participated in</string>
-    <string name="events_view_subscriber">Events that the user subscribed to</string>
+    <string name="events_organizer">Events you organized</string>
+    <string name="events_player">Events you participated in</string>
+    <string name="events_subscriber">Events you subscribed to</string>
+    <string name="events_view_organizer">Events the user organized</string>
+    <string name="events_view_player">Events the user participated in</string>
+    <string name="events_view_subscriber">Events the user subscribed to</string>
     <string name="notifications_only">Notifications only</string>
     <string name="change_username">Change username</string>
     <string name="change_password">Change password</string>
@@ -303,4 +303,6 @@
     <string name="past">Past</string>
     <string name="events_unrated">Events that are unrated</string>
     <string name="events_are_unrated">You have unrated events</string>
+    <string name="events_subscriber_player">Events I subscribed to and participated in</string>
+    <string name="events_subscriber_organizer">Events I subscribed to and organized</string>
 </resources>

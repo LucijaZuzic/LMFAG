@@ -30,8 +30,8 @@ import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MyProfileInfoFragment extends Fragment {
-    SharedPreferences preferences;
-    FirebaseFirestore db;
+    private SharedPreferences preferences;
+    private FirebaseFirestore db;
     private Context context;
     private Activity activity;
 

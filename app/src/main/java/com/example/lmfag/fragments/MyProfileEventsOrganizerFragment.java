@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,8 +31,11 @@ public class MyProfileEventsOrganizerFragment extends Fragment {
     private Activity activity;
     private TextView noResults;
     private Chip upcoming, current, past;
+    private boolean only_notified = false;
     private List<String> events_array;
     private List<Integer> timestamp_array;
+    private List<String> event_subscriber_array;
+    private List<Integer> event_subscriber_timestamp_array;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,20 +48,35 @@ public class MyProfileEventsOrganizerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_titled_list_events_time, container, false);
+        return inflater.inflate(R.layout.fragment_titled_list_events_subscribed, container, false);
     }
 
     public void changeArray(RecyclerView recyclerViewEventsOrganizer) {
         List<String> events_array_selected_time = new ArrayList<>();
-        for (int i = 0, n = events_array.size(); i < n; i++) {
-            if (upcoming.isChecked() && timestamp_array.get(i) == 0) {
-                events_array_selected_time.add(events_array.get(i));
+        List<String> events = new ArrayList<>();
+        List<Integer> timestamps = new ArrayList<>();
+
+        if (!only_notified) {
+            events = events_array;
+            timestamps = timestamp_array;
+        } else {
+            for (int i = 0, n = event_subscriber_array.size(); i < n; i++) {
+                if (events_array.contains(event_subscriber_array.get(i))) {
+                    events.add(event_subscriber_array.get(i));
+                    timestamps.add(event_subscriber_timestamp_array.get(i));
+                }
             }
-            if (current.isChecked() && timestamp_array.get(i) == 1) {
-                events_array_selected_time.add(events_array.get(i));
+        }
+
+        for (int i = 0, n = events.size(); i < n; i++) {
+            if (upcoming.isChecked() && timestamps.get(i) == 0) {
+                events_array_selected_time.add(events.get(i));
             }
-            if (past.isChecked() && timestamp_array.get(i) == 2) {
-                events_array_selected_time.add(events_array.get(i));
+            if (current.isChecked() && timestamps.get(i) == 1) {
+                events_array_selected_time.add(events.get(i));
+            }
+            if (past.isChecked() && timestamps.get(i) == 2) {
+                events_array_selected_time.add(events.get(i));
             }
         }
 
@@ -74,12 +93,15 @@ public class MyProfileEventsOrganizerFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         DrawerHelper.fillNavbarData(activity);
+        TextView title = view.findViewById(R.id.list_title);
+        title.setText(R.string.events_organizer);
         noResults = view.findViewById(R.id.noResults);
         upcoming = view.findViewById(R.id.upcoming);
         current = view.findViewById(R.id.current);
         past = view.findViewById(R.id.past);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(activity.getApplicationContext());
         RecyclerView recyclerViewEventsOrganizer = view.findViewById(R.id.recyclerViewList);
+        SwitchCompat notificationsOnly = view.findViewById(R.id.onlyShowNotificationToggle);
         upcoming.setOnClickListener((v) -> changeArray(recyclerViewEventsOrganizer));
         current.setOnClickListener((v) -> changeArray(recyclerViewEventsOrganizer));
         past.setOnClickListener((v) -> changeArray(recyclerViewEventsOrganizer));
@@ -94,8 +116,22 @@ public class MyProfileEventsOrganizerFragment extends Fragment {
             String[] timestamp_string = preferences.getString("userOrganizerTimestamp", "").split("_");
             timestamp_array = new ArrayList<>();
             if (!timestamp_string[0].equals("")) {
-                for (int i = 0; i < timestamp_string.length; i++) {
-                    timestamp_array.add(Integer.parseInt(timestamp_string[i]));
+                for (String s : timestamp_string) {
+                    timestamp_array.add(Integer.parseInt(s));
+                }
+            }
+
+            String[] subscriber_string = preferences.getString("userSubscriber", "").split("_");
+            event_subscriber_array = new ArrayList<>();
+            if (!subscriber_string[0].equals("")) {
+                event_subscriber_array.addAll(Arrays.asList(subscriber_string));
+            }
+
+            String[] subscriber_timestamp_string = preferences.getString("userSubscriberTimestamp", "").split("_");
+            event_subscriber_timestamp_array = new ArrayList<>();
+            if (!subscriber_timestamp_string[0].equals("")) {
+                for (String s : subscriber_timestamp_string) {
+                    event_subscriber_timestamp_array.add(Integer.parseInt(s));
                 }
             }
 
@@ -103,7 +139,14 @@ public class MyProfileEventsOrganizerFragment extends Fragment {
                 changeArray(recyclerViewEventsOrganizer);
             }
         }
-        TextView title = view.findViewById(R.id.list_title);
-        title.setText(R.string.events_organizer);
+        notificationsOnly.setOnClickListener(someView -> {
+            if (notificationsOnly.isChecked()) {
+                title.setText(R.string.events_subscriber_organizer);
+            } else {
+                title.setText(R.string.events_organizer);
+            }
+            only_notified = notificationsOnly.isChecked();
+            changeArray(recyclerViewEventsOrganizer);
+        });
     }
 }

@@ -235,11 +235,11 @@
     <string name="subscriber">Pretplatnik</string>
     <string name="user_areas_of_interest">Korisnikova područja interesa</string>
     <string name="user_friends">Korisnikovi prijatelji</string>
-    <string name="events_organizer">Ja sam organizator</string>
-    <string name="events_player">Ja sam sudionik</string>
-    <string name="events_subscriber">Ja sam pretplaćen</string>
+    <string name="events_organizer">Vi ste organizator</string>
+    <string name="events_player">Vi ste sudionik</string>
+    <string name="events_subscriber">Vi ste pretplaćeni</string>
     <string name="events_view_organizer">Korisnik je organizator</string>
-    <string name="events_view_player">Korisnik je sudjelovao</string>
+    <string name="events_view_player">Korisnik je sudionik</string>
     <string name="events_view_subscriber">Korisnik je pretplaćen</string>
     <string name="notifications_only">Samo obavijesti</string>
     <string name="change_username">Promjeni korisničko ime</string>
@@ -303,4 +303,6 @@
     <string name="past">Prošli</string>
     <string name="events_unrated">Događaji koji nisu ocijenjeni</string>
     <string name="events_are_unrated">Postoje događaji koje niste ocijenili</string>
+    <string name="events_subscriber_player">Vi ste pretplaćeni i sudionik</string>
+    <string name="events_subscriber_organizer">Vi ste pretplaćeni i organizator</string>
 </resources>
