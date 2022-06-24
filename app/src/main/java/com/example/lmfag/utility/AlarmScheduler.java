@@ -52,11 +52,10 @@ public class AlarmScheduler {
         }
     }
 
-    public static void scheduleAlarmFriendRequest(Context applicationContext,  String name, String friendID ) {
+    public static void scheduleAlarmFriendRequest(Context applicationContext) {
         AlarmManager alarmManager = (AlarmManager) applicationContext.getSystemService(Context.ALARM_SERVICE);
         Intent alarmReceiverIntent = new Intent(applicationContext, FriendRequestAlarmReceiver.class);
-        alarmReceiverIntent.putExtra("name", name);
-        alarmReceiverIntent.putExtra("friendID", friendID);
+
         PendingIntent pendingIntent = PendingIntent.getBroadcast(applicationContext, 0, alarmReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), pendingIntent);
@@ -76,6 +75,7 @@ public class AlarmScheduler {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
         String me = preferences.getString("userID", "");
+        AtomicBoolean sentWarning = new AtomicBoolean(false);
         db.collection("friend_requests")
                 .whereEqualTo("receiver", me)
                 .get().addOnCompleteListener(task -> {
@@ -87,7 +87,10 @@ public class AlarmScheduler {
                                     .get()
                                     .addOnCompleteListener(task2 -> {
                                         if (task2.isSuccessful()) {
-                                            scheduleAlarmFriendRequest(applicationContext,  task2.getResult().getData().get("username").toString(), document.getData().get("sender").toString());
+                                            if (!sentWarning.get()) {
+                                                sentWarning.set(true);
+                                                scheduleAlarmFriendRequest(applicationContext);
+                                            }
                                         }
                                     });
                             }
@@ -127,7 +130,7 @@ public class AlarmScheduler {
                                             if (current.getTimeInMillis() < cldr_start.getTimeInMillis()) {
                                                 scheduleAlarmStart(applicationContext, cldr_start.getTimeInMillis() - current.getTimeInMillis(), Objects.requireNonNull(docData.get("event_type")).toString(), Objects.requireNonNull(docData.get("event_name")).toString(), Objects.requireNonNull(docData.get("event_description")).toString(), documentTime.getId());
                                             }
-                                            if (current.getTimeInMillis() > cldr_end.getTimeInMillis() && !Objects.requireNonNull(document.getData().get("rated")).toString().equals("true")) {
+                                            if (!sentWarning.get() && current.getTimeInMillis() > cldr_end.getTimeInMillis() && !Objects.requireNonNull(document.getData().get("rated")).toString().equals("true")) {
                                                 sentWarning.set(true);
                                                 scheduleAlarmEnd(applicationContext);
                                             }

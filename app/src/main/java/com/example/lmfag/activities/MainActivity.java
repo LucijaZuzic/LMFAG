@@ -94,16 +94,6 @@ public class MainActivity extends AppCompatActivity {
         onStart(savedInstanceState);
     }
 
-    @Override
-    public void onBackPressed() {
-        if(isTaskRoot()){
-            startActivity(new Intent(this, MainActivity.class));
-            // using finish() is optional, use it if you do not want to keep currentActivity in stack
-            finish();
-        } else {
-            super.onBackPressed();
-        }
-    }
 
     protected void onStart(Bundle savedInstanceState) {
         Context context = this;
