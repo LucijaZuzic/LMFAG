@@ -239,6 +239,7 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
         myLocationOverlay.enableMyLocation();
         myLocationOverlay.disableFollowLocation();
 
+        setMyGpsLocation();
         map.getOverlays().add(myLocationOverlay);
         mapController.setZoom(17.0);
 
