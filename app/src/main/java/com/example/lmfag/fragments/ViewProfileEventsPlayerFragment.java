@@ -49,6 +49,7 @@ public class ViewProfileEventsPlayerFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_titled_list_events_time, container, false);
     }
+
     public void changeArray(RecyclerView recyclerViewEventsPlayer) {
         List<String> events_array_selected_time = new ArrayList<>();
 
@@ -72,13 +73,14 @@ public class ViewProfileEventsPlayerFragment extends Fragment {
             noResults.setVisibility(View.VISIBLE);
         }
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         DrawerHelper.fillNavbarData(activity);
         noResults = view.findViewById(R.id.noResults);
         TextView title = view.findViewById(R.id.list_title);
-        title.setText(R.string.events_view_player); 
+        title.setText(R.string.events_view_player);
         upcoming = view.findViewById(R.id.upcoming);
         current = view.findViewById(R.id.current);
         past = view.findViewById(R.id.past);

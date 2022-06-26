@@ -136,8 +136,8 @@ public class EditProfileActivity extends MenuInterfaceActivity {
         fillUserData();
         createProfile();
         discard.setOnClickListener(view -> {
-                onBackPressed();
-                finish();
+            onBackPressed();
+            finish();
         });
         changeProfilePicture();
     }

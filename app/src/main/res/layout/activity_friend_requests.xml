@@ -15,7 +15,6 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textViewFriendRequests"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -30,19 +29,21 @@
 
         <com.google.android.material.chip.ChipGroup
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginBottom="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_height="wrap_content">
+            android:layout_marginBottom="10dp">
+
             <com.google.android.material.chip.Chip
-                android:layout_width="wrap_content"
                 android:id="@+id/received"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checkable="true"
                 android:checked="true"
                 android:text="@string/received">
 
             </com.google.android.material.chip.Chip>
+
             <com.google.android.material.chip.Chip
                 android:id="@+id/sent"
                 android:layout_width="wrap_content"
@@ -54,9 +55,7 @@
         </com.google.android.material.chip.ChipGroup>
 
 
-
         <View
-            android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:layout_gravity="center"

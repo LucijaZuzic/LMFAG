@@ -139,17 +139,17 @@ public class DrawerHelper {
                     }
 
                     //if (encoded.equals("")) {
-                        String imageView = preferences.getString("showImage", "true");
-                        if (imageView.equals("true")) {
-                            FirebaseStorage storage = FirebaseStorage.getInstance();
-                            StorageReference storageRef = storage.getReference();
-                            StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
-                            final long ONE_MEGABYTE = 1024 * 1024;
-                            if (circleImageView != null) {
-                                imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(Objects.requireNonNull(circleImageView).getContext().getApplicationContext())
-                                                .asBitmap()
-                                                .placeholder(R.drawable.ic_baseline_person_24)
-                                                .load(bytes).into(circleImageView)
+                    String imageView = preferences.getString("showImage", "true");
+                    if (imageView.equals("true")) {
+                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                        StorageReference storageRef = storage.getReference();
+                        StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
+                        final long ONE_MEGABYTE = 1024 * 1024;
+                        if (circleImageView != null) {
+                            imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(Objects.requireNonNull(circleImageView).getContext().getApplicationContext())
+                                            .asBitmap()
+                                            .placeholder(R.drawable.ic_baseline_person_24)
+                                            .load(bytes).into(circleImageView)
                                     /*.into((new CustomTarget<Bitmap>() {
                                         @Override
                                         public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
@@ -167,11 +167,11 @@ public class DrawerHelper {
 
                                         }
                                     }))*/).addOnFailureListener(exception -> {
-                                    // Handle any errors
-                                });
-                                //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                            }
+                                // Handle any errors
+                            });
+                            //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                         }
+                    }
                     /* Preferences } else {
                         Intent myIntent = new Intent(context, MainActivity.class);
                         context.startActivity(myIntent);

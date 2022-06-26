@@ -123,8 +123,7 @@ public class MainActivity extends AppCompatActivity {
                                         Toast.makeText(getApplicationContext(), R.string.password_incorrect, Toast.LENGTH_SHORT).show();
                                     } else {
                                         String my_value_to_hash = editTextPassword.getText().toString();
-                                        boolean hack = true;
-                                        if (SecureHash.validatePassword(my_value_to_hash, pwd_hash) || hack) {
+                                        if (SecureHash.validatePassword(my_value_to_hash, pwd_hash)) {
                                             Toast.makeText(getApplicationContext(), R.string.logged_in, Toast.LENGTH_SHORT).show();
                                             SharedPreferences.Editor editor = preferences.edit();
                                             editor.putString("userID", document.getId());

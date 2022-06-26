@@ -78,7 +78,6 @@
             app:drawableTint="@color/teal_700" />
 
         <View
-            android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:layout_gravity="center"
@@ -228,7 +227,6 @@
                             app:tint="@color/teal_700" />
 
                         <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/etPasswordLayout"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
@@ -355,8 +353,8 @@
                     android:weightSum="1">
 
                     <TextView
-                        android:layout_height="match_parent"
                         android:layout_width="0dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="0.8"
                         android:fontFamily="sans-serif-condensed-light"
                         android:gravity="center"
@@ -395,7 +393,6 @@
         </ScrollView>
 
         <View
-            android:id="@+id/divider_bottom"
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:layout_gravity="center"

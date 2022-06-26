@@ -154,7 +154,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
 
     public void selectAreaOfInterest(String selected_item) {
         this.selected_item = selected_item;
-        sp.setText(EventTypeToDrawable.getEventTypeToTranslation(this,selected_item));
+        sp.setText(EventTypeToDrawable.getEventTypeToTranslation(this, selected_item));
         imageViewEventType.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), EventTypeToDrawable.getEventTypeToDrawable(selected_item)));
         openableCard.setVisibility(View.GONE);
     }

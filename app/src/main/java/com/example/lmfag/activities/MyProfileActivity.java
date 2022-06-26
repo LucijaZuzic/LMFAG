@@ -38,7 +38,15 @@ public class MyProfileActivity extends MenuInterfaceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
-
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            Integer x = extras.getInt("selectedTab");
+            if (x != null) {
+                editor.putInt("selectedTab", x);
+                editor.apply();
+            }
+        }
         fillUserData();
     }
 
@@ -194,7 +202,7 @@ public class MyProfileActivity extends MenuInterfaceActivity {
                                         } else {
                                             editor.putString("userPlayer", "");
                                             editor.apply();
-                                            editor.putString("userPlayerTimestamp", ""); 
+                                            editor.putString("userPlayerTimestamp", "");
                                         }
                                         editor.apply();
                                         if (events_subscriber_string.length() > 0) {

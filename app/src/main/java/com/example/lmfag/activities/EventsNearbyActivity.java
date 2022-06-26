@@ -71,33 +71,6 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
     private SwitchCompat switchMapOnOff;
     private Chip upcoming, current, past;
 
-    // Location choosing on tap
-    private final MapEventsReceiver mapEventsReceiver = new MapEventsReceiver() {
-        @Override
-        public boolean singleTapConfirmedHelper(org.osmdroid.util.GeoPoint p) {
-            return false;
-        }
-
-        @Override
-        public boolean longPressHelper(org.osmdroid.util.GeoPoint p) {
-            Toast.makeText(getApplicationContext(), getString(R.string.setting_location), Toast.LENGTH_SHORT).show();
-            docIds.clear();
-            map.getOverlays().clear();
-            map.getOverlays().add(myLocationOverlay);
-            map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
-            map.getOverlays().add(chosenLocationMarker);
-            chosenLocationMarker.setPosition(p);
-            mapController.setCenter(chosenLocationMarker.getPosition());
-
-            enterLatitude.setText(String.format(Locale.getDefault(), "%.4f", p.getLatitude()).replace(',', '.'));
-            enterLongitude.setText(String.format(Locale.getDefault(), "%.4f", p.getLongitude()).replace(',', '.'));
-                /* How to format String formattedLocation = getString(R.string.marker_location) + ": " + getString(R.string.latitude) + ": " +
-                        Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0 + " "
-                        + getString(R.string.longitude) + ": " + Math.round(chosenLocationMarker.getPosition().getLongitude() * 10000) / 10000.0; */
-
-            return true;
-        }
-    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +79,7 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
         docIds = new ArrayList<>();
         snapshots = new ArrayList<>();
         timestamps_array = new ArrayList<>();
-        
+
         noResults = findViewById(R.id.noResults);
         map = findViewById(R.id.map);
         enterLatitude = findViewById(R.id.inputLatitude);
@@ -139,16 +112,14 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
                 for (float f = 0; f < 360; f += 1) {
                     try {
                         circlePoints.add(new org.osmdroid.util.GeoPoint(temp_latitude, temp_longitude).destinationPoint(radius * 1000, f));
-                    }
-                    catch (IllegalArgumentException e){
+                    } catch (IllegalArgumentException e) {
                         Toast.makeText(context, R.string.radius_too_large, Toast.LENGTH_SHORT).show();
                     }
                 }
                 try {
                     oPolygon.setPoints(circlePoints);
                     map.getOverlays().add(oPolygon);
-                }
-                catch (IllegalArgumentException e){
+                } catch (IllegalArgumentException e) {
                     Toast.makeText(context, R.string.radius_too_large, Toast.LENGTH_SHORT).show();
                 }
             } else {
@@ -179,9 +150,34 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
                 /* How to format String formattedLocation = getString(R.string.marker_location) + ":\n" + getString(R.string.latitude) + ": " +
                         Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0 + "\n"
                         + getString(R.string.longitude) + ": " + Math.round(chosenLocationMarker.getPosition().getLongitude() * 10000) / 10000.0;  */
-       //});
-    }
+        //});
+    }    // Location choosing on tap
+    private final MapEventsReceiver mapEventsReceiver = new MapEventsReceiver() {
+        @Override
+        public boolean singleTapConfirmedHelper(org.osmdroid.util.GeoPoint p) {
+            return false;
+        }
 
+        @Override
+        public boolean longPressHelper(org.osmdroid.util.GeoPoint p) {
+            Toast.makeText(getApplicationContext(), getString(R.string.setting_location), Toast.LENGTH_SHORT).show();
+            docIds.clear();
+            map.getOverlays().clear();
+            map.getOverlays().add(myLocationOverlay);
+            map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
+            map.getOverlays().add(chosenLocationMarker);
+            chosenLocationMarker.setPosition(p);
+            mapController.setCenter(chosenLocationMarker.getPosition());
+
+            enterLatitude.setText(String.format(Locale.getDefault(), "%.4f", p.getLatitude()).replace(',', '.'));
+            enterLongitude.setText(String.format(Locale.getDefault(), "%.4f", p.getLongitude()).replace(',', '.'));
+                /* How to format String formattedLocation = getString(R.string.marker_location) + ": " + getString(R.string.latitude) + ": " +
+                        Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0 + " "
+                        + getString(R.string.longitude) + ": " + Math.round(chosenLocationMarker.getPosition().getLongitude() * 10000) / 10000.0; */
+
+            return true;
+        }
+    };
 
     @Override
     public void onResume() {
@@ -361,7 +357,7 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
             map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
             map.getOverlays().add(chosenLocationMarker);
             mapController.setCenter(chosenLocationMarker.getPosition());
-            for (DocumentSnapshot s: snaps) {
+            for (DocumentSnapshot s : snaps) {
                 addEventMarker(s);
             }
             if (snaps.isEmpty()) {
@@ -424,7 +420,7 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
                     }
                     changeTimestampVisible();
 
-        });
+                });
     }
 
     @Override
@@ -476,4 +472,6 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
     public void afterTextChanged(Editable editable) {
 
     }
+
+
 }

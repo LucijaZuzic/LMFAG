@@ -55,7 +55,6 @@
         </androidx.cardview.widget.CardView>
 
         <View
-            android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:layout_gravity="center"
@@ -81,10 +80,10 @@
 
                 <LinearLayout
                     android:id="@+id/organizerBanner"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -162,7 +161,6 @@
 
                 <TextView
 
-                    android:id="@+id/textViewUsers"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -202,7 +200,6 @@
         </ScrollView>
 
         <View
-            android:id="@+id/divider_bottom"
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:layout_gravity="center"

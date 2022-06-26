@@ -129,7 +129,7 @@ public class FindEventsActivity extends MenuInterfaceActivity {
 
     public void selectAreaOfInterest(String selected_item) {
         this.selected_item = selected_item;
-        sp.setText(EventTypeToDrawable.getEventTypeToTranslation(this,selected_item));
+        sp.setText(EventTypeToDrawable.getEventTypeToTranslation(this, selected_item));
         imageViewEventType.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), EventTypeToDrawable.getEventTypeToDrawable(selected_item)));
 
         openableCard.setVisibility(View.GONE);
@@ -161,6 +161,11 @@ public class FindEventsActivity extends MenuInterfaceActivity {
 
         if (selected_item != null) {
             q = db.collection("events").whereEqualTo("event_type", selected_item);
+        } else {
+            CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(new ArrayList<>(), context, preferences);
+            recyclerViewFindEvents.setAdapter(customAdapterEvents);
+            noResults.setVisibility(View.VISIBLE);
+            return;
         }
         q.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -198,6 +203,11 @@ public class FindEventsActivity extends MenuInterfaceActivity {
         String text = editTextEventName.getText().toString();
         if (!text.equals("")) {
             q = db.collection("events").whereEqualTo("event_name", text);
+        } else {
+            CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(new ArrayList<>(), context, preferences);
+            recyclerViewFindEvents.setAdapter(customAdapterEvents);
+            noResults.setVisibility(View.VISIBLE);
+            return;
         }
         q.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -279,33 +289,10 @@ public class FindEventsActivity extends MenuInterfaceActivity {
             });
 
         } else {
-            q.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    if (task.getResult().size() > 0) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            events_array.add(document.getId());
-                            Calendar cldr_start = Calendar.getInstance();
-                            Timestamp start_timestamp = (Timestamp) (document.getData().get("datetime"));
-                            Date start_date = Objects.requireNonNull(start_timestamp).toDate();
-                            cldr_start.setTime(start_date);
-                            Calendar cldr_end = Calendar.getInstance();
-                            Timestamp end_timestamp = (Timestamp) (document.getData().get("ending"));
-                            Date end_date = Objects.requireNonNull(end_timestamp).toDate();
-                            cldr_end.setTime(end_date);
-                            timestamps_array.add(checkTimestamp(cldr_start, cldr_end));
-                        }
-                        changeTimestampVisible();
-                    } else {
-                        CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(new ArrayList<>(), context, preferences);
-                        recyclerViewFindEvents.setAdapter(customAdapterEvents);
-                        noResults.setVisibility(View.VISIBLE);
-                    }
-                } else {
-                    CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(new ArrayList<>(), context, preferences);
-                    recyclerViewFindEvents.setAdapter(customAdapterEvents);
-                    noResults.setVisibility(View.VISIBLE);
-                }
-            });
+            CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(new ArrayList<>(), context, preferences);
+            recyclerViewFindEvents.setAdapter(customAdapterEvents);
+            noResults.setVisibility(View.VISIBLE);
+            return;
         }
     }
 }

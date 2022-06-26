@@ -3,10 +3,7 @@
     <string name="username">Username</string>
     <string name="find_events">Find events</string>
     <string name="rating_bar">Rating bar</string>
-    <string name="expand_friends">Expand friends</string>
     <string name="events_nearby">Events nearby</string>
-    <string name="friends">Friends</string>
-    <string name="areas_of_interest">Areas of interest</string>
     <string name="find_friends">Find friends</string>
     <string name="rank_points">Rank points/Rank points for next rank</string>
     <string name="my_events">My events</string>
@@ -18,7 +15,6 @@
     <string name="location">Location:</string>
     <string name="friend_requests">Friend requests</string>
     <string name="my_messages">My messages</string>
-    <string name="organizer_rank">Organizer rank</string>
     <string name="event_name">Event name:</string>
     <string name="create_event">Create event</string>
     <string name="event_type">Event type:</string>
@@ -26,13 +22,10 @@
     <string name="number_of_players">Number of players:</string>
     <string name="organizer_playing">Organizer playing</string>
     <string name="choose_location">Choose location</string>
-    <string name="choose_date">Choose date</string>
-    <string name="choose_time">Choose time</string>
     <string name="public_event">Public</string>
     <string name="outdoor">Outdoor</string>
     <string name="apply">Apply</string>
     <string name="cancel">Cancel</string>
-    <string name="enter_a_username">Enter a username</string>
     <string name="minimum_level">Minimum level:</string>
     <string name="choose_an_activity_category">Choose event type</string>
     <string name="area_of_interest">Area of interest</string>
@@ -44,16 +37,13 @@
     <string name="area_of_interest_already_added">Area of interest already added</string>
     <string name="write_success">DocumentSnapshot successfully written!</string>
     <string name="write_failed">Error writing document</string>
-    <string name="remove_area_of_interest">Remove area of interest</string>
     <string name="area_of_interest_not_present">Area of interest not present</string>
     <string name="image_upload_finished">Image upload finished</string>
     <string name="image_upload_started">Image upload started</string>
     <string name="go_back_upload">You can\'t go back while the image is uploading.</string>
-    <string name="my_profile">My profile</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="password">Password</string>
-    <string name="long_app_name">Let\'s meet for a game</string>
     <string name="update_password">Update password</string>
     <string name="no_user_username">No user with username.</string>
     <string name="multiple_username">Multiple users with username.</string>
@@ -62,27 +52,18 @@
     <string name="logged_in">Logged in!</string>
     <string name="password_short">Password must have at least one character.</string>
     <string name="send_friend_request">Send friend request</string>
-    <string name="already_sent">Friend request already sent.</string>
     <string name="send_message">Send message</string>
-    <string name="friends_with_self">You can\'t become friends with yourself.</string>
     <string name="visiting_myself">You can\'t visit your profile.</string>
-    <string name="already_friends">You are already friends with this user.</string>
     <string name="event_description">Event description:</string>
     <string name="friend_request_sent">Friend request sent.</string>
     <string name="no_longer_friends">You are no longer friends.</string>
     <string name="friend_request_declined">Friend request declined.</string>
     <string name="friend_request_accepted">Friend request accepted.</string>
     <string name="notifications">Notifications</string>
-    <string name="date">Date</string>
-    <string name="time">Time</string>
     <string name="created_event">Created event!</string>
     <string name="updated_event">Updated event</string>
-    <string name="initial_minimum_level">0</string>
-    <string name="enter_search_value">Enter search value.</string>
     <string name="latest_message">Latest message</string>
     <string name="enter_message">Enter message.</string>
-    <string name="choose_duration">Choose duration</string>
-    <string name="duration">Duration</string>
     <string name="choose_start_date">Choose start date</string>
     <string name="choose_start_time">Choose start time</string>
     <string name="choose_end_time">Choose end time</string>
@@ -112,13 +93,10 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="deleted_by_sender">Deleted by sender.</string>
-    <string name="player">Player</string>
     <string name="enter_search_radius">Enter search radius (km).</string>
-    <string name="results">Results</string>
     <string name="my_friends">My friends</string>
     <string name="my_areas_of_interest">My areas of interest</string>
     <string name="begin_past">Event can\'t begin in the past.</string>
-    <string name="end_before_beginning">Event can\'t end before beginning.</string>
     <string name="end_past">Event can\'t end in the past.</string>
     <string name="no_connection">Internet connection lost!</string>
     <string-array name="event_types">
@@ -201,56 +179,24 @@
         <item>poker</item>
         <item>other</item>
     </string-array>
-    <string-array name="friend_search_params">
-        <item>areas of interest</item>
-        <item>description</item>
-        <item>location</item>
-        <item>username</item>
-    </string-array>
-    <string-array name="friend_sort_params">
-        <item>rank</item>
-        <item>username</item>
-    </string-array>
-    <string-array name="event_search_params">
-        <item>event type</item>
-        <item>event name</item>
-        <item>description</item>
-    </string-array>
-    <string-array name="event_sort_params">
-        <item>start time</item>
-        <item>event type</item>
-        <item>event name</item>
-    </string-array>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="added_areas_of_interest">Added areas of interest</string>
-    <string name="expand_areas_of_interest">Expand areas of interest</string>
-    <string name="expand_added_areas_of_interest">Expand added areas of interest</string>
-    <string name="expand_not_added_areas_of_interest">Expand new areas of interest</string>
-    <string name="not_added_areas_of_interest">New areas of interest</string>
     <string name="filter_by_event_name">Event name</string>
     <string name="filter_by_event_type">Event type</string>
     <string name="filter_by_organizer">Organizer</string>
-    <string name="expand_subscriber">Expand subscriber</string>
-    <string name="subscriber">Subscriber</string>
     <string name="user_areas_of_interest">User\'s areas of interest</string>
     <string name="user_friends">User\'s friends</string>
     <string name="events_organizer">Events you organized</string>
     <string name="events_player">Events you participated in</string>
-    <string name="events_subscriber">Events you subscribed to</string>
     <string name="events_view_organizer">Events the user organized</string>
     <string name="events_view_player">Events the user participated in</string>
-    <string name="events_view_subscriber">Events the user subscribed to</string>
     <string name="notifications_only">Notifications only</string>
     <string name="change_username">Change username</string>
     <string name="change_password">Change password</string>
     <string name="repeat_new_password">Repeat new password</string>
     <string name="password_match">Passwords do not match</string>
-    <string name="change_username_or_password">Change username or password</string>
     <string name="new_password">New password</string>
     <string name="edit_account">Edit account</string>
     <string name="display_map">Display map</string>
-    <string name="update_notify">Successfully updated notification preferences</string>
     <string name="not_friend_organizer">You need to be friends with the organizer to participate in a private event.</string>
     <string name="not_enough">Not enough participants.</string>
     <string name="rate_twice">You can\'t rate an event twice.</string>
@@ -260,17 +206,10 @@
     <string name="username_success_change">Username successfully changed.</string>
     <string name="end_before_begin">Event can\'t end before beginning.</string>
     <string name="edit_finished">Can\'t edit an event that finished.</string>
-    <string name="default_notification_channel_id">default_channel</string>
-    <string name="msg_subscribed">Successfully subscribed to topic.</string>
-    <string name="msg_subscribe_failed">Subscribe to topic failed.</string>
-    <string name="cant_edit_finished">Can\'t edit an event that finished.</string>
     <string name="delete_event">Are you sure you want to delete your event?</string>
-    <string name="playing_events">Playing events</string>
-    <string name="organizing_events">Organizing events</string>
     <string name="channel_name">LMFAG_default_channel</string>
     <string name="channel_description">Notify for upcoming events.</string>
     <string name="channel_id">LMFAG_default_channel</string>
-    <string name="refresh_messages">Do you want to refresh your messages?</string>
     <string name="close_card">Close card</string>
     <string name="rotate_left">Rotate left</string>
     <string name="rotate_right">Rotate right</string>
@@ -290,7 +229,6 @@
     <string name="notifications_on">Notifications on</string>
     <string name="notifications_off">Notifications off</string>
     <string name="please_choose_an_event_type">Choose an event type</string>
-    <string name="please_choose_a_location">Choose a location</string>
     <string name="turn_off_images">Turn images on and off</string>
     <string name="received">Received</string>
     <string name="sent">Sent</string>

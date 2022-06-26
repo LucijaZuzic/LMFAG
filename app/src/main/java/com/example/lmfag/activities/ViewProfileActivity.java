@@ -95,6 +95,7 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
             });
         }
     }
+
     private int checkTimestamp(Calendar cldr_start, Calendar cldr_end) {
         if (cldr_start.getTime().after(Calendar.getInstance().getTime()) && cldr_end.getTime().after(Calendar.getInstance().getTime())) {
             return 0;
@@ -107,6 +108,7 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
         }
         return -1;
     }
+
     private void getSubscriberEvents() {
         List<String> player_events_array = new ArrayList<>();
         /* friend List<String> subscriber_events_array = new ArrayList<>(); */

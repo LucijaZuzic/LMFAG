@@ -89,6 +89,7 @@ public class MyProfileEventsOrganizerFragment extends Fragment {
             noResults.setVisibility(View.VISIBLE);
         }
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

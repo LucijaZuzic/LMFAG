@@ -29,7 +29,7 @@ public class FindFriendsActivity extends MenuInterfaceActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_friends);
         context = this;
-        
+
         noResults = findViewById(R.id.noResults);
         recyclerViewFindFriends = findViewById(R.id.recyclerViewFriends);
         ImageView imageViewBeginSearch = findViewById(R.id.imageViewBeginSearch);
@@ -44,6 +44,11 @@ public class FindFriendsActivity extends MenuInterfaceActivity {
         String text = editTextSearchValue.getText().toString();
         if (!text.equals("")) {
             q = db.collection("users").whereEqualTo("username", text);
+        } else {
+            CustomAdapterFriends customAdapterFriends = new CustomAdapterFriends(new ArrayList<>(), context, preferences);
+            recyclerViewFindFriends.setAdapter(customAdapterFriends);
+            noResults.setVisibility(View.VISIBLE);
+            return;
         }
         q.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {

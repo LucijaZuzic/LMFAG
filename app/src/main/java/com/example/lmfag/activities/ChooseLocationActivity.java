@@ -41,31 +41,6 @@ public class ChooseLocationActivity extends MenuInterfaceActivity implements Tex
     private TextView markerView;
     private EditText enterLongitude, enterLatitude;
 
-    // Location choosing on tap
-    private final MapEventsReceiver mapEventsReceiver = new MapEventsReceiver() {
-        @Override
-        public boolean singleTapConfirmedHelper(GeoPoint p) {
-            return false;
-        }
-
-        @Override
-        public boolean longPressHelper(GeoPoint p) {
-            Toast.makeText(getApplicationContext(), getString(R.string.setting_location), Toast.LENGTH_SHORT).show();
-            map.getOverlays().clear();
-            map.getOverlays().add(myLocationOverlay);
-            map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
-            map.getOverlays().add(chosenLocationMarker);
-            mapController.setCenter(chosenLocationMarker.getPosition());
-
-            enterLatitude.setText(String.format(Locale.getDefault(), "%.4f", p.getLatitude()).replace(',','.'));
-            enterLongitude.setText(String.format(Locale.getDefault(), "%.4f", p.getLongitude()).replace(',','.'));
-            String formattedLocation = getString(R.string.marker_location) + ":\n" + getString(R.string.latitude) + ": " +
-                    Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0 + "\n"
-                    + getString(R.string.longitude) + ": " + Math.round(chosenLocationMarker.getPosition().getLongitude() * 10000) / 10000.0;
-            markerView.setText(formattedLocation);
-            return true;
-        }
-    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +48,7 @@ public class ChooseLocationActivity extends MenuInterfaceActivity implements Tex
 
         Context context = this;
         Configuration.getInstance().load(context, PreferenceManager.getDefaultSharedPreferences(context));
-        
+
 
         enterLatitude = findViewById(R.id.inputLatitude);
         enterLongitude = findViewById(R.id.inputLongitude);
@@ -196,7 +171,31 @@ public class ChooseLocationActivity extends MenuInterfaceActivity implements Tex
                 markerView.setText(formattedLocation);
             }
         });*/
-    }
+    }    // Location choosing on tap
+    private final MapEventsReceiver mapEventsReceiver = new MapEventsReceiver() {
+        @Override
+        public boolean singleTapConfirmedHelper(GeoPoint p) {
+            return false;
+        }
+
+        @Override
+        public boolean longPressHelper(GeoPoint p) {
+            Toast.makeText(getApplicationContext(), getString(R.string.setting_location), Toast.LENGTH_SHORT).show();
+            map.getOverlays().clear();
+            map.getOverlays().add(myLocationOverlay);
+            map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
+            map.getOverlays().add(chosenLocationMarker);
+            mapController.setCenter(chosenLocationMarker.getPosition());
+
+            enterLatitude.setText(String.format(Locale.getDefault(), "%.4f", p.getLatitude()).replace(',', '.'));
+            enterLongitude.setText(String.format(Locale.getDefault(), "%.4f", p.getLongitude()).replace(',', '.'));
+            String formattedLocation = getString(R.string.marker_location) + ":\n" + getString(R.string.latitude) + ": " +
+                    Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0 + "\n"
+                    + getString(R.string.longitude) + ": " + Math.round(chosenLocationMarker.getPosition().getLongitude() * 10000) / 10000.0;
+            markerView.setText(formattedLocation);
+            return true;
+        }
+    };
 
     private void saveMarkerLocationToSP() {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -223,7 +222,6 @@ public class ChooseLocationActivity extends MenuInterfaceActivity implements Tex
         //Configuration.getInstance().save(this, prefs);
         map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
-
 
     @Override
     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -274,4 +272,6 @@ public class ChooseLocationActivity extends MenuInterfaceActivity implements Tex
     public void afterTextChanged(Editable editable) {
 
     }
+
+
 }

@@ -86,7 +86,7 @@ public class FriendRequestsActivity extends MenuInterfaceActivity {
                             }
                         }
                     }
-                   checkChange();
+                    checkChange();
                 });
     }
 

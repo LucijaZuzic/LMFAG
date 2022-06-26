@@ -75,7 +75,6 @@
             app:drawableTint="@color/teal_700" />
 
         <View
-            android:id="@+id/divider_top"
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:layout_gravity="center"
@@ -94,7 +93,6 @@
                 android:orientation="vertical">
 
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -103,42 +101,42 @@
                     android:layout_marginBottom="10dp"
                     android:orientation="vertical"
                     android:weightSum="1">
+
                     <com.google.android.material.chip.ChipGroup
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content">
 
                         <com.google.android.material.chip.Chip
+                            android:id="@+id/upcoming"
                             android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:checkable="true"
                             android:checked="true"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/upcoming"
-                            android:text="@string/upcoming">
-                        </com.google.android.material.chip.Chip>
+                            android:text="@string/upcoming"></com.google.android.material.chip.Chip>
+
                         <com.google.android.material.chip.Chip
-                            android:layout_width="wrap_content"
                             android:id="@+id/current"
-                            android:checkable="true"
-                            android:layout_height="wrap_content"
-                            android:text="@string/current">
-                        </com.google.android.material.chip.Chip>
-                        <com.google.android.material.chip.Chip
                             android:layout_width="wrap_content"
-                            android:id="@+id/past"
-                            android:checkable="true"
                             android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:text="@string/current"></com.google.android.material.chip.Chip>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/past"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checkable="true"
                             android:text="@string/past">
 
                         </com.google.android.material.chip.Chip>
                     </com.google.android.material.chip.ChipGroup>
 
                     <TextView
-                        android:id="@+id/textView2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/search_by"
-                        android:textStyle="bold"
-                        android:textSize="21sp" />
+                        android:textSize="21sp"
+                        android:textStyle="bold" />
 
                     <RadioGroup
                         android:layout_width="match_parent"
@@ -370,7 +368,6 @@
                 </LinearLayout>
 
                 <View
-                    android:id="@+id/divider4"
                     android:layout_width="match_parent"
                     android:layout_height="3dp"
                     android:layout_marginStart="10dp"
@@ -387,7 +384,8 @@
                     android:text="@string/no_results"
                     android:textSize="21sp"
                     android:textStyle="bold"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewEvents"
                     android:layout_width="match_parent"

@@ -83,22 +83,23 @@ public class AlarmScheduler {
                         if (task.getResult().size() > 0) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 db.collection("users")
-                                    .document(document.getData().get("sender").toString())
-                                    .get()
-                                    .addOnCompleteListener(task2 -> {
-                                        if (task2.isSuccessful()) {
-                                            if (!sentWarning.get()) {
-                                                sentWarning.set(true);
-                                                scheduleAlarmFriendRequest(applicationContext);
+                                        .document(document.getData().get("sender").toString())
+                                        .get()
+                                        .addOnCompleteListener(task2 -> {
+                                            if (task2.isSuccessful()) {
+                                                if (!sentWarning.get()) {
+                                                    sentWarning.set(true);
+                                                    scheduleAlarmFriendRequest(applicationContext);
+                                                }
                                             }
-                                        }
-                                    });
+                                        });
                             }
                         }
                     }
                 });
 
     }
+
     public static void getAllSubscriberEvents(Context applicationContext) {
         cancelAllAlarms(applicationContext);
         FirebaseFirestore db = FirebaseFirestore.getInstance();

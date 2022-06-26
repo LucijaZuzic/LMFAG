@@ -73,7 +73,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_event);
         context = this;
-        
+
         map = findViewById(R.id.map);
         textViewChooseStartDate = findViewById(R.id.textViewChooseStartDate);
         textViewChooseStartTime = findViewById(R.id.textViewChooseStartTime);
@@ -116,7 +116,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         });
         rate = findViewById(R.id.imageViewRate);
         rate.setOnClickListener(view -> {
-            if (Calendar.getInstance().getTime().before(cldr_end.getTime()) || Calendar.getInstance().getTime().equals(cldr_end.getTime()) ) {
+            if (Calendar.getInstance().getTime().before(cldr_end.getTime()) || Calendar.getInstance().getTime().equals(cldr_end.getTime())) {
                 Toast.makeText(getApplicationContext(), R.string.rate_before_end, Toast.LENGTH_SHORT).show();
             } else {
                 CollectionReference docRef = db.collection("event_attending");
@@ -604,7 +604,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                     }
                     Float val1 = Float.parseFloat(Objects.requireNonNull(docData.get("minimum_players")).toString());
                     Float val2 = Float.parseFloat(Objects.requireNonNull(docData.get("maximum_players")).toString());
-                    System.out.println(Objects.requireNonNull(docData.get("organizer")).toString());
+                    System.out.println(Objects.requireNonNull(docData.get("organizer")));
 
                     event_type = Objects.requireNonNull(docData.get("event_type")).toString();
                     participate_minimum = val1;

@@ -87,7 +87,7 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
                         viewHolder.getListEntry().setOnClickListener(view -> {
                             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(circleImageView.getContext().getApplicationContext());
                             SharedPreferences.Editor editor = preferences.edit();
-                            editor.putString("friendID",replace_string);
+                            editor.putString("friendID", replace_string);
                             editor.apply();
                             Intent intent = new Intent(circleImageView.getContext(), ViewProfileActivity.class);
                             circleImageView.getContext().startActivity(intent);

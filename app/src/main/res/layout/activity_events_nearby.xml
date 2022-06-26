@@ -31,7 +31,6 @@
             app:drawableTint="@color/teal_700" />
 
         <View
-            android:id="@+id/divider_top"
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:layout_gravity="center"
@@ -120,8 +119,6 @@
                         </LinearLayout>
 
                         <ImageView
-                            android:visibility="gone"
-                            android:id="@+id/updateLocation"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
                             android:layout_gravity="center"
@@ -131,6 +128,7 @@
                             android:focusable="true"
                             android:padding="5dp"
                             android:src="@drawable/ic_baseline_location_on_24"
+                            android:visibility="gone"
                             app:tint="@color/teal_700">
 
                         </ImageView>
@@ -170,37 +168,39 @@
                             app:srcCompat="@drawable/ic_baseline_search_24"
                             app:tint="@color/teal_700" />
                     </LinearLayout>
+
                     <com.google.android.material.chip.ChipGroup
 
-                        android:layout_marginTop="10dp"
-                        android:layout_gravity="start"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginTop="10dp">
 
                         <com.google.android.material.chip.Chip
-                            android:layout_width="wrap_content"
-                            android:checkable="true"
-                            android:layout_height="wrap_content"
                             android:id="@+id/upcoming"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checkable="true"
                             android:checked="true"
-                            android:text="@string/upcoming">
-                        </com.google.android.material.chip.Chip>
+                            android:text="@string/upcoming"></com.google.android.material.chip.Chip>
+
                         <com.google.android.material.chip.Chip
-                            android:layout_width="wrap_content"
                             android:id="@+id/current"
-                            android:checkable="true"
-                            android:layout_height="wrap_content"
-                            android:text="@string/current">
-                        </com.google.android.material.chip.Chip>
-                        <com.google.android.material.chip.Chip
                             android:layout_width="wrap_content"
-                            android:id="@+id/past"
-                            android:checkable="true"
                             android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:text="@string/current"></com.google.android.material.chip.Chip>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/past"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checkable="true"
                             android:text="@string/past">
 
                         </com.google.android.material.chip.Chip>
                     </com.google.android.material.chip.ChipGroup>
+
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/switchMapOnOff"
                         android:layout_width="match_parent"
@@ -219,7 +219,6 @@
                 </LinearLayout>
 
                 <View
-                    android:id="@+id/divider"
                     android:layout_width="match_parent"
                     android:layout_height="5dp"
                     android:layout_gravity="center"
