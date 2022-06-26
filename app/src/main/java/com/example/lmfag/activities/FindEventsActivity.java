@@ -85,6 +85,15 @@ public class FindEventsActivity extends MenuInterfaceActivity {
         nameRadio.setOnClickListener(view -> showName());
         typeRadio = findViewById(R.id.chooseEventType);
         typeRadio.setOnClickListener(view -> showType());
+        if (organizerRadio.isChecked()) {
+            showOrganizer();
+        }
+        if (nameRadio.isChecked()) {
+            showName();
+        }
+        if (typeRadio.isChecked()) {
+            showType();
+        }
         editTextEventName = findViewById(R.id.editTextEventName);
         editTextOrganizerName = findViewById(R.id.editTextOrganizerName);
 
