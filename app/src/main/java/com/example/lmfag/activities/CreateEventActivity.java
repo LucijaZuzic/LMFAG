@@ -551,8 +551,8 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                         minimum_level.setValue(Integer.parseInt(Objects.requireNonNull(docData.get("minimum_level")).toString()));
                         switch_public.setChecked(Objects.requireNonNull(docData.get("public")).toString().equals("true"));
                         switch_out.setChecked(Objects.requireNonNull(docData.get("outdoors")).toString().equals("true"));
-                        Float val_min = Float.parseFloat(Objects.requireNonNull(docData.get("minimum_players")).toString());
-                        Float val_max = Float.parseFloat(Objects.requireNonNull(docData.get("maximum_players")).toString());
+                        float val_min = Float.parseFloat(Objects.requireNonNull(docData.get("minimum_players")).toString());
+                        float val_max = Float.parseFloat(Objects.requireNonNull(docData.get("maximum_players")).toString());
                         slider_min.setValue((int) Math.floor(val_min));
                         slider_max.setValue((int) Math.floor(val_max));
                         Timestamp start_timestamp = (Timestamp) (docData.get("datetime"));

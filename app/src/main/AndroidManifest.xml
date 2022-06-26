@@ -54,9 +54,6 @@
             android:name=".activities.ViewMessagesActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.MyEventsActivity"
-            android:exported="false" />
-        <activity
             android:name=".activities.ViewProfileActivity"
             android:exported="false" />
         <activity

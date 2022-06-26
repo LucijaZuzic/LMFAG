@@ -320,5 +320,6 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        fillUserData();
     }
 }

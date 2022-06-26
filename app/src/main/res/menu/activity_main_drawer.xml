@@ -33,10 +33,6 @@
             android:icon="@drawable/ic_baseline_location_searching_24"
             android:title="@string/events_nearby" />
         <item
-            android:id="@+id/my_events"
-            android:icon="@drawable/ic_baseline_calendar_today_24"
-            android:title="@string/my_events" />
-        <item
             android:id="@+id/create_event"
             android:icon="@drawable/ic_baseline_edit_calendar_24"
             android:title="@string/create_event" />

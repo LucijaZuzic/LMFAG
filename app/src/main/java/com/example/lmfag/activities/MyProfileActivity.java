@@ -377,5 +377,15 @@ public class MyProfileActivity extends MenuInterfaceActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            Integer x = extras.getInt("selectedTab");
+            if (x != null) {
+                editor.putInt("selectedTab", x);
+                editor.apply();
+            }
+        }
+        fillUserData();
     }
 }
