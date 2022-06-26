@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
@@ -28,7 +27,7 @@ public class MyMessagesActivity extends MenuInterfaceActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_messages);
         context = this;
-        
+
         noResults = findViewById(R.id.noResults);
         friends_array = new ArrayList<>();
         recyclerViewMessages = findViewById(R.id.recyclerViewMessages);

@@ -75,7 +75,6 @@
             app:drawableTint="@color/teal_700" />
 
         <View
-            android:id="@+id/divider_top"
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:layout_gravity="center"
@@ -97,17 +96,47 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
                     android:orientation="vertical"
                     android:weightSum="1">
 
+                    <com.google.android.material.chip.ChipGroup
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/upcoming"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:checked="true"
+                            android:text="@string/upcoming"></com.google.android.material.chip.Chip>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/current"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:text="@string/current"></com.google.android.material.chip.Chip>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/past"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checkable="true"
+                            android:text="@string/past">
+
+                        </com.google.android.material.chip.Chip>
+                    </com.google.android.material.chip.ChipGroup>
 
                     <TextView
-                        android:id="@+id/textView2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/search_by"
-                        android:textSize="21sp" />
+                        android:textSize="21sp"
+                        android:textStyle="bold" />
 
                     <RadioGroup
                         android:layout_width="match_parent"
@@ -121,7 +150,7 @@
                         <RadioButton
                             android:id="@+id/chooseOrganizer"
                             android:layout_width="wrap_content"
-                            android:layout_height="30dp"
+                            android:layout_height="35dp"
                             android:fontFamily="sans-serif-condensed-light"
                             android:text="@string/filter_by_organizer"
                             android:textSize="21sp"
@@ -133,7 +162,7 @@
                         <RadioButton
                             android:id="@+id/chooseEventName"
                             android:layout_width="wrap_content"
-                            android:layout_height="30dp"
+                            android:layout_height="35dp"
                             android:fontFamily="sans-serif-condensed-light"
                             android:text="@string/filter_by_event_name"
                             android:textSize="21sp"
@@ -145,7 +174,7 @@
                         <RadioButton
                             android:id="@+id/chooseEventType"
                             android:layout_width="wrap_content"
-                            android:layout_height="30dp"
+                            android:layout_height="35dp"
                             android:fontFamily="sans-serif-condensed-light"
                             android:text="@string/filter_by_event_type"
                             android:textSize="21sp"
@@ -339,10 +368,11 @@
                 </LinearLayout>
 
                 <View
-                    android:id="@+id/divider4"
                     android:layout_width="match_parent"
                     android:layout_height="3dp"
-                    android:layout_margin="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
                     android:background="?android:attr/listDivider" />
 
                 <TextView

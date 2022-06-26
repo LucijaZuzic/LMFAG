@@ -98,7 +98,7 @@ public class CustomAdapterFriends extends RecyclerView.Adapter<CustomAdapterFrie
                         if (imageView.equals("true")) {
                             Glide.with(circleImageView.getContext().getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
                         }
-                         //listEntry.setVisibility(View.VISIBLE);
+                        //listEntry.setVisibility(View.VISIBLE);
                     }).addOnFailureListener(exception -> {
                         //listEntry.setVisibility(View.VISIBLE);
                         // Handle any errors

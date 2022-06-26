@@ -14,11 +14,4 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="Theme.LMFAG.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="Theme.LMFAG.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-    <style name="Theme.LMFAG.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

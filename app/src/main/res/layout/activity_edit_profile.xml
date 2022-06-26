@@ -78,7 +78,6 @@
             app:drawableTint="@color/teal_700" />
 
         <View
-            android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:layout_gravity="center"
@@ -228,7 +227,6 @@
                             app:tint="@color/teal_700" />
 
                         <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/etPasswordLayout"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
@@ -346,7 +344,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="30dp"
                     android:layout_marginEnd="10dp"
@@ -357,11 +355,9 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginEnd="10dp"
                         android:layout_weight="0.8"
                         android:fontFamily="sans-serif-condensed-light"
                         android:gravity="center"
-                        android:padding="5dp"
                         android:text="@string/area_of_interest"
                         android:textSize="21sp"
                         android:textStyle="bold"
@@ -372,12 +368,12 @@
                         android:id="@+id/floatingActionButtonAddAreaOfInterest"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
                         android:layout_weight="0.2"
                         android:clickable="true"
                         android:contentDescription="@string/add_area_of_interest"
                         android:focusable="true"
                         app:backgroundTint="@color/teal_700"
+                        app:fabCustomSize="40dp"
                         app:srcCompat="@drawable/ic_baseline_add_24"
                         app:tint="@color/white" />
                 </LinearLayout>
@@ -397,7 +393,6 @@
         </ScrollView>
 
         <View
-            android:id="@+id/divider_bottom"
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:layout_gravity="center"

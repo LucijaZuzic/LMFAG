@@ -28,7 +28,6 @@
             app:drawableTint="@color/teal_700" />
 
         <View
-            android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:layout_gravity="center"

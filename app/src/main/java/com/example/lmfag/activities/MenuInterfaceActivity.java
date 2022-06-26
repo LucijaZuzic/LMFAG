@@ -22,13 +22,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 public class MenuInterfaceActivity extends AppCompatActivity {
-    private boolean flag = false;
     public SharedPreferences preferences;
     public SharedPreferences.Editor editor;
     public FirebaseFirestore db = FirebaseFirestore.getInstance();
     public FirebaseStorage storage = FirebaseStorage.getInstance();
     public StorageReference storageRef = storage.getReference();
-
+    private boolean flag = false;
     private Handler handlerForAlarm;
 
     @Override
@@ -74,15 +73,6 @@ public class MenuInterfaceActivity extends AppCompatActivity {
         finish();
     }
 
-    @Override
-    public void onBackPressed() {
-        if(isTaskRoot()){
-            startActivity(new Intent(this, MainActivity.class));
-        } else {
-            super.onBackPressed();
-        }
-        finish();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -130,7 +120,7 @@ public class MenuInterfaceActivity extends AppCompatActivity {
             case menu_openID:
                 DrawerHelper.fillNavbarData(this);
                 DrawerLayout drawer = findViewById(R.id.drawer_layout);
-                
+
                 if (flag) {
                     drawer.closeDrawer(GravityCompat.START);
                 } else {

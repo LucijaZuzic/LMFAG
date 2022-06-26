@@ -135,9 +135,9 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
                     if (imageView.equals("true")) {
                         imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes ->
                                 Glide.with(getApplicationContext())
-                                .asBitmap()
-                                .load(bytes)
-                                .into(circleImageView));
+                                        .asBitmap()
+                                        .load(bytes)
+                                        .into(circleImageView));
                     }
                 }
             }

@@ -55,7 +55,6 @@
         </androidx.cardview.widget.CardView>
 
         <View
-            android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:layout_gravity="center"
@@ -75,16 +74,16 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:padding="10dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="10dp">
 
                 <LinearLayout
                     android:id="@+id/organizerBanner"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -105,9 +104,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
                         android:layout_marginBottom="20dp"
-                        android:layout_marginTop="10dp"
                         app:cardCornerRadius="10dp"
                         app:cardElevation="10dp"
                         app:contentPadding="10dp">
@@ -162,7 +161,6 @@
 
                 <TextView
 
-                    android:id="@+id/textViewUsers"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
@@ -176,6 +174,7 @@
                     android:textStyle="bold"
                     app:drawableStartCompat="@drawable/ic_baseline_groups_24"
                     app:drawableTint="@color/teal_700" />
+
                 <TextView
                     android:id="@+id/noResults"
                     android:layout_width="wrap_content"
@@ -201,7 +200,6 @@
         </ScrollView>
 
         <View
-            android:id="@+id/divider_bottom"
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:layout_gravity="center"

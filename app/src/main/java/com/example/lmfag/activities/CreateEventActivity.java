@@ -28,10 +28,10 @@ import com.example.lmfag.BuildConfig;
 import com.example.lmfag.R;
 import com.example.lmfag.utility.AlarmScheduler;
 import com.example.lmfag.utility.EventTypeToDrawable;
+import com.example.lmfag.utility.LevelTransformation;
 import com.example.lmfag.utility.adapters.CustomAdapterEventTypeAdd;
 import com.firebase.geofire.GeoFireUtils;
 import com.firebase.geofire.GeoLocation;
-import com.google.android.material.slider.RangeSlider;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -67,12 +67,11 @@ public class CreateEventActivity extends MenuInterfaceActivity {
     private IMapController mapController;
     private TextView eventName;
     private TextView description;
-    private NumberPicker minimum_level;
+    private NumberPicker minimum_level, slider_min, slider_max;
     private SwitchCompat switch_public;
     private SwitchCompat switch_out;
     private SwitchCompat switch_organizer;
     private SwitchCompat switch_notify;
-    private RangeSlider slider;
     private TextView location;
     private Marker chosenLocationMarker;
     private double longitude;
@@ -110,13 +109,20 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         description = findViewById(R.id.editTextEventDescription);
         minimum_level = findViewById(R.id.editTextMinimumLevel);
         minimum_level.setMinValue(0);
-        minimum_level.setMaxValue(100000);
+        minimum_level.setMaxValue(20);
         minimum_level.setWrapSelectorWheel(true);
         switch_public = findViewById(R.id.switchPublic);
         switch_out = findViewById(R.id.switchOutdoor);
         switch_organizer = findViewById(R.id.switchOrganizerPlaying);
         switch_notify = findViewById(R.id.switchNotifications);
-        slider = findViewById(R.id.range_slider);
+        slider_min = findViewById(R.id.pickerMinimumPlayers);
+        slider_max = findViewById(R.id.pickerMaximumPlayers);
+        slider_max.setMaxValue(1000);
+        slider_min.setMaxValue(1000);
+        slider_max.setMinValue(2);
+        slider_min.setMinValue(2);
+        slider_max.setOnValueChangedListener((v1,v2,v3) -> fixMax());
+        slider_min.setOnValueChangedListener((v1,v2,v3) -> fixMin());
         location = findViewById(R.id.textViewChooseLocation);
         imageViewChooseStartDate = findViewById(R.id.imageViewChooseStartDate);
         textViewChooseStartDate = findViewById(R.id.textViewChooseStartDate);
@@ -152,9 +158,25 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         firstMapSetup();
     }
 
+    public void fixMin() {
+        int minimum_pl = Integer.parseInt(String.valueOf(slider_min.getValue()));
+        int maximum_pl = Integer.parseInt(String.valueOf(slider_max.getValue()));
+        if (minimum_pl > maximum_pl) {
+            slider_min.setValue(maximum_pl);
+        }
+    }
+
+    public void fixMax() {
+        int minimum_pl = Integer.parseInt(String.valueOf(slider_min.getValue()));
+        int maximum_pl = Integer.parseInt(String.valueOf(slider_max.getValue()));
+        if (minimum_pl > maximum_pl) {
+            slider_max.setValue(minimum_pl);
+        }
+    }
+
     public void selectAreaOfInterest(String selected_item) {
         this.selected_item = selected_item;
-        sp.setText(EventTypeToDrawable.getEventTypeToTranslation(this,selected_item));
+        sp.setText(EventTypeToDrawable.getEventTypeToTranslation(this, selected_item));
         imageViewEventType.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), EventTypeToDrawable.getEventTypeToDrawable(selected_item)));
         openableCard.setVisibility(View.GONE);
     }
@@ -292,7 +314,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                         }
                         if (areas_array.contains(selected_item)) {
                             if (minimum_level_val > 0) {
-                                if (points_array.get(areas_array.indexOf(selected_item)) < minimum_level_val * 1000) {
+                                if (points_array.get(areas_array.indexOf(selected_item)) < LevelTransformation.lower_bound((int)minimum_level_val)) {
                                     Toast.makeText(getApplicationContext(), R.string.level_low, Toast.LENGTH_SHORT).show();
                                     writeAttendingToDB(false);
                                 } else {
@@ -406,6 +428,11 @@ public class CreateEventActivity extends MenuInterfaceActivity {
     }
 
     void fetchDataFromUI() {
+        String eventID = preferences.getString("eventID", "");
+        if (eventID.equals("")) {
+            continueEdit();
+            return;
+        }
         DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE:
@@ -440,8 +467,8 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         docData.put("minimum_level", Integer.parseInt(String.valueOf(minimum_level.getValue())));
         docData.put("public", switch_public.isChecked());
         docData.put("outdoors", switch_out.isChecked());
-        docData.put("minimum_players", slider.getValues().get(0));
-        docData.put("maximum_players", slider.getValues().get(1));
+        docData.put("minimum_players", Integer.parseInt(String.valueOf(slider_min.getValue())));
+        docData.put("maximum_players", Integer.parseInt(String.valueOf(slider_max.getValue())));
         docData.put("datetime", new Timestamp(cldr_start.getTime()));
         docData.put("ending", new Timestamp(cldr_end.getTime()));
         docData.put("organizer", userID);
@@ -524,9 +551,10 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                         minimum_level.setValue(Integer.parseInt(Objects.requireNonNull(docData.get("minimum_level")).toString()));
                         switch_public.setChecked(Objects.requireNonNull(docData.get("public")).toString().equals("true"));
                         switch_out.setChecked(Objects.requireNonNull(docData.get("outdoors")).toString().equals("true"));
-                        Float val1 = Float.parseFloat(Objects.requireNonNull(docData.get("minimum_players")).toString());
-                        Float val2 = Float.parseFloat(Objects.requireNonNull(docData.get("maximum_players")).toString());
-                        slider.setValues(val1, val2);
+                        Float val_min = Float.parseFloat(Objects.requireNonNull(docData.get("minimum_players")).toString());
+                        Float val_max = Float.parseFloat(Objects.requireNonNull(docData.get("maximum_players")).toString());
+                        slider_min.setValue((int) Math.floor(val_min));
+                        slider_max.setValue((int) Math.floor(val_max));
                         Timestamp start_timestamp = (Timestamp) (docData.get("datetime"));
                         Date start_date = Objects.requireNonNull(start_timestamp).toDate();
                         cldr_start.setTime(start_date);

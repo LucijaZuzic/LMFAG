@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
 import com.example.lmfag.utility.EventTypeToDrawable;
+import com.example.lmfag.utility.LevelTransformation;
 
 import java.util.List;
 import java.util.Locale;
@@ -46,15 +47,15 @@ public class CustomAdapterAreaOfInterest extends RecyclerView.Adapter<CustomAdap
         String text = localAreasOfInterest.get(position);
         textViewAreaOfInterest.setText(EventTypeToDrawable.getEventTypeToTranslation(textViewAreaOfInterest.getContext(), text));
         textViewAreaOfInterest.setCompoundDrawablesWithIntrinsicBounds(EventTypeToDrawable.getEventTypeToDrawable(text), 0, 0, 0);
-        int level = (int) (Math.floor(localLevelPoints.get(position) / 1000));
+
+        double points_level = localLevelPoints.get(position);
+        int level = LevelTransformation.level(points_level);
         String text_level = Integer.toString(level);
-        Double upper_bound = Math.ceil(localLevelPoints.get(position) / 1000) * 1000;
-        if (upper_bound.equals(0.0)) {
-            upper_bound = 1000.0;
-        }
-        float points_level = Float.parseFloat(localLevelPoints.get(position).toString().replace(',', '.'));
+        Double upper_bound = LevelTransformation.upper_bound(level);
+        Double lower_bound = LevelTransformation.lower_bound(level);
+        Double range = upper_bound - lower_bound;
         String text_level_points = String.format(Locale.getDefault(), "%.1f / %.1f", points_level, upper_bound).replace(',', '.');
-        viewHolder.getProgressBar().setProgress((int) ((localLevelPoints.get(position) - (upper_bound - 1000)) / 10));
+        viewHolder.getProgressBar().setProgress((int) ((points_level - lower_bound) / range * 100));
         viewHolder.getTextViewLevel().setText(text_level);
         viewHolder.getTextViewLevelPoints().setText(text_level_points);
     }

@@ -36,6 +36,8 @@ import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RateEventActivity extends MenuInterfaceActivity {
+    private final Calendar cldr_end = Calendar.getInstance();
+    private final Calendar cldr_start = Calendar.getInstance();
     private String organizer;
     private List<String> people;
     private List<Float> ratings;
@@ -49,8 +51,6 @@ public class RateEventActivity extends MenuInterfaceActivity {
     private TextView rate_event_list_entry_banner_text, organizerUsername;
     private LinearLayout organizerBanner;
     private TextView noResults;
-    private final Calendar cldr_end = Calendar.getInstance();
-    private final Calendar cldr_start = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,14 +68,17 @@ public class RateEventActivity extends MenuInterfaceActivity {
         rateEventActivity = this;
         recyclerViewPlayers = findViewById(R.id.recyclerViewPlayers);
         context = this;
-        ImageView apply =  findViewById(R.id.imageViewApply);
+        ImageView apply = findViewById(R.id.imageViewApply);
         apply.setOnClickListener(view -> writeRating());
         findViewById(R.id.imageViewDiscard).setOnClickListener(view -> {
             Intent myIntent = new Intent(context, ViewEventActivity.class);
             context.startActivity(myIntent);
             finish();
         });
+
+        getWhoAttended();
     }
+
     private void writeRating() {
         if (people.size() > 0) {
             updatePlayer(0);
@@ -83,6 +86,7 @@ public class RateEventActivity extends MenuInterfaceActivity {
             updateOrganizer();
         }
     }
+
     private void checkRated() {
         String eventID = preferences.getString("eventID", "");
         String userID = preferences.getString("userID", "");
@@ -107,12 +111,6 @@ public class RateEventActivity extends MenuInterfaceActivity {
                 }
             }
         });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getWhoAttended();
     }
 
     public void updateRating(int index, Float value) {
@@ -148,7 +146,7 @@ public class RateEventActivity extends MenuInterfaceActivity {
                                     people.add(participantID);
                                     ratings.add(0.0F);
                                 }
-                                if (userID.equals(participantID)){
+                                if (userID.equals(participantID)) {
                                     user_participated = true;
                                     if (Objects.requireNonNull(map.get("rated")).toString().equals("true")) {
                                         Toast.makeText(getApplicationContext(), R.string.rate_twice, Toast.LENGTH_SHORT).show();

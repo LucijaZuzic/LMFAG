@@ -38,7 +38,7 @@ public class ChangePasswordActivity extends MenuInterfaceActivity {
         passwordEditRepeat = findViewById(R.id.editTextPasswordRepeat);
         checkBoxUsername = findViewById(R.id.checkBoxUsername);
         checkBoxPassword = findViewById(R.id.checkBoxPassword);
-        
+
         fillUserData();
         createProfile();
         discard.setOnClickListener(view -> onBackPressed());
@@ -51,7 +51,7 @@ public class ChangePasswordActivity extends MenuInterfaceActivity {
                 if (passwordEdit.getText().toString().length() == 0) {
                     Toast.makeText(getApplicationContext(), R.string.password_short, Toast.LENGTH_SHORT).show();
                 } else {
-                    if (passwordEditRepeat.getText() == passwordEdit.getText()) {
+                    if (passwordEditRepeat.getText().toString().equals(passwordEdit.getText().toString())) {
                         try {
                             String new_hash = SecureHash.generateStrongPasswordHash(passwordEdit.getText().toString());
                             old_data.remove("password_hash");
