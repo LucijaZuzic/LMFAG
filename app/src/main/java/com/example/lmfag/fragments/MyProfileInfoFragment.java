@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.example.lmfag.R;
 import com.example.lmfag.activities.MainActivity;
 import com.example.lmfag.utility.DrawerHelper;
+import com.example.lmfag.utility.LevelTransformation;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -73,15 +74,14 @@ public class MyProfileInfoFragment extends Fragment {
         myUsername.setText(preferences.getString("userUsername", ""));
         myLocation.setText(preferences.getString("userLocation", ""));
         double points_rank = Double.parseDouble(preferences.getString("userRankPoints", ""));
-        int rank = (int) (Math.floor(points_rank / 1000));
+        int rank = LevelTransformation.level(points_rank);
         String text_rank = Integer.toString(rank);
-        Double upper_bound = Math.ceil(points_rank / 1000) * 1000;
-        if (upper_bound.equals(0.0)) {
-            upper_bound = 1000.0;
-        }
+        Double upper_bound = LevelTransformation.upper_bound(rank);
+        Double lower_bound = LevelTransformation.lower_bound(rank);
+        Double range = upper_bound - lower_bound;
         String text_rank_points = String.format(Locale.getDefault(), "%.1f / %.1f", points_rank, upper_bound).replace(',', '.');
         ProgressBar progressBar = view.findViewById(R.id.determinateBar);
-        progressBar.setProgress((int) ((points_rank - (upper_bound - 1000)) / 10));
+        progressBar.setProgress((int) ((points_rank - lower_bound) / range * 100));
         myOrganizerRank.setText(text_rank);
         myOrganizerRankPoints.setText(text_rank_points);
         myDescription.setText(Objects.requireNonNull(preferences.getString("userDescription", "")));

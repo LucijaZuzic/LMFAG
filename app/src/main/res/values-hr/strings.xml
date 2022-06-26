@@ -243,4 +243,7 @@
     <string name="events_are_unrated">Postoje događaji koje niste ocijenili</string>
     <string name="events_subscriber_player">Vi ste pretplaćeni i sudionik</string>
     <string name="events_subscriber_organizer">Vi ste pretplaćeni i organizator</string>
+    <string name="delete_aoe">Jeste li sigurni da želite izbrisat područje interesa</string>
+    <string name="minimum_number_players">Minimalni broj igrača:</string>
+    <string name="maximum_number_players">Maksimalni broj igrača:</string>
 </resources>

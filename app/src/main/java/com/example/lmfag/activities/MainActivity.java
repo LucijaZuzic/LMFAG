@@ -94,6 +94,11 @@ public class MainActivity extends AppCompatActivity {
         onStart(savedInstanceState);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("receiverRegistered", false);
+    }
 
     protected void onStart(Bundle savedInstanceState) {
         Context context = this;

@@ -17,7 +17,7 @@ import com.example.lmfag.R;
 import com.example.lmfag.activities.CreateProfileActivity;
 import com.example.lmfag.activities.EditProfileActivity;
 import com.example.lmfag.utility.EventTypeToDrawable;
-import com.example.lmfag.utility.MySwipe;
+import com.example.lmfag.utility.LevelTransformation;
 
 import java.util.List;
 import java.util.Locale;
@@ -62,17 +62,18 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
         String text = localAreasOfInterest.get(position);
         textViewAreaOfInterest.setText(EventTypeToDrawable.getEventTypeToTranslation(textViewAreaOfInterest.getContext(), text));
         textViewAreaOfInterest.setCompoundDrawablesWithIntrinsicBounds(EventTypeToDrawable.getEventTypeToDrawable(text), 0, 0, 0);
-        int level = (int) (Math.floor(localLevelPoints.get(position) / 1000));
+
+        double points_level = localLevelPoints.get(position);
+        int level = LevelTransformation.level(points_level);
         String text_level = Integer.toString(level);
-        Double upper_bound = Math.ceil(localLevelPoints.get(position) / 1000) * 1000;
-        if (upper_bound.equals(0.0)) {
-            upper_bound = 1000.0;
-        }
-        float points_level = Float.parseFloat(localLevelPoints.get(position).toString().replace(',', '.'));
+        Double upper_bound = LevelTransformation.upper_bound(level);
+        Double lower_bound = LevelTransformation.lower_bound(level);
+        Double range = upper_bound - lower_bound;
         String text_level_points = String.format(Locale.getDefault(), "%.1f / %.1f", points_level, upper_bound).replace(',', '.');
-        viewHolder.getDeterminateBar().setProgress((int) ((localLevelPoints.get(position) - (upper_bound - 1000)) / 10));
+        viewHolder.getDeterminateBar().setProgress((int) ((points_level - lower_bound) / range * 100));
         viewHolder.getTextViewLevel().setText(text_level);
         viewHolder.getTextViewLevelPoints().setText(text_level_points);
+
         Context ctx1 = editProfileActivity;
         Context ctx2 = createProfileActivity;
         Context ctx = ctx1;
@@ -97,7 +98,7 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
         };
         CardView cardView = viewHolder.getCardAreaOfInterest();
         AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-        cardView.setOnTouchListener(new MySwipe(ctx) {
+        /* old code cardView.setOnTouchListener(new MySwipe(ctx) {
             public void onSwipeTop() {
 
             }
@@ -128,11 +129,11 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
 
             }
 
-        });
+        });*/
 
         cardView.setOnLongClickListener(view -> {
 
-            builder.setMessage("Are you sure you want to delete your area of interest " + text + "?").setPositiveButton(R.string.yes, dialogClickListener)
+            builder.setMessage(textViewAreaOfInterest.getContext().getResources().getString(R.string.delete_aoe) + " " + EventTypeToDrawable.getEventTypeToTranslation(textViewAreaOfInterest.getContext(), text) + "?").setPositiveButton(R.string.yes, dialogClickListener)
                     .setNegativeButton(R.string.no, dialogClickListener).show();
 
             return true;

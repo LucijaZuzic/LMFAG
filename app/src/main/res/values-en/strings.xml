@@ -243,4 +243,7 @@
     <string name="events_are_unrated">You have unrated events</string>
     <string name="events_subscriber_player">Events I subscribed to and participated in</string>
     <string name="events_subscriber_organizer">Events I subscribed to and organized</string>
+    <string name="delete_aoe">Are you sure you want to delete your area of interest</string>
+    <string name="minimum_number_players">Minimum number of players:</string>
+    <string name="maximum_number_players">Maximum number of players:</string>
 </resources>

@@ -18,6 +18,7 @@ import com.example.lmfag.BuildConfig;
 import com.example.lmfag.R;
 import com.example.lmfag.utility.AlarmScheduler;
 import com.example.lmfag.utility.EventTypeToDrawable;
+import com.example.lmfag.utility.LevelTransformation;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -308,6 +309,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
     }
 
     private void checkNumberOfParticipantsAdd() {
+        double minimum_level_val = Double.parseDouble(minimum_level.toString());
         String eventID = preferences.getString("eventID", "");
         String userID = preferences.getString("userID", "");
         if (eventID.equals("")) {
@@ -337,8 +339,8 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                                         points_array.add(Float.parseFloat(s));
                                     }
                                     if (areas_array.contains(event_type)) {
-                                        if (minimum_level > 0) {
-                                            if (points_array.get(areas_array.indexOf(event_type)) < minimum_level * 1000) {
+                                        if (minimum_level_val > 0) {
+                                            if (points_array.get(areas_array.indexOf(event_type)) < LevelTransformation.lower_bound((int)minimum_level_val)) {
                                                 Toast.makeText(getApplicationContext(), R.string.level_low, Toast.LENGTH_SHORT).show();
                                             } else {
                                                 if (public_event) {
@@ -361,7 +363,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                                             }
                                         }
                                     } else {
-                                        if (minimum_level > 0) {
+                                        if (minimum_level_val > 0) {
                                             Toast.makeText(getApplicationContext(), R.string.level_low, Toast.LENGTH_SHORT).show();
                                         } else {
                                             if (public_event) {
@@ -375,7 +377,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                                         }
                                     }
                                 } else {
-                                    if (minimum_level > 0) {
+                                    if (minimum_level_val > 0) {
                                         Toast.makeText(getApplicationContext(), R.string.level_low, Toast.LENGTH_SHORT).show();
                                     } else {
                                         if (public_event) {
