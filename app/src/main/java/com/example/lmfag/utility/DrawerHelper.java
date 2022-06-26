@@ -21,7 +21,6 @@ import com.example.lmfag.activities.FindEventsActivity;
 import com.example.lmfag.activities.FindFriendsActivity;
 import com.example.lmfag.activities.FriendRequestsActivity;
 import com.example.lmfag.activities.MainActivity;
-import com.example.lmfag.activities.MyEventsActivity;
 import com.example.lmfag.activities.MyMessagesActivity;
 import com.example.lmfag.activities.MyProfileActivity;
 import com.google.android.material.navigation.NavigationView;
@@ -65,9 +64,6 @@ public class DrawerHelper {
             context.startActivity(myIntent);
         } else if (id == R.id.my_messages) {
             Intent myIntent = new Intent(context, MyMessagesActivity.class);
-            context.startActivity(myIntent);
-        } else if (id == R.id.my_events) {
-            Intent myIntent = new Intent(context, MyEventsActivity.class);
             context.startActivity(myIntent);
         } else if (id == R.id.events_nearby) {
             Intent myIntent = new Intent(context, EventsNearbyActivity.class);

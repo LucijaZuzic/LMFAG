@@ -104,8 +104,7 @@ public class RateEventActivity extends MenuInterfaceActivity {
                         Map<String, Object> map = document.getData();
                         map.put("rated", true);
                         docRef.document(document.getId()).set(map);
-                        Intent myIntent = new Intent(context, ViewEventActivity.class);
-                        context.startActivity(myIntent);
+                        onBackPressed();
                         finish();
                     }
                 }
@@ -118,6 +117,8 @@ public class RateEventActivity extends MenuInterfaceActivity {
     }
 
     private void getWhoAttended() {
+        people.clear();
+        ratings.clear();
         String eventID = preferences.getString("eventID", "");
         String userID = preferences.getString("userID", "");
         if (userID.equals("")) {
@@ -345,7 +346,7 @@ public class RateEventActivity extends MenuInterfaceActivity {
                             data.put("points_levels", points_array);
                         }
                     }
-                    docRef.set(data);
+                    docRef.set(Objects.requireNonNull(data));
                     if (index != people.size() - 1) {
                         updatePlayer(index + 1);
                     } else {

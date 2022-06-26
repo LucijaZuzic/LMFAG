@@ -27,7 +27,6 @@
                 android:layout_margin="20dp"
                 app:cardBackgroundColor="@color/dark_teal_700"
                 app:cardCornerRadius="10dp"
-                app:cardElevation="10dp"
                 app:contentPadding="10dp">
 
                 <LinearLayout
@@ -269,7 +268,6 @@
                     android:layout_margin="10dp"
                     android:orientation="vertical"
                     app:cardCornerRadius="10dp"
-                    app:cardElevation="10dp"
                     app:contentPadding="10dp">
 
                     <TextView
@@ -310,7 +308,6 @@
                     android:layout_marginEnd="10dp"
                     android:orientation="vertical"
                     app:cardCornerRadius="10dp"
-                    app:cardElevation="10dp"
                     app:contentPadding="10dp">
 
                     <TextView

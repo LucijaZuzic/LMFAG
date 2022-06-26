@@ -56,6 +56,7 @@ public class ViewParticipantsActivity extends MenuInterfaceActivity {
     }
 
     private void getWhoAttended() {
+        people.clear();
         String eventID = preferences.getString("eventID", "");
         if (eventID.equals("")) {
             Intent myIntent = new Intent(context, MyProfileActivity.class);
