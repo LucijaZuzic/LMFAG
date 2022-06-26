@@ -3,8 +3,10 @@ package com.example.lmfag.activities;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,7 +25,9 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
+import com.example.lmfag.receivers.LocationSettingChangedReceiver;
 import com.example.lmfag.utility.EventTypeToDrawable;
+import com.example.lmfag.utility.Locateable;
 import com.example.lmfag.utility.adapters.CustomAdapterEvent;
 import com.firebase.geofire.GeoFireUtils;
 import com.firebase.geofire.GeoLocation;
@@ -54,7 +58,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-public class EventsNearbyActivity extends MenuInterfaceActivity implements TextWatcher {
+public class EventsNearbyActivity extends MenuInterfaceActivity implements TextWatcher, Locateable {
     private MapView map;
     private IMapController mapController;
     private MyLocationNewOverlay myLocationOverlay;
@@ -70,12 +74,15 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
     private EditText enterLongitude, enterLatitude;
     private SwitchCompat switchMapOnOff;
     private Chip upcoming, current, past;
+    private LocationSettingChangedReceiver locationReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_events_nearby);
         context = this;
+
+        locationReceiver = new LocationSettingChangedReceiver(this);
         docIds = new ArrayList<>();
         snapshots = new ArrayList<>();
         timestamps_array = new ArrayList<>();
@@ -183,12 +190,15 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
     public void onResume() {
         super.onResume();
         //this will refresh the osmdroid configuration on resuming.
+        getApplicationContext().registerReceiver(locationReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
         map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        getApplicationContext().unregisterReceiver(locationReceiver);
+        myLocationOverlay.disableMyLocation();
         //this will refresh the osmdroid configuration on resuming.
         map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
@@ -229,21 +239,6 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
         myLocationOverlay.enableMyLocation();
         myLocationOverlay.disableFollowLocation();
 
-        myLocationOverlay.runOnFirstFix(() -> runOnUiThread(() -> {
-            docIds.clear();
-            map.getOverlays().clear();
-            map.getOverlays().add(myLocationOverlay);
-            map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
-            map.getOverlays().add(chosenLocationMarker);
-            chosenLocationMarker.setPosition(myLocationOverlay.getMyLocation());
-            mapController.setCenter(myLocationOverlay.getMyLocation());
-
-            enterLatitude.setText(String.format(Locale.getDefault(), "%.4f", myLocationOverlay.getMyLocation().getLatitude()).replace(',', '.'));
-            enterLongitude.setText(String.format(Locale.getDefault(), "%.4f", myLocationOverlay.getMyLocation().getLongitude()).replace(',', '.'));
-            /* How to format String formattedLocation = getString(R.string.my_location) + ":\n" + getString(R.string.latitude) + ": " +
-                    Math.round(myLocationOverlay.getMyLocation().getLatitude() * 10000) / 10000.0 + "\n"
-                    + getString(R.string.longitude) + ": " + Math.round(myLocationOverlay.getMyLocation().getLongitude() * 10000) / 10000.0; */
-        }));
         map.getOverlays().add(myLocationOverlay);
         mapController.setZoom(17.0);
 
@@ -474,4 +469,23 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
     }
 
 
+    @Override
+    public void setMyGpsLocation() {
+        myLocationOverlay.enableMyLocation();
+        myLocationOverlay.runOnFirstFix(() -> runOnUiThread(() -> {
+            docIds.clear();
+            map.getOverlays().clear();
+            map.getOverlays().add(myLocationOverlay);
+            map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
+            map.getOverlays().add(chosenLocationMarker);
+            chosenLocationMarker.setPosition(myLocationOverlay.getMyLocation());
+            mapController.setCenter(myLocationOverlay.getMyLocation());
+
+            enterLatitude.setText(String.format(Locale.getDefault(), "%.4f", myLocationOverlay.getMyLocation().getLatitude()).replace(',', '.'));
+            enterLongitude.setText(String.format(Locale.getDefault(), "%.4f", myLocationOverlay.getMyLocation().getLongitude()).replace(',', '.'));
+            /* How to format String formattedLocation = getString(R.string.my_location) + ":\n" + getString(R.string.latitude) + ": " +
+                    Math.round(myLocationOverlay.getMyLocation().getLatitude() * 10000) / 10000.0 + "\n"
+                    + getString(R.string.longitude) + ": " + Math.round(myLocationOverlay.getMyLocation().getLongitude() * 10000) / 10000.0; */
+        }));
+    }
 }

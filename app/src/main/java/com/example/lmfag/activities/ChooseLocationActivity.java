@@ -2,7 +2,10 @@ package com.example.lmfag.activities;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
@@ -17,6 +20,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.content.res.AppCompatResources;
 
 import com.example.lmfag.R;
+import com.example.lmfag.receivers.LocationSettingChangedReceiver;
+import com.example.lmfag.utility.Locateable;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
@@ -27,12 +32,14 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.MapEventsOverlay;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.IMyLocationConsumer;
+import org.osmdroid.views.overlay.mylocation.IMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.Locale;
 
 
-public class ChooseLocationActivity extends MenuInterfaceActivity implements TextWatcher {
+public class ChooseLocationActivity extends MenuInterfaceActivity implements TextWatcher, Locateable {
     private MapView map;
     private IMapController mapController;
     private MyLocationNewOverlay myLocationOverlay;
@@ -40,6 +47,7 @@ public class ChooseLocationActivity extends MenuInterfaceActivity implements Tex
     private TextView coordinatesView;
     private TextView markerView;
     private EditText enterLongitude, enterLatitude;
+    private LocationSettingChangedReceiver locationReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +57,7 @@ public class ChooseLocationActivity extends MenuInterfaceActivity implements Tex
         Context context = this;
         Configuration.getInstance().load(context, PreferenceManager.getDefaultSharedPreferences(context));
 
+        locationReceiver = new LocationSettingChangedReceiver(this);
 
         enterLatitude = findViewById(R.id.inputLatitude);
         enterLongitude = findViewById(R.id.inputLongitude);
@@ -95,20 +104,7 @@ public class ChooseLocationActivity extends MenuInterfaceActivity implements Tex
         myLocationOverlay.enableMyLocation();
         myLocationOverlay.disableFollowLocation();
 
-        myLocationOverlay.runOnFirstFix(() -> runOnUiThread(() -> {
-            map.getOverlays().clear();
-            map.getOverlays().add(myLocationOverlay);
-            map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
-            map.getOverlays().add(chosenLocationMarker);
-            mapController.setCenter(chosenLocationMarker.getPosition());
-
-            enterLatitude.setText(String.format(Locale.getDefault(), "%.4f", myLocationOverlay.getMyLocation().getLatitude()).replace(',', '.'));
-            enterLongitude.setText(String.format(Locale.getDefault(), "%.4f", myLocationOverlay.getMyLocation().getLongitude()).replace(',', '.'));
-            String formattedLocation = getString(R.string.my_location) + ":\n" + getString(R.string.latitude) + ": " +
-                    Math.round(myLocationOverlay.getMyLocation().getLatitude() * 10000) / 10000.0 + "\n"
-                    + getString(R.string.longitude) + ": " + Math.round(myLocationOverlay.getMyLocation().getLongitude() * 10000) / 10000.0;
-            coordinatesView.setText(formattedLocation);
-        }));
+        setMyGpsLocation();
         map.getOverlays().add(myLocationOverlay);
         mapController.setZoom(17.0);
 
@@ -208,6 +204,8 @@ public class ChooseLocationActivity extends MenuInterfaceActivity implements Tex
     @Override
     public void onResume() {
         super.onResume();
+        IntentFilter intentFilter = new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION);
+        getApplicationContext().registerReceiver(locationReceiver, intentFilter);
         //this will refresh the osmdroid configuration on resuming.
         //if you make changes to the configuration, use SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
@@ -217,6 +215,8 @@ public class ChooseLocationActivity extends MenuInterfaceActivity implements Tex
     @Override
     public void onPause() {
         super.onPause();
+        myLocationOverlay.disableMyLocation();
+        getApplicationContext().unregisterReceiver(locationReceiver);
         //this will refresh the osmdroid configuration on resuming.
         //if you make changes to the configuration, use SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Configuration.getInstance().save(this, prefs);
@@ -273,5 +273,22 @@ public class ChooseLocationActivity extends MenuInterfaceActivity implements Tex
 
     }
 
+    @Override
+    public void setMyGpsLocation() {
+        myLocationOverlay.enableMyLocation();
+        myLocationOverlay.runOnFirstFix(() -> runOnUiThread(() -> {
+            map.getOverlays().clear();
+            map.getOverlays().add(myLocationOverlay);
+            map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
+            map.getOverlays().add(chosenLocationMarker);
+            mapController.setCenter(chosenLocationMarker.getPosition());
 
+            enterLatitude.setText(String.format(Locale.getDefault(), "%.4f", myLocationOverlay.getMyLocation().getLatitude()).replace(',', '.'));
+            enterLongitude.setText(String.format(Locale.getDefault(), "%.4f", myLocationOverlay.getMyLocation().getLongitude()).replace(',', '.'));
+            String formattedLocation = getString(R.string.my_location) + ":\n" + getString(R.string.latitude) + ": " +
+                    Math.round(myLocationOverlay.getMyLocation().getLatitude() * 10000) / 10000.0 + "\n"
+                    + getString(R.string.longitude) + ": " + Math.round(myLocationOverlay.getMyLocation().getLongitude() * 10000) / 10000.0;
+            coordinatesView.setText(formattedLocation);
+        }));
+    }
 }
