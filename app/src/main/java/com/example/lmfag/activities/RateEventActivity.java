@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.example.lmfag.R;
 import com.example.lmfag.utility.EventTypeToDrawable;
 import com.example.lmfag.utility.adapters.CustomAdapterRating;
+import com.google.android.material.slider.Slider;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -44,7 +44,7 @@ public class RateEventActivity extends MenuInterfaceActivity {
     private RateEventActivity rateEventActivity;
     private RecyclerView recyclerViewPlayers;
     private String event_type;
-    private RatingBar ratingBarOrganizer;
+    private Slider ratingBarOrganizer;
     private CircleImageView circleImageView;
     private TextView rate_event_list_entry_banner_text, organizerUsername;
     private LinearLayout organizerBanner;
@@ -312,8 +312,8 @@ public class RateEventActivity extends MenuInterfaceActivity {
                     if (!userID.equals(people.get(index))) {
                         if (organizer.equals(document.getId()) && !userID.equals(organizer)) {
                             float value = Float.parseFloat(Objects.requireNonNull(Objects.requireNonNull(data).get("points_rank")).toString());
-                            value += ratingBarOrganizer.getRating();
-                            data.put("points_rank", value);
+                            value += ratingBarOrganizer.getValue();
+                            data.put("points_rank", Math.max(0, value));
                         }
                         String area_string = Objects.requireNonNull(Objects.requireNonNull(data).get("areas_of_interest")).toString();
                         if (area_string.length() > 2) {
@@ -327,10 +327,10 @@ public class RateEventActivity extends MenuInterfaceActivity {
                                 points_array.add(Float.parseFloat(s));
                             }
                             if (areas_array.contains(event_type)) {
-                                points_array.set(areas_array.indexOf(event_type), points_array.get(areas_array.indexOf(event_type)) + ratings.get(index));
+                                points_array.set(areas_array.indexOf(event_type), Math.max(0, points_array.get(areas_array.indexOf(event_type)) + ratings.get(index)));
                             } else {
                                 areas_array.add(event_type);
-                                points_array.add(ratings.get(index));
+                                points_array.add(Math.max(0, ratings.get(index)));
                             }
                             data.put("areas_of_interest", areas_array);
                             data.put("points_levels", points_array);
@@ -338,7 +338,7 @@ public class RateEventActivity extends MenuInterfaceActivity {
                             List<String> areas_array = new ArrayList<>();
                             List<Float> points_array = new ArrayList<>();
                             areas_array.add(event_type);
-                            points_array.add(ratings.get(index));
+                            points_array.add(Math.max(0, ratings.get(index)));
                             data.put("areas_of_interest", areas_array);
                             data.put("points_levels", points_array);
                         }
@@ -371,8 +371,8 @@ public class RateEventActivity extends MenuInterfaceActivity {
                     Map<String, Object> data = document.getData();
                     if (organizer.equals(document.getId()) && !userID.equals(organizer)) {
                         float value = Float.parseFloat(Objects.requireNonNull(Objects.requireNonNull(data).get("points_rank")).toString());
-                        value += ratingBarOrganizer.getRating();
-                        data.put("points_rank", value);
+                        value += ratingBarOrganizer.getValue();
+                        data.put("points_rank", Math.max(0, value));
                     }
                     docRef.set(Objects.requireNonNull(data));
                     checkRated();

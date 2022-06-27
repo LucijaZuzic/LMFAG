@@ -113,7 +113,7 @@ public class ViewProfileInfoFragment extends Fragment {
         double upper_bound = LevelTransformation.upper_bound(rank);
         double lower_bound = LevelTransformation.lower_bound(rank);
         double range = upper_bound - lower_bound;
-        String text_rank_points = String.format(Locale.getDefault(), "%.1f / %.1f", points_rank, upper_bound).replace(',', '.');
+        String text_rank_points = String.format(Locale.getDefault(), "%.0f / %.0f", points_rank, upper_bound).replace(',', '.');
         ProgressBar progressBar = view.findViewById(R.id.determinateBar);
         progressBar.setProgress((int) ((points_rank - lower_bound) / range * 100));
         myOrganizerRank.setText(text_rank);

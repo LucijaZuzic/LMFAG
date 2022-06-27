@@ -3,6 +3,7 @@ package com.example.lmfag.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -34,10 +35,32 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class MyProfileActivity extends MenuInterfaceActivity {
 
+    private String oldOrganizer;
+    private String oldOrganizerTimestamp;
+    private String oldPlayer;
+    private String oldPlayerTimestamp;
+    private String oldSubscriber;
+    private String oldSubscriberTimestamp;
+    private boolean first = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
+
+        editor.putString("userOrganizer", "");
+        editor.apply();
+        editor.putString("userOrganizerTimestamp", "");
+        editor.apply();
+        editor.putString("userPlayer", "");
+        editor.apply();
+        editor.putString("userPlayerTimestamp", "");
+        editor.apply();
+        editor.putString("userSubscriber", "");
+        editor.apply();
+        editor.putString("userSubscriberTimestamp", "");
+        editor.apply();
+
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         if (extras != null) {
@@ -46,11 +69,14 @@ public class MyProfileActivity extends MenuInterfaceActivity {
             editor.apply();
         }
         fillUserData();
+        countDownAlarmStart();
     }
 
     private void getOrganizerEvents() {
         List<String> organizer_events_array = new ArrayList<>();
         List<Integer> organizer_events_timestamps = new ArrayList<>();
+        oldOrganizer = preferences.getString("userOrganizer", "");
+        oldOrganizerTimestamp = preferences.getString("userOrganizerTimestamp", "");
         String userID = preferences.getString("userID", "");
         if (!userID.equals("")) {
             db.collection("events").whereEqualTo("organizer", userID).get().addOnCompleteListener(task -> {
@@ -99,9 +125,20 @@ public class MyProfileActivity extends MenuInterfaceActivity {
                     editor.putString("userOrganizerTimestamp", "");
                 }
                 editor.apply();
-
-                int tab_int = preferences.getInt("selectedTab", 0);
-                fillPager(tab_int);
+                boolean correct = preferences.getString("userOrganizer", "").equals(oldOrganizer)
+                        && preferences.getString("userOrganizerTimestamp", "").equals(oldOrganizerTimestamp)
+                        && preferences.getString("userPlayer", "").equals(oldPlayer)
+                        && preferences.getString("userPlayerTimestamp", "").equals(oldPlayerTimestamp)
+                        && preferences.getString("userSubscriber", "").equals(oldSubscriber)
+                        && preferences.getString("userSubscriberTimestamp", "").equals(oldSubscriberTimestamp);
+                if (!correct || first) {
+                    int tab_int = preferences.getInt("selectedTab", 0);
+                    fillPager(tab_int);
+                } else {
+                    editor.putInt("selectedTab", 0);
+                    editor.apply();
+                }
+                first = false;
             });
         }
     }
@@ -126,6 +163,10 @@ public class MyProfileActivity extends MenuInterfaceActivity {
         List<Integer> player_events_timestamps = new ArrayList<>();
         List<Integer> subscriber_events_timestamps = new ArrayList<>();
         List<Integer> unrated_events_timestamps = new ArrayList<>();
+        oldPlayer = preferences.getString("userPlayer", "");
+        oldPlayerTimestamp = preferences.getString("userPlayerTimestamp", "");
+        oldSubscriber = preferences.getString("userSubscriber", "");
+        oldSubscriberTimestamp = preferences.getString("userSubscriberTimestamp", "");
         String userID = preferences.getString("userID", "");
         AtomicInteger processed = new AtomicInteger();
         if (!userID.equals("")) {
@@ -375,6 +416,20 @@ public class MyProfileActivity extends MenuInterfaceActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        editor.putString("userOrganizer", "");
+        editor.apply();
+        editor.putString("userOrganizerTimestamp", "");
+        editor.apply();
+        editor.putString("userPlayer", "");
+        editor.apply();
+        editor.putString("userPlayerTimestamp", "");
+        editor.apply();
+        editor.putString("userSubscriber", "");
+        editor.apply();
+        editor.putString("userSubscriberTimestamp", "");
+        editor.apply();
+
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         if (extras != null) {
@@ -383,5 +438,28 @@ public class MyProfileActivity extends MenuInterfaceActivity {
             editor.apply();
         }
         fillUserData();
+        countDownAlarmStart();
+    }
+
+    public void countDownAlarmStart() {
+        Handler handlerForAlarm = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                handlerForAlarm.postDelayed(this, 10000);
+                try {
+                    ViewPager2 viewPager = findViewById(R.id.pager);
+                    if (!first) {
+                        int item = viewPager.getCurrentItem();
+                        editor.putInt("selectedTab", item);
+                        editor.apply();
+                    }
+                    getSubscriberEvents();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        handlerForAlarm.postDelayed(runnable, 10000);
     }
 }

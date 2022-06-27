@@ -1,7 +1,9 @@
 package com.example.lmfag.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -32,17 +34,35 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ViewProfileActivity extends MenuInterfaceActivity {
 
+    private String oldOrganizer;
+    private String oldOrganizerTimestamp;
+    private String oldPlayer;
+    private String oldPlayerTimestamp;
+    private boolean first = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_profile);
 
+        editor.putString("friendOrganizer", "");
+        editor.apply();
+        editor.putString("friendOrganizerTimestamp", "");
+        editor.apply();
+        editor.putString("friendPlayer", "");
+        editor.apply();
+        editor.putString("friendPlayerTimestamp", "");
+        editor.apply();
+
         fillUserData();
+        countDownAlarmStart();
     }
 
     private void getOrganizerEvents() {
         List<String> organizer_events_array = new ArrayList<>();
         List<Integer> organizer_events_timestamps = new ArrayList<>();
+        oldOrganizer = preferences.getString("friendOrganizer", "");
+        oldOrganizerTimestamp = preferences.getString("friendOrganizerTimestamp", "");
         String friendID = preferences.getString("friendID", "");
         if (!friendID.equals("")) {
             db.collection("events").whereEqualTo("organizer", friendID).get().addOnCompleteListener(task -> {
@@ -91,7 +111,18 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                     editor.putString("friendOrganizerTimestamp", "");
                 }
                 editor.apply();
-                fillPager();
+                boolean correct = preferences.getString("friendOrganizer", "").equals(oldOrganizer)
+                        && preferences.getString("friendOrganizerTimestamp", "").equals(oldOrganizerTimestamp)
+                        && preferences.getString("friendPlayer", "").equals(oldPlayer)
+                        && preferences.getString("friendPlayerTimestamp", "").equals(oldPlayerTimestamp);
+                if (!correct || first) {
+                    int tab_int = preferences.getInt("selectedTab", 0);
+                    fillPager(tab_int);
+                } else {
+                    editor.putInt("selectedTab", 0);
+                    editor.apply();
+                }
+                first = false;
             });
         }
     }
@@ -114,6 +145,8 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
         /* friend List<String> subscriber_events_array = new ArrayList<>(); */
         List<Integer> player_events_timestamps = new ArrayList<>();
         /* friend List<Integer> subscriber_events_timestamps = new ArrayList<>(); */
+        oldPlayer = preferences.getString("friendPlayer", "");
+        oldPlayerTimestamp = preferences.getString("friendPlayerTimestamp", "");
         String friendID = preferences.getString("friendID", "");
         AtomicInteger processed = new AtomicInteger();
         if (!friendID.equals("")) {
@@ -215,11 +248,17 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
 
     private void fillUserData() {
         String name = preferences.getString("friendID", "");
-        if (name.equalsIgnoreCase("")) {
+        String me = preferences.getString("userID", "");
+        if (name.equalsIgnoreCase("") || me.equalsIgnoreCase("")) {
             Intent myIntent = new Intent(this, MainActivity.class);
             startActivity(myIntent);
             finish();
             return;
+        }
+        if (me.equals(name)) {
+            Intent myIntent = new Intent(this, MyProfileActivity.class);
+            startActivity(myIntent);
+            finish();
         }
         DocumentReference docRef = db.collection("users").document(name);
         docRef.get().addOnCompleteListener(task -> {
@@ -285,7 +324,7 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
         });
     }
 
-    private void fillPager() {
+    private void fillPager(int x) {
         TabPagerAdapter tabPagerAdapterViewProfile = new TabPagerAdapter(this,
                 new ViewProfileInfoFragment(), new ViewProfileFriendsFragment(), new ViewProfileAreasOfInterestFragment(),
                 new ViewProfileEventsOrganizerFragment(), new ViewProfileEventsPlayerFragment());
@@ -315,11 +354,49 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                     break;
             }
         }).attach();
+
+        viewPager.setCurrentItem(x);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("selectedTab", 0);
+        editor.apply();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        editor.putString("friendOrganizer", "");
+        editor.apply();
+        editor.putString("friendOrganizerTimestamp", "");
+        editor.apply();
+        editor.putString("friendPlayer", "");
+        editor.apply();
+        editor.putString("friendPlayerTimestamp", "");
+        editor.apply();
+
         fillUserData();
+        countDownAlarmStart();
+    }
+
+    public void countDownAlarmStart() {
+        Handler handlerForAlarm = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                handlerForAlarm.postDelayed(this, 10000);
+                try {
+                    ViewPager2 viewPager = findViewById(R.id.pager);
+                    if (!first) {
+                        int item = viewPager.getCurrentItem();
+                        editor.putInt("selectedTab", item);
+                        editor.apply();
+                    }
+                    getSubscriberEvents();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        handlerForAlarm.postDelayed(runnable, 10000);
     }
 }

@@ -32,7 +32,7 @@ public class MenuInterfaceActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        //countDownAlarmStart();
+        countDownAlarmStart();
         super.onResume();
     }
 
@@ -43,8 +43,7 @@ public class MenuInterfaceActivity extends AppCompatActivity {
             public void run() {
                 handlerForAlarm.postDelayed(this, 10000);
                 try {
-                    AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
-                    AlarmScheduler.getAllReceivedFriendRequests(getApplicationContext());
+                    AlarmScheduler.getOnlyStartOfEvents(getApplicationContext());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
