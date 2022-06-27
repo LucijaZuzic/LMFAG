@@ -75,6 +75,7 @@
                                 android:layout_marginBottom="10dp"
                                 android:fontFamily="sans-serif-condensed-light"
                                 android:text="@string/marker_latitude"
+                                android:textAlignment="center"
                                 android:textSize="21sp"
                                 android:textStyle="bold" />
 
@@ -101,6 +102,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="10dp"
                                 android:fontFamily="sans-serif-condensed-light"
+                                android:textAlignment="center"
                                 android:text="@string/marker_longitude"
                                 android:textSize="21sp"
                                 android:textStyle="bold" />

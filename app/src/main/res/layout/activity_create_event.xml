@@ -129,7 +129,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-condensed-light"
-                        android:hint="@string/event_name"
+                        android:hint="@string/enter_event_name"
                         android:importantForAutofill="no"
 
                         android:inputType="textPersonName"
@@ -218,7 +218,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="30dp"
                     android:fontFamily="sans-serif-condensed-light"
-                    android:hint="@string/event_description"
+                    android:hint="@string/enter_a_description"
                     android:importantForAutofill="no"
                     android:inputType="textMultiLine"
                     android:minHeight="48dp"

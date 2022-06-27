@@ -11,7 +11,6 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -47,7 +46,6 @@ public class RateEventActivity extends MenuInterfaceActivity {
     private String event_type;
     private RatingBar ratingBarOrganizer;
     private CircleImageView circleImageView;
-    private CardView rate_event_list_entry_banner_card;
     private TextView rate_event_list_entry_banner_text, organizerUsername;
     private LinearLayout organizerBanner;
     private TextView noResults;
@@ -59,7 +57,6 @@ public class RateEventActivity extends MenuInterfaceActivity {
         ratingBarOrganizer = findViewById(R.id.simpleRatingBarOrganizer);
         noResults = findViewById(R.id.noResults);
         circleImageView = findViewById(R.id.profile_image_organizer);
-        rate_event_list_entry_banner_card = findViewById(R.id.rate_event_list_entry_banner_card);
         rate_event_list_entry_banner_text = findViewById(R.id.rate_event_list_entry_banner_text);
         organizerUsername = findViewById(R.id.textViewOrganizer);
         organizerBanner = findViewById(R.id.organizerBanner);
@@ -215,7 +212,7 @@ public class RateEventActivity extends MenuInterfaceActivity {
                     rate_event_list_entry_banner_text.setText(Objects.requireNonNull(docData.get("event_name")).toString());
                     rate_event_list_entry_banner_text.setCompoundDrawablesWithIntrinsicBounds(EventTypeToDrawable.getEventTypeToDrawable(event_type), 0, 0, 0);
 
-                    rate_event_list_entry_banner_card.setOnClickListener(view -> {
+                    rate_event_list_entry_banner_text.setOnClickListener(view -> {
                         Intent myIntent = new Intent(context, ViewEventActivity.class);
                         context.startActivity(myIntent);
                         finish();

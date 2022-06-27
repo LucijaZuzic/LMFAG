@@ -65,8 +65,7 @@ public class MenuInterfaceActivity extends AppCompatActivity {
         editor.apply();
         editor.putString("userUsername", "");
         editor.apply();
-        editor.putString("userPicture", "");
-        editor.apply();
+
         AlarmScheduler.cancelAllAlarms(this.getApplicationContext());
         Intent myIntent = new Intent(this, MainActivity.class);
         startActivity(myIntent);
@@ -140,6 +139,7 @@ public class MenuInterfaceActivity extends AppCompatActivity {
                 }
                 editor.apply();
                 recreate();
+                return true;
             case imageSwitch:
                 String imageShow = preferences.getString("showImage", "");
                 if (imageShow.equals("true")) {
@@ -153,6 +153,8 @@ public class MenuInterfaceActivity extends AppCompatActivity {
                     item.setIcon(R.drawable.ic_baseline_image_not_supported_24);
                 }
                 editor.apply();
+                recreate();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
