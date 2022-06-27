@@ -25,7 +25,7 @@
             android:drawablePadding="10dp"
             android:fontFamily="sans-serif-condensed-light"
             android:gravity="center"
-            android:hint="@string/some_event_name"
+            android:hint="@string/filter_by_event_name"
             android:textSize="20sp"
             android:textStyle="bold"
             app:drawableStartCompat="@drawable/ic_baseline_interests_24"

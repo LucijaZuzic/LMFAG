@@ -340,7 +340,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                                     }
                                     if (areas_array.contains(event_type)) {
                                         if (minimum_level_val > 0) {
-                                            if (points_array.get(areas_array.indexOf(event_type)) < LevelTransformation.lower_bound((int)minimum_level_val)) {
+                                            if (points_array.get(areas_array.indexOf(event_type)) < LevelTransformation.lower_bound((int) minimum_level_val)) {
                                                 Toast.makeText(getApplicationContext(), R.string.level_low, Toast.LENGTH_SHORT).show();
                                             } else {
                                                 if (public_event) {
@@ -484,7 +484,11 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                 if (document.exists()) {
                     Map<String, Object> data = document.getData();
                     String organizerUserName = Objects.requireNonNull(Objects.requireNonNull(data).get("username")).toString();
-                    String name_str = organizerUserName + ": " + eventName.getText();
+                    String some_name = eventName.getText().toString();
+                    if (some_name.equals("")) {
+                        some_name = context.getResources().getString(R.string.filter_by_event_name);
+                    }
+                    String name_str = organizerUserName + ": " + some_name;
                     eventName.setText(name_str);
                     circleImageView.setOnClickListener(view -> {
                         editor.putString("friendID", name);
