@@ -248,4 +248,5 @@
     <string name="maximum_number_players">Maksimalni broj igrača:</string>
     <string name="some_minimum_level">Minimalna razina</string>
     <string name="some_number_of_players">Broj igrača</string>
+    <string name="some_description">Opis događaja</string>
 </resources>

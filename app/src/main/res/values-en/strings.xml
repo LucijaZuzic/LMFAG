@@ -248,4 +248,5 @@
     <string name="maximum_number_players">Maximum number of players:</string>
     <string name="some_minimum_level">Minimum level</string>
     <string name="some_number_of_players">Number of players</string>
+    <string name="some_description">Event description</string>
 </resources>

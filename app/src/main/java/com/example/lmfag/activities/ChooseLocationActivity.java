@@ -146,25 +146,9 @@ public class ChooseLocationActivity extends MenuInterfaceActivity implements Tex
             saveMarkerLocationToSP();
             finish();
         });
-        /* Update button ImageView updateButton = findViewById(R.id.updateLocation);
-        updateButton.setOnClickListener(view -> {
-            if (enterLongitude.getText().toString().length() != 0 && enterLatitude.getText().toString().length() != 0) {
-                float temp_latitude = Float.parseFloat(enterLatitude.getText().toString().replace(',', '.'));
-                float temp_longitude = Float.parseFloat(enterLongitude.getText().toString().replace(',', '.'));
-                map.getOverlays().clear();
-                map.getOverlays().add(myLocationOverlay);
-                map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
-                map.getOverlays().add(chosenLocationMarker);
-                chosenLocationMarker.setPosition(new org.osmdroid.util.GeoPoint(temp_latitude, temp_longitude));
-                mapController.setCenter(chosenLocationMarker.getPosition());
 
-                String formattedLocation = getString(R.string.marker_location) + ":\n" + getString(R.string.latitude) + ": " +
-                        Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0 + "\n"
-                        + getString(R.string.longitude) + ": " + Math.round(chosenLocationMarker.getPosition().getLongitude() * 10000) / 10000.0;
-                markerView.setText(formattedLocation);
-            }
-        });*/
-    }    // Location choosing on tap
+    }
+    // Location choosing on tap
     private final MapEventsReceiver mapEventsReceiver = new MapEventsReceiver() {
         @Override
         public boolean singleTapConfirmedHelper(GeoPoint p) {

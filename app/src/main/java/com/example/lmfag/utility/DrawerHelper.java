@@ -85,9 +85,6 @@ public class DrawerHelper {
         String name = preferences.getString("userID", "");
         String username = preferences.getString("userUsername", "");
 
-        /* Preferences String encoded = preferences.getString("userPicture", "");
-        byte[] imageAsBytes = Base64.decode(encoded.getBytes(), Base64.DEFAULT);*/
-
         if (name.equals("")) {
             Intent myIntent = new Intent(context, MainActivity.class);
             context.startActivity(myIntent);
@@ -109,14 +106,6 @@ public class DrawerHelper {
             myUsername.setText(username);
         }
 
-        /* Preferences if (circleImageView != null && !encoded.equals("")) {
-            Glide.with(context.getApplicationContext()).asBitmap().load(imageAsBytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
-        }
-
-        if (myUsername != null && !username.equals("") && circleImageView != null && !encoded.equals("")) {
-            return;
-        }*/
-
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users").document(name);
         docRef.get().addOnCompleteListener(task -> {
@@ -134,7 +123,6 @@ public class DrawerHelper {
                         myUsername.setText(Objects.requireNonNull(Objects.requireNonNull(data).get("username")).toString());
                     }
 
-                    //if (encoded.equals("")) {
                     String imageView = preferences.getString("showImage", "true");
                     if (imageView.equals("true")) {
                         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -146,33 +134,12 @@ public class DrawerHelper {
                                             .asBitmap()
                                             .placeholder(R.drawable.ic_baseline_person_24)
                                             .load(bytes).into(circleImageView)
-                                    /*.into((new CustomTarget<Bitmap>() {
-                                        @Override
-                                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                                            resource.compress(Bitmap.CompressFormat.JPEG, 20, byteArrayOutputStream);
-                                            byte[] b = byteArrayOutputStream.toByteArray();
-                                            String encoded = Base64.encodeToString(b, Base64.DEFAULT);
-                                            editor.putString("userPicture", encoded);
-                                            editor.apply();
-                                            circleImageView.setImageBitmap(resource);
-                                        }
-
-                                        @Override
-                                        public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                                        }
-                                    }))*/).addOnFailureListener(exception -> {
+                                     ).addOnFailureListener(exception -> {
                                 // Handle any errors
                             });
                             //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                         }
                     }
-                    /* Preferences } else {
-                        Intent myIntent = new Intent(context, MainActivity.class);
-                        context.startActivity(myIntent);
-                        //Log.d(TAG, "No such document");
-                    }*/
                 }
             }
         });

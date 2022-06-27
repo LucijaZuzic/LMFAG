@@ -329,40 +329,7 @@ public class MyProfileActivity extends MenuInterfaceActivity {
                     String points_string = Objects.requireNonNull(data.get("points_levels")).toString();
                     editor.putString("user_points_levels", points_string);
                     editor.apply();
-                    /* Preferences String imageView = preferences.getString("showImage", "true");
-                    if (imageView.equals("true")) {
-                        StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
-                        final long ONE_MEGABYTE = 1024 * 1024;
-                        imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(getApplicationContext())
-                                .asBitmap()
-                                .load(bytes)
-                                .into((new CustomTarget<Bitmap>() {
-                                    @Override
-                                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                                        resource.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                                        byte[] b = byteArrayOutputStream.toByteArray();
-                                        String encoded = Base64.encodeToString(b, Base64.DEFAULT);
-                                        editor.putString("userPicture", encoded);
-                                        editor.apply();
-                                        getSubscriberEvents();
-                                    }
 
-                                    @Override
-                                    public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                                    }
-                                }))).addOnFailureListener(exception -> {
-                            // Handle any errors
-                            editor.putString("userPicture", "");
-                            editor.apply();
-                            getSubscriberEvents();
-                        });
-                    } else {
-                        editor.putString("userPicture", "");
-                        editor.apply();
-                        getSubscriberEvents();
-                    }*/
                     getSubscriberEvents();
                 } else {
                     Intent myIntent = new Intent(this, MainActivity.class);

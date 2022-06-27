@@ -142,23 +142,9 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
         });
         switchMapOnOff = findViewById(R.id.switchMapOnOff);
         switchMapOnOff.setOnClickListener(view -> changeTimestampVisible());
-        /*ImageView updateButton = findViewById(R.id.updateLocation);
-          updateButton.setOnClickListener(view -> {
-            if (enterLongitude.getText().toString().length() != 0 && enterLatitude.getText().toString().length() != 0) {
-                float temp_latitude = Float.parseFloat(enterLatitude.getText().toString().replace(',', '.'));
-                float temp_longitude = Float.parseFloat(enterLongitude.getText().toString().replace(',', '.'));
-                map.getOverlays().clear();
-                map.getOverlays().add(myLocationOverlay);
-                map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
-                map.getOverlays().add(chosenLocationMarker);
-                chosenLocationMarker.setPosition(new org.osmdroid.util.GeoPoint(temp_latitude, temp_longitude));
-                mapController.setCenter(chosenLocationMarker.getPosition());
 
-                /* How to format String formattedLocation = getString(R.string.marker_location) + ":\n" + getString(R.string.latitude) + ": " +
-                        Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0 + "\n"
-                        + getString(R.string.longitude) + ": " + Math.round(chosenLocationMarker.getPosition().getLongitude() * 10000) / 10000.0;  */
-        //});
-    }    // Location choosing on tap
+    }
+    // Location choosing on tap
     private final MapEventsReceiver mapEventsReceiver = new MapEventsReceiver() {
         @Override
         public boolean singleTapConfirmedHelper(org.osmdroid.util.GeoPoint p) {
@@ -178,9 +164,6 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
 
             enterLatitude.setText(String.format(Locale.getDefault(), "%.4f", p.getLatitude()).replace(',', '.'));
             enterLongitude.setText(String.format(Locale.getDefault(), "%.4f", p.getLongitude()).replace(',', '.'));
-                /* How to format String formattedLocation = getString(R.string.marker_location) + ": " + getString(R.string.latitude) + ": " +
-                        Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0 + " "
-                        + getString(R.string.longitude) + ": " + Math.round(chosenLocationMarker.getPosition().getLongitude() * 10000) / 10000.0; */
 
             return true;
         }
@@ -256,9 +239,6 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
 
             @Override
             public void onMarkerDragEnd(Marker marker) {
-                /* How to format String formattedLocation = getString(R.string.marker_location) + ": " + getString(R.string.latitude) + ": " +
-                        Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0 + " "
-                        + getString(R.string.longitude) + ": " + Math.round(chosenLocationMarker.getPosition().getLongitude() * 10000) / 10000.0; */
 
                 docIds.clear();
                 map.getOverlays().clear();
@@ -457,10 +437,6 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
             chosenLocationMarker.setPosition(new GeoPoint(temp_latitude, temp_longitude));
             mapController.setCenter(chosenLocationMarker.getPosition());
 
-            /* How to format String formattedLocation = getString(R.string.marker_location) + ":\n" + getString(R.string.latitude) + ": " +
-                    Math.round(chosenLocationMarker.getPosition().getLatitude() * 10000) / 10000.0 + "\n"
-                    + getString(R.string.longitude) + ": " + Math.round(chosenLocationMarker.getPosition().getLongitude() * 10000) / 10000.0;
-            markerView.setText(formattedLocation);*/
         }
     }
 
@@ -484,9 +460,7 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
 
             enterLatitude.setText(String.format(Locale.getDefault(), "%.4f", myLocationOverlay.getMyLocation().getLatitude()).replace(',', '.'));
             enterLongitude.setText(String.format(Locale.getDefault(), "%.4f", myLocationOverlay.getMyLocation().getLongitude()).replace(',', '.'));
-            /* How to format String formattedLocation = getString(R.string.my_location) + ":\n" + getString(R.string.latitude) + ": " +
-                    Math.round(myLocationOverlay.getMyLocation().getLatitude() * 10000) / 10000.0 + "\n"
-                    + getString(R.string.longitude) + ": " + Math.round(myLocationOverlay.getMyLocation().getLongitude() * 10000) / 10000.0; */
+
         }));
     }
 }

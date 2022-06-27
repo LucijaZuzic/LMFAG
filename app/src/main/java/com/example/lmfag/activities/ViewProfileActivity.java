@@ -142,9 +142,7 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
 
     private void getSubscriberEvents() {
         List<String> player_events_array = new ArrayList<>();
-        /* friend List<String> subscriber_events_array = new ArrayList<>(); */
         List<Integer> player_events_timestamps = new ArrayList<>();
-        /* friend List<Integer> subscriber_events_timestamps = new ArrayList<>(); */
         oldPlayer = preferences.getString("friendPlayer", "");
         oldPlayerTimestamp = preferences.getString("friendPlayerTimestamp", "");
         String friendID = preferences.getString("friendID", "");
@@ -154,8 +152,7 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            /* friend String isSubscribed = Objects.requireNonNull(document.getData().get("notifications")).toString(); */
-                            db.collection("events").document(Objects.requireNonNull(document.getData().get("event")).toString()).get().addOnCompleteListener(task1 -> {
+                             db.collection("events").document(Objects.requireNonNull(document.getData().get("event")).toString()).get().addOnCompleteListener(task1 -> {
                                 if (task1.isSuccessful()) {
                                     DocumentSnapshot document1 = task1.getResult();
                                     Calendar cldr_start = Calendar.getInstance();
@@ -168,10 +165,6 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                                     cldr_end.setTime(end_date);
                                     int timestamp = checkTimestamp(cldr_start, cldr_end);
 
-                                    /* friend if (isSubscribed.equals("true")) {
-                                        subscriber_events_array.add(Objects.requireNonNull(document.getData().get("event")).toString());
-                                        subscriber_events_timestamps.add(timestamp);
-                                    } */
                                     String isAttending = Objects.requireNonNull(document.getData().get("attending")).toString();
                                     if (isAttending.equals("true")) {
                                         player_events_array.add(Objects.requireNonNull(document.getData().get("event")).toString());
@@ -189,16 +182,6 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                                         }
                                         String events_player_string = events_player_stringBuilder.toString();
                                         String events_player_timestamp_string = events_player_timestamp_stringBuilder.toString();
-                                        /* friend StringBuilder events_subscriber_stringBuilder = new StringBuilder();
-                                        StringBuilder events_subscriber_timestamp_stringBuilder = new StringBuilder();
-                                        for (String event : subscriber_events_array) {
-                                            events_subscriber_stringBuilder.append(event).append("_");
-                                        }
-                                        for (Integer timestampTMP : subscriber_events_timestamps) {
-                                            events_subscriber_timestamp_stringBuilder.append(timestampTMP).append("_");
-                                        }
-                                        String events_subscriber_string = events_subscriber_stringBuilder.toString();
-                                        String events_subscriber_timestamp_string = events_subscriber_timestamp_stringBuilder.toString(); */
                                         if (events_player_string.length() > 0) {
                                             editor.putString("friendPlayer", events_player_string.substring(0, events_player_string.length() - 1));
                                             editor.apply();
@@ -209,15 +192,6 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                                             editor.putString("friendPlayerTimestamp", "");
                                         }
                                         editor.apply();
-                                        /* friend if (events_subscriber_string.length() > 0) {
-                                            editor.putString("friendSubscriber", events_subscriber_string.substring(0, events_subscriber_string.length() - 1));
-                                            editor.apply();
-                                            editor.putString("friendSubscriberTimestamp", events_subscriber_timestamp_string.substring(0, events_subscriber_timestamp_string.length() - 1));
-                                        } else {
-                                            editor.putString("friendSubscriber", "");
-                                            editor.apply();
-                                            editor.putString("friendSubscriberTimestamp", "");
-                                        }*/
                                     }
                                 }
                             });
@@ -226,19 +200,11 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                         editor.putString("friendPlayer", "");
                         editor.apply();
                         editor.putString("friendPlayerTimestamp", "");
-                        /* friend editor.apply();
-                        editor.putString("friendSubscriber", "");
-                        editor.apply();
-                        editor.putString("friendSubscriberTimestamp", ""); */
                     }
                 } else {
                     editor.putString("friendPlayer", "");
                     editor.apply();
                     editor.putString("friendPlayerTimestamp", "");
-                    /* friend editor.apply();
-                    editor.putString("friendSubscriber", "");
-                    editor.apply();
-                    editor.putString("friendSubscriberTimestamp", ""); */
                 }
                 editor.apply();
                 getOrganizerEvents();
@@ -280,40 +246,7 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                     String points_string = Objects.requireNonNull(data.get("points_levels")).toString();
                     editor.putString("friend_points_levels", points_string);
                     editor.apply();
-                    /* Preferences String imageView = preferences.getString("showImage", "true");
-                    if (imageView.equals("true")) {
-                        StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
-                        final long ONE_MEGABYTE = 1024 * 1024;
-                        imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(getApplicationContext())
-                                .asBitmap()
-                                .load(bytes).into()
-                                /*.into((new CustomTarget<Bitmap>() {
-                                    @Override
-                                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                                        resource.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-                                        byte[] b = byteArrayOutputStream.toByteArray();
-                                        String encoded = Base64.encodeToString(b, Base64.DEFAULT);
-                                        editor.putString("friendPicture", encoded);
-                                        editor.apply();
-                                        getSubscriberEvents();
-                                    }
 
-                                    @Override
-                                    public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                                    }
-                                }))).addOnFailureListener(exception -> {
-                            // Handle any errors
-                            editor.putString("friendPicture", "");
-                            editor.apply();
-                            getSubscriberEvents();
-                        });
-                    } else {
-                        editor.putString("friendPicture", "");
-                        editor.apply();
-                        getSubscriberEvents();
-                    }*/
                     getSubscriberEvents();
                 } else {
                     Intent myIntent = new Intent(this, MainActivity.class);

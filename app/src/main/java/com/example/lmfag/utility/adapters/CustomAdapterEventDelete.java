@@ -66,57 +66,7 @@ public class CustomAdapterEventDelete extends RecyclerView.Adapter<CustomAdapter
         String docID = localEventNames.get(position);
 
         CardView deleteCard = viewHolder.getDeleteCard();
-        /* Old code for gesture deleteCard.setOnTouchListener(new MySwipe(context) {
-            public void onSwipeTop() {
 
-            }
-            public void onSwipeRight() {
-
-                db.collection("events").document(docID).delete();
-                db.collection("event_attending").whereEqualTo("event", docID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            if (task.getResult().size() > 0) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    db.collection("event_attending").document(document.getId()).delete();
-                                }
-                            }
-                        }
-                    }
-                });
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putInt("selectedTab", 3);
-                editor.apply();
-                Intent myIntent = new Intent(context, MyProfileActivity.class);
-                context.startActivity(myIntent);
-            }
-            public void onSwipeLeft() {
-
-                db.collection("events").document(docID).delete();
-                db.collection("event_attending").whereEqualTo("event", docID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            if (task.getResult().size() > 0) {
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    db.collection("event_attending").document(document.getId()).delete();
-                                }
-                            }
-                        }
-                    }
-                });
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putInt("selectedTab", 3);
-                editor.apply();
-                Intent myIntent = new Intent(context, MyProfileActivity.class);
-                context.startActivity(myIntent);
-            }
-            public void onSwipeBottom() {
-
-            }
-
-        });*/
         deleteCard.setOnLongClickListener(view -> {
             DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
                 switch (which) {
