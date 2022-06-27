@@ -69,7 +69,7 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
         double upper_bound = LevelTransformation.upper_bound(level);
         double lower_bound = LevelTransformation.lower_bound(level);
         double range = upper_bound - lower_bound;
-        String text_level_points = String.format(Locale.getDefault(), "%.1f / %.1f", points_level, upper_bound).replace(',', '.');
+        String text_level_points = String.format(Locale.getDefault(), "%.0f / %.0f", points_level, upper_bound).replace(',', '.');
         viewHolder.getDeterminateBar().setProgress((int) ((points_level - lower_bound) / range * 100));
         viewHolder.getTextViewLevel().setText(text_level);
         viewHolder.getTextViewLevelPoints().setText(text_level_points);

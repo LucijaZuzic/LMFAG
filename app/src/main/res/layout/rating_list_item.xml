@@ -41,13 +41,17 @@
 
         </LinearLayout>
 
-        <RatingBar
+
+        <com.google.android.material.slider.Slider
             android:id="@+id/simpleRatingBarPlayer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/rating_bar"
-            android:progressTint="@color/teal_700"
-            android:rating="2" />
+            android:valueFrom="-5.0"
+            android:value="0"
+            android:valueTo="5.0"
+            android:stepSize="1.0">
+
+        </com.google.android.material.slider.Slider>
 
     </LinearLayout>
 

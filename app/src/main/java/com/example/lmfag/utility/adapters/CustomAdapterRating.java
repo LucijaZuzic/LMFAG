@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.example.lmfag.R;
 import com.example.lmfag.activities.RateEventActivity;
 import com.example.lmfag.activities.ViewProfileActivity;
+import com.google.android.material.slider.Slider;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -68,10 +68,11 @@ public class CustomAdapterRating extends RecyclerView.Adapter<CustomAdapterRatin
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String name = localFriendUsernames.get(position);
         DocumentReference docRef = db.collection("users").document(name);
-        RatingBar ratingBar = viewHolder.getRatingBar();
+        Slider ratingBar = viewHolder.getRatingBar();
         CircleImageView profileImage = viewHolder.getProfileImage();
         // Called when the user swipes the RatingBar
-        ratingBar.setOnRatingBarChangeListener((ratingBarNew, rating, fromUser) -> rateEventActivity.updateRating(position, ratingBar.getRating()));
+        ratingBar.setOnClickListener((v) -> rateEventActivity.updateRating(position, ratingBar.getValue()));
+        ratingBar.setOnFocusChangeListener((v1, v2) -> rateEventActivity.updateRating(position, ratingBar.getValue()));
         if (!name.equals(preferences.getString("userID", ""))) {
             profileImage.setOnClickListener(view -> {
                 SharedPreferences.Editor editor = preferences.edit();
@@ -111,7 +112,7 @@ public class CustomAdapterRating extends RecyclerView.Adapter<CustomAdapterRatin
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView textViewUsername;
         private final CircleImageView profile_image_player;
-        private final RatingBar ratingBar;
+        private final Slider ratingBar;
 
         public ViewHolder(View view) {
             super(view);
@@ -130,7 +131,7 @@ public class CustomAdapterRating extends RecyclerView.Adapter<CustomAdapterRatin
             return profile_image_player;
         }
 
-        public RatingBar getRatingBar() {
+        public Slider getRatingBar() {
             return ratingBar;
         }
     }

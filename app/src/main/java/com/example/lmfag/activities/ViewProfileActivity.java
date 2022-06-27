@@ -215,11 +215,17 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
 
     private void fillUserData() {
         String name = preferences.getString("friendID", "");
-        if (name.equalsIgnoreCase("")) {
+        String me = preferences.getString("userID", "");
+        if (name.equalsIgnoreCase("") || me.equalsIgnoreCase("")) {
             Intent myIntent = new Intent(this, MainActivity.class);
             startActivity(myIntent);
             finish();
             return;
+        }
+        if (me.equals(name)) {
+            Intent myIntent = new Intent(this, MyProfileActivity.class);
+            startActivity(myIntent);
+            finish();
         }
         DocumentReference docRef = db.collection("users").document(name);
         docRef.get().addOnCompleteListener(task -> {
