@@ -173,14 +173,14 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
     public void onResume() {
         super.onResume();
         //this will refresh the osmdroid configuration on resuming.
-        getApplicationContext().registerReceiver(locationReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
-        map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
+        registerReceiver(locationReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
+        map.onResume(); //n eeded for compass, my location overlays, v6.0.0 and up
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        getApplicationContext().unregisterReceiver(locationReceiver);
+        unregisterReceiver(locationReceiver);
         myLocationOverlay.disableMyLocation();
         //this will refresh the osmdroid configuration on resuming.
         map.onPause();  //needed for compass, my location overlays, v6.0.0 and up

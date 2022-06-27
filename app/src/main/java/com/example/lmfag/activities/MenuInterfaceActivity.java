@@ -21,7 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-public class MenuInterfaceActivity extends AppCompatActivity {
+public class MenuInterfaceActivity extends BaseActivity {
     public SharedPreferences preferences;
     public SharedPreferences.Editor editor;
     public FirebaseFirestore db = FirebaseFirestore.getInstance();

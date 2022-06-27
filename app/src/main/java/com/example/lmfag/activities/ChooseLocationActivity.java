@@ -186,7 +186,7 @@ public class ChooseLocationActivity extends MenuInterfaceActivity implements Tex
     public void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION);
-        getApplicationContext().registerReceiver(locationReceiver, intentFilter);
+        registerReceiver(locationReceiver, intentFilter);
         //this will refresh the osmdroid configuration on resuming.
         //if you make changes to the configuration, use SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
@@ -197,7 +197,7 @@ public class ChooseLocationActivity extends MenuInterfaceActivity implements Tex
     public void onPause() {
         super.onPause();
         myLocationOverlay.disableMyLocation();
-        getApplicationContext().unregisterReceiver(locationReceiver);
+        unregisterReceiver(locationReceiver);
         //this will refresh the osmdroid configuration on resuming.
         //if you make changes to the configuration, use SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Configuration.getInstance().save(this, prefs);

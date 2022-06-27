@@ -40,7 +40,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.Objects;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         createNotificationChannel();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        boolean receiverRegistered = preferences.getBoolean("receiverRegistered", false);
         //Request permission dialog
         ActivityResultLauncher<String[]> alarmPermissionRequest =
                 registerForActivityResult(new ActivityResultContracts
@@ -85,19 +84,8 @@ public class MainActivity extends AppCompatActivity {
                     Manifest.permission.SCHEDULE_EXACT_ALARM,
             });
         }
-        if (!receiverRegistered) {
-            ConnectionChangeReceiver connectionChangeReceiver = new ConnectionChangeReceiver();
-            getApplication().registerReceiver(connectionChangeReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
-            preferences.edit().putBoolean("receiverRegistered", true).apply();
-        }
 
         onStart(savedInstanceState);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putBoolean("receiverRegistered", false).apply();
     }
 
     protected void onStart(Bundle savedInstanceState) {
