@@ -65,7 +65,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
     private double latitude = 45.36;
     private boolean public_event;
     private String organizerID;
-    private Float participate_minimum, participate_maximum;
+    private Float participate_maximum;
     private Float minimum_level;
     private CircleImageView circleImageView;
 
@@ -400,21 +400,6 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         });
     }
 
-    private void checkNumberOfParticipantsRemove() {
-        String eventID = preferences.getString("eventID", "");
-        CollectionReference dr = db.collection("event_attending");
-        dr.whereEqualTo("event", eventID).whereEqualTo("attending", true).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                if (task.getResult().size() > participate_minimum) {
-                    Toast.makeText(getApplicationContext(), R.string.no_longer_attending, Toast.LENGTH_SHORT).show();
-                    removeParticipant();
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.not_enough, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
     private void checkNumberOfParticipants() {
         String eventID = preferences.getString("eventID", "");
         CollectionReference dr = db.collection("event_attending");
@@ -422,7 +407,8 @@ public class ViewEventActivity extends MenuInterfaceActivity {
             if (task.isSuccessful()) {
                 TextView participant_number = findViewById(R.id.textViewNumberOfPlayersCurrent);
                 Integer size = task.getResult().size();
-                participant_number.setText(size + "");
+                String size_str = size + "";
+                participant_number.setText(size_str);
             }
         });
     }
@@ -436,7 +422,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                 if (task.getResult().size() == 0) {
                     checkNumberOfParticipantsAdd();
                 } else {
-                    checkNumberOfParticipantsRemove();
+                    removeParticipant();
                 }
             }
         });
@@ -498,7 +484,8 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                 if (document.exists()) {
                     Map<String, Object> data = document.getData();
                     String organizerUserName = Objects.requireNonNull(Objects.requireNonNull(data).get("username")).toString();
-                    eventName.setText(organizerUserName + ": " + eventName.getText());
+                    String name_str = organizerUserName + ": " + eventName.getText();
+                    eventName.setText(name_str);
                     circleImageView.setOnClickListener(view -> {
                         editor.putString("friendID", name);
                         editor.apply();
@@ -583,7 +570,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                 if (document.exists()) {
                     Map<String, Object> docData = document.getData();
 
-                    organizerID = Objects.requireNonNull(docData.get("organizer")).toString();
+                    organizerID = Objects.requireNonNull(Objects.requireNonNull(docData).get("organizer")).toString();
                     eventName.setText(Objects.requireNonNull(Objects.requireNonNull(docData).get("event_name")).toString());
                     getOrganizerData(organizerID);
                     eventType.setText(EventTypeToDrawable.getEventTypeToTranslation(this, Objects.requireNonNull(Objects.requireNonNull(docData).get("event_type")).toString()));
@@ -609,7 +596,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                     System.out.println(Objects.requireNonNull(docData.get("organizer")));
 
                     event_type = Objects.requireNonNull(docData.get("event_type")).toString();
-                    participate_minimum = val1;
+
                     participate_maximum = val2;
                     minimum_level = Float.parseFloat(Objects.requireNonNull(docData.get("minimum_level")).toString());
                     slider.setText(String.format(Locale.getDefault(), "%.0f - %.0f", val1, val2));

@@ -83,7 +83,7 @@ public class AlarmScheduler {
                         if (task.getResult().size() > 0) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 db.collection("users")
-                                        .document(document.getData().get("sender").toString())
+                                        .document(Objects.requireNonNull(document.getData().get("sender")).toString())
                                         .get()
                                         .addOnCompleteListener(task2 -> {
                                             if (task2.isSuccessful()) {
@@ -100,7 +100,62 @@ public class AlarmScheduler {
 
     }
 
+    public static void deleteFaultyEvents() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("events").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult().size() > 0) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        checkFaulty(document.getId());
+                    }
+                }
+            }
+        });
+    }
+
+    private static void checkFaulty(String docID) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("events").document(docID).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    String eventID = document.getId();
+                    Map<String, Object> docData = document.getData();
+                    Calendar current = Calendar.getInstance();
+                    Calendar cldr_start = Calendar.getInstance();
+                    Timestamp start_timestamp = (Timestamp) (Objects.requireNonNull(docData).get("datetime"));
+                    Date start_date = Objects.requireNonNull(start_timestamp).toDate();
+                    cldr_start.setTime(start_date);
+                    float minimum_pl = Float.parseFloat(Objects.requireNonNull(docData.get("minimum_players")).toString());
+                    if (current.getTimeInMillis() > cldr_start.getTimeInMillis()) {
+                        db.collection("event_attending").whereEqualTo("event", eventID).get().addOnCompleteListener(task1 -> {
+                            if (task1.isSuccessful()) {
+                                int size = task1.getResult().size();
+                                if (size < minimum_pl) {
+                                    deleteAnEvent(eventID);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+    }
+
+    private static void deleteAnEvent(String docID) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("events").document(docID).delete();
+        db.collection("event_attending").whereEqualTo("event", docID).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult().size() > 0) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        db.collection("event_attending").document(document.getId()).delete();
+                    }
+                }
+            }
+        });
+    }
+
     public static void getAllSubscriberEvents(Context applicationContext) {
+        deleteFaultyEvents();
         cancelAllAlarms(applicationContext);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext);
@@ -113,7 +168,8 @@ public class AlarmScheduler {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             String isSubscribed = Objects.requireNonNull(document.getData().get("notifications")).toString();
                             if (isSubscribed.equals("true")) {
-                                DocumentReference docRef = db.collection("events").document(Objects.requireNonNull(document.getData().get("event")).toString());
+                                String eventID = Objects.requireNonNull(document.getData().get("event")).toString();
+                                DocumentReference docRef = db.collection("events").document(eventID);
                                 docRef.get().addOnCompleteListener(taskTime -> {
                                     if (taskTime.isSuccessful()) {
                                         DocumentSnapshot documentTime = taskTime.getResult();
