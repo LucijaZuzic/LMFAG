@@ -98,38 +98,6 @@ public class CustomAdapterAreaOfInterestRemove extends RecyclerView.Adapter<Cust
         };
         CardView cardView = viewHolder.getCardAreaOfInterest();
         AlertDialog.Builder builder = new AlertDialog.Builder(ctx);
-        /* old code cardView.setOnTouchListener(new MySwipe(ctx) {
-            public void onSwipeTop() {
-
-            }
-
-            public void onSwipeRight() {
-                if (editProfileActivity != null) {
-                    builder.setMessage("Are you sure you want to delete your area of interest " + text + "?").setPositiveButton(R.string.yes, dialogClickListener)
-                            .setNegativeButton(R.string.no, dialogClickListener).show();
-                }
-                if (createProfileActivity != null) {
-                    builder.setMessage("Are you sure you want to delete your area of interest " + text + "?").setPositiveButton(R.string.yes, dialogClickListener)
-                            .setNegativeButton(R.string.no, dialogClickListener).show();
-                }
-            }
-
-            public void onSwipeLeft() {
-                if (editProfileActivity != null) {
-                    builder.setMessage("Are you sure you want to delete your area of interest " + text + "?").setPositiveButton(R.string.yes, dialogClickListener)
-                            .setNegativeButton(R.string.no, dialogClickListener).show();
-                }
-                if (createProfileActivity != null) {
-                    builder.setMessage("Are you sure you want to delete your area of interest " + text + "?").setPositiveButton(R.string.yes, dialogClickListener)
-                            .setNegativeButton(R.string.no, dialogClickListener).show();
-                }
-            }
-
-            public void onSwipeBottom() {
-
-            }
-
-        });*/
 
         cardView.setOnLongClickListener(view -> {
 

@@ -194,38 +194,7 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
                                 noResults.setVisibility(View.VISIBLE);
                             }
                             recyclerViewMessages.setAdapter(customAdapter);
-                            /* Testing addOnScrollListener, had an error recyclerViewMessages.addOnScrollListener(new RecyclerView.OnScrollListener()  {
-                                @Override
-                                public void onScrolled (RecyclerView recyclerView, int dx, int dy) {
-                                // Grab the last child placed in the ScrollView, we need it to determinate the bottom position.
-                                View view = (View) recyclerViewMessages.getChildAt( recyclerViewMessages.getAdapter().getItemCount()-1);
 
-                                // Calculate the scrollDiff
-                                int diff = (view.getBottom()-(recyclerViewMessages.getHeight()+recyclerViewMessages.getScrollY()));
-
-                                // if diff is zero, then the bottom has been reached
-                                if( diff == 0 )
-                                {
-                                    // notify that we have reached the bottom
-                                    messageDialog();
-                                }
-                                }
-                            });
-                            recyclerViewMessages.setOnTouchListener(new MySwipe(context) {
-                                public void onSwipeTop() {
-                                }
-
-                                public void onSwipeRight() {
-                                    messageDialog();
-                                }
-
-                                public void onSwipeLeft() {
-                                    messageDialog();
-                                }
-
-                                public void onSwipeBottom() {
-                                }
-                            });*/
                             recyclerViewMessages.scrollToPosition(customAdapter.getItemCount() - 1);
                         }
                     }

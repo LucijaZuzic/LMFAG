@@ -159,8 +159,5 @@ public class CustomAdapterMessages extends RecyclerView.Adapter<CustomAdapterMes
             return background;
         }
 
-        /*img old public CircleImageView getProfileImageTwo() {
-            return profile_image_two;
-        }*/
     }
 }

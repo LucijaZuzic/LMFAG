@@ -122,9 +122,7 @@ public class ViewProfileInfoFragment extends Fragment {
         String imageShow = preferences.getString("showImage", "");
         if (imageShow.equals("true")) {
             CircleImageView circleImageView = view.findViewById(R.id.profile_image);
-            /* Preferences String encoded = preferences.getString("userPicture", "");
-            byte[] imageAsBytes = Base64.decode(encoded.getBytes(), Base64.DEFAULT);
-            Glide.with(context.getApplicationContext()).asBitmap().load(imageAsBytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);*/
+
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
             StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
