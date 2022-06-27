@@ -9,16 +9,16 @@
     <string name="my_events">Moji događaji</string>
     <string name="rank">Rang</string>
     <string name="user_description">Opis korisnika:</string>
-    <string name="enter_a_location">Unesi lokaciju</string>
+    <string name="enter_a_location">Unesi lokaciju.</string>
     <string name="edit_profile">Uredi profil</string>
-    <string name="enter_a_description">Unesi opis</string>
+    <string name="enter_a_description">Unesi opis.</string>
     <string name="location">Lokacija:</string>
     <string name="friend_requests">Zahtjevi za prijateljstvo</string>
     <string name="my_messages">Moje poruke</string>
     <string name="event_name">Ime događaja:</string>
     <string name="create_event">Stvori događaj</string>
     <string name="event_type">Vrsta događaja:</string>
-    <string name="players">Igrači</string>
+    <string name="players">Igrači:</string>
     <string name="number_of_players">Broj igrača:</string>
     <string name="organizer_playing">Organizator sudjeluje</string>
     <string name="choose_location">Odaberi lokaciju</string>
@@ -32,7 +32,7 @@
     <string name="add_area_of_interest">Dodaj područje interesa</string>
     <string name="level">Razina</string>
     <string name="level_points">Bodovi razine/Bodovi do iduće razine</string>
-    <string name="organizer">Organizator</string>
+    <string name="organizer">Organizator:</string>
     <string name="rate_event">Ocijeni događaj</string>
     <string name="area_of_interest_already_added">Već je dodano područje interesa</string>
     <string name="write_success">Snimka dokumenta uspješno je zapisana!</string>
@@ -246,4 +246,5 @@
     <string name="delete_aoe">Jeste li sigurni da želite izbrisat područje interesa</string>
     <string name="minimum_number_players">Minimalni broj igrača:</string>
     <string name="maximum_number_players">Maksimalni broj igrača:</string>
+    <string name="some_event_name">Ime događaja</string>
 </resources>

@@ -41,11 +41,9 @@ public class MyProfileActivity extends MenuInterfaceActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         if (extras != null) {
-            Integer x = extras.getInt("selectedTab");
-            if (x != null) {
-                editor.putInt("selectedTab", x);
-                editor.apply();
-            }
+            int x = extras.getInt("selectedTab");
+            editor.putInt("selectedTab", x);
+            editor.apply();
         }
         fillUserData();
     }
@@ -102,7 +100,7 @@ public class MyProfileActivity extends MenuInterfaceActivity {
                 }
                 editor.apply();
 
-                Integer tab_int = preferences.getInt("selectedTab", 0);
+                int tab_int = preferences.getInt("selectedTab", 0);
                 fillPager(tab_int);
             });
         }
@@ -136,11 +134,11 @@ public class MyProfileActivity extends MenuInterfaceActivity {
                     if (task.getResult().size() > 0) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             String isSubscribed = Objects.requireNonNull(document.getData().get("notifications")).toString();
-                            db.collection("events").document(document.getData().get("event").toString()).get().addOnCompleteListener(task1 -> {
+                            db.collection("events").document(Objects.requireNonNull(document.getData().get("event")).toString()).get().addOnCompleteListener(task1 -> {
                                 if (task1.isSuccessful()) {
                                     DocumentSnapshot document1 = task1.getResult();
                                     Calendar cldr_start = Calendar.getInstance();
-                                    Timestamp start_timestamp = (Timestamp) (document1.getData().get("datetime"));
+                                    Timestamp start_timestamp = (Timestamp) (Objects.requireNonNull(document1.getData()).get("datetime"));
                                     Date start_date = Objects.requireNonNull(start_timestamp).toDate();
                                     cldr_start.setTime(start_date);
                                     Calendar cldr_end = Calendar.getInstance();
@@ -380,11 +378,9 @@ public class MyProfileActivity extends MenuInterfaceActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         if (extras != null) {
-            Integer x = extras.getInt("selectedTab");
-            if (x != null) {
-                editor.putInt("selectedTab", x);
-                editor.apply();
-            }
+            int x = extras.getInt("selectedTab");
+            editor.putInt("selectedTab", x);
+            editor.apply();
         }
         fillUserData();
     }

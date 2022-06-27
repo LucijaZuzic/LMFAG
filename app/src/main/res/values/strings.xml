@@ -9,16 +9,16 @@
     <string name="my_events">My events</string>
     <string name="rank">Rank</string>
     <string name="user_description">User description:</string>
-    <string name="enter_a_location">Enter a location</string>
+    <string name="enter_a_location">Enter a location.</string>
     <string name="edit_profile">Edit profile</string>
-    <string name="enter_a_description">Enter a description</string>
+    <string name="enter_a_description">Enter a description.</string>
     <string name="location">Location:</string>
     <string name="friend_requests">Friend requests</string>
     <string name="my_messages">My messages</string>
     <string name="event_name">Event name:</string>
     <string name="create_event">Create event</string>
     <string name="event_type">Event type:</string>
-    <string name="players">Players</string>
+    <string name="players">Players:</string>
     <string name="number_of_players">Number of players:</string>
     <string name="organizer_playing">Organizer playing</string>
     <string name="choose_location">Choose location</string>
@@ -32,7 +32,7 @@
     <string name="add_area_of_interest">Add area of interest</string>
     <string name="level">Level</string>
     <string name="level_points">Level points/Level points for next level</string>
-    <string name="organizer">Organizer</string>
+    <string name="organizer">Organizer:</string>
     <string name="rate_event">Rate event</string>
     <string name="area_of_interest_already_added">Area of interest already added</string>
     <string name="write_success">DocumentSnapshot successfully written!</string>
@@ -246,4 +246,5 @@
     <string name="delete_aoe">Are you sure you want to delete your area of interest</string>
     <string name="minimum_number_players">Minimum number of players:</string>
     <string name="maximum_number_players">Maximum number of players:</string>
+    <string name="some_event_name">Event name</string>
 </resources>

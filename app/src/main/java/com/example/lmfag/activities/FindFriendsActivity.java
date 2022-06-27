@@ -12,11 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.lmfag.R;
 import com.example.lmfag.utility.adapters.CustomAdapterFriends;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FindFriendsActivity extends MenuInterfaceActivity {
     private Context context;
@@ -40,20 +40,21 @@ public class FindFriendsActivity extends MenuInterfaceActivity {
     private void getAllFriends() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         List<String> friends_array = new ArrayList<>();
-        Query q = db.collection("users").orderBy("username");
         String text = editTextSearchValue.getText().toString();
-        if (!text.equals("")) {
-            q = db.collection("users").whereEqualTo("username", text);
-        } else {
+        if (text.equals("")) {
             CustomAdapterFriends customAdapterFriends = new CustomAdapterFriends(new ArrayList<>(), context, preferences);
             recyclerViewFindFriends.setAdapter(customAdapterFriends);
             noResults.setVisibility(View.VISIBLE);
             return;
         }
-        q.get().addOnCompleteListener(task -> {
+        db.collection("users").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().size() > 0) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
+                        String name = Objects.requireNonNull(document.getData().get("username")).toString();
+                        if (!name.toLowerCase().contains(text.toLowerCase())) {
+                            continue;
+                        }
                         if (!(document.getId().equals(preferences.getString("userID", "")))) {
                             friends_array.add(document.getId());
                         }

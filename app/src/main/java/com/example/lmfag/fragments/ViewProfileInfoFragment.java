@@ -110,24 +110,27 @@ public class ViewProfileInfoFragment extends Fragment {
         double points_rank = Double.parseDouble(preferences.getString("friendRankPoints", ""));
         int rank = LevelTransformation.level(points_rank);
         String text_rank = Integer.toString(rank);
-        Double upper_bound = LevelTransformation.upper_bound(rank);
-        Double lower_bound = LevelTransformation.lower_bound(rank);
-        Double range = upper_bound - lower_bound;
+        double upper_bound = LevelTransformation.upper_bound(rank);
+        double lower_bound = LevelTransformation.lower_bound(rank);
+        double range = upper_bound - lower_bound;
         String text_rank_points = String.format(Locale.getDefault(), "%.1f / %.1f", points_rank, upper_bound).replace(',', '.');
         ProgressBar progressBar = view.findViewById(R.id.determinateBar);
         progressBar.setProgress((int) ((points_rank - lower_bound) / range * 100));
         myOrganizerRank.setText(text_rank);
         myOrganizerRankPoints.setText(text_rank_points);
         myDescription.setText(Objects.requireNonNull(preferences.getString("friendDescription", "")));
-        CircleImageView circleImageView = view.findViewById(R.id.profile_image);
-        /* Preferences String encoded = preferences.getString("userPicture", "");
-        byte[] imageAsBytes = Base64.decode(encoded.getBytes(), Base64.DEFAULT);
-        Glide.with(context.getApplicationContext()).asBitmap().load(imageAsBytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);*/
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
-        StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
-        final long ONE_MEGABYTE = 1024 * 1024;
-        imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(context.getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView));
+        String imageShow = preferences.getString("showImage", "");
+        if (imageShow.equals("true")) {
+            CircleImageView circleImageView = view.findViewById(R.id.profile_image);
+            /* Preferences String encoded = preferences.getString("userPicture", "");
+            byte[] imageAsBytes = Base64.decode(encoded.getBytes(), Base64.DEFAULT);
+            Glide.with(context.getApplicationContext()).asBitmap().load(imageAsBytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);*/
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference();
+            StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
+            final long ONE_MEGABYTE = 1024 * 1024;
+            imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(context.getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView));
+        }
     }
 
     private void writeToDb(String sender, String receiver) {

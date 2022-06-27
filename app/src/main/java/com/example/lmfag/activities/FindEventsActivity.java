@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.appcompat.content.res.AppCompatResources;
@@ -31,7 +30,6 @@ import java.util.Objects;
 
 public class FindEventsActivity extends MenuInterfaceActivity {
     private TextView sp;
-    private List<String> all_areas;
     private Context context = this;
     private RecyclerView recyclerViewFindEvents;
     private LinearLayout nameCard, organizerCard, typeCard;
@@ -42,7 +40,7 @@ public class FindEventsActivity extends MenuInterfaceActivity {
     private TextView noResults;
     private ImageView imageViewEventType;
     private EditText editTextEventName, editTextOrganizerName;
-    private Chip upcoming, current, past;
+    private Chip upcoming, current, past, organizerRadio, nameRadio, typeRadio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +62,7 @@ public class FindEventsActivity extends MenuInterfaceActivity {
         typeCard = findViewById(R.id.typeCard);
         imageViewEventType = findViewById(R.id.imageViewEventType);
         sp = findViewById(R.id.sp);
-        all_areas = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.event_types)));
+        List<String> all_areas = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.event_types)));
 
         RecyclerView recyclerViewAreasOfInterestNew = findViewById(R.id.recyclerViewAreasOfInterestNew);
         CustomAdapterEventTypeAdd customAdapterEventTypeAdd = new CustomAdapterEventTypeAdd(all_areas, this);
@@ -78,22 +76,15 @@ public class FindEventsActivity extends MenuInterfaceActivity {
         ivEventName.setOnClickListener(view -> getAllEventsWithName());
         ImageView ivOrganizerName = findViewById(R.id.imageViewBeginSearchOrganizerName);
         ivOrganizerName.setOnClickListener(view -> getAllEventsWithOrganizer());
-        RadioButton organizerRadio, nameRadio, typeRadio;
         organizerRadio = findViewById(R.id.chooseOrganizer);
         organizerRadio.setOnClickListener(view -> showOrganizer());
         nameRadio = findViewById(R.id.chooseEventName);
         nameRadio.setOnClickListener(view -> showName());
         typeRadio = findViewById(R.id.chooseEventType);
         typeRadio.setOnClickListener(view -> showType());
-        if (organizerRadio.isChecked()) {
-            showOrganizer();
-        }
-        if (nameRadio.isChecked()) {
-            showName();
-        }
-        if (typeRadio.isChecked()) {
-            showType();
-        }
+        showOrganizer();
+        showName();
+        showType();
         editTextEventName = findViewById(R.id.editTextEventName);
         editTextOrganizerName = findViewById(R.id.editTextOrganizerName);
 
@@ -146,37 +137,45 @@ public class FindEventsActivity extends MenuInterfaceActivity {
     }
 
     public void showName() {
-        nameCard.setVisibility(View.VISIBLE);
-        organizerCard.setVisibility(View.GONE);
-        typeCard.setVisibility(View.GONE);
+        if (nameRadio.isChecked()) {
+            organizerRadio.setChecked(false);
+            typeRadio.setChecked(false);
+            nameCard.setVisibility(View.VISIBLE);
+            organizerCard.setVisibility(View.GONE);
+            typeCard.setVisibility(View.GONE);
+        }
     }
 
     public void showOrganizer() {
-        nameCard.setVisibility(View.GONE);
-        organizerCard.setVisibility(View.VISIBLE);
-        typeCard.setVisibility(View.GONE);
+        if (organizerRadio.isChecked()) {
+            nameRadio.setChecked(false);
+            typeRadio.setChecked(false);
+            nameCard.setVisibility(View.GONE);
+            organizerCard.setVisibility(View.VISIBLE);
+            typeCard.setVisibility(View.GONE);
+        }
     }
 
     public void showType() {
-        nameCard.setVisibility(View.GONE);
-        organizerCard.setVisibility(View.GONE);
-        typeCard.setVisibility(View.VISIBLE);
+        if (typeRadio.isChecked()) {
+            nameRadio.setChecked(false);
+            organizerRadio.setChecked(false);
+            nameCard.setVisibility(View.GONE);
+            organizerCard.setVisibility(View.GONE);
+            typeCard.setVisibility(View.VISIBLE);
+        }
     }
 
     private void getAllEventsOfType() {
         events_array = new ArrayList<>();
         timestamps_array = new ArrayList<>();
-        Query q = db.collection("events");
-
-        if (selected_item != null) {
-            q = db.collection("events").whereEqualTo("event_type", selected_item);
-        } else {
+        if (selected_item == null) {
             CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(new ArrayList<>(), context, preferences);
             recyclerViewFindEvents.setAdapter(customAdapterEvents);
             noResults.setVisibility(View.VISIBLE);
             return;
         }
-        q.get().addOnCompleteListener(task -> {
+        db.collection("events").whereEqualTo("event_type", selected_item).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().size() > 0) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
@@ -208,20 +207,21 @@ public class FindEventsActivity extends MenuInterfaceActivity {
     private void getAllEventsWithName() {
         events_array = new ArrayList<>();
         timestamps_array = new ArrayList<>();
-        Query q = db.collection("events");
         String text = editTextEventName.getText().toString();
-        if (!text.equals("")) {
-            q = db.collection("events").whereEqualTo("event_name", text);
-        } else {
+        if (text.equals("")) {
             CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(new ArrayList<>(), context, preferences);
             recyclerViewFindEvents.setAdapter(customAdapterEvents);
             noResults.setVisibility(View.VISIBLE);
             return;
         }
-        q.get().addOnCompleteListener(task -> {
+        db.collection("events").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().size() > 0) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
+                        String name = Objects.requireNonNull(document.getData().get("event_name")).toString();
+                        if (!name.toLowerCase().contains(text.toLowerCase())) {
+                            continue;
+                        }
                         events_array.add(document.getId());
                         Calendar cldr_start = Calendar.getInstance();
                         Timestamp start_timestamp = (Timestamp) (document.getData().get("datetime"));
@@ -253,10 +253,15 @@ public class FindEventsActivity extends MenuInterfaceActivity {
         Query q = db.collection("events");
         String organizerName = editTextOrganizerName.getText().toString();
         if (!organizerName.equals("")) {
-            db.collection("users").whereEqualTo("username", organizerName).get().addOnCompleteListener(task -> {
+            //db.collection("users").whereEqualTo("username", organizerName).get().addOnCompleteListener(task -> {
+            db.collection("users").get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
+                            String name = Objects.requireNonNull(document.getData().get("username")).toString();
+                            if (!name.toLowerCase().contains(organizerName.toLowerCase())) {
+                                continue;
+                            }
                             q.whereEqualTo("organizer", document.getId()).get().addOnCompleteListener(task1 -> {
                                 if (task1.isSuccessful()) {
                                     if (task1.getResult().size() > 0) {
@@ -301,7 +306,6 @@ public class FindEventsActivity extends MenuInterfaceActivity {
             CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(new ArrayList<>(), context, preferences);
             recyclerViewFindEvents.setAdapter(customAdapterEvents);
             noResults.setVisibility(View.VISIBLE);
-            return;
         }
     }
 }

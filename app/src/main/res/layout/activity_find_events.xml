@@ -111,14 +111,14 @@
                             android:layout_height="wrap_content"
                             android:checkable="true"
                             android:checked="true"
-                            android:text="@string/upcoming"></com.google.android.material.chip.Chip>
+                            android:text="@string/upcoming" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/current"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checkable="true"
-                            android:text="@string/current"></com.google.android.material.chip.Chip>
+                            android:text="@string/current" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/past"
@@ -136,63 +136,43 @@
                         android:text="@string/search_by"
                         android:textSize="21sp"
                         android:textStyle="bold" />
-
-                    <RadioGroup
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:checkedButton="@id/chooseOrganizer"
-                        android:orientation="vertical"
-                        android:paddingStart="30dp"
-                        android:weightSum="1">
-
-                        <RadioButton
+                    <com.google.android.material.chip.ChipGroup
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <com.google.android.material.chip.Chip
                             android:id="@+id/chooseOrganizer"
+                            android:checkable="true"
+                            android:checked="true"
                             android:layout_width="wrap_content"
-                            android:layout_height="35dp"
-                            android:fontFamily="sans-serif-condensed-light"
                             android:text="@string/filter_by_organizer"
-                            android:textSize="21sp"
-                            android:textStyle="bold"
-                            android:visibility="visible"
-                            app:drawableStartCompat="@drawable/ic_baseline_person_24"
-                            app:drawableTint="@color/teal_700" />
-
-                        <RadioButton
+                            android:layout_height="wrap_content">
+                        </com.google.android.material.chip.Chip>
+                        <com.google.android.material.chip.Chip
                             android:id="@+id/chooseEventName"
+                            android:checkable="true"
                             android:layout_width="wrap_content"
-                            android:layout_height="35dp"
-                            android:fontFamily="sans-serif-condensed-light"
                             android:text="@string/filter_by_event_name"
-                            android:textSize="21sp"
-                            android:textStyle="bold"
-                            android:visibility="visible"
-                            app:drawableStartCompat="@drawable/ic_baseline_calendar_today_24"
-                            app:drawableTint="@color/teal_700" />
-
-                        <RadioButton
+                            android:layout_height="wrap_content">
+                        </com.google.android.material.chip.Chip>
+                        <com.google.android.material.chip.Chip
                             android:id="@+id/chooseEventType"
+                            android:checkable="true"
                             android:layout_width="wrap_content"
-                            android:layout_height="35dp"
-                            android:fontFamily="sans-serif-condensed-light"
                             android:text="@string/filter_by_event_type"
-                            android:textSize="21sp"
-                            android:textStyle="bold"
-                            android:visibility="visible"
-                            app:drawableStartCompat="@drawable/ic_baseline_interests_24"
-                            app:drawableTint="@color/teal_700" />
-                    </RadioGroup>
+                            android:layout_height="wrap_content">
+                        </com.google.android.material.chip.Chip>
+                    </com.google.android.material.chip.ChipGroup>
 
                     <LinearLayout
                         android:id="@+id/nameCard"
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
                         android:gravity="center"
-                        android:orientation="vertical"
-                        android:visibility="visible">
+                        android:orientation="vertical" >
 
                         <TextView
                             android:layout_width="match_parent"
@@ -204,7 +184,6 @@
                             android:padding="5dp"
                             android:text="@string/event_name"
                             android:textSize="21sp"
-
                             android:textStyle="bold"
                             app:drawableStartCompat="@drawable/ic_baseline_calendar_today_24"
                             app:drawableTint="@color/teal_700" />
@@ -212,6 +191,8 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="20dp"
                             android:orientation="horizontal">
 
 
@@ -242,14 +223,14 @@
 
                     <LinearLayout
                         android:id="@+id/organizerCard"
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
                         android:gravity="center"
-                        android:orientation="vertical"
-                        android:visibility="gone">
+                        android:orientation="vertical" >
 
 
                         <TextView
@@ -259,10 +240,7 @@
                             android:layout_marginBottom="10dp"
                             android:fontFamily="sans-serif-condensed-light"
                             android:gravity="center"
-                            android:minWidth="48dp"
-                            android:minHeight="48dp"
                             android:padding="5dp"
-
                             android:text="@string/organizer"
                             android:textSize="21sp"
                             android:textStyle="bold"
@@ -304,14 +282,14 @@
 
                     <LinearLayout
                         android:id="@+id/typeCard"
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="10dp"
                         android:gravity="center"
-                        android:orientation="vertical"
-                        android:visibility="gone">
+                        android:orientation="vertical" >
 
                         <TextView
                             android:layout_width="match_parent"
@@ -319,6 +297,7 @@
                             android:layout_gravity="center_vertical"
                             android:fontFamily="sans-serif-condensed-light"
                             android:gravity="center"
+                            android:layout_marginBottom="10dp"
                             android:padding="5dp"
                             android:text="@string/event_type"
                             android:textSize="21sp"
@@ -330,7 +309,8 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="30dp">
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="20dp">
 
                             <ImageView
                                 android:id="@+id/imageViewEventType"

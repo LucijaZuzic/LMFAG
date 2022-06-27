@@ -146,6 +146,7 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
     }
 
     public void getAllMessages() {
+        List<String> old_messages = new ArrayList<>(messages);
         messages = new ArrayList<>();
         times = new ArrayList<>();
         sender = new ArrayList<>();
@@ -171,49 +172,62 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
                             }
                         }
                         Collections.reverse(messages);
-                        Collections.reverse(times);
-                        Collections.reverse(sender);
-                        Collections.reverse(ids);
-                        CustomAdapterMessages customAdapter = new CustomAdapterMessages(messages, times, sender, ids, me, context, myUsername, otherUsername);
-                        if (messages.size() > 0) {
-                            noResults.setVisibility(View.GONE);
+                        boolean changed = false;
+                        if (messages.size() != old_messages.size()) {
+                            changed = true;
                         } else {
-                            noResults.setVisibility(View.VISIBLE);
+                            for (int i = messages.size() - 1; i >= 0; i--) {
+                                if (!messages.get(i).equals(old_messages.get(i))) {
+                                    changed = true;
+                                    break;
+                                }
+                            }
                         }
-                        recyclerViewMessages.setAdapter(customAdapter);
-                        /* Testing addOnScrollListener, had an error recyclerViewMessages.addOnScrollListener(new RecyclerView.OnScrollListener()  {
-                            @Override
-                            public void onScrolled (RecyclerView recyclerView, int dx, int dy) {
-                            // Grab the last child placed in the ScrollView, we need it to determinate the bottom position.
-                            View view = (View) recyclerViewMessages.getChildAt( recyclerViewMessages.getAdapter().getItemCount()-1);
+                        if (changed) {
+                            Collections.reverse(times);
+                            Collections.reverse(sender);
+                            Collections.reverse(ids);
+                            CustomAdapterMessages customAdapter = new CustomAdapterMessages(messages, times, sender, ids, me, context, myUsername, otherUsername);
+                            if (messages.size() > 0) {
+                                noResults.setVisibility(View.GONE);
+                            } else {
+                                noResults.setVisibility(View.VISIBLE);
+                            }
+                            recyclerViewMessages.setAdapter(customAdapter);
+                            /* Testing addOnScrollListener, had an error recyclerViewMessages.addOnScrollListener(new RecyclerView.OnScrollListener()  {
+                                @Override
+                                public void onScrolled (RecyclerView recyclerView, int dx, int dy) {
+                                // Grab the last child placed in the ScrollView, we need it to determinate the bottom position.
+                                View view = (View) recyclerViewMessages.getChildAt( recyclerViewMessages.getAdapter().getItemCount()-1);
 
-                            // Calculate the scrollDiff
-                            int diff = (view.getBottom()-(recyclerViewMessages.getHeight()+recyclerViewMessages.getScrollY()));
+                                // Calculate the scrollDiff
+                                int diff = (view.getBottom()-(recyclerViewMessages.getHeight()+recyclerViewMessages.getScrollY()));
 
-                            // if diff is zero, then the bottom has been reached
-                            if( diff == 0 )
-                            {
-                                // notify that we have reached the bottom
-                                messageDialog();
-                            }
-                            }
-                        });
-                        recyclerViewMessages.setOnTouchListener(new MySwipe(context) {
-                            public void onSwipeTop() {
-                            }
+                                // if diff is zero, then the bottom has been reached
+                                if( diff == 0 )
+                                {
+                                    // notify that we have reached the bottom
+                                    messageDialog();
+                                }
+                                }
+                            });
+                            recyclerViewMessages.setOnTouchListener(new MySwipe(context) {
+                                public void onSwipeTop() {
+                                }
 
-                            public void onSwipeRight() {
-                                messageDialog();
-                            }
+                                public void onSwipeRight() {
+                                    messageDialog();
+                                }
 
-                            public void onSwipeLeft() {
-                                messageDialog();
-                            }
+                                public void onSwipeLeft() {
+                                    messageDialog();
+                                }
 
-                            public void onSwipeBottom() {
-                            }
-                        });*/
-                        recyclerViewMessages.scrollToPosition(customAdapter.getItemCount() - 1);
+                                public void onSwipeBottom() {
+                                }
+                            });*/
+                            recyclerViewMessages.scrollToPosition(customAdapter.getItemCount() - 1);
+                        }
                     }
                 });
     }

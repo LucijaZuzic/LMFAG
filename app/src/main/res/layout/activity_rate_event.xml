@@ -27,32 +27,6 @@
             app:drawableStartCompat="@drawable/ic_baseline_star_24"
             app:drawableTint="@color/teal_700" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/rate_event_list_entry_banner_card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:gravity="center"
-            app:cardCornerRadius="10dp"
-            app:contentPadding="10dp">
-
-            <TextView
-                android:id="@+id/rate_event_list_entry_banner_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:drawablePadding="10dp"
-                android:fontFamily="sans-serif-condensed-light"
-                android:gravity="center"
-                android:hint="@string/area_of_interest"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:drawableStartCompat="@drawable/ic_baseline_interests_24"
-                app:drawableTint="@color/teal_700" />
-        </androidx.cardview.widget.CardView>
-
         <View
             android:layout_width="match_parent"
             android:layout_height="5dp"
@@ -61,6 +35,21 @@
             android:layout_marginEnd="10dp"
             android:background="?android:attr/listDivider" />
 
+        <TextView
+            android:id="@+id/rate_event_list_entry_banner_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="20dp"
+            android:fontFamily="sans-serif-condensed-light"
+            android:gravity="center"
+            android:hint="@string/area_of_interest"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:drawableStartCompat="@drawable/ic_baseline_interests_24"
+            app:drawableTint="@color/teal_700" />
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -75,7 +64,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:padding="10dp">
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp">
 
                 <LinearLayout
                     android:id="@+id/organizerBanner"
@@ -88,7 +78,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginTop="10dp"
                         android:layout_marginRight="10dp"
                         android:fontFamily="sans-serif-condensed-light"
                         android:gravity="center"
