@@ -10,8 +10,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
 import com.example.lmfag.utility.adapters.CustomAdapterFriendRequest;
+import com.example.lmfag.utility.adapters.CustomAdapterFriends;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.chip.Chip;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,10 +38,11 @@ public class FriendRequestsActivity extends MenuInterfaceActivity {
         setContentView(R.layout.activity_friend_requests);
         context = this;
         first = true;
-        received = new ArrayList<>();
-        sent = new ArrayList<>();
         old_received = new ArrayList<>();
         old_sent = new ArrayList<>();
+        received = new ArrayList<>();
+        sent = new ArrayList<>();
+
         noResults = findViewById(R.id.noResults);
         recyclerViewFriendRequests = findViewById(R.id.recyclerViewFriendRequests);
         sentChip = findViewById(R.id.sent);
@@ -121,15 +126,14 @@ public class FriendRequestsActivity extends MenuInterfaceActivity {
                 }
             }
             if (!equal || first || current_option != previous_option) {
-                CustomAdapterFriendRequest customAdapterAreaOfInterest = new CustomAdapterFriendRequest(received, me, context);
-                recyclerViewFriendRequests.setAdapter(customAdapterAreaOfInterest);
+                CustomAdapterFriendRequest customAdapterFriendRequest = new CustomAdapterFriendRequest(received, me, context);
+                recyclerViewFriendRequests.setAdapter(customAdapterFriendRequest);
                 if (received.size() > 0) {
                     noResults.setVisibility(View.GONE);
                 } else {
                     noResults.setVisibility(View.VISIBLE);
                 }
             }
-            first = false;
         } else {
             boolean equal = true;
             if (old_sent.size() != sent.size()) {
@@ -143,20 +147,27 @@ public class FriendRequestsActivity extends MenuInterfaceActivity {
                 }
             }
             if (!equal || first || current_option != previous_option) {
-                CustomAdapterFriendRequest customAdapterAreaOfInterest = new CustomAdapterFriendRequest(sent, me, context);
-                recyclerViewFriendRequests.setAdapter(customAdapterAreaOfInterest);
+                CustomAdapterFriends customAdapterFriends= new CustomAdapterFriends(sent, context, preferences);
+                recyclerViewFriendRequests.setAdapter(customAdapterFriends);
                 if (sent.size() > 0) {
                     noResults.setVisibility(View.GONE);
                 } else {
                     noResults.setVisibility(View.VISIBLE);
                 }
             }
-            first = false;
         }
+        first = false;
         previous_option = current_option;
+        old_received = new ArrayList<>(received);
+        old_sent = new ArrayList<>(sent);
     }
 
     public void refresh() {
+        handlerForAlarm.removeCallbacksAndMessages(runnable);
+        handlerForAlarm.removeCallbacksAndMessages(handlerForAlarm);
+        handlerForAlarm.removeCallbacksAndMessages(null);
+        handlerForAlarm.removeCallbacks(runnable);
+        handlerForAlarm.removeCallbacks(null);
         Intent myIntent = new Intent(context, FriendRequestsActivity.class);
         context.startActivity(myIntent);
         finish();
@@ -167,41 +178,43 @@ public class FriendRequestsActivity extends MenuInterfaceActivity {
         super.onResume();
         first = true;
         getFriendRequests();
-    }
-
-    private void getSentFriendRequests() {
-        String me = preferences.getString("userID", "");
-        db.collection("friend_requests")
-                .whereEqualTo("sender", me)
-                .get().addOnCompleteListener(task2 -> {
-                    if (task2.isSuccessful()) {
-                        if (task2.getResult().size() > 0) {
-                            for (QueryDocumentSnapshot document2 : task2.getResult()) {
-                                sent.add(Objects.requireNonNull(document2.getData().get("receiver")).toString());
-                            }
-                        }
-                    }
-                    checkChange();
-                });
+        countDownStart();
     }
 
     private void getFriendRequests() {
         String me = preferences.getString("userID", "");
-        old_received = new ArrayList<>(received);
-        old_sent = new ArrayList<>(sent);
-        received = new ArrayList<>();
-        sent = new ArrayList<>();
-        db.collection("friend_requests")
+        received.clear();
+        sent.clear();
+        List<Task<QuerySnapshot>> tasks = new ArrayList<>();
+        tasks.add(db.collection("friend_requests")
                 .whereEqualTo("receiver", me)
                 .get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         if (task.getResult().size() > 0) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                received.add(Objects.requireNonNull(document.getData().get("sender")).toString());
+                                String username_some = Objects.requireNonNull(document.getData().get("sender")).toString();
+                                if (!received.contains(username_some)) {
+                                    received.add(username_some);
+                                }
                             }
                         }
                     }
-                    getSentFriendRequests();
-                });
+                }));
+        tasks.add(db.collection("friend_requests")
+                .whereEqualTo("sender", me)
+                .get().addOnCompleteListener(task2 -> {
+                    if (task2.isSuccessful()) {
+                        if (task2.getResult().size() > 0) {
+                            for (QueryDocumentSnapshot document2 : task2.getResult()) {
+                                String username_some = Objects.requireNonNull(document2.getData().get("receiver")).toString();
+                                if (!sent.contains(username_some)) {
+                                    sent.add(username_some);
+                                }
+                            }
+                        }
+                    }
+                }));
+        Tasks.whenAllComplete(tasks)
+                .addOnCompleteListener(t -> checkChange());
     }
 }

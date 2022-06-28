@@ -130,14 +130,14 @@ public class MyProfileActivity extends MenuInterfaceActivity {
                         && preferences.getString("userPlayer", "").equals(oldPlayer)
                         && preferences.getString("userPlayerTimestamp", "").equals(oldPlayerTimestamp)
                         && preferences.getString("userSubscriber", "").equals(oldSubscriber)
-                        && preferences.getString("userSubscriberTimestamp", "").equals(oldSubscriberTimestamp)
-                        && preferences.getString("userUnrated", "").equals(oldUnrated)
-                        && preferences.getString("userUnratedTimestamp", "").equals(oldUnratedTimestamp)
-                        && preferences.getString("userLocation", "").equals(oldLocation)
-                        && preferences.getString("userDescription", "").equals(oldDescription)
-                        && preferences.getString("userRankPoints", "").equals(oldRank)
-                        && preferences.getString("user_areas_of_interest", "").equals(oldAreas)
-                        && preferences.getString("user_points_levels", "").equals(oldPoints);
+                        && preferences.getString("userSubscriberTimestamp", "").equals(oldSubscriberTimestamp);
+                       // && preferences.getString("userUnrated", "").equals(oldUnrated)
+                       // && preferences.getString("userUnratedTimestamp", "").equals(oldUnratedTimestamp)
+                        //    && preferences.getString("userLocation", "").equals(oldLocation)
+                        //      && preferences.getString("userDescription", "").equals(oldDescription)
+                        //   && preferences.getString("userRankPoints", "").equals(oldRank)
+                        //      && preferences.getString("user_areas_of_interest", "").equals(oldAreas)
+                //       && preferences.getString("user_points_levels", "").equals(oldPoints);
                 if (!correct || first) {
                     int tab_int = preferences.getInt("selectedTab", 0);
                     fillPager(tab_int);
@@ -322,6 +322,11 @@ public class MyProfileActivity extends MenuInterfaceActivity {
         oldAreas = preferences.getString("user_areas_of_interest", "");
         oldPoints = preferences.getString("user_points_levels", "");
         if (name.equalsIgnoreCase("")) {
+            handlerForAlarm.removeCallbacksAndMessages(runnable);
+            handlerForAlarm.removeCallbacksAndMessages(runnable);
+            handlerForAlarm.removeCallbacksAndMessages(null);
+            handlerForAlarm.removeCallbacks(runnable);
+            handlerForAlarm.removeCallbacks(null);
             Intent myIntent = new Intent(this, MainActivity.class);
             startActivity(myIntent);
             finish();
@@ -351,6 +356,11 @@ public class MyProfileActivity extends MenuInterfaceActivity {
 
                     getSubscriberEvents();
                 } else {
+                    handlerForAlarm.removeCallbacksAndMessages(runnable);
+                    handlerForAlarm.removeCallbacksAndMessages(runnable);
+                    handlerForAlarm.removeCallbacksAndMessages(null);
+                    handlerForAlarm.removeCallbacks(runnable);
+                    handlerForAlarm.removeCallbacks(null);
                     Intent myIntent = new Intent(this, MainActivity.class);
                     startActivity(myIntent);
                     finish();
@@ -401,6 +411,7 @@ public class MyProfileActivity extends MenuInterfaceActivity {
         super.onResume();
         first = true;
         fillUserData();
+        countDownAlarmStart();
     }
 
     public void countDownAlarmStart() {

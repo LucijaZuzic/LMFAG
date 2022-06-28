@@ -252,7 +252,9 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
             return 2;
         }
         return -1;
-    }    private final MapEventsReceiver mapEventsReceiver = new MapEventsReceiver() {
+    }
+
+    private final MapEventsReceiver mapEventsReceiver = new MapEventsReceiver() {
         @Override
         public boolean singleTapConfirmedHelper(org.osmdroid.util.GeoPoint p) {
             return false;

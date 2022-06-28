@@ -46,6 +46,7 @@ public class MyMessagesActivity extends MenuInterfaceActivity {
         super.onResume();
         first = true;
         getAllFriends();
+        countDownStart();
     }
 
     public void countDownStart() {
@@ -130,14 +131,19 @@ public class MyMessagesActivity extends MenuInterfaceActivity {
                 }
             }
             first = false;
+            old_friends_array = new ArrayList<>(friends_array);
         });
     }
 
     private void getAllFriends() {
-        old_friends_array = new ArrayList<>(friends_array);
         friends_array = new ArrayList<>();
         String me = preferences.getString("userID", "");
         if (me.equals("")) {
+            handlerForAlarm.removeCallbacksAndMessages(runnable);
+            handlerForAlarm.removeCallbacksAndMessages(runnable);
+            handlerForAlarm.removeCallbacksAndMessages(null);
+            handlerForAlarm.removeCallbacks(runnable);
+            handlerForAlarm.removeCallbacks(null);
             Intent myIntent = new Intent(context, MainActivity.class);
             startActivity(myIntent);
             finish();

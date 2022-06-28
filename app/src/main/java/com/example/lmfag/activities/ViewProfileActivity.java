@@ -231,12 +231,22 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
         oldAreas = preferences.getString("friend_areas_of_interest", "");
         oldPoints = preferences.getString("friend_points_levels", "");
         if (name.equalsIgnoreCase("") || me.equalsIgnoreCase("")) {
+            handlerForAlarm.removeCallbacksAndMessages(runnable);
+            handlerForAlarm.removeCallbacksAndMessages(runnable);
+            handlerForAlarm.removeCallbacksAndMessages(null);
+            handlerForAlarm.removeCallbacks(runnable);
+            handlerForAlarm.removeCallbacks(null);
             Intent myIntent = new Intent(this, MainActivity.class);
             startActivity(myIntent);
             finish();
             return;
         }
         if (me.equals(name)) {
+            handlerForAlarm.removeCallbacksAndMessages(runnable);
+            handlerForAlarm.removeCallbacksAndMessages(runnable);
+            handlerForAlarm.removeCallbacksAndMessages(null);
+            handlerForAlarm.removeCallbacks(runnable);
+            handlerForAlarm.removeCallbacks(null);
             Intent myIntent = new Intent(this, MyProfileActivity.class);
             startActivity(myIntent);
             finish();
@@ -264,6 +274,11 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
 
                     getSubscriberEvents();
                 } else {
+                    handlerForAlarm.removeCallbacksAndMessages(runnable);
+                    handlerForAlarm.removeCallbacksAndMessages(runnable);
+                    handlerForAlarm.removeCallbacksAndMessages(null);
+                    handlerForAlarm.removeCallbacks(runnable);
+                    handlerForAlarm.removeCallbacks(null);
                     Intent myIntent = new Intent(this, MainActivity.class);
                     startActivity(myIntent);
                     finish();
@@ -311,6 +326,7 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
         super.onResume();
         first = true;
         fillUserData();
+        countDownAlarmStart();
     }
 
     public void countDownAlarmStart() {

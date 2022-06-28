@@ -33,6 +33,7 @@ public class MenuInterfaceActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        refreshSomething();
     }
 
     public void refreshSomething() {
@@ -117,6 +118,11 @@ public class MenuInterfaceActivity extends BaseActivity {
         editor.apply();
 
         AlarmScheduler.cancelAllAlarms(this.getApplicationContext());
+        handlerGeneral.removeCallbacksAndMessages(runnableGeneral);
+        handlerGeneral.removeCallbacksAndMessages(handlerGeneral);
+        handlerGeneral.removeCallbacksAndMessages(null);
+        handlerGeneral.removeCallbacks(runnableGeneral);
+        handlerGeneral.removeCallbacks(null);
         Intent myIntent = new Intent(this, MainActivity.class);
         startActivity(myIntent);
         finish();
@@ -130,6 +136,11 @@ public class MenuInterfaceActivity extends BaseActivity {
 
         String user = preferences.getString("userID", "");
         if (user.equals("")) {
+            handlerGeneral.removeCallbacksAndMessages(runnableGeneral);
+            handlerGeneral.removeCallbacksAndMessages(handlerGeneral);
+            handlerGeneral.removeCallbacksAndMessages(null);
+            handlerGeneral.removeCallbacks(runnableGeneral);
+            handlerGeneral.removeCallbacks(null);
             Intent myIntent = new Intent(this, MainActivity.class);
             startActivity(myIntent);
             finish();

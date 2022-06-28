@@ -81,16 +81,11 @@ public class MainActivity extends BaseActivity {
             });
         }
 
-        onStart(savedInstanceState);
-    }
-
-    protected void onStart(Bundle savedInstanceState) {
         Context context = this;
         ImageView imageViewRegister = findViewById(R.id.imageViewRegister);
         ImageView imageViewLogin = findViewById(R.id.imageViewLogin);
         EditText editTextPassword = findViewById(R.id.editTextPassword);
         EditText editTextUsername = findViewById(R.id.editTextUsername);
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor editor = preferences.edit();
 
         String name = preferences.getString("userID", "");
@@ -122,7 +117,6 @@ public class MainActivity extends BaseActivity {
             editor.apply();
             editor.putString("userUnratedTimestamp", "");
             editor.apply();
-
 
             editor.putString("userLocation", "");
             editor.apply();

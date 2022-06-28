@@ -178,7 +178,9 @@ public class ChooseLocationActivity extends MenuInterfaceActivity implements Tex
         //if you make changes to the configuration, use SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Configuration.getInstance().save(this, prefs);
         map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
-    }    private final MapEventsReceiver mapEventsReceiver = new MapEventsReceiver() {
+    }
+
+    private final MapEventsReceiver mapEventsReceiver = new MapEventsReceiver() {
         @Override
         public boolean singleTapConfirmedHelper(GeoPoint p) {
             return false;

@@ -220,7 +220,7 @@
     <string name="radius_too_large">Ne može se prikazati kružnica.</string>
     <string name="no_longer_attending">Više ne sudjelujete na događaju.</string>
     <string name="attending_event">Sudjelujete u događaju.</string>
-    <string name="change_notify">Uspješno su izmijenje postavke obavijesti.</string>
+    <string name="change_notify">Uspješno su izmijenjene postavke obavijesti.</string>
     <string name="notifications_on">Obavijesti uključene</string>
     <string name="notifications_off">Obavijesti isključene</string>
     <string name="please_choose_an_event_type">Odaberite vrstu događaja</string>
