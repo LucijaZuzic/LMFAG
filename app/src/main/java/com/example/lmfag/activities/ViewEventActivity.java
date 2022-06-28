@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -236,6 +237,8 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         if (!(cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime()) || cldr_start.getTime().equals(Calendar.getInstance().getTime()) || cldr_end.getTime().equals(Calendar.getInstance().getTime()))) {
             apply.setVisibility(View.VISIBLE);
             switch_notify.setVisibility(View.VISIBLE);
+            LinearLayout subscribeLine = findViewById(R.id.subscribeLine);
+            subscribeLine.setVisibility(View.VISIBLE);
         }
         CollectionReference docRef = db.collection("event_attending");
         docRef.whereEqualTo("event", eventID).whereEqualTo("user", userID).whereEqualTo("attending", true).get().addOnCompleteListener(task -> {

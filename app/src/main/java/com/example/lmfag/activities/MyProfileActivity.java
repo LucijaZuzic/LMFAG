@@ -25,7 +25,6 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -181,7 +180,7 @@ public class MyProfileActivity extends MenuInterfaceActivity {
             db.collection("event_attending").whereEqualTo("user", userID).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
-                        List<Task<QuerySnapshot>> tasks = new ArrayList<>();
+                        List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             Task<DocumentSnapshot> taskNew = db.collection("events").document(Objects.requireNonNull(document.getData().get("event")).toString()).get();
                             taskNew.addOnCompleteListener(task1 -> {
@@ -214,6 +213,7 @@ public class MyProfileActivity extends MenuInterfaceActivity {
                                     }
                                 }
                             });
+                            tasks.add(taskNew);
                         }
                         // Collect all the query results together into a single list
                         Tasks.whenAllComplete(tasks)
