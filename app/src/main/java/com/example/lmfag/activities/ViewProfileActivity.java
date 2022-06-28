@@ -182,27 +182,27 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                         // Collect all the query results together into a single list
                         Tasks.whenAllComplete(tasks)
                                 .addOnCompleteListener(t -> {
-                                        StringBuilder events_player_stringBuilder = new StringBuilder();
-                                        StringBuilder events_player_timestamp_stringBuilder = new StringBuilder();
-                                        for (String event : player_events_array) {
-                                            events_player_stringBuilder.append(event).append("_");
-                                        }
-                                        for (Integer timestampTMP : player_events_timestamps) {
-                                            events_player_timestamp_stringBuilder.append(timestampTMP).append("_");
-                                        }
-                                        String events_player_string = events_player_stringBuilder.toString();
-                                        String events_player_timestamp_string = events_player_timestamp_stringBuilder.toString();
-                                        if (events_player_string.length() > 0) {
-                                            editor.putString("friendPlayer", events_player_string.substring(0, events_player_string.length() - 1));
-                                            editor.apply();
-                                            editor.putString("friendPlayerTimestamp", events_player_timestamp_string.substring(0, events_player_timestamp_string.length() - 1));
-                                        } else {
-                                            editor.putString("friendPlayer", "");
-                                            editor.apply();
-                                            editor.putString("friendPlayerTimestamp", "");
-                                        }
+                                    StringBuilder events_player_stringBuilder = new StringBuilder();
+                                    StringBuilder events_player_timestamp_stringBuilder = new StringBuilder();
+                                    for (String event : player_events_array) {
+                                        events_player_stringBuilder.append(event).append("_");
+                                    }
+                                    for (Integer timestampTMP : player_events_timestamps) {
+                                        events_player_timestamp_stringBuilder.append(timestampTMP).append("_");
+                                    }
+                                    String events_player_string = events_player_stringBuilder.toString();
+                                    String events_player_timestamp_string = events_player_timestamp_stringBuilder.toString();
+                                    if (events_player_string.length() > 0) {
+                                        editor.putString("friendPlayer", events_player_string.substring(0, events_player_string.length() - 1));
                                         editor.apply();
-                                        getOrganizerEvents();
+                                        editor.putString("friendPlayerTimestamp", events_player_timestamp_string.substring(0, events_player_timestamp_string.length() - 1));
+                                    } else {
+                                        editor.putString("friendPlayer", "");
+                                        editor.apply();
+                                        editor.putString("friendPlayerTimestamp", "");
+                                    }
+                                    editor.apply();
+                                    getOrganizerEvents();
                                 });
                     } else {
                         editor.putString("friendPlayer", "");
@@ -226,7 +226,7 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
         String name = preferences.getString("friendID", "");
         String me = preferences.getString("userID", "");
         oldDescription = preferences.getString("friendDescription", "");
-        oldLocation= preferences.getString("friendLocation", "");
+        oldLocation = preferences.getString("friendLocation", "");
         oldRank = preferences.getString("friendRankPoints", "");
         oldAreas = preferences.getString("friend_areas_of_interest", "");
         oldPoints = preferences.getString("friend_points_levels", "");
@@ -310,6 +310,7 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
     protected void onResume() {
         super.onResume();
         first = true;
+        fillUserData();
     }
 
     public void countDownAlarmStart() {
@@ -342,6 +343,7 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
             handlerForAlarm.removeCallbacks(null);
         }
     }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -355,8 +357,7 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         super.onDestroy();
         if (handlerForAlarm != null) {
             handlerForAlarm.removeCallbacksAndMessages(runnable);

@@ -10,8 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
 import com.example.lmfag.utility.adapters.CustomAdapterFriendRequest;
-import com.example.lmfag.utility.adapters.CustomAdapterFriends;
-import com.example.lmfag.utility.adapters.CustomAdapterFriendsMessages;
 import com.google.android.material.chip.Chip;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -46,7 +44,7 @@ public class FriendRequestsActivity extends MenuInterfaceActivity {
         receivedChip = findViewById(R.id.received);
         previous_option = sentChip.isChecked();
 
-                getFriendRequests();
+        getFriendRequests();
         countDownStart();
         sentChip.setOnClickListener(view -> {
             receivedChip.setChecked(!sentChip.isChecked());
@@ -57,7 +55,7 @@ public class FriendRequestsActivity extends MenuInterfaceActivity {
             checkChange();
         });
     }
-    
+
     public void countDownStart() {
         handlerForAlarm = new Handler();
         runnable = () -> {
@@ -82,6 +80,7 @@ public class FriendRequestsActivity extends MenuInterfaceActivity {
             handlerForAlarm.removeCallbacks(null);
         }
     }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -95,8 +94,7 @@ public class FriendRequestsActivity extends MenuInterfaceActivity {
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         super.onDestroy();
         if (handlerForAlarm != null) {
             handlerForAlarm.removeCallbacksAndMessages(runnable);
@@ -106,11 +104,11 @@ public class FriendRequestsActivity extends MenuInterfaceActivity {
             handlerForAlarm.removeCallbacks(null);
         }
     }
-    
+
     public void checkChange() {
         boolean current_option = sentChip.isChecked();
         String me = preferences.getString("userID", "");
-        if (receivedChip.isChecked()) { 
+        if (receivedChip.isChecked()) {
             boolean equal = true;
             if (old_received.size() != received.size()) {
                 equal = false;
@@ -131,7 +129,7 @@ public class FriendRequestsActivity extends MenuInterfaceActivity {
                     noResults.setVisibility(View.VISIBLE);
                 }
             }
-            first = false; 
+            first = false;
         } else {
             boolean equal = true;
             if (old_sent.size() != sent.size()) {
@@ -162,6 +160,13 @@ public class FriendRequestsActivity extends MenuInterfaceActivity {
         Intent myIntent = new Intent(context, FriendRequestsActivity.class);
         context.startActivity(myIntent);
         finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        first = true;
+        getFriendRequests();
     }
 
     private void getSentFriendRequests() {

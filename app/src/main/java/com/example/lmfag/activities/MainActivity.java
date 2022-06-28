@@ -14,7 +14,6 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -202,22 +201,15 @@ public class MainActivity extends BaseActivity {
         }
 
         CardView noConnView = findViewById(R.id.no_conn_card_view);
-        LinearLayout.LayoutParams cardViewParams = (LinearLayout.LayoutParams) noConnView.getLayoutParams();
         LinearLayoutCompat loginLayout = findViewById(R.id.login_ui);
-        LinearLayout.LayoutParams loginLayoutParams = (LinearLayout.LayoutParams) loginLayout.getLayoutParams();
 
         if (!haveConnection) {
-            cardViewParams.weight = 0.2f;
-            noConnView.setLayoutParams(cardViewParams);
+            noConnView.setVisibility(View.VISIBLE);
+            loginLayout.setVisibility(View.GONE);
 
-            loginLayoutParams.weight = 0.8f;
-            loginLayout.setLayoutParams(loginLayoutParams);
         } else {
-            cardViewParams.weight = 0.0f;
-            noConnView.setLayoutParams(cardViewParams);
-
-            loginLayoutParams.weight = 1.f;
-            loginLayout.setLayoutParams(loginLayoutParams);
+            noConnView.setVisibility(View.GONE);
+            loginLayout.setVisibility(View.VISIBLE);
 
             imageViewLogin.setOnClickListener(confirmLoginButtonListener);
             imageViewRegister.setOnClickListener(view -> {

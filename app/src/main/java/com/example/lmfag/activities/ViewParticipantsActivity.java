@@ -147,13 +147,13 @@ public class ViewParticipantsActivity extends MenuInterfaceActivity {
                         imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(circleImageView.getContext().getApplicationContext()).asBitmap().load(bytes).into(circleImageView)).addOnFailureListener(exception -> {
                             // Handle any errors
                         });
-                        //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+
                     }
                 } else {
                     Intent myIntent = new Intent(context, MainActivity.class);
                     startActivity(myIntent);
                     finish();
-                    //Log.d(TAG, "No such document");
+
                 }
             }
         });

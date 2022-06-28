@@ -3,7 +3,6 @@ package com.example.lmfag.utility.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,22 +86,21 @@ public class CustomAdapterFriends extends RecyclerView.Adapter<CustomAdapterFrie
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     viewHolder.getTextView().setText(Objects.requireNonNull(document.get("username")).toString());
-                    FirebaseStorage storage = FirebaseStorage.getInstance();
-                    StorageReference storageRef = storage.getReference();
-                    StorageReference imagesRef = storageRef.child("profile_pictures/" + localFriendUsernames.get(position));
-                    final long ONE_MEGABYTE = 1024 * 1024;
-                    imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-                        CircleImageView circleImageView = viewHolder.getProfileImage();
-                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(circleImageView.getContext().getApplicationContext());
-                        String imageView = preferences.getString("showImage", "true");
-                        if (imageView.equals("true")) {
+                    String imageView = preferences.getString("showImage", "true");
+                    if (imageView.equals("true")) {
+                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                        StorageReference storageRef = storage.getReference();
+                        StorageReference imagesRef = storageRef.child("profile_pictures/" + localFriendUsernames.get(position));
+                        final long ONE_MEGABYTE = 1024 * 1024;
+                        imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+                            CircleImageView circleImageView = viewHolder.getProfileImage();
                             Glide.with(circleImageView.getContext().getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
-                        }
-                        //listEntry.setVisibility(View.VISIBLE);
-                    }).addOnFailureListener(exception -> {
-                        //listEntry.setVisibility(View.VISIBLE);
-                        // Handle any errors
-                    });
+                            //listEntry.setVisibility(View.VISIBLE);
+                        }).addOnFailureListener(exception -> {
+                            //listEntry.setVisibility(View.VISIBLE);
+                            // Handle any errors
+                        });
+                    }
                 }
             }
         });

@@ -131,10 +131,10 @@ public class DrawerHelper {
                         final long ONE_MEGABYTE = 1024 * 1024;
                         if (circleImageView != null) {
                             imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(Objects.requireNonNull(circleImageView).getContext().getApplicationContext())
-                                            .asBitmap()
-                                            .placeholder(R.drawable.ic_baseline_person_24)
-                                            .load(bytes).into(circleImageView)
-                                     ).addOnFailureListener(exception -> {
+                                    .asBitmap()
+                                    .placeholder(R.drawable.ic_baseline_person_24)
+                                    .load(bytes).into(circleImageView)
+                            ).addOnFailureListener(exception -> {
                                 // Handle any errors
                             });
                             //Log.d(TAG, "DocumentSnapshot data: " + document.getData());

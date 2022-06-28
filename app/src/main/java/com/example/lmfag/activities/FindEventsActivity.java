@@ -139,6 +139,11 @@ public class FindEventsActivity extends MenuInterfaceActivity {
     }
 
     public void showName() {
+        events_array = new ArrayList<>();
+        timestamps_array = new ArrayList<>();
+        CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(new ArrayList<>(), context, preferences);
+        recyclerViewFindEvents.setAdapter(customAdapterEvents);
+        noResults.setVisibility(View.VISIBLE);
         if (nameRadio.isChecked()) {
             organizerRadio.setChecked(false);
             typeRadio.setChecked(false);
@@ -149,6 +154,11 @@ public class FindEventsActivity extends MenuInterfaceActivity {
     }
 
     public void showOrganizer() {
+        events_array = new ArrayList<>();
+        timestamps_array = new ArrayList<>();
+        CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(new ArrayList<>(), context, preferences);
+        recyclerViewFindEvents.setAdapter(customAdapterEvents);
+        noResults.setVisibility(View.VISIBLE);
         if (organizerRadio.isChecked()) {
             nameRadio.setChecked(false);
             typeRadio.setChecked(false);
@@ -159,6 +169,11 @@ public class FindEventsActivity extends MenuInterfaceActivity {
     }
 
     public void showType() {
+        events_array = new ArrayList<>();
+        timestamps_array = new ArrayList<>();
+        CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(new ArrayList<>(), context, preferences);
+        recyclerViewFindEvents.setAdapter(customAdapterEvents);
+        noResults.setVisibility(View.VISIBLE);
         if (typeRadio.isChecked()) {
             nameRadio.setChecked(false);
             organizerRadio.setChecked(false);

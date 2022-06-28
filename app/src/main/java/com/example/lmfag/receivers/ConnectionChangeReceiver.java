@@ -5,13 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.widget.Toast;
 
 import com.example.lmfag.activities.BaseActivity;
 import com.example.lmfag.activities.MainActivity;
 
 public class ConnectionChangeReceiver extends BroadcastReceiver {
-    private boolean connected;
+    private final boolean connected;
 
     public ConnectionChangeReceiver(BaseActivity activity) {
         connected = isConnected(activity);

@@ -233,13 +233,13 @@ public class RateEventActivity extends MenuInterfaceActivity {
                     Intent myIntent = new Intent(context, MyProfileActivity.class);
                     startActivity(myIntent);
                     finish();
-                    //Log.d(TAG, "No such document");
+
                 }
             } else {
                 Intent myIntent = new Intent(context, MyProfileActivity.class);
                 startActivity(myIntent);
                 finish();
-                //Log.d(TAG, "No such document");
+
             }
         });
     }
@@ -283,19 +283,19 @@ public class RateEventActivity extends MenuInterfaceActivity {
                         imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(circleImageView.getContext().getApplicationContext()).asBitmap().load(bytes).into(circleImageView)).addOnFailureListener(exception -> {
                             // Handle any errors
                         });
-                        //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+
                     }
                 } else {
                     Intent myIntent = new Intent(context, MyProfileActivity.class);
                     startActivity(myIntent);
                     finish();
-                    //Log.d(TAG, "No such document");
+
                 }
             } else {
                 Intent myIntent = new Intent(context, MyProfileActivity.class);
                 startActivity(myIntent);
                 finish();
-                //Log.d(TAG, "No such document");
+
             }
         });
     }

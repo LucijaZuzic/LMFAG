@@ -87,13 +87,16 @@ public class CustomAdapterRating extends RecyclerView.Adapter<CustomAdapterRatin
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     viewHolder.getTextView().setText(Objects.requireNonNull(document.get("username")).toString());
-                    FirebaseStorage storage = FirebaseStorage.getInstance();
-                    StorageReference storageRef = storage.getReference();
-                    StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
-                    final long ONE_MEGABYTE = 1024 * 1024;
-                    imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(context.getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(profileImage)).addOnFailureListener(exception -> {
-                        // Handle any errors
-                    });
+                    String imageShow = preferences.getString("showImage", "");
+                    if (imageShow.equals("true")) {
+                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                        StorageReference storageRef = storage.getReference();
+                        StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
+                        final long ONE_MEGABYTE = 1024 * 1024;
+                        imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(context.getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(profileImage)).addOnFailureListener(exception -> {
+                            // Handle any errors
+                        });
+                    }
                 }
             }
         });

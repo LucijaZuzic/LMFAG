@@ -164,31 +164,7 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
         myLocationOverlay.disableMyLocation();
         //this will refresh the osmdroid configuration on resuming.
         map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
-    }    private final MapEventsReceiver mapEventsReceiver = new MapEventsReceiver() {
-        @Override
-        public boolean singleTapConfirmedHelper(org.osmdroid.util.GeoPoint p) {
-            return false;
-        }
-
-        @Override
-        public boolean longPressHelper(org.osmdroid.util.GeoPoint p) {
-            Toast.makeText(getApplicationContext(), getString(R.string.setting_location), Toast.LENGTH_SHORT).show();
-            docIds.clear();
-            map.getOverlays().clear();
-            oPolygon = new org.osmdroid.views.overlay.Polygon(map);
-            oPolygon.setInfoWindow(null);
-            map.getOverlays().add(myLocationOverlay);
-            map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
-            map.getOverlays().add(chosenLocationMarker);
-            chosenLocationMarker.setPosition(p);
-            mapController.setCenter(chosenLocationMarker.getPosition());
-
-            enterLatitude.setText(String.format(Locale.getDefault(), "%.4f", p.getLatitude()).replace(',', '.'));
-            enterLongitude.setText(String.format(Locale.getDefault(), "%.4f", p.getLongitude()).replace(',', '.'));
-
-            return true;
-        }
-    };
+    }
 
     private void firstMapSetup() {
         //Request permission dialog
@@ -276,7 +252,31 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
             return 2;
         }
         return -1;
-    }
+    }    private final MapEventsReceiver mapEventsReceiver = new MapEventsReceiver() {
+        @Override
+        public boolean singleTapConfirmedHelper(org.osmdroid.util.GeoPoint p) {
+            return false;
+        }
+
+        @Override
+        public boolean longPressHelper(org.osmdroid.util.GeoPoint p) {
+            Toast.makeText(getApplicationContext(), getString(R.string.setting_location), Toast.LENGTH_SHORT).show();
+            docIds.clear();
+            map.getOverlays().clear();
+            oPolygon = new org.osmdroid.views.overlay.Polygon(map);
+            oPolygon.setInfoWindow(null);
+            map.getOverlays().add(myLocationOverlay);
+            map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
+            map.getOverlays().add(chosenLocationMarker);
+            chosenLocationMarker.setPosition(p);
+            mapController.setCenter(chosenLocationMarker.getPosition());
+
+            enterLatitude.setText(String.format(Locale.getDefault(), "%.4f", p.getLatitude()).replace(',', '.'));
+            enterLongitude.setText(String.format(Locale.getDefault(), "%.4f", p.getLongitude()).replace(',', '.'));
+
+            return true;
+        }
+    };
 
     private void addEventMarker(DocumentSnapshot doc) {
         Marker newMarker = new Marker(map);

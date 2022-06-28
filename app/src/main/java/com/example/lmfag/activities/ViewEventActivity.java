@@ -69,6 +69,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
     private Float participate_maximum;
     private Float minimum_level;
     private CircleImageView circleImageView;
+    private LinearLayout subscribeLine;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +84,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         textViewChooseEndTime = findViewById(R.id.textViewChooseEndTime);
         circleImageView = findViewById(R.id.profile_image);
         switch_notify = findViewById(R.id.switchNotifications);
-
+        subscribeLine = findViewById(R.id.subscribeLine);
         eventName = findViewById(R.id.textViewEventName);
         eventType = findViewById(R.id.textViewEventType);
         description = findViewById(R.id.textViewEvenDescription);
@@ -217,12 +218,6 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         mapController.setCenter(new org.osmdroid.util.GeoPoint(latitude, longitude));
     }
 
-    private void refresh() {
-        Intent myIntent = new Intent(context, ViewEventActivity.class);
-        context.startActivity(myIntent);
-        finish();
-    }
-
     private void checkValidTime() {
         if (cldr_start.getTime().after(cldr_end.getTime()) || cldr_start.getTime().equals(cldr_end.getTime())) {
             Toast.makeText(getApplicationContext(), R.string.end_before_begin, Toast.LENGTH_SHORT).show();
@@ -237,7 +232,6 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         if (!(cldr_start.getTime().before(Calendar.getInstance().getTime()) || cldr_end.getTime().before(Calendar.getInstance().getTime()) || cldr_start.getTime().equals(Calendar.getInstance().getTime()) || cldr_end.getTime().equals(Calendar.getInstance().getTime()))) {
             apply.setVisibility(View.VISIBLE);
             switch_notify.setVisibility(View.VISIBLE);
-            LinearLayout subscribeLine = findViewById(R.id.subscribeLine);
             subscribeLine.setVisibility(View.VISIBLE);
         }
         CollectionReference docRef = db.collection("event_attending");
@@ -245,17 +239,9 @@ public class ViewEventActivity extends MenuInterfaceActivity {
             if (task.isSuccessful()) {
                 if (task.getResult().size() == 0) {
                     apply.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_person_add_24));
+                    checkNumberOfParticipantsAdd();
                 } else {
                     apply.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_person_remove_24));
-                }
-            }
-        });
-        docRef.whereEqualTo("event", eventID).whereEqualTo("user", userID).whereEqualTo("rated", true).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                if (task.getResult().size() != 0) {
-                    rate.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_star_24));
-                } else {
-                    rate.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_star_outline_24));
                 }
             }
         });
@@ -270,18 +256,23 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                 DocumentSnapshot document2 = task2.getResult();
                 if (document2.exists()) {
                     if (!Objects.requireNonNull(Objects.requireNonNull(document2.getData()).get("friends")).toString().contains(userID)) {
-                        Toast.makeText(getApplicationContext(), R.string.not_friend_organizer, Toast.LENGTH_SHORT).show();
+                        apply.setVisibility(View.GONE);
+                        switch_notify.setVisibility(View.GONE);
+                        subscribeLine.setVisibility(View.GONE);
                     } else {
-                        addParticipant();
-                        Toast.makeText(getApplicationContext(), R.string.attending_event, Toast.LENGTH_SHORT).show();
-                        AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
-                        refresh();
+                        apply.setVisibility(View.VISIBLE);
+                        switch_notify.setVisibility(View.VISIBLE);
+                        subscribeLine.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), R.string.not_friend_organizer, Toast.LENGTH_SHORT).show();
+                    apply.setVisibility(View.GONE);
+                    switch_notify.setVisibility(View.GONE);
+                    subscribeLine.setVisibility(View.GONE);
                 }
             } else {
-                Toast.makeText(getApplicationContext(), R.string.not_friend_organizer, Toast.LENGTH_SHORT).show();
+                apply.setVisibility(View.GONE);
+                switch_notify.setVisibility(View.GONE);
+                subscribeLine.setVisibility(View.GONE);
             }
         });
     }
@@ -290,6 +281,12 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         CollectionReference dr = db.collection("friends");
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String userID = preferences.getString("userID", "");
+        if (userID.equals(organizerID)) {
+            apply.setVisibility(View.VISIBLE);
+            switch_notify.setVisibility(View.VISIBLE);
+            subscribeLine.setVisibility(View.VISIBLE);
+            return;
+        }
         dr.document(organizerID).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
@@ -297,10 +294,9 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                     if (!Objects.requireNonNull(Objects.requireNonNull(document.getData()).get("friends")).toString().contains(userID)) {
                         checkOtherDirection();
                     } else {
-                        addParticipant();
-                        Toast.makeText(getApplicationContext(), R.string.attending_event, Toast.LENGTH_SHORT).show();
-                        AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
-                        refresh();
+                        apply.setVisibility(View.VISIBLE);
+                        switch_notify.setVisibility(View.VISIBLE);
+                        subscribeLine.setVisibility(View.VISIBLE);
                     }
                 } else {
                     checkOtherDirection();
@@ -344,36 +340,37 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                                     if (areas_array.contains(event_type)) {
                                         if (minimum_level_val > 0) {
                                             if (points_array.get(areas_array.indexOf(event_type)) < LevelTransformation.lower_bound((int) minimum_level_val)) {
-                                                Toast.makeText(getApplicationContext(), R.string.level_low, Toast.LENGTH_SHORT).show();
+                                                apply.setVisibility(View.GONE);
+                                                switch_notify.setVisibility(View.GONE);
+                                                subscribeLine.setVisibility(View.GONE);
                                             } else {
                                                 if (public_event) {
-                                                    addParticipant();
-                                                    Toast.makeText(getApplicationContext(), R.string.attending_event, Toast.LENGTH_SHORT).show();
-                                                    AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
-                                                    refresh();
+                                                    apply.setVisibility(View.VISIBLE);
+                                                    switch_notify.setVisibility(View.VISIBLE);
+                                                    subscribeLine.setVisibility(View.VISIBLE);
                                                 } else {
                                                     checkFriends();
                                                 }
                                             }
                                         } else {
                                             if (public_event) {
-                                                addParticipant();
-                                                Toast.makeText(getApplicationContext(), R.string.attending_event, Toast.LENGTH_SHORT).show();
-                                                AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
-                                                refresh();
+                                                apply.setVisibility(View.VISIBLE);
+                                                switch_notify.setVisibility(View.VISIBLE);
+                                                subscribeLine.setVisibility(View.VISIBLE);
                                             } else {
                                                 checkFriends();
                                             }
                                         }
                                     } else {
                                         if (minimum_level_val > 0) {
-                                            Toast.makeText(getApplicationContext(), R.string.level_low, Toast.LENGTH_SHORT).show();
+                                            apply.setVisibility(View.GONE);
+                                            switch_notify.setVisibility(View.GONE);
+                                            subscribeLine.setVisibility(View.GONE);
                                         } else {
                                             if (public_event) {
-                                                addParticipant();
-                                                Toast.makeText(getApplicationContext(), R.string.attending_event, Toast.LENGTH_SHORT).show();
-                                                AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
-                                                refresh();
+                                                apply.setVisibility(View.VISIBLE);
+                                                switch_notify.setVisibility(View.VISIBLE);
+                                                subscribeLine.setVisibility(View.VISIBLE);
                                             } else {
                                                 checkFriends();
                                             }
@@ -381,13 +378,14 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                                     }
                                 } else {
                                     if (minimum_level_val > 0) {
-                                        Toast.makeText(getApplicationContext(), R.string.level_low, Toast.LENGTH_SHORT).show();
+                                        apply.setVisibility(View.GONE);
+                                        switch_notify.setVisibility(View.GONE);
+                                        subscribeLine.setVisibility(View.GONE);
                                     } else {
-                                        if (public_event) {
-                                            addParticipant();
-                                            Toast.makeText(getApplicationContext(), R.string.attending_event, Toast.LENGTH_SHORT).show();
-                                            AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
-                                            refresh();
+                                        if (public_event) { 
+                                            apply.setVisibility(View.VISIBLE);
+                                            switch_notify.setVisibility(View.VISIBLE); 
+                                            subscribeLine.setVisibility(View.VISIBLE);
                                         } else {
                                             checkFriends();
                                         }
@@ -397,7 +395,9 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                         }
                     });
                 } else {
-                    Toast.makeText(getApplicationContext(), R.string.too_many, Toast.LENGTH_SHORT).show();
+                    apply.setVisibility(View.GONE);
+                    switch_notify.setVisibility(View.GONE);
+                    subscribeLine.setVisibility(View.GONE);
                 }
             }
         });
@@ -423,7 +423,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         docRef.whereEqualTo("event", eventID).whereEqualTo("user", userID).whereEqualTo("attending", true).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().size() == 0) {
-                    checkNumberOfParticipantsAdd();
+                    addParticipant();
                 } else {
                     removeParticipant();
                 }
@@ -439,6 +439,8 @@ public class ViewEventActivity extends MenuInterfaceActivity {
             if (task.isSuccessful()) {
                 if (task.getResult().size() > 0) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
+                        Toast.makeText(this, R.string.no_longer_attending, Toast.LENGTH_SHORT).show();
+                        apply.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_person_add_24));
                         if (!userID.equals(organizerID)) {
                             docRef.document(document.getId()).delete();
                         } else {
@@ -446,7 +448,14 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                             map.put("attending", false);
                             map.put("notifications", switch_notify.isChecked());
                             docRef.document(document.getId()).set(map);
+                            Toast.makeText(this, R.string.change_notify, Toast.LENGTH_SHORT).show();
+                            if (switch_notify.isChecked()) {
+                                Toast.makeText(this, R.string.notifications_on, Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(this, R.string.notifications_off, Toast.LENGTH_SHORT).show();
+                            }
                         }
+                        AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
                     }
                 }
             }
@@ -475,6 +484,15 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                     docData.put("rated", false);
                     docRef.add(docData);
                 }
+                Toast.makeText(this, R.string.attending_event, Toast.LENGTH_SHORT).show();
+                apply.setImageDrawable(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.ic_baseline_person_remove_24));
+                Toast.makeText(this, R.string.change_notify, Toast.LENGTH_SHORT).show();
+                if (switch_notify.isChecked()) {
+                    Toast.makeText(this, R.string.notifications_on, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, R.string.notifications_off, Toast.LENGTH_SHORT).show();
+                }
+                AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
             }
         });
     }
@@ -506,14 +524,14 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                         imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> Glide.with(context.getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView)).addOnFailureListener(exception -> {
                             // Handle any errors
                         });
-                        //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+
                     }
                 } else {
                     editor.putString("eventID", "");
                     editor.apply();
                     onBackPressed();
                     finish();
-                    //Log.d(TAG, "No such document");
+
                 }
             } else {
                 editor.putString("eventID", "");
@@ -613,6 +631,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                     Timestamp end_timestamp = (Timestamp) (docData.get("ending"));
                     Date end_date = Objects.requireNonNull(end_timestamp).toDate();
                     cldr_end.setTime(end_date);
+                    public_event = Objects.requireNonNull(docData.get("public")).toString().equals("true");
                     checkValidTime();
                     checkSubscribed();
                     checkEdit();
@@ -621,7 +640,6 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                     textViewChooseStartTime.setText(DateFormat.getTimeInstance().format(cldr_start.getTime()));
                     textViewChooseEndDate.setText(DateFormat.getDateInstance().format(cldr_end.getTime()));
                     textViewChooseEndTime.setText(DateFormat.getTimeInstance().format(cldr_end.getTime()));
-                    public_event = Objects.requireNonNull(docData.get("public")).toString().equals("true");
                     GeoPoint location_point = (GeoPoint) (docData.get("location"));
                     latitude = Objects.requireNonNull(location_point).getLatitude();
                     longitude = location_point.getLongitude();
@@ -652,7 +670,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                     editor.apply();
                     onBackPressed();
                     finish();
-                    //Log.d(TAG, "No such document");
+
                 }
             } else {
                 editor.putString("eventID", "");

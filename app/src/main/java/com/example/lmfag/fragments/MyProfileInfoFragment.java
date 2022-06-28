@@ -85,7 +85,6 @@ public class MyProfileInfoFragment extends Fragment {
         String imageShow = preferences.getString("showImage", "");
         if (imageShow.equals("true")) {
             CircleImageView circleImageView = view.findViewById(R.id.profile_image);
-
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
             StorageReference imagesRef = storageRef.child("profile_pictures/" + name);

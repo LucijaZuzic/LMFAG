@@ -121,8 +121,8 @@ public class CreateEventActivity extends MenuInterfaceActivity {
         slider_min.setMaxValue(1000);
         slider_max.setMinValue(2);
         slider_min.setMinValue(2);
-        slider_max.setOnValueChangedListener((v1,v2,v3) -> fixMax());
-        slider_min.setOnValueChangedListener((v1,v2,v3) -> fixMin());
+        slider_max.setOnValueChangedListener((v1, v2, v3) -> fixMax());
+        slider_min.setOnValueChangedListener((v1, v2, v3) -> fixMin());
         location = findViewById(R.id.textViewChooseLocation);
         imageViewChooseStartDate = findViewById(R.id.imageViewChooseStartDate);
         textViewChooseStartDate = findViewById(R.id.textViewChooseStartDate);
@@ -254,7 +254,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                     (dp, sYear, sMonth, sDay) -> {
                         cldr_start.set(sYear, sMonth, sDay, cldr_start.get(HOUR_OF_DAY), cldr_start.get(MINUTE));
                         textViewChooseStartDate.setText(DateFormat.getDateInstance().format(cldr_start.getTime()));
-                        //checkCorrectTime();
+
                     }, cldr_start.get(YEAR), cldr_start.get(MONTH), cldr_start.get(DAY_OF_MONTH));
             picker.show();
         });
@@ -264,7 +264,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                     (dp, sYear, sMonth, sDay) -> {
                         cldr_end.set(sYear, sMonth, sDay, cldr_end.get(HOUR_OF_DAY), cldr_end.get(MINUTE));
                         textViewChooseEndDate.setText(DateFormat.getDateInstance().format(cldr_end.getTime()));
-                        //checkCorrectTime();
+
                     }, cldr_end.get(YEAR), cldr_end.get(MONTH), cldr_end.get(DAY_OF_MONTH));
             picker.show();
         });
@@ -277,7 +277,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                     (tp, sHour, sMinute) -> {
                         cldr_start.set(cldr_start.get(YEAR), cldr_start.get(MONTH), cldr_start.get(DAY_OF_MONTH), sHour, sMinute);
                         textViewChooseStartTime.setText(DateFormat.getTimeInstance().format(cldr_start.getTime()));
-                        //checkCorrectTime();
+
                     }, cldr_start.get(HOUR_OF_DAY), cldr_start.get(MINUTE), true);
             picker.show();
         });
@@ -287,7 +287,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                     (tp, sHour, sMinute) -> {
                         cldr_end.set(cldr_end.get(YEAR), cldr_end.get(MONTH), cldr_end.get(DAY_OF_MONTH), sHour, sMinute);
                         textViewChooseEndTime.setText(DateFormat.getTimeInstance().format(cldr_end.getTime()));
-                        //checkCorrectTime();
+
                     }, cldr_end.get(HOUR_OF_DAY), cldr_end.get(MINUTE), true);
             picker.show();
         });
@@ -314,7 +314,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                         }
                         if (areas_array.contains(selected_item)) {
                             if (minimum_level_val > 0) {
-                                if (points_array.get(areas_array.indexOf(selected_item)) < LevelTransformation.lower_bound((int)minimum_level_val)) {
+                                if (points_array.get(areas_array.indexOf(selected_item)) < LevelTransformation.lower_bound((int) minimum_level_val)) {
                                     Toast.makeText(getApplicationContext(), R.string.level_low, Toast.LENGTH_SHORT).show();
                                     writeAttendingToDB(false);
                                 } else {
@@ -401,7 +401,7 @@ public class CreateEventActivity extends MenuInterfaceActivity {
             db.collection("events")
                     .add(docData)
                     .addOnSuccessListener(aVoid -> {
-                        //Log.d(TAG, "DocumentSnapshot successfully written!");
+
                         Toast.makeText(getApplicationContext(), R.string.created_event, Toast.LENGTH_SHORT).show();
                         editor.putString("eventID", aVoid.getId());
                         editor.apply();
@@ -409,20 +409,20 @@ public class CreateEventActivity extends MenuInterfaceActivity {
                     })
                     .addOnFailureListener(e -> {
                         Toast.makeText(getApplicationContext(), R.string.write_failed, Toast.LENGTH_SHORT).show();
-                        //Log.w(TAG, "Error writing document", e);
+
                     });
         } else {
             db.collection("events")
                     .document(eventID)
                     .set(docData)
                     .addOnSuccessListener(aVoid -> {
-                        //Log.d(TAG, "DocumentSnapshot successfully written!");
+
                         Toast.makeText(getApplicationContext(), R.string.updated_event, Toast.LENGTH_SHORT).show();
                         checkAbleToAttend();
                     })
                     .addOnFailureListener(e -> {
                         Toast.makeText(getApplicationContext(), R.string.write_failed, Toast.LENGTH_SHORT).show();
-                        //Log.w(TAG, "Error writing document", e);
+
                     });
         }
     }

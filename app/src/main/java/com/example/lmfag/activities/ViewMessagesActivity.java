@@ -90,6 +90,7 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        getMyData();
     }
 
     public void getMyData() {
@@ -207,7 +208,7 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
         runnable = () -> {
             handlerForAlarm.postDelayed(runnable, 10000);
             try {
-                getAllMessages();
+                getMyData();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -226,6 +227,7 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
             handlerForAlarm.removeCallbacks(null);
         }
     }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -239,8 +241,7 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         super.onDestroy();
         if (handlerForAlarm != null) {
             handlerForAlarm.removeCallbacksAndMessages(runnable);

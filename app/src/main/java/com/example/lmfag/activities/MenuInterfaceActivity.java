@@ -220,6 +220,7 @@ public class MenuInterfaceActivity extends BaseActivity {
             handlerGeneral.removeCallbacks(null);
         }
     }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -233,8 +234,7 @@ public class MenuInterfaceActivity extends BaseActivity {
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         super.onDestroy();
         if (handlerGeneral != null) {
             handlerGeneral.removeCallbacksAndMessages(runnableGeneral);

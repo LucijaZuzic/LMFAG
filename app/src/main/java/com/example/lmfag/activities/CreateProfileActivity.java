@@ -217,7 +217,7 @@ public class CreateProfileActivity extends BaseActivity {
         db.collection("users")
                 .add(docData)
                 .addOnSuccessListener(aVoid -> {
-                    //Log.d(TAG, "DocumentSnapshot successfully written!");
+                    
                     Toast.makeText(getApplicationContext(), R.string.write_success, Toast.LENGTH_SHORT).show();
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     Toast.makeText(getApplicationContext(), R.string.logged_in, Toast.LENGTH_SHORT).show();
@@ -255,7 +255,7 @@ public class CreateProfileActivity extends BaseActivity {
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(getApplicationContext(), R.string.write_failed, Toast.LENGTH_SHORT).show();
-                    //Log.w(TAG, "Error writing document", e);
+
                 });
     }
 

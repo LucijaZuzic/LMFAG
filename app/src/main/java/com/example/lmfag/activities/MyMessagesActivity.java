@@ -45,6 +45,7 @@ public class MyMessagesActivity extends MenuInterfaceActivity {
     protected void onResume() {
         super.onResume();
         first = true;
+        getAllFriends();
     }
 
     public void countDownStart() {
@@ -71,6 +72,7 @@ public class MyMessagesActivity extends MenuInterfaceActivity {
             handlerForAlarm.removeCallbacks(null);
         }
     }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -84,8 +86,7 @@ public class MyMessagesActivity extends MenuInterfaceActivity {
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         super.onDestroy();
         if (handlerForAlarm != null) {
             handlerForAlarm.removeCallbacksAndMessages(runnable);

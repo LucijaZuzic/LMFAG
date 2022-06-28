@@ -175,7 +175,7 @@ public class MyProfileActivity extends MenuInterfaceActivity {
         oldSubscriberTimestamp = preferences.getString("userSubscriberTimestamp", "");
         oldUnrated = preferences.getString("userUnrated", "");
         oldUnratedTimestamp = preferences.getString("userUnratedTimestamp", "");
-        String userID = preferences.getString("userID", ""); 
+        String userID = preferences.getString("userID", "");
         if (!userID.equals("")) {
             db.collection("event_attending").whereEqualTo("user", userID).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
@@ -207,7 +207,7 @@ public class MyProfileActivity extends MenuInterfaceActivity {
                                         subscriber_events_timestamps.add(timestamp);
                                     }
                                     String isRated = Objects.requireNonNull(document.getData().get("rated")).toString();
-                                    if (isRated.equals("true")) {
+                                    if (isRated.equals("false") && timestamp == 2) {
                                         unrated_events_array.add(Objects.requireNonNull(document.getData().get("event")).toString());
                                         unrated_events_timestamps.add(timestamp);
                                     }
@@ -279,7 +279,7 @@ public class MyProfileActivity extends MenuInterfaceActivity {
                                     }
                                     editor.apply();
                                     getOrganizerEvents();
-                                }); 
+                                });
                     } else {
                         editor.putString("userPlayer", "");
                         editor.apply();
@@ -317,7 +317,7 @@ public class MyProfileActivity extends MenuInterfaceActivity {
     private void fillUserData() {
         String name = preferences.getString("userID", "");
         oldDescription = preferences.getString("userDescription", "");
-        oldLocation= preferences.getString("userLocation", "");
+        oldLocation = preferences.getString("userLocation", "");
         oldRank = preferences.getString("userRankPoints", "");
         oldAreas = preferences.getString("user_areas_of_interest", "");
         oldPoints = preferences.getString("user_points_levels", "");
@@ -400,6 +400,7 @@ public class MyProfileActivity extends MenuInterfaceActivity {
     protected void onResume() {
         super.onResume();
         first = true;
+        fillUserData();
     }
 
     public void countDownAlarmStart() {
@@ -432,6 +433,7 @@ public class MyProfileActivity extends MenuInterfaceActivity {
             handlerForAlarm.removeCallbacks(null);
         }
     }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -445,8 +447,7 @@ public class MyProfileActivity extends MenuInterfaceActivity {
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         super.onDestroy();
         if (handlerForAlarm != null) {
             handlerForAlarm.removeCallbacksAndMessages(runnable);
