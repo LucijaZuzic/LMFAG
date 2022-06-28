@@ -47,7 +47,8 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
     private TextView usernameFriend;
     private TextView noResults;
     private StorageReference storageRef;
-    private Handler handler;
+    private Handler handlerForAlarm;
+    private Runnable runnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,18 +203,51 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
     }
 
     public void countDownStart() {
-        handler = new Handler();
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                handler.postDelayed(this, 10000);
-                try {
-                    getAllMessages();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        handlerForAlarm = new Handler();
+        runnable = () -> {
+            handlerForAlarm.postDelayed(runnable, 10000);
+            try {
+                getAllMessages();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         };
-        handler.postDelayed(runnable, 10000);
+        handlerForAlarm.postDelayed(runnable, 10000);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (handlerForAlarm != null) {
+            handlerForAlarm.removeCallbacksAndMessages(runnable);
+            handlerForAlarm.removeCallbacksAndMessages(handlerForAlarm);
+            handlerForAlarm.removeCallbacksAndMessages(null);
+            handlerForAlarm.removeCallbacks(runnable);
+            handlerForAlarm.removeCallbacks(null);
+        }
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (handlerForAlarm != null) {
+            handlerForAlarm.removeCallbacksAndMessages(runnable);
+            handlerForAlarm.removeCallbacksAndMessages(handlerForAlarm);
+            handlerForAlarm.removeCallbacksAndMessages(null);
+            handlerForAlarm.removeCallbacks(runnable);
+            handlerForAlarm.removeCallbacks(null);
+        }
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        if (handlerForAlarm != null) {
+            handlerForAlarm.removeCallbacksAndMessages(runnable);
+            handlerForAlarm.removeCallbacksAndMessages(handlerForAlarm);
+            handlerForAlarm.removeCallbacksAndMessages(null);
+            handlerForAlarm.removeCallbacks(runnable);
+            handlerForAlarm.removeCallbacks(null);
+        }
     }
 }

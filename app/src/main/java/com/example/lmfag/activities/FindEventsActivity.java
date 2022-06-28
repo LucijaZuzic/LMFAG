@@ -15,10 +15,12 @@ import com.example.lmfag.R;
 import com.example.lmfag.utility.EventTypeToDrawable;
 import com.example.lmfag.utility.adapters.CustomAdapterEvent;
 import com.example.lmfag.utility.adapters.CustomAdapterEventTypeAdd;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.chip.Chip;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -250,19 +252,19 @@ public class FindEventsActivity extends MenuInterfaceActivity {
     private void getAllEventsWithOrganizer() {
         events_array = new ArrayList<>();
         timestamps_array = new ArrayList<>();
-        Query q = db.collection("events");
         String organizerName = editTextOrganizerName.getText().toString();
         if (!organizerName.equals("")) {
-            //db.collection("users").whereEqualTo("username", organizerName).get().addOnCompleteListener(task -> {
             db.collection("users").get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
+                        List<Task<QuerySnapshot>> tasks = new ArrayList<Task<QuerySnapshot>>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             String name = Objects.requireNonNull(document.getData().get("username")).toString();
                             if (!name.toLowerCase().contains(organizerName.toLowerCase())) {
                                 continue;
                             }
-                            q.whereEqualTo("organizer", document.getId()).get().addOnCompleteListener(task1 -> {
+                            Task<QuerySnapshot> newTask = db.collection("events").whereEqualTo("organizer", document.getId()).get();
+                            newTask.addOnCompleteListener(task1 -> {
                                 if (task1.isSuccessful()) {
                                     if (task1.getResult().size() > 0) {
                                         for (QueryDocumentSnapshot document1 : task1.getResult()) {
@@ -277,19 +279,12 @@ public class FindEventsActivity extends MenuInterfaceActivity {
                                             cldr_end.setTime(end_date);
                                             timestamps_array.add(checkTimestamp(cldr_start, cldr_end));
                                         }
-                                        changeTimestampVisible();
-                                    } else {
-                                        CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(new ArrayList<>(), context, preferences);
-                                        recyclerViewFindEvents.setAdapter(customAdapterEvents);
-                                        noResults.setVisibility(View.VISIBLE);
                                     }
-                                } else {
-                                    CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(new ArrayList<>(), context, preferences);
-                                    recyclerViewFindEvents.setAdapter(customAdapterEvents);
-                                    noResults.setVisibility(View.VISIBLE);
                                 }
                             });
+                            tasks.add(newTask);
                         }
+                        Tasks.whenAllComplete(tasks).addOnCompleteListener(t -> changeTimestampVisible());
                     } else {
                         CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(new ArrayList<>(), context, preferences);
                         recyclerViewFindEvents.setAdapter(customAdapterEvents);
@@ -301,7 +296,6 @@ public class FindEventsActivity extends MenuInterfaceActivity {
                     noResults.setVisibility(View.VISIBLE);
                 }
             });
-
         } else {
             CustomAdapterEvent customAdapterEvents = new CustomAdapterEvent(new ArrayList<>(), context, preferences);
             recyclerViewFindEvents.setAdapter(customAdapterEvents);

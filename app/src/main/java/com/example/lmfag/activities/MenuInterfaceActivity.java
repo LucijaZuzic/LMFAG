@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -28,28 +27,25 @@ public class MenuInterfaceActivity extends BaseActivity {
     public FirebaseStorage storage = FirebaseStorage.getInstance();
     public StorageReference storageRef = storage.getReference();
     private boolean flag = false;
-    private Handler handlerForAlarm;
+    private Handler handlerGeneral;
+    private Runnable runnableGeneral;
 
     @Override
     protected void onResume() {
-        countDownAlarmStart();
         super.onResume();
     }
 
-    public void countDownAlarmStart() {
-        handlerForAlarm = new Handler();
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                handlerForAlarm.postDelayed(this, 10000);
-                try {
-                    AlarmScheduler.getOnlyStartOfEvents(getApplicationContext());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+    public void refreshSomething() {
+        handlerGeneral = new Handler();
+        runnableGeneral = () -> {
+            handlerGeneral.postDelayed(runnableGeneral, 10000);
+            try {
+                AlarmScheduler.getOnlyStartOfEvents(getApplicationContext());
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         };
-        handlerForAlarm.postDelayed(runnable, 10000);
+        handlerGeneral.postDelayed(runnableGeneral, 10000);
     }
 
     @Override
@@ -57,6 +53,7 @@ public class MenuInterfaceActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         editor = preferences.edit();
+        refreshSomething();
     }
 
     public void logout() {
@@ -64,13 +61,66 @@ public class MenuInterfaceActivity extends BaseActivity {
         editor.apply();
         editor.putString("userUsername", "");
         editor.apply();
+        editor.putString("friendOrganizer", "");
+        editor.apply();
+        editor.putString("friendOrganizerTimestamp", "");
+        editor.apply();
+        editor.putString("friendPlayer", "");
+        editor.apply();
+        editor.putString("friendPlayerTimestamp", "");
+        editor.apply();
+        editor.putString("userOrganizer", "");
+        editor.apply();
+        editor.putString("userOrganizerTimestamp", "");
+        editor.apply();
+        editor.putString("userPlayer", "");
+        editor.apply();
+        editor.putString("userPlayerTimestamp", "");
+        editor.apply();
+        editor.putString("userSubscriber", "");
+        editor.apply();
+        editor.putString("userSubscriberTimestamp", "");
+        editor.apply();
+        editor.putString("userUnrated", "");
+        editor.apply();
+        editor.putString("userUnratedTimestamp", "");
+        editor.apply();
+
+
+        editor.putString("userLocation", "");
+        editor.apply();
+        editor.putString("userRankPoints", "");
+        editor.apply();
+        editor.putString("userDescription", "");
+        editor.apply();
+        editor.putString("user_areas_of_interest", "");
+        editor.apply();
+        editor.putString("user_points_levels", "");
+        editor.apply();
+
+        editor.putString("friendLocation", "");
+        editor.apply();
+        editor.putString("friendRankPoints", "");
+        editor.apply();
+        editor.putString("friendDescription", "");
+        editor.apply();
+        editor.putString("friend_areas_of_interest", "");
+        editor.apply();
+        editor.putString("friend_points_levels", "");
+        editor.apply();
+
+        editor.putInt("selectedTab", 0);
+        editor.apply();
+        editor.putString("eventID", "");
+        editor.apply();
+        editor.putString("friendID", "");
+        editor.apply();
 
         AlarmScheduler.cancelAllAlarms(this.getApplicationContext());
         Intent myIntent = new Intent(this, MainActivity.class);
         startActivity(myIntent);
         finish();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -156,6 +206,42 @@ public class MenuInterfaceActivity extends BaseActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (handlerGeneral != null) {
+            handlerGeneral.removeCallbacksAndMessages(runnableGeneral);
+            handlerGeneral.removeCallbacksAndMessages(handlerGeneral);
+            handlerGeneral.removeCallbacksAndMessages(null);
+            handlerGeneral.removeCallbacks(runnableGeneral);
+            handlerGeneral.removeCallbacks(null);
+        }
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (handlerGeneral != null) {
+            handlerGeneral.removeCallbacksAndMessages(runnableGeneral);
+            handlerGeneral.removeCallbacksAndMessages(handlerGeneral);
+            handlerGeneral.removeCallbacksAndMessages(null);
+            handlerGeneral.removeCallbacks(runnableGeneral);
+            handlerGeneral.removeCallbacks(null);
+        }
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        if (handlerGeneral != null) {
+            handlerGeneral.removeCallbacksAndMessages(runnableGeneral);
+            handlerGeneral.removeCallbacksAndMessages(handlerGeneral);
+            handlerGeneral.removeCallbacksAndMessages(null);
+            handlerGeneral.removeCallbacks(runnableGeneral);
+            handlerGeneral.removeCallbacks(null);
         }
     }
 }

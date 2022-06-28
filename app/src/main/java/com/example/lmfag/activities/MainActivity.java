@@ -5,7 +5,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -21,12 +20,10 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.cardview.widget.CardView;
 
 import com.example.lmfag.R;
-import com.example.lmfag.receivers.ConnectionChangeReceiver;
 import com.example.lmfag.utility.AlarmScheduler;
 import com.example.lmfag.utility.SecureHash;
 import com.google.firebase.firestore.CollectionReference;
@@ -95,9 +92,67 @@ public class MainActivity extends BaseActivity {
         EditText editTextPassword = findViewById(R.id.editTextPassword);
         EditText editTextUsername = findViewById(R.id.editTextUsername);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = preferences.edit();
+
         String name = preferences.getString("userID", "");
 
         View.OnClickListener confirmLoginButtonListener = view -> {
+            editor.putString("userUsername", "");
+            editor.apply();
+            editor.putString("friendOrganizer", "");
+            editor.apply();
+            editor.putString("friendOrganizerTimestamp", "");
+            editor.apply();
+            editor.putString("friendPlayer", "");
+            editor.apply();
+            editor.putString("friendPlayerTimestamp", "");
+            editor.apply();
+            editor.putString("userOrganizer", "");
+            editor.apply();
+            editor.putString("userOrganizerTimestamp", "");
+            editor.apply();
+            editor.putString("userPlayer", "");
+            editor.apply();
+            editor.putString("userPlayerTimestamp", "");
+            editor.apply();
+            editor.putString("userSubscriber", "");
+            editor.apply();
+            editor.putString("userSubscriberTimestamp", "");
+            editor.apply();
+            editor.putString("userUnrated", "");
+            editor.apply();
+            editor.putString("userUnratedTimestamp", "");
+            editor.apply();
+
+
+            editor.putString("userLocation", "");
+            editor.apply();
+            editor.putString("userRankPoints", "");
+            editor.apply();
+            editor.putString("userDescription", "");
+            editor.apply();
+            editor.putString("user_areas_of_interest", "");
+            editor.apply();
+            editor.putString("user_points_levels", "");
+            editor.apply();
+
+            editor.putString("friendLocation", "");
+            editor.apply();
+            editor.putString("friendRankPoints", "");
+            editor.apply();
+            editor.putString("friendDescription", "");
+            editor.apply();
+            editor.putString("friend_areas_of_interest", "");
+            editor.apply();
+            editor.putString("friend_points_levels", "");
+            editor.apply();
+
+            editor.putInt("selectedTab", 0);
+            editor.apply();
+            editor.putString("eventID", "");
+            editor.apply();
+            editor.putString("friendID", "");
+            editor.apply();
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             String username = editTextUsername.getText().toString();
             CollectionReference docRef = db.collection("users");
@@ -118,7 +173,6 @@ public class MainActivity extends BaseActivity {
                                         String my_value_to_hash = editTextPassword.getText().toString();
                                         if (SecureHash.validatePassword(my_value_to_hash, pwd_hash)) {
                                             Toast.makeText(getApplicationContext(), R.string.logged_in, Toast.LENGTH_SHORT).show();
-                                            SharedPreferences.Editor editor = preferences.edit();
                                             editor.putString("userID", document.getId());
                                             editor.apply();
                                             AlarmScheduler.getAllSubscriberEvents(getApplicationContext());

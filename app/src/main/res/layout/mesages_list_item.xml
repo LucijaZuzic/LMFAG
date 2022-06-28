@@ -42,6 +42,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-condensed-light"
                         android:hint="@string/username"
+                        android:layout_gravity="left"
                         android:textColor="@color/white"
                         android:textColorHint="@color/white"
                         android:textStyle="bold" />
@@ -52,6 +53,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-condensed-light"
                         android:hint="@string/latest_message"
+                        android:layout_gravity="left"
                         android:textColor="@color/white"
                         android:textColorHint="@color/white" />
                 </LinearLayout>
@@ -64,6 +66,7 @@
                 android:layout_marginStart="20dp"
                 android:fontFamily="sans-serif-condensed-light"
                 android:hint="@string/latest_message"
+                android:layout_gravity="start"
                 android:visibility="gone" />
         </LinearLayout>
 

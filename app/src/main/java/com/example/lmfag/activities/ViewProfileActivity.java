@@ -1,7 +1,6 @@
 package com.example.lmfag.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -17,12 +16,15 @@ import com.example.lmfag.fragments.ViewProfileEventsPlayerFragment;
 import com.example.lmfag.fragments.ViewProfileFriendsFragment;
 import com.example.lmfag.fragments.ViewProfileInfoFragment;
 import com.example.lmfag.utility.adapters.TabPagerAdapter;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,7 +32,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ViewProfileActivity extends MenuInterfaceActivity {
 
@@ -38,21 +39,21 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
     private String oldOrganizerTimestamp;
     private String oldPlayer;
     private String oldPlayerTimestamp;
+    private String oldPoints;
+    private String oldRank;
+    private String oldAreas;
+    private String oldDescription;
+    private String oldLocation;
     private boolean first = true;
+    private Handler handlerForAlarm;
+    private Runnable runnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_profile);
 
-        editor.putString("friendOrganizer", "");
-        editor.apply();
-        editor.putString("friendOrganizerTimestamp", "");
-        editor.apply();
-        editor.putString("friendPlayer", "");
-        editor.apply();
-        editor.putString("friendPlayerTimestamp", "");
-        editor.apply();
+        first = true;
 
         fillUserData();
         countDownAlarmStart();
@@ -114,14 +115,18 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                 boolean correct = preferences.getString("friendOrganizer", "").equals(oldOrganizer)
                         && preferences.getString("friendOrganizerTimestamp", "").equals(oldOrganizerTimestamp)
                         && preferences.getString("friendPlayer", "").equals(oldPlayer)
-                        && preferences.getString("friendPlayerTimestamp", "").equals(oldPlayerTimestamp);
+                        && preferences.getString("friendPlayerTimestamp", "").equals(oldPlayerTimestamp)
+                        && preferences.getString("friendLocation", "").equals(oldLocation)
+                        && preferences.getString("friendDescription", "").equals(oldDescription)
+                        && preferences.getString("friendRankPoints", "").equals(oldRank)
+                        && preferences.getString("friend_areas_of_interest", "").equals(oldAreas)
+                        && preferences.getString("friend_points_levels", "").equals(oldPoints);
                 if (!correct || first) {
                     int tab_int = preferences.getInt("selectedTab", 0);
                     fillPager(tab_int);
-                } else {
-                    editor.putInt("selectedTab", 0);
-                    editor.apply();
                 }
+                editor.putInt("selectedTab", 0);
+                editor.apply();
                 first = false;
             });
         }
@@ -146,13 +151,14 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
         oldPlayer = preferences.getString("friendPlayer", "");
         oldPlayerTimestamp = preferences.getString("friendPlayerTimestamp", "");
         String friendID = preferences.getString("friendID", "");
-        AtomicInteger processed = new AtomicInteger();
         if (!friendID.equals("")) {
             db.collection("event_attending").whereEqualTo("user", friendID).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
+                        List<Task<QuerySnapshot>> tasks = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                             db.collection("events").document(Objects.requireNonNull(document.getData().get("event")).toString()).get().addOnCompleteListener(task1 -> {
+                            Task<DocumentSnapshot> taskNew = db.collection("events").document(Objects.requireNonNull(document.getData().get("event")).toString()).get();
+                            taskNew.addOnCompleteListener(task1 -> {
                                 if (task1.isSuccessful()) {
                                     DocumentSnapshot document1 = task1.getResult();
                                     Calendar cldr_start = Calendar.getInstance();
@@ -170,8 +176,12 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                                         player_events_array.add(Objects.requireNonNull(document.getData().get("event")).toString());
                                         player_events_timestamps.add(timestamp);
                                     }
-                                    processed.getAndIncrement();
-                                    if (processed.get() == task.getResult().size()) {
+                                }
+                            });
+                        }
+                        // Collect all the query results together into a single list
+                        Tasks.whenAllComplete(tasks)
+                                .addOnCompleteListener(t -> {
                                         StringBuilder events_player_stringBuilder = new StringBuilder();
                                         StringBuilder events_player_timestamp_stringBuilder = new StringBuilder();
                                         for (String event : player_events_array) {
@@ -192,22 +202,22 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                                             editor.putString("friendPlayerTimestamp", "");
                                         }
                                         editor.apply();
-                                    }
-                                }
-                            });
-                        }
+                                        getOrganizerEvents();
+                                });
                     } else {
                         editor.putString("friendPlayer", "");
                         editor.apply();
                         editor.putString("friendPlayerTimestamp", "");
+                        editor.apply();
+                        getOrganizerEvents();
                     }
                 } else {
                     editor.putString("friendPlayer", "");
                     editor.apply();
                     editor.putString("friendPlayerTimestamp", "");
+                    editor.apply();
+                    getOrganizerEvents();
                 }
-                editor.apply();
-                getOrganizerEvents();
             });
         }
     }
@@ -215,6 +225,11 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
     private void fillUserData() {
         String name = preferences.getString("friendID", "");
         String me = preferences.getString("userID", "");
+        oldDescription = preferences.getString("friendDescription", "");
+        oldLocation= preferences.getString("friendLocation", "");
+        oldRank = preferences.getString("friendRankPoints", "");
+        oldAreas = preferences.getString("friend_areas_of_interest", "");
+        oldPoints = preferences.getString("friend_points_levels", "");
         if (name.equalsIgnoreCase("") || me.equalsIgnoreCase("")) {
             Intent myIntent = new Intent(this, MainActivity.class);
             startActivity(myIntent);
@@ -289,47 +304,66 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
         }).attach();
 
         viewPager.setCurrentItem(x);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("selectedTab", 0);
-        editor.apply();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        editor.putString("friendOrganizer", "");
-        editor.apply();
-        editor.putString("friendOrganizerTimestamp", "");
-        editor.apply();
-        editor.putString("friendPlayer", "");
-        editor.apply();
-        editor.putString("friendPlayerTimestamp", "");
-        editor.apply();
-
-        fillUserData();
-        countDownAlarmStart();
+        first = true;
     }
 
     public void countDownAlarmStart() {
-        Handler handlerForAlarm = new Handler();
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                handlerForAlarm.postDelayed(this, 10000);
-                try {
-                    ViewPager2 viewPager = findViewById(R.id.pager);
-                    if (!first) {
-                        int item = viewPager.getCurrentItem();
-                        editor.putInt("selectedTab", item);
-                        editor.apply();
-                    }
-                    getSubscriberEvents();
-                } catch (Exception e) {
-                    e.printStackTrace();
+        handlerForAlarm = new Handler();
+        runnable = () -> {
+            handlerForAlarm.postDelayed(runnable, 10000);
+            try {
+                ViewPager2 viewPager = findViewById(R.id.pager);
+                if (!first) {
+                    int item = viewPager.getCurrentItem();
+                    editor.putInt("selectedTab", item);
+                    editor.apply();
                 }
+                fillUserData();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         };
         handlerForAlarm.postDelayed(runnable, 10000);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (handlerForAlarm != null) {
+            handlerForAlarm.removeCallbacksAndMessages(runnable);
+            handlerForAlarm.removeCallbacksAndMessages(handlerForAlarm);
+            handlerForAlarm.removeCallbacksAndMessages(null);
+            handlerForAlarm.removeCallbacks(runnable);
+            handlerForAlarm.removeCallbacks(null);
+        }
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (handlerForAlarm != null) {
+            handlerForAlarm.removeCallbacksAndMessages(runnable);
+            handlerForAlarm.removeCallbacksAndMessages(handlerForAlarm);
+            handlerForAlarm.removeCallbacksAndMessages(null);
+            handlerForAlarm.removeCallbacks(runnable);
+            handlerForAlarm.removeCallbacks(null);
+        }
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        if (handlerForAlarm != null) {
+            handlerForAlarm.removeCallbacksAndMessages(runnable);
+            handlerForAlarm.removeCallbacksAndMessages(handlerForAlarm);
+            handlerForAlarm.removeCallbacksAndMessages(null);
+            handlerForAlarm.removeCallbacks(runnable);
+            handlerForAlarm.removeCallbacks(null);
+        }
     }
 }

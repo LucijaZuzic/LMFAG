@@ -109,6 +109,7 @@ public class ChooseLocationActivity extends MenuInterfaceActivity implements Tex
 
         // Init marker
         chosenLocationMarker = new Marker(map);
+        chosenLocationMarker.setInfoWindow(null);
         chosenLocationMarker.setIcon(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.map_marker));
         chosenLocationMarker.setDraggable(true);
         chosenLocationMarker.setOnMarkerDragListener(new Marker.OnMarkerDragListener() {
@@ -148,7 +149,14 @@ public class ChooseLocationActivity extends MenuInterfaceActivity implements Tex
         });
 
     }
-    // Location choosing on tap
+
+    private void saveMarkerLocationToSP() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor spEditor = sp.edit();
+        spEditor.putFloat("newEventLatitude", (float) chosenLocationMarker.getPosition().getLatitude());
+        spEditor.putFloat("newEventLongitude", (float) chosenLocationMarker.getPosition().getLongitude());
+        spEditor.apply();
+    }    // Location choosing on tap
     private final MapEventsReceiver mapEventsReceiver = new MapEventsReceiver() {
         @Override
         public boolean singleTapConfirmedHelper(GeoPoint p) {
@@ -173,14 +181,6 @@ public class ChooseLocationActivity extends MenuInterfaceActivity implements Tex
             return true;
         }
     };
-
-    private void saveMarkerLocationToSP() {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences.Editor spEditor = sp.edit();
-        spEditor.putFloat("newEventLatitude", (float) chosenLocationMarker.getPosition().getLatitude());
-        spEditor.putFloat("newEventLongitude", (float) chosenLocationMarker.getPosition().getLongitude());
-        spEditor.apply();
-    }
 
     @Override
     public void onResume() {
@@ -272,4 +272,6 @@ public class ChooseLocationActivity extends MenuInterfaceActivity implements Tex
             coordinatesView.setText(formattedLocation);
         }));
     }
+
+
 }
