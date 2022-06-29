@@ -215,10 +215,10 @@ public class AlarmScheduler {
                                                                 if (size < minimum_pl && Calendar.getInstance().getTimeInMillis() >= cldr_start.getTimeInMillis()) {
                                                                     deleteAnEvent(eventID);
                                                                 } else {
-                                                                    if (size >= minimum_pl && Calendar.getInstance().getTimeInMillis() < cldr_start.getTimeInMillis()) {
+                                                                    if (!(size < minimum_pl) && Calendar.getInstance().getTimeInMillis() < cldr_start.getTimeInMillis()) {
                                                                         scheduleAlarmStart(applicationContext, cldr_start.getTimeInMillis() - Calendar.getInstance().getTimeInMillis(), Objects.requireNonNull(docData.get("event_type")).toString(), Objects.requireNonNull(docData.get("event_name")).toString(), Objects.requireNonNull(docData.get("event_description")).toString(), documentTime.getId());
                                                                     }
-                                                                    if (size >= minimum_pl && !sentWarning.get() && Calendar.getInstance().getTimeInMillis() > cldr_end.getTimeInMillis() && !Objects.requireNonNull(document.getData().get("rated")).toString().equals("true")) {
+                                                                    if (!(size < minimum_pl) && !sentWarning.get() && Calendar.getInstance().getTimeInMillis() > cldr_end.getTimeInMillis() && !Objects.requireNonNull(document.getData().get("rated")).toString().equals("true")) {
                                                                         sentWarning.set(true);
                                                                         scheduleAlarmEnd(applicationContext);
                                                                     }
@@ -275,7 +275,7 @@ public class AlarmScheduler {
                                                                 if (size < minimum_pl && Calendar.getInstance().getTimeInMillis() >= cldr_start.getTimeInMillis()) {
                                                                     deleteAnEvent(eventID);
                                                                 } else {
-                                                                    if (size >= minimum_pl && Calendar.getInstance().getTimeInMillis() < cldr_start.getTimeInMillis()) {
+                                                                    if (!(size < minimum_pl) && Calendar.getInstance().getTimeInMillis() < cldr_start.getTimeInMillis()) {
                                                                         scheduleAlarmStart(applicationContext, cldr_start.getTimeInMillis() - Calendar.getInstance().getTimeInMillis(), Objects.requireNonNull(docData.get("event_type")).toString(), Objects.requireNonNull(docData.get("event_name")).toString(), Objects.requireNonNull(docData.get("event_description")).toString(), documentTime.getId());
                                                                     }
                                                                 }
