@@ -27,6 +27,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -52,6 +53,7 @@ public class MyProfileActivity extends MenuInterfaceActivity {
     private boolean first = true;
     private Handler handlerForAlarm;
     private Runnable runnable;
+    private int last_selected_tab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,17 +61,63 @@ public class MyProfileActivity extends MenuInterfaceActivity {
         setContentView(R.layout.activity_my_profile);
 
         first = true;
-
+        last_selected_tab = 0;
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         if (extras != null) {
-            int x = extras.getInt("selectedTab");
-            editor.putInt("selectedTab", x);
-            editor.apply();
+            last_selected_tab = extras.getInt("selectedTab");
         }
 
         fillUserData();
         countDownAlarmStart();
+    }
+    
+    private boolean equalSetOfEvents(String id1, String time1, String id2, String time2) {
+        if (id1.length() != id2.length() || time1.length() != time2.length() ) {
+            return false;
+        }
+
+        String[] id_array_1 = id1.split("_");
+        List<String> id_list_1 = new ArrayList<>();
+        if (!id_array_1[0].equals("")) {
+            id_list_1.addAll(Arrays.asList(id_array_1));
+        }
+        
+        String[] time_array_1 = time1.split("_");
+        List<Integer> time_list_1 = new ArrayList<>();
+        if (!time_array_1[0].equals("")) {
+            for (String s : time_array_1) {
+                time_list_1.add(Integer.parseInt(s));
+            }
+        }
+        
+        String[] id_array_2 = id2.split("_");
+        List<String> id_list_2 = new ArrayList<>();
+        if (!id_array_2[0].equals("")) {
+            id_list_2.addAll(Arrays.asList(id_array_2));
+        }
+
+        String[] time_array_2 = time2.split("_");
+        List<Integer> time_list_2 = new ArrayList<>();
+        if (!time_array_2[0].equals("")) {
+            for (String s : time_array_2) {
+                time_list_2.add(Integer.parseInt(s));
+            }
+        }
+
+        for (int index1 = 0, n = id_list_1.size(); index1 < n; index1++) {
+            String element1 = id_list_1.get(index1);
+            int index2 = id_list_2.indexOf(element1);
+            if (index2 == -1) {
+                return false;
+            }
+            Integer stamp1 = time_list_1.get(index1);
+            Integer stamp2 = time_list_2.get(index2);
+            if (!stamp1.equals(stamp2)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void getOrganizerEvents() {
@@ -125,25 +173,20 @@ public class MyProfileActivity extends MenuInterfaceActivity {
                     editor.putString("userOrganizerTimestamp", "");
                 }
                 editor.apply();
-                boolean correct = preferences.getString("userOrganizer", "").equals(oldOrganizer)
-                        && preferences.getString("userOrganizerTimestamp", "").equals(oldOrganizerTimestamp)
-                        && preferences.getString("userPlayer", "").equals(oldPlayer)
-                        && preferences.getString("userPlayerTimestamp", "").equals(oldPlayerTimestamp)
-                        && preferences.getString("userSubscriber", "").equals(oldSubscriber)
-                        && preferences.getString("userSubscriberTimestamp", "").equals(oldSubscriberTimestamp);
-                       // && preferences.getString("userUnrated", "").equals(oldUnrated)
-                       // && preferences.getString("userUnratedTimestamp", "").equals(oldUnratedTimestamp)
-                        //    && preferences.getString("userLocation", "").equals(oldLocation)
-                        //      && preferences.getString("userDescription", "").equals(oldDescription)
-                        //   && preferences.getString("userRankPoints", "").equals(oldRank)
-                        //      && preferences.getString("user_areas_of_interest", "").equals(oldAreas)
-                //       && preferences.getString("user_points_levels", "").equals(oldPoints);
+                boolean organizerCorrect = equalSetOfEvents(preferences.getString("userOrganizer", ""), preferences.getString("userOrganizerTimestamp", ""), oldOrganizer, oldOrganizerTimestamp);
+                boolean subscriberCorrect = equalSetOfEvents(preferences.getString("userSubscriber", ""), preferences.getString("userSubscriberTimestamp", ""), oldSubscriber, oldSubscriberTimestamp);
+                boolean playerCorrect = equalSetOfEvents(preferences.getString("userPlayer", ""), preferences.getString("userPlayerTimestamp", ""), oldPlayer, oldPlayerTimestamp);
+                boolean unratedCorrect = equalSetOfEvents(preferences.getString("userUnrated", ""), preferences.getString("userUnratedTimestamp", ""), oldUnrated, oldUnratedTimestamp);
+
+                boolean userInfoCorrect = preferences.getString("userLocation", "").equals(oldLocation)
+                        && preferences.getString("userDescription", "").equals(oldDescription)
+                        && preferences.getString("userRankPoints", "").equals(oldRank)
+                        && preferences.getString("user_areas_of_interest", "").equals(oldAreas)
+                        && preferences.getString("user_points_levels", "").equals(oldPoints);
+                boolean correct = organizerCorrect && playerCorrect && subscriberCorrect && unratedCorrect && userInfoCorrect;
                 if (!correct || first) {
-                    int tab_int = preferences.getInt("selectedTab", 0);
-                    fillPager(tab_int);
+                    fillPager();
                 }
-                editor.putInt("selectedTab", 0);
-                editor.apply();
                 first = false;
             });
         }
@@ -369,7 +412,7 @@ public class MyProfileActivity extends MenuInterfaceActivity {
         });
     }
 
-    private void fillPager(int x) {
+    private void fillPager() {
         TabPagerAdapter tabPagerAdapter = new TabPagerAdapter(this,
                 new MyProfileInfoFragment(), new MyProfileFriendsFragment(), new MyProfileAreasOfInterestFragment(),
                 new MyProfileEventsOrganizerFragment(), new MyProfileEventsPlayerFragment(), new MyProfileEventsUnratedFragment());
@@ -403,13 +446,19 @@ public class MyProfileActivity extends MenuInterfaceActivity {
             }
         }).attach();
 
-        viewPager.setCurrentItem(x);
+        viewPager.setCurrentItem(last_selected_tab, false);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         first = true;
+        last_selected_tab = 0;
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            last_selected_tab = extras.getInt("selectedTab");
+        }
         fillUserData();
         countDownAlarmStart();
     }
@@ -419,12 +468,6 @@ public class MyProfileActivity extends MenuInterfaceActivity {
         runnable = () -> {
             handlerForAlarm.postDelayed(runnable, 10000);
             try {
-                ViewPager2 viewPager = findViewById(R.id.pager);
-                if (!first) {
-                    int item = viewPager.getCurrentItem();
-                    editor.putInt("selectedTab", item);
-                    editor.apply();
-                }
                 fillUserData();
             } catch (Exception e) {
                 e.printStackTrace();

@@ -26,6 +26,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -56,6 +57,54 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
 
         fillUserData();
         countDownAlarmStart();
+    }
+
+    private boolean equalSetOfEvents(String id1, String time1, String id2, String time2) {
+        if (id1.length() != id2.length() || time1.length() != time2.length() ) {
+            return false;
+        }
+
+        String[] id_array_1 = id1.split("_");
+        List<String> id_list_1 = new ArrayList<>();
+        if (!id_array_1[0].equals("")) {
+            id_list_1.addAll(Arrays.asList(id_array_1));
+        }
+
+        String[] time_array_1 = time1.split("_");
+        List<Integer> time_list_1 = new ArrayList<>();
+        if (!time_array_1[0].equals("")) {
+            for (String s : time_array_1) {
+                time_list_1.add(Integer.parseInt(s));
+            }
+        }
+
+        String[] id_array_2 = id2.split("_");
+        List<String> id_list_2 = new ArrayList<>();
+        if (!id_array_2[0].equals("")) {
+            id_list_2.addAll(Arrays.asList(id_array_2));
+        }
+
+        String[] time_array_2 = time2.split("_");
+        List<Integer> time_list_2 = new ArrayList<>();
+        if (!time_array_2[0].equals("")) {
+            for (String s : time_array_2) {
+                time_list_2.add(Integer.parseInt(s));
+            }
+        }
+
+        for (int index1 = 0, n = id_list_1.size(); index1 < n; index1++) {
+            String element1 = id_list_1.get(index1);
+            int index2 = id_list_2.indexOf(element1);
+            if (index2 == -1) {
+                return false;
+            }
+            Integer stamp1 = time_list_1.get(index1);
+            Integer stamp2 = time_list_2.get(index2);
+            if (!stamp1.equals(stamp2)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void getOrganizerEvents() {
@@ -111,21 +160,18 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                     editor.putString("friendOrganizerTimestamp", "");
                 }
                 editor.apply();
-                boolean correct = preferences.getString("friendOrganizer", "").equals(oldOrganizer)
-                        && preferences.getString("friendOrganizerTimestamp", "").equals(oldOrganizerTimestamp)
-                        && preferences.getString("friendPlayer", "").equals(oldPlayer)
-                        && preferences.getString("friendPlayerTimestamp", "").equals(oldPlayerTimestamp)
-                        && preferences.getString("friendLocation", "").equals(oldLocation)
+                boolean organizerCorrect = equalSetOfEvents(preferences.getString("friendOrganizer", ""), preferences.getString("friendOrganizerTimestamp", ""), oldOrganizer, oldOrganizerTimestamp);
+                boolean playerCorrect = equalSetOfEvents(preferences.getString("friendPlayer", ""), preferences.getString("friendPlayerTimestamp", ""), oldPlayer, oldPlayerTimestamp);
+
+                boolean friendInfoCorrect = preferences.getString("friendLocation", "").equals(oldLocation)
                         && preferences.getString("friendDescription", "").equals(oldDescription)
                         && preferences.getString("friendRankPoints", "").equals(oldRank)
                         && preferences.getString("friend_areas_of_interest", "").equals(oldAreas)
                         && preferences.getString("friend_points_levels", "").equals(oldPoints);
+                boolean correct = organizerCorrect  && playerCorrect && friendInfoCorrect;
                 if (!correct || first) {
-                    int tab_int = preferences.getInt("selectedTab", 0);
-                    fillPager(tab_int);
+                    fillPager();
                 }
-                editor.putInt("selectedTab", 0);
-                editor.apply();
                 first = false;
             });
         }
@@ -287,7 +333,7 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
         });
     }
 
-    private void fillPager(int x) {
+    private void fillPager() {
         TabPagerAdapter tabPagerAdapterViewProfile = new TabPagerAdapter(this,
                 new ViewProfileInfoFragment(), new ViewProfileFriendsFragment(), new ViewProfileAreasOfInterestFragment(),
                 new ViewProfileEventsOrganizerFragment(), new ViewProfileEventsPlayerFragment());
@@ -317,8 +363,6 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
                     break;
             }
         }).attach();
-
-        viewPager.setCurrentItem(x);
     }
 
     @Override
@@ -334,12 +378,6 @@ public class ViewProfileActivity extends MenuInterfaceActivity {
         runnable = () -> {
             handlerForAlarm.postDelayed(runnable, 10000);
             try {
-                ViewPager2 viewPager = findViewById(R.id.pager);
-                if (!first) {
-                    int item = viewPager.getCurrentItem();
-                    editor.putInt("selectedTab", item);
-                    editor.apply();
-                }
                 fillUserData();
             } catch (Exception e) {
                 e.printStackTrace();

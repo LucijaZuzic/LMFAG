@@ -110,8 +110,6 @@ public class MenuInterfaceActivity extends BaseActivity {
         editor.putString("friend_points_levels", "");
         editor.apply();
 
-        editor.putInt("selectedTab", 0);
-        editor.apply();
         editor.putString("eventID", "");
         editor.apply();
         editor.putString("friendID", "");

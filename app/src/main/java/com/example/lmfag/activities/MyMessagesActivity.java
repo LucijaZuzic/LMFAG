@@ -114,8 +114,8 @@ public class MyMessagesActivity extends MenuInterfaceActivity {
             if (old_friends_array.size() != friends_array.size()) {
                 equal = false;
             } else {
-                for (int i = 0, n = old_friends_array.size(); i < n; i++) {
-                    if (!old_friends_array.get(i).equals(friends_array.get(i))) {
+                for (int i = 0, n = friends_array.size(); i < n; i++) {
+                    if (!old_friends_array.contains(friends_array.get(i))) {
                         equal = false;
                         break;
                     }

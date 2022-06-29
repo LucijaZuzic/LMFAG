@@ -139,8 +139,8 @@ public class FriendRequestsActivity extends MenuInterfaceActivity {
             if (old_sent.size() != sent.size()) {
                 equal = false;
             } else {
-                for (int i = 0, n = old_sent.size(); i < n; i++) {
-                    if (!old_sent.get(i).equals(sent.get(i))) {
+                for (int i = 0, n = sent.size(); i < n; i++) {
+                    if (!old_sent.contains(sent.get(i))) {
                         equal = false;
                         break;
                     }
