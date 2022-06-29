@@ -71,8 +71,7 @@ public class CustomAdapterRating extends RecyclerView.Adapter<CustomAdapterRatin
         Slider ratingBar = viewHolder.getRatingBar();
         CircleImageView profileImage = viewHolder.getProfileImage();
         // Called when the user swipes the RatingBar
-        ratingBar.setOnClickListener((v) -> rateEventActivity.updateRating(position, ratingBar.getValue()));
-        ratingBar.setOnFocusChangeListener((v1, v2) -> rateEventActivity.updateRating(position, ratingBar.getValue()));
+        ratingBar.addOnChangeListener((v1, v2, v3) -> rateEventActivity.updateRating(position, ratingBar.getValue()));
         if (!name.equals(preferences.getString("userID", ""))) {
             profileImage.setOnClickListener(view -> {
                 SharedPreferences.Editor editor = preferences.edit();
