@@ -101,9 +101,7 @@ public class ViewProfileEventsOrganizerFragment extends Fragment {
                 }
             }
 
-            if (!organizer_string[0].equals("")) {
-                changeArray(recyclerViewEventsOrganizer);
-            }
+            changeArray(recyclerViewEventsOrganizer);
         }
         TextView title = view.findViewById(R.id.list_title);
         title.setText(R.string.events_view_organizer);

@@ -136,9 +136,7 @@ public class MyProfileEventsOrganizerFragment extends Fragment {
                 }
             }
 
-            if (!organizer_string[0].equals("")) {
-                changeArray(recyclerViewEventsOrganizer);
-            }
+            changeArray(recyclerViewEventsOrganizer);
         }
         notificationsOnly.setOnClickListener(someView -> {
             if (notificationsOnly.isChecked()) {
