@@ -238,7 +238,7 @@ public class AlarmScheduler {
     }
 
     public static void getOnlyStartOfEvents(Context applicationContext) {
-        cancelAllAlarms(applicationContext);
+
         List<Task<QuerySnapshot>> tasks = deleteFaultyEvents();
         // Collect all the query results together into a single list
         Tasks.whenAllComplete(tasks)
