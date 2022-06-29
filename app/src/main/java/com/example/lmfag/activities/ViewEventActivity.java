@@ -70,6 +70,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
     private Float minimum_level;
     private CircleImageView circleImageView;
     private LinearLayout subscribeLine;
+    private TextView participant_number;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +102,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
             context.startActivity(myIntent);
         });
         switch_notify.setOnClickListener(view -> changeNotify());
-
+        participant_number = findViewById(R.id.textViewNumberOfPlayersCurrent);
         String me = preferences.getString("userID", "");
         String eventID = preferences.getString("eventID", "");
         edit = findViewById(R.id.imageViewEdit);
@@ -408,7 +409,6 @@ public class ViewEventActivity extends MenuInterfaceActivity {
         CollectionReference dr = db.collection("event_attending");
         dr.whereEqualTo("event", eventID).whereEqualTo("attending", true).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                TextView participant_number = findViewById(R.id.textViewNumberOfPlayersCurrent);
                 Integer size = task.getResult().size();
                 String size_str = size + "";
                 participant_number.setText(size_str);
@@ -456,6 +456,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                             }
                         }
                         AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
+                        checkNumberOfParticipants();
                     }
                 }
             }
@@ -493,6 +494,7 @@ public class ViewEventActivity extends MenuInterfaceActivity {
                     Toast.makeText(this, R.string.notifications_off, Toast.LENGTH_SHORT).show();
                 }
                 AlarmScheduler.getAllSubscriberEvents(getApplicationContext());
+                checkNumberOfParticipants();
             }
         });
     }
