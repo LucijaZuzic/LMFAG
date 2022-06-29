@@ -109,6 +109,7 @@ public class ChooseLocationActivity extends MenuInterfaceActivity implements Tex
 
         // Init marker
         chosenLocationMarker = new Marker(map);
+        chosenLocationMarker.setInfoWindow(null);
         chosenLocationMarker.setIcon(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.map_marker));
         chosenLocationMarker.setDraggable(true);
         chosenLocationMarker.setOnMarkerDragListener(new Marker.OnMarkerDragListener() {
@@ -148,7 +149,37 @@ public class ChooseLocationActivity extends MenuInterfaceActivity implements Tex
         });
 
     }
-    // Location choosing on tap
+
+    private void saveMarkerLocationToSP() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor spEditor = sp.edit();
+        spEditor.putFloat("newEventLatitude", (float) chosenLocationMarker.getPosition().getLatitude());
+        spEditor.putFloat("newEventLongitude", (float) chosenLocationMarker.getPosition().getLongitude());
+        spEditor.apply();
+    }    // Location choosing on tap
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION);
+        registerReceiver(locationReceiver, intentFilter);
+        //this will refresh the osmdroid configuration on resuming.
+        //if you make changes to the configuration, use SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        //Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
+        map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        myLocationOverlay.disableMyLocation();
+        unregisterReceiver(locationReceiver);
+        //this will refresh the osmdroid configuration on resuming.
+        //if you make changes to the configuration, use SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        //Configuration.getInstance().save(this, prefs);
+        map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
+    }
+
     private final MapEventsReceiver mapEventsReceiver = new MapEventsReceiver() {
         @Override
         public boolean singleTapConfirmedHelper(GeoPoint p) {
@@ -173,36 +204,6 @@ public class ChooseLocationActivity extends MenuInterfaceActivity implements Tex
             return true;
         }
     };
-
-    private void saveMarkerLocationToSP() {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences.Editor spEditor = sp.edit();
-        spEditor.putFloat("newEventLatitude", (float) chosenLocationMarker.getPosition().getLatitude());
-        spEditor.putFloat("newEventLongitude", (float) chosenLocationMarker.getPosition().getLongitude());
-        spEditor.apply();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        IntentFilter intentFilter = new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION);
-        registerReceiver(locationReceiver, intentFilter);
-        //this will refresh the osmdroid configuration on resuming.
-        //if you make changes to the configuration, use SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
-        map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        myLocationOverlay.disableMyLocation();
-        unregisterReceiver(locationReceiver);
-        //this will refresh the osmdroid configuration on resuming.
-        //if you make changes to the configuration, use SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //Configuration.getInstance().save(this, prefs);
-        map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
-    }
 
     @Override
     public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -272,4 +273,8 @@ public class ChooseLocationActivity extends MenuInterfaceActivity implements Tex
             coordinatesView.setText(formattedLocation);
         }));
     }
+
+
+
+
 }

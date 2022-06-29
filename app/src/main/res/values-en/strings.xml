@@ -2,11 +2,9 @@
     <string name="app_name">Let\'s meet for a game</string>
     <string name="username">Username</string>
     <string name="find_events">Find events</string>
-    <string name="rating_bar">Rating bar</string>
     <string name="events_nearby">Events nearby</string>
     <string name="find_friends">Find friends</string>
     <string name="rank_points">Rank points/Rank points for next rank</string>
-    <string name="my_events">My events</string>
     <string name="rank">Rank</string>
     <string name="user_description">User description:</string>
     <string name="enter_a_location">Enter a location.</string>
@@ -86,7 +84,6 @@
     <string name="marker_location">Marker location</string>
     <string name="confirm_location">Confirm location</string>
     <string name="level_low">Your level is not high enough to participate.</string>
-    <string name="too_many">Too many participants.</string>
     <string name="create_profile">Create profile</string>
     <string name="enter_a_username_to_search">Enter a username to search.</string>
     <string name="delete_message">Do you want to delete this message?</string>
@@ -197,8 +194,6 @@
     <string name="new_password">New password</string>
     <string name="edit_account">Edit account</string>
     <string name="display_map">Display map</string>
-    <string name="not_friend_organizer">You need to be friends with the organizer to participate in a private event.</string>
-    <string name="not_enough">Not enough participants.</string>
     <string name="rate_twice">You can\'t rate an event twice.</string>
     <string name="not_participate_rate">You can\'t rate an event if you don\'t participate or organize.</string>
     <string name="rate_before_end">Event can\'t be rated before it ends</string>

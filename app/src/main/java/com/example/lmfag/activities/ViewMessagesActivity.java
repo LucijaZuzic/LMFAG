@@ -37,6 +37,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ViewMessagesActivity extends MenuInterfaceActivity {
     private ViewMessagesActivity context;
     private RecyclerView recyclerViewMessages;
+    private List<String> old_ids = new ArrayList<>();
     private List<String> messages = new ArrayList<>();
     private List<String> times = new ArrayList<>();
     private List<String> sender = new ArrayList<>();
@@ -47,13 +48,15 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
     private TextView usernameFriend;
     private TextView noResults;
     private StorageReference storageRef;
-    private Handler handler;
+    private Handler handlerForAlarm;
+    private Runnable runnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_messages);
         context = this;
+        old_ids = new ArrayList<>();
         me = preferences.getString("userID", "");
         other = preferences.getString("friendID", "");
         storageRef = storage.getReference();
@@ -62,6 +65,11 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
         circleImageView.setOnClickListener(view -> {
             editor.putString("friendID", other);
             editor.apply();
+            handlerForAlarm.removeCallbacksAndMessages(runnable);
+            handlerForAlarm.removeCallbacksAndMessages(runnable);
+            handlerForAlarm.removeCallbacksAndMessages(null);
+            handlerForAlarm.removeCallbacks(runnable);
+            handlerForAlarm.removeCallbacks(null);
             Intent myIntent = new Intent(context, ViewProfileActivity.class);
             startActivity(myIntent);
             finish();
@@ -89,16 +97,28 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        getMyData();
+        countDownStart();
     }
 
     public void getMyData() {
         if (me.equals("")) {
+            handlerForAlarm.removeCallbacksAndMessages(runnable);
+            handlerForAlarm.removeCallbacksAndMessages(runnable);
+            handlerForAlarm.removeCallbacksAndMessages(null);
+            handlerForAlarm.removeCallbacks(runnable);
+            handlerForAlarm.removeCallbacks(null);
             Intent myIntent = new Intent(context, MainActivity.class);
             startActivity(myIntent);
             finish();
             return;
         }
         if (other.equals(me)) {
+            handlerForAlarm.removeCallbacksAndMessages(runnable);
+            handlerForAlarm.removeCallbacksAndMessages(runnable);
+            handlerForAlarm.removeCallbacksAndMessages(null);
+            handlerForAlarm.removeCallbacks(runnable);
+            handlerForAlarm.removeCallbacks(null);
             Toast.makeText(getApplicationContext(), R.string.visiting_myself, Toast.LENGTH_SHORT).show();
             Intent myIntent = new Intent(context, MyProfileActivity.class);
             startActivity(myIntent);
@@ -146,7 +166,6 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
     }
 
     public void getAllMessages() {
-        List<String> old_messages = new ArrayList<>(messages);
         messages = new ArrayList<>();
         times = new ArrayList<>();
         sender = new ArrayList<>();
@@ -160,6 +179,10 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Map<String, Object> map = document.getData();
                                 if (Objects.requireNonNull(map.get("sender")).toString().equals(me) || Objects.requireNonNull(map.get("sender")).toString().equals(other)) {
+                                    String index = document.getId();
+                                    if (ids.contains(index)) {
+                                        continue;
+                                    }
                                     messages.add(Objects.requireNonNull(map.get("messages")).toString());
                                     Timestamp start_timestamp = (Timestamp) (map.get("timestamp"));
                                     Date start_date = Objects.requireNonNull(start_timestamp).toDate();
@@ -167,25 +190,26 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
                                     cldr_start.setTime(start_date);
                                     times.add(DateFormat.getDateTimeInstance().format(cldr_start.getTime()));
                                     sender.add(Objects.requireNonNull(map.get("sender")).toString());
-                                    ids.add(document.getId());
+                                    ids.add(index);
                                 }
                             }
                         }
-                        Collections.reverse(messages);
                         boolean changed = false;
-                        if (messages.size() != old_messages.size()) {
+                        if (ids.size() != old_ids.size()) {
                             changed = true;
                         } else {
-                            for (int i = messages.size() - 1; i >= 0; i--) {
-                                if (!messages.get(i).equals(old_messages.get(i))) {
+                            for (int i = ids.size() - 1; i >= 0; i--) {
+                                if (!old_ids.contains(ids.get(i))) {
                                     changed = true;
                                     break;
                                 }
                             }
                         }
+                        old_ids = new ArrayList<>(ids);
                         if (changed) {
                             Collections.reverse(times);
                             Collections.reverse(sender);
+                            Collections.reverse(messages);
                             Collections.reverse(ids);
                             CustomAdapterMessages customAdapter = new CustomAdapterMessages(messages, times, sender, ids, me, context, myUsername, otherUsername);
                             if (messages.size() > 0) {
@@ -202,18 +226,51 @@ public class ViewMessagesActivity extends MenuInterfaceActivity {
     }
 
     public void countDownStart() {
-        handler = new Handler();
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                handler.postDelayed(this, 10000);
-                try {
-                    getAllMessages();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        handlerForAlarm = new Handler();
+        runnable = () -> {
+            handlerForAlarm.postDelayed(runnable, 10000);
+            try {
+                getMyData();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         };
-        handler.postDelayed(runnable, 10000);
+        handlerForAlarm.postDelayed(runnable, 10000);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (handlerForAlarm != null) {
+            handlerForAlarm.removeCallbacksAndMessages(runnable);
+            handlerForAlarm.removeCallbacksAndMessages(handlerForAlarm);
+            handlerForAlarm.removeCallbacksAndMessages(null);
+            handlerForAlarm.removeCallbacks(runnable);
+            handlerForAlarm.removeCallbacks(null);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (handlerForAlarm != null) {
+            handlerForAlarm.removeCallbacksAndMessages(runnable);
+            handlerForAlarm.removeCallbacksAndMessages(handlerForAlarm);
+            handlerForAlarm.removeCallbacksAndMessages(null);
+            handlerForAlarm.removeCallbacks(runnable);
+            handlerForAlarm.removeCallbacks(null);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (handlerForAlarm != null) {
+            handlerForAlarm.removeCallbacksAndMessages(runnable);
+            handlerForAlarm.removeCallbacksAndMessages(handlerForAlarm);
+            handlerForAlarm.removeCallbacksAndMessages(null);
+            handlerForAlarm.removeCallbacks(runnable);
+            handlerForAlarm.removeCallbacks(null);
+        }
     }
 }

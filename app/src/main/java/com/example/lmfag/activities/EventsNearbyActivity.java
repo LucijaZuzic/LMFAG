@@ -110,11 +110,11 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
                 double radius = Double.parseDouble(enterRadius.getText().toString());
                 float temp_latitude = Float.parseFloat(enterLatitude.getText().toString().replace(',', '.'));
                 float temp_longitude = Float.parseFloat(enterLongitude.getText().toString().replace(',', '.'));
-                getEventsThatAreInRadius(temp_latitude, temp_longitude, radius);
                 if (oPolygon != null) {
                     map.getOverlays().remove(oPolygon);
                 }
                 oPolygon = new org.osmdroid.views.overlay.Polygon(map);
+                oPolygon.setInfoWindow(null);
                 ArrayList<org.osmdroid.util.GeoPoint> circlePoints = new ArrayList<>();
                 for (float f = 0; f < 360; f += 1) {
                     try {
@@ -129,9 +129,12 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
                 } catch (IllegalArgumentException e) {
                     Toast.makeText(context, R.string.radius_too_large, Toast.LENGTH_SHORT).show();
                 }
+                getEventsThatAreInRadius(temp_latitude, temp_longitude, radius);
             } else {
                 docIds.clear();
                 map.getOverlays().clear();
+                oPolygon = new org.osmdroid.views.overlay.Polygon(map);
+                oPolygon.setInfoWindow(null);
                 map.getOverlays().add(myLocationOverlay);
                 map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
                 map.getOverlays().add(chosenLocationMarker);
@@ -144,38 +147,15 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
         switchMapOnOff.setOnClickListener(view -> changeTimestampVisible());
 
     }
-    // Location choosing on tap
-    private final MapEventsReceiver mapEventsReceiver = new MapEventsReceiver() {
-        @Override
-        public boolean singleTapConfirmedHelper(org.osmdroid.util.GeoPoint p) {
-            return false;
-        }
-
-        @Override
-        public boolean longPressHelper(org.osmdroid.util.GeoPoint p) {
-            Toast.makeText(getApplicationContext(), getString(R.string.setting_location), Toast.LENGTH_SHORT).show();
-            docIds.clear();
-            map.getOverlays().clear();
-            map.getOverlays().add(myLocationOverlay);
-            map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
-            map.getOverlays().add(chosenLocationMarker);
-            chosenLocationMarker.setPosition(p);
-            mapController.setCenter(chosenLocationMarker.getPosition());
-
-            enterLatitude.setText(String.format(Locale.getDefault(), "%.4f", p.getLatitude()).replace(',', '.'));
-            enterLongitude.setText(String.format(Locale.getDefault(), "%.4f", p.getLongitude()).replace(',', '.'));
-
-            return true;
-        }
-    };
 
     @Override
     public void onResume() {
         super.onResume();
+        setMyGpsLocation();
         //this will refresh the osmdroid configuration on resuming.
         registerReceiver(locationReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
-        map.onResume(); //n eeded for compass, my location overlays, v6.0.0 and up
-    }
+        map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
+    }    // Location choosing on tap
 
     @Override
     public void onPause() {
@@ -230,6 +210,7 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
 
         // Init marker
         chosenLocationMarker = new Marker(map);
+        chosenLocationMarker.setInfoWindow(null);
         chosenLocationMarker.setIcon(AppCompatResources.getDrawable(getApplicationContext(), R.drawable.map_marker));
         chosenLocationMarker.setDraggable(true);
         chosenLocationMarker.setOnMarkerDragListener(new Marker.OnMarkerDragListener() {
@@ -242,6 +223,8 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
 
                 docIds.clear();
                 map.getOverlays().clear();
+                oPolygon = new org.osmdroid.views.overlay.Polygon(map);
+                oPolygon.setInfoWindow(null);
                 map.getOverlays().add(myLocationOverlay);
                 map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
                 map.getOverlays().add(chosenLocationMarker);
@@ -271,26 +254,49 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
         return -1;
     }
 
+    private final MapEventsReceiver mapEventsReceiver = new MapEventsReceiver() {
+        @Override
+        public boolean singleTapConfirmedHelper(org.osmdroid.util.GeoPoint p) {
+            return false;
+        }
+
+        @Override
+        public boolean longPressHelper(org.osmdroid.util.GeoPoint p) {
+            Toast.makeText(getApplicationContext(), getString(R.string.setting_location), Toast.LENGTH_SHORT).show();
+            docIds.clear();
+            map.getOverlays().clear();
+            oPolygon = new org.osmdroid.views.overlay.Polygon(map);
+            oPolygon.setInfoWindow(null);
+            map.getOverlays().add(myLocationOverlay);
+            map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
+            map.getOverlays().add(chosenLocationMarker);
+            chosenLocationMarker.setPosition(p);
+            mapController.setCenter(chosenLocationMarker.getPosition());
+
+            enterLatitude.setText(String.format(Locale.getDefault(), "%.4f", p.getLatitude()).replace(',', '.'));
+            enterLongitude.setText(String.format(Locale.getDefault(), "%.4f", p.getLongitude()).replace(',', '.'));
+
+            return true;
+        }
+    };
+
     private void addEventMarker(DocumentSnapshot doc) {
         Marker newMarker = new Marker(map);
+        newMarker.setInfoWindow(null);
         Drawable unwrappedDrawable = AppCompatResources.getDrawable(getApplicationContext(), EventTypeToDrawable.getEventTypeToDrawable(Objects.requireNonNull(doc.getString("event_type"))));
         Drawable wrappedDrawable = DrawableCompat.wrap(Objects.requireNonNull(unwrappedDrawable));
         DrawableCompat.setTint(wrappedDrawable, ContextCompat.getColor(context, R.color.brown));
         newMarker.setIcon(wrappedDrawable);
-        newMarker.setTitle(doc.getString("event_name"));
-        newMarker.setSnippet(EventTypeToDrawable.getEventTypeToTranslation(this, Objects.requireNonNull(doc.getString("event_type"))));
         com.google.firebase.firestore.GeoPoint location_point = (com.google.firebase.firestore.GeoPoint) (doc.get("location"));
         double tmp_latitude = Objects.requireNonNull(location_point).getLatitude();
         double tmp_longitude = location_point.getLongitude();
         newMarker.setPosition(new org.osmdroid.util.GeoPoint(tmp_latitude, tmp_longitude));
-        newMarker.setSubDescription(doc.getString("event_description"));
         newMarker.setOnMarkerClickListener((marker, mapView) -> {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString("eventID", doc.getId());
             editor.apply();
             Intent myIntent = new Intent(context, ViewEventActivity.class);
             startActivity(myIntent);
-            finish();
             return false;
         });
         newMarker.setDraggable(false);
@@ -331,6 +337,9 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
             map.getOverlays().clear();
             map.getOverlays().add(myLocationOverlay);
             map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
+            if (oPolygon != null) {
+                map.getOverlays().add(oPolygon);
+            }
             map.getOverlays().add(chosenLocationMarker);
             mapController.setCenter(chosenLocationMarker.getPosition());
             for (DocumentSnapshot s : snaps) {
@@ -431,6 +440,8 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
         }
         if (enterLongitude.getText().toString().length() > 0 && enterLatitude.getText().toString().length() > 0) {
             map.getOverlays().clear();
+            oPolygon = new org.osmdroid.views.overlay.Polygon(map);
+            oPolygon.setInfoWindow(null);
             map.getOverlays().add(myLocationOverlay);
             map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
             map.getOverlays().add(chosenLocationMarker);
@@ -445,13 +456,16 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
 
     }
 
-
     @Override
     public void setMyGpsLocation() {
         myLocationOverlay.enableMyLocation();
         myLocationOverlay.runOnFirstFix(() -> runOnUiThread(() -> {
             docIds.clear();
+            snapshots.clear();
+            timestamps_array.clear();
             map.getOverlays().clear();
+            oPolygon = new org.osmdroid.views.overlay.Polygon(map);
+            oPolygon.setInfoWindow(null);
             map.getOverlays().add(myLocationOverlay);
             map.getOverlays().add(new MapEventsOverlay(mapEventsReceiver));
             map.getOverlays().add(chosenLocationMarker);
@@ -463,4 +477,8 @@ public class EventsNearbyActivity extends MenuInterfaceActivity implements TextW
 
         }));
     }
+
+
+
+
 }

@@ -122,7 +122,6 @@ public class ViewProfileInfoFragment extends Fragment {
         String imageShow = preferences.getString("showImage", "");
         if (imageShow.equals("true")) {
             CircleImageView circleImageView = view.findViewById(R.id.profile_image);
-
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
             StorageReference imagesRef = storageRef.child("profile_pictures/" + name);
@@ -138,12 +137,12 @@ public class ViewProfileInfoFragment extends Fragment {
         db.collection("friend_requests")
                 .add(docData)
                 .addOnSuccessListener(aVoid -> {
-                    //Log.d(TAG, "DocumentSnapshot successfully written!");
+
                     Toast.makeText(context.getApplicationContext(), R.string.friend_request_sent, Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(context.getApplicationContext(), R.string.write_failed, Toast.LENGTH_SHORT).show();
-                    //Log.w(TAG, "Error writing document", e);
+
                 });
     }
 

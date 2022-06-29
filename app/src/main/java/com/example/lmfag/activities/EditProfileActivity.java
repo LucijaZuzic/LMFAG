@@ -241,7 +241,7 @@ public class EditProfileActivity extends MenuInterfaceActivity {
                 .document(name)
                 .set(docData)
                 .addOnSuccessListener(aVoid -> {
-                    //Log.d(TAG, "DocumentSnapshot successfully written!");
+
                     Toast.makeText(getApplicationContext(), R.string.write_success, Toast.LENGTH_SHORT).show();
                     Toast.makeText(getApplicationContext(), R.string.logged_in, Toast.LENGTH_SHORT).show();
                     Intent myIntent = new Intent(context, MyProfileActivity.class);
@@ -250,7 +250,7 @@ public class EditProfileActivity extends MenuInterfaceActivity {
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(getApplicationContext(), R.string.write_failed, Toast.LENGTH_SHORT).show();
-                    //Log.w(TAG, "Error writing document", e);
+
                 });
     }
 
@@ -371,13 +371,13 @@ public class EditProfileActivity extends MenuInterfaceActivity {
                                 // Handle any errors
                             });
                         }
-                        //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+
                     }
                 } else {
                     Intent myIntent = new Intent(context, MainActivity.class);
                     startActivity(myIntent);
                     finish();
-                    //Log.d(TAG, "No such document");
+
                 }
             }
         });

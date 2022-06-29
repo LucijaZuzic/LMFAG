@@ -77,29 +77,29 @@ public class CustomAdapterFriendRequest extends RecyclerView.Adapter<CustomAdapt
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
-                    viewHolder.getTextView().setText(Objects.requireNonNull(document.get("username")).toString());
-                    FirebaseStorage storage = FirebaseStorage.getInstance();
-                    StorageReference storageRef = storage.getReference();
-                    StorageReference imagesRef = storageRef.child("profile_pictures/" + replace_string);
-                    final long ONE_MEGABYTE = 1024 * 1024;
-                    imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+                    TextView textViewUsername = viewHolder.getTextView();
+                    textViewUsername.setText(Objects.requireNonNull(document.get("username")).toString());
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(textViewUsername.getContext().getApplicationContext());
+                    String imageView = preferences.getString("showImage", "true");
+                    if (imageView.equals("true")) {
+                        FirebaseStorage storage = FirebaseStorage.getInstance();
+                        StorageReference storageRef = storage.getReference();
+                        StorageReference imagesRef = storageRef.child("profile_pictures/" + replace_string);
+                        final long ONE_MEGABYTE = 1024 * 1024;
                         CircleImageView circleImageView = viewHolder.getProfileImage();
-                        viewHolder.getListEntry().setOnClickListener(view -> {
-                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(circleImageView.getContext().getApplicationContext());
-                            SharedPreferences.Editor editor = preferences.edit();
-                            editor.putString("friendID", replace_string);
-                            editor.apply();
-                            Intent intent = new Intent(circleImageView.getContext(), ViewProfileActivity.class);
-                            circleImageView.getContext().startActivity(intent);
-                        });
-                        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(circleImageView.getContext().getApplicationContext());
-                        String imageView = preferences.getString("showImage", "true");
-                        if (imageView.equals("true")) {
+                        imagesRef.getBytes(7 * ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+                            viewHolder.getListEntry().setOnClickListener(view -> {
+                                SharedPreferences.Editor editor = preferences.edit();
+                                editor.putString("friendID", replace_string);
+                                editor.apply();
+                                Intent intent = new Intent(circleImageView.getContext(), ViewProfileActivity.class);
+                                circleImageView.getContext().startActivity(intent);
+                            });
                             Glide.with(circleImageView.getContext().getApplicationContext()).asBitmap().load(bytes).placeholder(R.drawable.ic_baseline_person_24).into(circleImageView);
-                        }
-                    }).addOnFailureListener(exception -> {
-                        // Handle any errors
-                    });
+                        }).addOnFailureListener(exception -> {
+                            // Handle any errors
+                        });
+                    }
                 }
             }
         });

@@ -31,14 +31,14 @@
             android:layout_height="wrap_content"
             android:checkable="true"
             android:checked="true"
-            android:text="@string/upcoming"></com.google.android.material.chip.Chip>
+            android:text="@string/upcoming" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/current"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
-            android:text="@string/current"></com.google.android.material.chip.Chip>
+            android:text="@string/current" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/past"

@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lmfag.R;
@@ -45,7 +44,7 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class CreateProfileActivity extends AppCompatActivity {
+public class CreateProfileActivity extends BaseActivity {
     private TextView myUsername;
     private TextView myLocation;
     private TextView myDescription;
@@ -218,7 +217,7 @@ public class CreateProfileActivity extends AppCompatActivity {
         db.collection("users")
                 .add(docData)
                 .addOnSuccessListener(aVoid -> {
-                    //Log.d(TAG, "DocumentSnapshot successfully written!");
+                    
                     Toast.makeText(getApplicationContext(), R.string.write_success, Toast.LENGTH_SHORT).show();
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     Toast.makeText(getApplicationContext(), R.string.logged_in, Toast.LENGTH_SHORT).show();
@@ -256,7 +255,7 @@ public class CreateProfileActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(getApplicationContext(), R.string.write_failed, Toast.LENGTH_SHORT).show();
-                    //Log.w(TAG, "Error writing document", e);
+
                 });
     }
 

@@ -83,10 +83,8 @@ public class CustomAdapterEventDelete extends RecyclerView.Adapter<CustomAdapter
                                 }
                             }
                         });
-                        SharedPreferences.Editor editor = preferences.edit();
-                        editor.putInt("selectedTab", 3);
-                        editor.apply();
                         Intent myIntent = new Intent(context, MyProfileActivity.class);
+                        myIntent.putExtra("selectedTab", 3);
                         context.startActivity(myIntent);
 
                     case DialogInterface.BUTTON_NEGATIVE:
